@@ -1,6 +1,6 @@
 <script lang="ts">
   import CryptoJS from 'crypto-js'
-  import { Loading, acts } from '@tadashi/svelte-loading'
+  import { acts } from '@tadashi/svelte-loading'
   import { navigate } from 'svelte-navigator'
 
   let pastedCodePlain: string = ''
@@ -33,8 +33,6 @@
     })
   }
 </script>
-
-<Loading />
 
 {#if pastedCodePlain === ''}
   <textarea

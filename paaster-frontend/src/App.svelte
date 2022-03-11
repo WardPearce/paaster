@@ -3,9 +3,14 @@
   import { faLock } from '@fortawesome/free-solid-svg-icons'
 
   import { Route, Router } from 'svelte-navigator'
+
+  import { Loading } from '@tadashi/svelte-loading'
+
   import ViewPaste from './components/ViewPaste.svelte'
   import CreatePaste from './components/CreatePaste.svelte'
 </script>
+
+<Loading />
 
 <Router>
   <nav>

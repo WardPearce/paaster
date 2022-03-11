@@ -4,7 +4,9 @@
 }
 
 :root {
-    --darkBg: #151515
+    --darkBg: #151515;
+    --toastBarBackground: #fff;
+    --toastBackground: #222121;
 }
 
 @font-face {
@@ -63,7 +65,7 @@ textarea {
 }
 
 .paste-del button:hover {
-    transition: 200ms;
+    transition: 300ms;
     background-color: rgb(90, 27, 13);
     outline: 1px solid rgb(121, 30, 10);
     cursor: pointer;
@@ -75,5 +77,5 @@ textarea {
 
 ::-moz-selection, ::selection {
     color: rgb(255, 255, 255) !important;
-    background: rgb(150, 150, 144) !important;
+    background: rgb(75, 75, 72) !important;
 }

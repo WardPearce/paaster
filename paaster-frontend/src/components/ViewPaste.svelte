@@ -5,10 +5,25 @@
   import Fa from 'svelte-fa'
   import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
+  import { SvelteToast, toast } from '@zerodevx/svelte-toast'
+
   import { useParams } from 'svelte-navigator'
+
+  import Mousetrap from 'mousetrap'
 
   const code: string = `import os
 print(f"{os.path.join('greg', 'mike')}")`
+
+  function codeToClip() {
+    toast.push('Copied to clipboard')
+    navigator.clipboard.writeText(code)
+    return false
+  }
+
+  Mousetrap.bind(
+    ['command+a', 'ctrl+a'],
+    codeToClip
+  )
 
   const params = useParams()
   // Server side paste id.
@@ -22,6 +37,8 @@ print(f"{os.path.join('greg', 'mike')}")`
 <svelte:head>
     {@html classicDark}
 </svelte:head>
+
+<SvelteToast />
 
 {#if serverSecret}
   <div class="paste-del">
