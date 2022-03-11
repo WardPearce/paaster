@@ -16,7 +16,7 @@
 
   import Mousetrap from 'mousetrap'
   
-  import { getPaste } from '../api/index'
+  import { getPaste, deletePaste } from '../api/index'
 
   acts.show(true)
 
@@ -44,6 +44,8 @@
     acts.show(false)
   })
 
+  acts.show(false)
+
   function codeToClip() {
     toast.push('Copied to clipboard')
     navigator.clipboard.writeText(code)
@@ -55,8 +57,15 @@
     codeToClip
   )
 
-  acts.show(false)
-
+  async function deletePasteOn() {
+    try {
+      await deletePaste(pasteId, serverSecret)
+      toast.push(`Deleting paste ${pasteId}`)
+      navigate('/')
+    } catch (error) {
+      toast.push(error.toString())
+    }
+  }
 </script>
 
 <svelte:head>
@@ -65,7 +74,7 @@
 
 {#if serverSecret}
   <div class="paste-del">
-    <button>
+    <button on:click={deletePasteOn}>
       <Fa icon={faTrashAlt}></Fa>
       Delete
     </button>

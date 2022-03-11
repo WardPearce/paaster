@@ -31,3 +31,17 @@ export async function getPaste(pasteId: string): Promise<string> {
   }
   return await resp.text()
 }
+
+export async function deletePaste(pasteId: string, serverSecret: string): Promise<void> {
+  const resp = await fetch(`${backendUrl}/api/paste/${pasteId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({serverSecret: serverSecret})
+  })
+  if (resp.status !== 200) {
+    const json = await resp.json()
+    throw Error(json.error)
+  }
+}

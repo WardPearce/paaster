@@ -4,3 +4,4 @@ motor
 aiofiles
 python-dotenv
 uvicorn
+bcrypt

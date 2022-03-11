@@ -5,13 +5,14 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 Version 3, 19 November 2007
 """
 
-from typing import AsyncGenerator, Union
 import nanoid
 import secrets
 import aiofiles
 import aiofiles.os
+import bcrypt
 
 from os import path
+from typing import AsyncGenerator, Union
 
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
@@ -50,7 +51,8 @@ class PasteCreateResource(HTTPEndpoint):
 
         await Sessions.mongo.file.insert_one({
             "_id": paste_id,
-            "server_secret": server_secret
+            "server_secret": bcrypt.hashpw(server_secret.encode(),
+                                           bcrypt.gensalt())
         })
 
         return JSONResponse({
@@ -60,6 +62,43 @@ class PasteCreateResource(HTTPEndpoint):
 
 
 class PasteResource(HTTPEndpoint):
+    async def delete(self, request: Request) -> JSONResponse:
+        json = await request.json()
+        if "serverSecret" not in json:
+            return JSONResponse(
+                {"error": "Server secret not provided"},
+                status_code=400
+            )
+
+        result = await Sessions.mongo.file.find_one({
+            "_id": request.path_params["paste_id"]
+        })
+        if not result:
+            return JSONResponse(
+                {"error": "Paste not found"},
+                status_code=404
+            )
+
+        if bcrypt.checkpw(json["serverSecret"].encode(),
+                          result["server_secret"]):
+            file_path = path.join(
+                SAVE_PATH, f"{result['_id']}.aes"
+            )
+            try:
+                await aiofiles.os.remove(file_path)
+            except FileNotFoundError:
+                pass
+
+            await Sessions.mongo.file.delete_many({
+                "_id": result["_id"]
+            })
+            return JSONResponse()
+        else:
+            return JSONResponse(
+                {"error": "Server secret invalid"},
+                status_code=403
+            )
+
     async def get(self, request: Request) -> Union[StreamingResponse,
                                                    JSONResponse]:
         result = await Sessions.mongo.file.find_one({
@@ -76,9 +115,12 @@ class PasteResource(HTTPEndpoint):
         )
 
         async def stream_content() -> AsyncGenerator[bytes, None]:
-            async with aiofiles.open(file_path, "rb") as f_:
-                while data := await f_.read(READ_CHUNK):
-                    yield data
+            try:
+                async with aiofiles.open(file_path, "rb") as f_:
+                    while data := await f_.read(READ_CHUNK):
+                        yield data
+            except FileNotFoundError:
+                yield b""
 
         return StreamingResponse(
             stream_content(),
