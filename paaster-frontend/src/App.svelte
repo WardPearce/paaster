@@ -19,7 +19,7 @@
     <Link to="/"><h2>paaster</h2></Link>
     <h4 class="encrypted">
       <Fa icon={faLock} />
-      End to end encrypted
+      E2EE
     </h4>
   </nav>
 
