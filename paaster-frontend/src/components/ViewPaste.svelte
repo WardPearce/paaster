@@ -62,6 +62,9 @@
     try {
       await deletePaste(pasteId, serverSecret)
       toast.push('Deleted paste!')
+      if (serverSecret) {
+        localStorage.removeItem(pasteId)
+      }
       navigate('/')
     } catch (error) {
       toast.push(error.toString())
