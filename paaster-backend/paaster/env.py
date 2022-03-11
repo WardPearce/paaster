@@ -25,7 +25,11 @@ SAVE_PATH = os.getenv(
     )
 )
 if not os.path.exists(SAVE_PATH):
-    os.mkdir(SAVE_PATH)
+    # Some rclone's might not allow creating empty dirs.
+    try:
+        os.mkdir(SAVE_PATH)
+    except Exception:
+        pass
 
 NANO_ID_LEN = int(os.getenv("NANO_ID_LEN", 21))
 
