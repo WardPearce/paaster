@@ -2,11 +2,16 @@
   import CryptoJS from 'crypto-js'
   import { acts } from '@tadashi/svelte-loading'
   import { navigate } from 'svelte-navigator'
+  import { toast } from '@zerodevx/svelte-toast'
+
+  import { getBackendSettings } from '../api/index'
 
   let pastedCodePlain: string = ''
 
-  function codePasted() {
+  async function codePasted() {
     acts.show(true)
+
+    const backendSettings = await getBackendSettings()
 
     crypto.subtle.generateKey(
       {
@@ -22,6 +27,16 @@
           pastedCodePlain, clientSecretKey
         ).toString()
 
+        const maxInBytes = backendSettings.maxPasteSizeMb * 1049000
+
+        if (new Blob([encryptedCode]).size > maxInBytes) {
+          pastedCodePlain = ''
+          toast.push(`Paste larger then ${backendSettings.maxPasteSizeMb} MB(s)`)
+          navigate('/')
+          acts.show(false)
+          return
+        }
+
         const serverId = 'temp'
         const serverSecret = 'secret'
 
@@ -31,7 +46,7 @@
         acts.show(false)
       })
     })
-  }
+  }pastedCodePlain
 </script>
 
 {#if pastedCodePlain === ''}

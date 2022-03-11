@@ -2,22 +2,24 @@
   import Fa from 'svelte-fa'
   import { faLock } from '@fortawesome/free-solid-svg-icons'
 
-  import { Route, Router } from 'svelte-navigator'
+  import { Route, Router, Link } from 'svelte-navigator'
 
   import { Loading } from '@tadashi/svelte-loading'
+  import { SvelteToast } from '@zerodevx/svelte-toast'
 
   import ViewPaste from './components/ViewPaste.svelte'
   import CreatePaste from './components/CreatePaste.svelte'
 </script>
 
 <Loading />
+<SvelteToast />
 
 <Router>
   <nav>
-    <h2>paaster</h2>
+    <Link to="/"><h2>paaster</h2></Link>
     <h4 class="encrypted">
       <Fa icon={faLock} />
-      Encrypted
+      End to end encrypted
     </h4>
   </nav>
 

@@ -5,7 +5,7 @@
   import Fa from 'svelte-fa'
   import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
-  import { SvelteToast, toast } from '@zerodevx/svelte-toast'
+  import { toast } from '@zerodevx/svelte-toast'
 
   import { useParams } from 'svelte-navigator'
 
@@ -37,8 +37,6 @@ print(f"{os.path.join('greg', 'mike')}")`
 <svelte:head>
     {@html classicDark}
 </svelte:head>
-
-<SvelteToast />
 
 {#if serverSecret}
   <div class="paste-del">

@@ -20,3 +20,5 @@ MONGO_PORT = os.environ["MONGO_PORT"]
 SAVE_PATH = os.environ["SAVE_PATH"]
 
 NANO_ID = int(os.getenv("NANO_ID", 12))
+
+MAX_PASTE_SIZE_MB = int(os.getenv("MAX_PASTE_SIZE_MB", 3))

@@ -22,7 +22,7 @@ body {
 }
 
 nav {
-    background-color: #161718;
+    background-color: #0e0d0d;
     border-bottom: 2.5px solid rgb(238, 238, 238);
     height: 3rem;
     display: flex;
@@ -33,6 +33,11 @@ nav {
 
 .encrypted {
     color: rgb(7, 155, 32);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(238, 238, 238);
 }
 
 textarea {

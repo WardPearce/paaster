@@ -1,5 +1,6 @@
 nanoid
-falcon
+starlette
 motor
 aiofiles
 python-dotenv
+uvicorn
