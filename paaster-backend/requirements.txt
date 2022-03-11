@@ -1,0 +1,5 @@
+nanoid
+falcon
+motor
+aiofiles
+python-dotenv
