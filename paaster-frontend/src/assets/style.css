@@ -1,0 +1,54 @@
+* { 
+    margin: 0; 
+    padding: 0; 
+}
+
+:root {
+    --darkBg: #151515
+}
+
+@font-face {
+    font-family: IMBPlexMono;
+    src: url('fonts/IBMPlexMono-Regular.ttf');
+}
+
+body {
+    font-family: IMBPlexMono;
+    color: rgb(238, 238, 238);
+    overflow-x: hidden;
+    background-color: var(--darkBg);
+}
+
+nav {
+    background-color: #161718;
+    border-bottom: 2.5px solid rgb(238, 238, 238);
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    justify-content: space-between;
+}
+
+.encrypted {
+    color: rgb(7, 155, 32);
+}
+
+textarea {
+    height: 100vh;
+    width: 100%;
+    resize: none;
+    border: none;
+    color: rgb(238, 238, 238);
+    background-color: var(--darkBg);
+    padding: 1em;
+    outline: none;
+}
+
+.hljs {
+    height: 100vh;
+}
+
+::-moz-selection, ::selection {
+    color: rgb(255, 255, 255) !important;
+    background: rgb(150, 150, 144) !important;
+}

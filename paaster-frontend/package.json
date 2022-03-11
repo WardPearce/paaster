@@ -1,0 +1,31 @@
+{
+  "name": "paaster-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "next",
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
+    "@tsconfig/svelte": "^3.0.0",
+    "carbon-icons-svelte": "^10.44.4",
+    "svelte": "^3.46.4",
+    "svelte-check": "^2.2.7",
+    "svelte-highlight": "^5.2.2",
+    "svelte-preprocess": "^4.9.8",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.4"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.0.0",
+    "crypto-js": "^4.1.1",
+    "svelte-fa": "^2.4.0",
+    "svelte-navigator": "^3.1.5"
+  }
+}
