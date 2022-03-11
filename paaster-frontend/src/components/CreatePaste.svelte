@@ -32,14 +32,18 @@
         if (new Blob([encryptedCode]).size > maxInBytes) {
           pastedCodePlain = ''
           toast.push(`Paste larger then ${backendSettings.maxPasteSizeMb} MB(s)`)
-          navigate('/')
           acts.show(false)
           return
         }
 
-        const paste = await savePaste(encryptedCode)
-        localStorage.setItem(paste.pasteId, paste.serverSecret)
-        navigate(`/${paste.pasteId}#${clientSecretKey}`)
+        try {
+          const paste = await savePaste(encryptedCode)
+          localStorage.setItem(paste.pasteId, paste.serverSecret)
+          navigate(`/${paste.pasteId}#${clientSecretKey}`)
+        } catch (error) {
+          pastedCodePlain = ''
+          toast.push(error.toString())
+        }
 
         acts.show(false)
       })

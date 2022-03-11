@@ -14,14 +14,20 @@ export async function savePaste(encryptedPaste: string): Promise<iPaste> {
     method: 'PUT',
     body: encryptedPaste
   })
-  if (resp.status !== 200) {}
-  return resp.json()
+  if (resp.status !== 200) {
+    const json = await resp.json()
+    throw Error(json.error)
+  }
+  return await resp.json()
 }
 
 export async function getPaste(pasteId: string): Promise<string> {
   const resp = await fetch(`${backendUrl}/api/paste/${pasteId}`, {
     method: 'GET'
   })
-  if (resp.status !== 200) {}
-  return resp.text()
+  if (resp.status !== 200) {
+    const json = await resp.json()
+    throw Error(json.error)
+  }
+  return await resp.text()
 }

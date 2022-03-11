@@ -38,6 +38,10 @@
       acts.show(false)
       return
     }
+  }).catch(error => {
+    toast.push(error.toString())
+    navigate('/')
+    acts.show(false)
   })
 
   function codeToClip() {
