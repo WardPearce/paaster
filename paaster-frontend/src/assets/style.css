@@ -17,7 +17,7 @@
 body {
     font-family: IMBPlexMono;
     color: rgb(238, 238, 238);
-    overflow-x: hidden;
+    overflow: hidden;
     background-color: var(--darkBg);
 }
 
@@ -77,7 +77,9 @@ textarea {
 }
 
 .hljs {
-    height: 100vh;
+    height: 90vh;
+    width: 100%;
+    white-space: pre-wrap;
 }
 
 ::-moz-selection, ::selection {
