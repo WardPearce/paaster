@@ -58,6 +58,7 @@
   )
 
   async function deletePasteOn() {
+    acts.show(true)
     try {
       await deletePaste(pasteId, serverSecret)
       toast.push(`Deleting paste ${pasteId}`)
@@ -65,6 +66,7 @@
     } catch (error) {
       toast.push(error.toString())
     }
+    acts.show(false)
   }
 </script>
 
