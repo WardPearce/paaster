@@ -17,7 +17,6 @@
     "carbon-icons-svelte": "^10.44.4",
     "svelte": "^3.46.4",
     "svelte-check": "^2.2.7",
-    "svelte-file-dropzone": "^1.0.0-dev.1",
     "svelte-highlight": "^5.2.2",
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
