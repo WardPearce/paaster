@@ -4,6 +4,8 @@
   import { HighlightSvelte } from 'svelte-highlight'
   import classicDark from 'svelte-highlight/src/styles/classic-dark'
 
+  import { navigate } from 'svelte-navigator'
+
   import Fa from 'svelte-fa'
   import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
@@ -28,7 +30,14 @@
   let code = ''
 
   getPaste(pasteId).then(encryptedData => {
-    code = CryptoJS.AES.decrypt(encryptedData, clientSecretKey).toString(CryptoJS.enc.Utf8)
+    try {
+      code = CryptoJS.AES.decrypt(encryptedData, clientSecretKey).toString(CryptoJS.enc.Utf8)
+    } catch {
+      toast.push('Unable to decrypt paste with provided key.')
+      navigate('/')
+      acts.show(false)
+      return
+    }
   })
 
   function codeToClip() {
