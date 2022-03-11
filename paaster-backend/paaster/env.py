@@ -14,11 +14,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-MONGO_HOST = os.environ["MONGO_HOST"]
-MONGO_PORT = os.environ["MONGO_PORT"]
+MONGO_HOST = os.getenv("MONGO_IP", "localhost")
+MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
+MONGO_DB = os.getenv("MONGO_DB", "paaster")
 
-SAVE_PATH = os.environ["SAVE_PATH"]
+SAVE_PATH = os.getenv(
+    "SAVE_PATH",
+    os.path.join(
+        os.path.dirname(os.path.realpath(__name__)),
+        "pastes"
+    )
+)
 
-NANO_ID = int(os.getenv("NANO_ID", 12))
+NANO_ID_LEN = int(os.getenv("NANO_ID_LEN", 21))
 
 MAX_PASTE_SIZE_MB = int(os.getenv("MAX_PASTE_SIZE_MB", 3))
+
+READ_CHUNK = int(os.getenv("READ_CHUNK", 1024))
