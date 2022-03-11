@@ -28,12 +28,27 @@ from ..resources import Sessions
 MAX_SIZE = MAX_PASTE_SIZE_MB * 1049000
 
 
+def format_path(paste_id: str) -> str:
+    """Formats the paste path for use in the save directory.
+
+    Parameters
+    ----------
+    paste_id : str
+
+    Returns
+    -------
+    str
+    """
+
+    return path.join(SAVE_PATH, f"{paste_id}.aes")
+
+
 class PasteCreateResource(HTTPEndpoint):
     async def put(self, request: Request) -> JSONResponse:
         paste_id = nanoid.generate(size=NANO_ID_LEN)
         server_secret = secrets.token_urlsafe()
 
-        file_path = path.join(SAVE_PATH, f"{paste_id}.aes")
+        file_path = format_path(paste_id)
 
         async with aiofiles.open(file_path, "wb") as f_:
             total_size = 0
@@ -81,9 +96,7 @@ class PasteResource(HTTPEndpoint):
 
         if bcrypt.checkpw(json["serverSecret"].encode(),
                           result["server_secret"]):
-            file_path = path.join(
-                SAVE_PATH, f"{result['_id']}.aes"
-            )
+            file_path = format_path(result["_id"])
             try:
                 await aiofiles.os.remove(file_path)
             except FileNotFoundError:
@@ -110,9 +123,7 @@ class PasteResource(HTTPEndpoint):
                 status_code=404
             )
 
-        file_path = path.join(
-            SAVE_PATH, f"{result['_id']}.aes"
-        )
+        file_path = format_path(result["_id"])
 
         async def stream_content() -> AsyncGenerator[bytes, None]:
             try:
