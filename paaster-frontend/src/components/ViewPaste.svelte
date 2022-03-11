@@ -35,16 +35,14 @@
     } catch {
       toast.push('Unable to decrypt paste with provided key.')
       navigate('/')
-      acts.show(false)
-      return
     }
+
+    acts.show(false)
   }).catch(error => {
     toast.push(error.toString())
     navigate('/')
     acts.show(false)
   })
-
-  acts.show(false)
 
   function codeToClip() {
     toast.push('Copied to clipboard!')
