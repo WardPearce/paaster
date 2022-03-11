@@ -44,6 +44,31 @@ textarea {
     outline: none;
 }
 
+.paste-del {
+    position:absolute;
+    top:8;
+    right:0;
+    margin-right: 1em;
+    margin-top: 1em;
+}
+
+.paste-del button {
+    text-align: center;
+    border: none;
+    padding: .5em 1em;
+    background-color: rgb(121, 30, 10);
+    color: #fff;
+    outline: none;
+    outline: 0px solid rgb(121, 30, 10);
+}
+
+.paste-del button:hover {
+    transition: 200ms;
+    background-color: rgb(90, 27, 13);
+    outline: 1px solid rgb(121, 30, 10);
+    cursor: pointer;
+}
+
 .hljs {
     height: 100vh;
 }

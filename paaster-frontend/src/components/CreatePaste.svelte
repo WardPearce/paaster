@@ -17,16 +17,16 @@
       ['encrypt', 'decrypt']
     ).then(key => {
       crypto.subtle.exportKey('jwk', key).then(secret => {
-        const secretKey = secret.k
+        const clientSecretKey = secret.k
         const encryptedCode = CryptoJS.AES.encrypt(
-          pastedCodePlain, secretKey
+          pastedCodePlain, clientSecretKey
         ).toString()
 
-        const serversideId = 'temp'
-        const serversideSecret = 'secret'
+        const serverId = 'temp'
+        const serverSecret = 'secret'
 
-        localStorage.setItem(serversideId, serversideSecret)
-        navigate(`/${serversideId}#${secretKey}`)
+        localStorage.setItem(serverId, serverSecret)
+        navigate(`/${serverId}#${clientSecretKey}`)
 
         acts.show(false)
       })
