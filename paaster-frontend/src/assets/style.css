@@ -4,9 +4,9 @@
 }
 
 :root {
-    --darkBg: #151515;
-    --toastBarBackground: #fff;
-    --toastBackground: #222121;
+    --darkBg: #191724;
+    --toastBarBackground: #565174;
+    --toastBackground: #211f29;
 }
 
 @font-face {
@@ -22,7 +22,7 @@ body {
 }
 
 nav {
-    background-color: #0e0d0d;
+    background-color: #0c0b10;
     border-bottom: 2.5px solid rgb(238, 238, 238);
     height: 3rem;
     display: flex;

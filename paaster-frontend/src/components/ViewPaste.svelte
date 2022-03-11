@@ -2,7 +2,7 @@
   import CryptoJS from 'crypto-js'
 
   import { HighlightSvelte } from 'svelte-highlight'
-  import classicDark from 'svelte-highlight/src/styles/classic-dark'
+  import rosPine from 'svelte-highlight/src/styles/ros-pine'
 
   import { navigate } from 'svelte-navigator'
 
@@ -72,7 +72,7 @@
 </script>
 
 <svelte:head>
-    {@html classicDark}
+    {@html rosPine}
 </svelte:head>
 
 {#if serverSecret}
