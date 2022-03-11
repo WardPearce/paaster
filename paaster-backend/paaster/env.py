@@ -25,6 +25,8 @@ SAVE_PATH = os.getenv(
         "pastes"
     )
 )
+if not os.path.exists(SAVE_PATH):
+    os.mkdir(SAVE_PATH)
 
 NANO_ID_LEN = int(os.getenv("NANO_ID_LEN", 21))
 

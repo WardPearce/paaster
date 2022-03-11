@@ -14,21 +14,20 @@ from motor import motor_asyncio
 
 from .routes import ROUTES
 from .resources import Sessions
-from .env import MONGO_HOST, MONGO_PORT
+from .env import MONGO_HOST, MONGO_PORT, MONGO_DB
 
 
 async def on_start() -> None:
-    Sessions.mongo = motor_asyncio.AsyncIOMotorClient(
+    mongo = motor_asyncio.AsyncIOMotorClient(
         MONGO_HOST, MONGO_PORT
     )
 
-    await Sessions.mongo.server_info()
+    await mongo.server_info()
 
-
-async def on_shut() -> None:
-    await Sessions.mongo.close()
+    Sessions.mongo = mongo[MONGO_DB]
 
 
 app = Starlette(routes=ROUTES, middleware=[
-    Middleware(CORSMiddleware, allow_origins=['*'])
-], on_startup=[on_start], on_shutdown=[on_shut])
+    Middleware(CORSMiddleware, allow_origins=["*"],
+               allow_methods=["GET", "DELETE", "PUT"])
+], on_startup=[on_start])

@@ -1,3 +1,8 @@
 export interface iBackendDetails {
-    maxPasteSizeMb: number
+  maxPasteSizeMb: number
+}
+
+export interface iPaste {
+  pasteId: string
+  serverSecret: string
 }

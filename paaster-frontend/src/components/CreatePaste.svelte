@@ -4,7 +4,7 @@
   import { navigate } from 'svelte-navigator'
   import { toast } from '@zerodevx/svelte-toast'
 
-  import { getBackendSettings } from '../api/index'
+  import { getBackendSettings, savePaste } from '../api/index'
 
   let pastedCodePlain: string = ''
 
@@ -21,7 +21,7 @@
       true,
       ['encrypt', 'decrypt']
     ).then(key => {
-      crypto.subtle.exportKey('jwk', key).then(secret => {
+      crypto.subtle.exportKey('jwk', key).then(async secret => {
         const clientSecretKey = secret.k
         const encryptedCode = CryptoJS.AES.encrypt(
           pastedCodePlain, clientSecretKey
@@ -37,16 +37,14 @@
           return
         }
 
-        const serverId = 'temp'
-        const serverSecret = 'secret'
-
-        localStorage.setItem(serverId, serverSecret)
-        navigate(`/${serverId}#${clientSecretKey}`)
+        const paste = await savePaste(encryptedCode)
+        localStorage.setItem(paste.pasteId, paste.serverSecret)
+        navigate(`/${paste.pasteId}#${clientSecretKey}`)
 
         acts.show(false)
       })
     })
-  }pastedCodePlain
+  }
 </script>
 
 {#if pastedCodePlain === ''}
