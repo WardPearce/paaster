@@ -47,7 +47,7 @@
   acts.show(false)
 
   function codeToClip() {
-    toast.push('Copied to clipboard')
+    toast.push('Copied to clipboard!')
     navigator.clipboard.writeText(code)
     return false
   }
@@ -61,7 +61,7 @@
     acts.show(true)
     try {
       await deletePaste(pasteId, serverSecret)
-      toast.push(`Deleting paste ${pasteId}`)
+      toast.push('Deleted paste!')
       navigate('/')
     } catch (error) {
       toast.push(error.toString())
