@@ -1,29 +1,46 @@
 <script lang="ts">
   import CryptoJS from 'crypto-js'
+  import { Loading, acts } from '@tadashi/svelte-loading'
+  import { navigate } from 'svelte-navigator'
 
-  let pastedCode: string = ''
+  let pastedCodePlain: string = ''
 
   function codePasted() {
-    window.crypto.subtle.generateKey(
+    acts.show(true)
+
+    crypto.subtle.generateKey(
       {
-        name: "AES-GCM",
+        name: 'AES-GCM',
         length: 256
       },
       true,
-      ["encrypt", "decrypt"]
+      ['encrypt', 'decrypt']
     ).then(key => {
       crypto.subtle.exportKey('jwk', key).then(secret => {
+        const secretKey = secret.k
         const encryptedCode = CryptoJS.AES.encrypt(
-          pastedCode, secret.k
+          pastedCodePlain, secretKey
         ).toString()
 
-        console.log(encryptedCode)
+        const serversideId = 'temp'
+        const serversideSecret = 'secret'
+
+        localStorage.setItem(serversideId, serversideSecret)
+        navigate(`/${serversideId}#${secretKey}`)
+
+        acts.show(false)
       })
     })
   }
 </script>
 
-<textarea
-  bind:value={pastedCode}
-  placeholder="paste your code here"
-  on:input={codePasted}></textarea>
+<Loading />
+
+{#if pastedCodePlain === ''}
+  <textarea
+    bind:value={pastedCodePlain}
+    placeholder="paste your code here"
+    on:input={codePasted}></textarea>
+{:else}
+  <textarea value={pastedCodePlain} disabled></textarea>
+{/if}
