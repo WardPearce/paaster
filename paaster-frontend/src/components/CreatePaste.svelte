@@ -38,6 +38,8 @@
 
         try {
           const paste = await savePaste(encryptedCode)
+          toast.push('Created paste!')
+
           localStorage.setItem(paste.pasteId, paste.serverSecret)
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
         } catch (error) {
