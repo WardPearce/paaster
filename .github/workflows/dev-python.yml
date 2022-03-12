@@ -35,4 +35,4 @@ jobs:
       - name: Install pyright
         run: npm install pyright -g
       - name: Run pyright
-        run: pyright /*
+        run: pyright ./*

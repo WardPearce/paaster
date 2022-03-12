@@ -1,0 +1,50 @@
+version: '3'
+services:
+  starlette:
+    image: wardpearce/paaster-backend
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    environment:
+      MONGO_HOST: "mongodb"
+      MONGO_PORT: 27017
+      MONGO_DB: "paaster"
+      NANO_ID_LEN: 21
+      READ_CHUNK: 1024
+
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  vite:
+    image: wardpearce/paaster-frontend
+    restart: unless-stopped
+    ports:
+      - "8889:80"
+    environment:
+      # Proxied URL for 'wardpearce/paaster-backend', NO ENDING SLASH
+      VITE_BACKEND_URL: "http://localhost:8888"
+      VITE_NAME: "paaster"
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local
+  appdata:
+    driver: local
