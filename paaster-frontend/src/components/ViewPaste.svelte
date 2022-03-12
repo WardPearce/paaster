@@ -66,6 +66,7 @@
   Mousetrap.bind(
     ['command+s', 'ctrl+s'],
     () => {
+      toast.push('Saving code!')
       saveAs(
         new Blob([code], {type: 'text/plain;charset=utf-8'}),
         `${pasteId}.txt`
