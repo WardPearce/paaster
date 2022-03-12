@@ -13,7 +13,8 @@ services:
       MONGO_DB: "paaster"
       NANO_ID_LEN: 21
       READ_CHUNK: 1024
-
+    volumes:
+      - appdata:/app/pastes
     depends_on:
       - mongodb
     networks:
