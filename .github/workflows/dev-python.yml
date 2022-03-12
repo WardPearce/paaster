@@ -1,4 +1,4 @@
-name: Development workflow
+name: Development Python workflow
 
 on:
   push:
