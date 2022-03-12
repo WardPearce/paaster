@@ -16,7 +16,7 @@
 
 <Router>
   <nav>
-    <Link to="/"><h2>paaster</h2></Link>
+    <Link to="/"><h2>{'VITE_NAME' in import.meta.env ? import.meta.env.VITE_NAME : 'paaster'}</h2></Link>
     <h4 class="encrypted">
       <Fa icon={faLock} />
       E2EE
