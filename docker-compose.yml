@@ -14,6 +14,7 @@ services:
       NANO_ID_LEN: 21
       READ_CHUNK: 1024
     volumes:
+      # If a non external 'SAVE_PATH' used this should be ensured that it isn't deleted
       - appdata:/app/pastes
     depends_on:
       - mongodb
