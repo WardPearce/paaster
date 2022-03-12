@@ -1,7 +1,8 @@
-### Currently in development
+# Currently in development
+
+## Preview
+![Video of paaster in action!](https://i.imgur.com/VXzk8xE.gif)
 
 # ToDo
 - Unit tests
-- Docker
-- Development documentation
-- Add previews
+- Developer documentation
