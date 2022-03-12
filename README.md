@@ -7,6 +7,7 @@
 - `Ctrl+V` - Paste code.
 - `Ctrl+S` - Download code as file.
 - `Ctrl+A` - Copy all code to clipboard.
+- `Ctrl+X` - Copy URL to clipboard.
 
 # ToDo
 - Unit tests

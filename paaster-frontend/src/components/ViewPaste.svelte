@@ -48,8 +48,17 @@
   Mousetrap.bind(
     ['command+a', 'ctrl+a'],
     () => {
-      toast.push('Copied to clipboard!')
+      toast.push('Copied code to clipboard!')
       navigator.clipboard.writeText(code)
+      return false
+    }
+  )
+
+  Mousetrap.bind(
+    ['command+x', 'ctrl+x'],
+    () => {
+      toast.push('Copied URL to clipboard!')
+      navigator.clipboard.writeText(location.href)
       return false
     }
   )
