@@ -104,7 +104,7 @@ class PasteResource(HTTPEndpoint):
             await Sessions.mongo.file.delete_many({
                 "_id": result["_id"]
             })
-            return JSONResponse()
+            return JSONResponse({"pastedId": result["_id"]})
         else:
             return JSONResponse(
                 {"error": "Server secret invalid"},
