@@ -1,12 +1,14 @@
 version: '3'
 services:
   starlette:
-    image: wardpearce/paaster-backend
+    build:
+      dockerfile: ./Dockerfile
+      context: ./paaster-backend
     restart: unless-stopped
     ports:
       - "8888:80"
     environment:
-      MONGO_HOST: "mongodb"
+      MONGO_IP: "mongodb"
       MONGO_PORT: 27017
       MONGO_DB: "paaster"
       NANO_ID_LEN: 21
@@ -18,16 +20,16 @@ services:
       - backend
 
   vite:
-    image: wardpearce/paaster-frontend
+    build:
+      dockerfile: ./Dockerfile
+      context: ./paaster-frontend
+      args:
+        # Proxied host URL, NO TRAILING SLASH!
+        VITE_BACKEND: "http://localhost:8888"
+        VITE_NAME: "paaster"
     restart: unless-stopped
     ports:
       - "8889:80"
-    env_file:
-      - "./.env"
-    environment:
-      # Proxied URL for 'wardpearce/paaster-backend', NO ENDING SLASH
-      BACKEND_URL: "http://localhost:8888"
-      SITE_NAME: "paaster"
 
   mongodb:
     image: mongo
