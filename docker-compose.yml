@@ -13,6 +13,7 @@ services:
       MONGO_DB: "paaster"
       NANO_ID_LEN: 21
       READ_CHUNK: 1024
+      MAX_PASTE_SIZE_MB: 3
     volumes:
       # If a non external 'SAVE_PATH' used this should be ensured that it isn't deleted
       - appdata:/app/pastes
