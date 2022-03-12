@@ -22,10 +22,12 @@ services:
     restart: unless-stopped
     ports:
       - "8889:80"
+    env_file:
+      - "./.env"
     environment:
       # Proxied URL for 'wardpearce/paaster-backend', NO ENDING SLASH
-      VITE_BACKEND_URL: "http://localhost:8888"
-      VITE_NAME: "paaster"
+      BACKEND_URL: "http://localhost:8888"
+      SITE_NAME: "paaster"
 
   mongodb:
     image: mongo

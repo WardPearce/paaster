@@ -10,7 +10,7 @@
   import ViewPaste from './components/ViewPaste.svelte'
   import CreatePaste from './components/CreatePaste.svelte'
 
-  const pageName = 'VITE_NAME' in import.meta.env ? import.meta.env.VITE_NAME : 'paaster'
+  const pageName = 'SITE_NAME' in process.env ? process.env.SITE_NAME : 'paaster'
 </script>
 
 <svelte:head>
