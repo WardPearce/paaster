@@ -15,6 +15,7 @@
   import { useParams } from 'svelte-navigator'
 
   import Mousetrap from 'mousetrap'
+  import { saveAs } from 'file-saver'
   
   import { getPaste, deletePaste } from '../api/index'
 
@@ -44,15 +45,24 @@
     acts.show(false)
   })
 
-  function codeToClip() {
-    toast.push('Copied to clipboard!')
-    navigator.clipboard.writeText(code)
-    return false
-  }
-
   Mousetrap.bind(
     ['command+a', 'ctrl+a'],
-    codeToClip
+    () => {
+      toast.push('Copied to clipboard!')
+      navigator.clipboard.writeText(code)
+      return false
+    }
+  )
+
+  Mousetrap.bind(
+    ['command+s', 'ctrl+s'],
+    () => {
+      saveAs(
+        new Blob([code], {type: 'text/plain;charset=utf-8'}),
+        `${pasteId}.txt`
+      )
+      return false
+    }
   )
 
   async function deletePasteOn() {
