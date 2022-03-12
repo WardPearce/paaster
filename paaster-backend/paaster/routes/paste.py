@@ -96,9 +96,8 @@ class PasteResource(HTTPEndpoint):
 
         if bcrypt.checkpw(json["serverSecret"].encode(),
                           result["server_secret"]):
-            file_path = format_path(result["_id"])
             try:
-                await aiofiles.os.remove(file_path)
+                await aiofiles.os.remove(format_path(result["_id"]))
             except FileNotFoundError:
                 pass
 
@@ -123,11 +122,10 @@ class PasteResource(HTTPEndpoint):
                 status_code=404
             )
 
-        file_path = format_path(result["_id"])
-
         async def stream_content() -> AsyncGenerator[bytes, None]:
             try:
-                async with aiofiles.open(file_path, "rb") as f_:
+                async with aiofiles.open(format_path(result["_id"]),
+                                         "rb") as f_:
                     while data := await f_.read(READ_CHUNK):
                         yield data
             except FileNotFoundError:
