@@ -10,3 +10,8 @@ from paaster import app
 __all__ = [
     "app"
 ]
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app)

@@ -5,6 +5,7 @@
 
 :root {
     --darkBg: #191724;
+    --textWhite: rgb(238, 238, 238);
     --toastBarBackground: #565174;
     --toastBackground: #211f29;
 }
@@ -16,14 +17,14 @@
 
 body {
     font-family: IMBPlexMono;
-    color: rgb(238, 238, 238);
+    color: var(--textWhite);
     overflow-x: hidden;
     background-color: var(--darkBg);
 }
 
 nav {
     background-color: #0c0b10;
-    border-bottom: 2.5px solid rgb(238, 238, 238);
+    border-bottom: 2.5px solid var(--textWhite);
     height: 3rem;
     display: flex;
     align-items: center;
@@ -31,16 +32,21 @@ nav {
     justify-content: space-between;
 }
 
+nav .nav-right {
+    display: flex;
+    justify-content: space-around;
+}
+
 .encrypted {
     color: rgb(7, 155, 32);
-    background-color: #17151f;
+    background-color: var(--darkBg);
     padding: .5em 1em;
     border-radius: 1em;
 }
 
 a {
     text-decoration: none;
-    color: rgb(238, 238, 238);
+    color: var(--textWhite)
 }
 
 textarea {
@@ -48,14 +54,33 @@ textarea {
     width: 100%;
     resize: none;
     border: none;
-    color: rgb(238, 238, 238);
+    color: var(--textWhite);
     background-color: var(--darkBg);
     padding: 1em;
     outline: none;
 }
 
+input {
+    transition: 100ms;
+    color: var(--textWhite);
+    background-color: var(--darkBg);
+    border: 0 solid #3b3457;;
+    height: 1em;
+    padding: .5em;
+}
+
+input:focus {
+    transition: 200ms;
+    outline: none;
+    border-bottom: 2.5px solid #3b3457;
+}
+
+button {
+    border-radius: 1em;
+}
+
 .paste-del {
-    position:absolute;
+    position: absolute;
     top:8;
     right:0;
     margin-right: 1em;
@@ -63,21 +88,52 @@ textarea {
 }
 
 .paste-del button {
+    transition: 300ms;
     text-align: center;
     border: none;
     padding: .5em 1em;
     background-color: rgb(121, 30, 10);
-    color: #fff;
+    color: var(--textWhite);
     outline: none;
-    outline: 0px solid rgb(121, 30, 10);
 }
 
 .paste-del button:hover {
     transition: 300ms;
     background-color: rgb(90, 27, 13);
-    outline: 1px solid rgb(121, 30, 10);
     cursor: pointer;
 }
+
+.dark-button {
+    transition: 300ms;
+    text-align: center;
+    border: none;
+    padding: .5em 1em;
+    background-color: var(--darkBg);
+    color: var(--textWhite);
+    outline: none;
+}
+
+.dark-button:hover {
+    transition: 300ms;
+    background-color: #16151d;
+    cursor: pointer;
+}
+
+/* 🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️ */
+.trans-button {
+    transition: 300ms;
+    background-color: transparent;
+    border: none;
+    color: var(--textWhite);
+    text-align: left;
+}
+
+.trans-button:hover {
+    transition: 300ms;
+    color: rgb(157, 157, 157);
+    cursor: pointer;
+}
+/* 🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️ */
 
 .hljs {
     min-height: 100vh;
@@ -88,4 +144,41 @@ textarea {
 ::-moz-selection, ::selection {
     color: rgb(255, 255, 255) !important;
     background: rgb(75, 75, 72) !important;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: #1917247c;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.header {
+    border-bottom: 2px solid #0c0b1052;
+    margin-bottom: .5em;
+}
+
+.contents {
+    min-width: 40vw;
+    border-radius: 1em;
+    padding: 1rem;
+    background-color: #24203a;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: auto;
 }
