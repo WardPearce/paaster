@@ -39,7 +39,6 @@ nav .nav-right {
 
 .encrypted {
     color: rgb(7, 155, 32);
-    background-color: var(--darkBg);
     padding: .5em 1em;
     border-radius: 1em;
 }
@@ -219,6 +218,7 @@ button {
     padding: 1.5em;
     background-color: #0c0b10;
     margin-bottom: .5em;
+    border-radius: 1em;
 }
 
 .paste-details {
