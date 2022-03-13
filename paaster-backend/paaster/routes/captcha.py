@@ -23,7 +23,8 @@ class CaptchaResource(HTTPEndpoint):
 
         captcha = generator.gen_captcha_image(
             margin=False,
-            difficult_level=3
+            difficult_level=3,
+            chars_mode="hex"
         )
 
         request.session["captcha"] = captcha.characters

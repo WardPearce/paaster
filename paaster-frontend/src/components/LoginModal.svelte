@@ -15,7 +15,7 @@
   let paswsordCrackTime = ''
   let passwordStrengh = 0
 
-  function passwordFeedback() {
+  function passwordFeedback(): void {
     if (!createAccount)
       return
 

@@ -9,7 +9,7 @@
 
   let pastedCodePlain: string = ''
 
-  async function codePasted() {
+  async function codePasted(): Promise<void> {
     acts.show(true)
 
     const backendSettings = await getBackendSettings()

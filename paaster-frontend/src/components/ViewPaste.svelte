@@ -77,7 +77,7 @@
     }
   )
 
-  async function deletePasteOn() {
+  async function deletePasteOn(): Promise<void> {
     acts.show(true)
     try {
       await deletePaste(pasteId, serverSecret)
