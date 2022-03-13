@@ -49,6 +49,10 @@ a {
     color: var(--textWhite)
 }
 
+a:hover {
+    color: rgb(157, 157, 157);
+}
+
 textarea {
     height: 100vh;
     width: 100%;
@@ -193,7 +197,7 @@ button {
 }
 
 .contents {
-    min-width: 40vw;
+    min-width: 30vw;
     border-radius: 1em;
     padding: 1rem;
     background-color: #24203a;
@@ -201,6 +205,25 @@ button {
     flex-direction: column;
     justify-content: space-between;
     pointer-events: auto;
+}
+
+.pastes {
+    padding: 1em;
+}
+
+.pastes ul {
+    list-style: none;
+}
+
+.paste-item {
+    padding: 1.5em;
+    background-color: #0c0b10;
+    margin-bottom: .5em;
+}
+
+.paste-details {
+    display: flex;
+    justify-content: space-between;
 }
 
 progress {

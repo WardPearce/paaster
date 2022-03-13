@@ -1,7 +1,6 @@
 import type { iPasteStorage } from './interfaces'
 import { storedPastes } from '../store'
 
-
 export class LocalPaste {
   key: string
 

@@ -13,6 +13,7 @@ import bcrypt
 
 from os import path
 from typing import AsyncGenerator, Union
+from datetime import datetime
 
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
@@ -64,15 +65,19 @@ class PasteCreateResource(HTTPEndpoint):
 
                 await f_.write(chunk)
 
+        now = datetime.now()
+
         await Sessions.mongo.file.insert_one({
             "_id": paste_id,
             "server_secret": bcrypt.hashpw(server_secret.encode(),
-                                           bcrypt.gensalt())
+                                           bcrypt.gensalt()),
+            "created": now
         })
 
         return JSONResponse({
             "pasteId": paste_id,
-            "serverSecret": server_secret
+            "serverSecret": server_secret,
+            "created": now.timestamp()
         })
 
 

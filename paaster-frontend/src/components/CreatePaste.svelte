@@ -45,7 +45,8 @@
           new LocalPaste(paste.pasteId).setPaste({
             serverSecret: paste.serverSecret,
             pasteId: paste.pasteId,
-            clientSecret: clientSecretKey
+            clientSecret: clientSecretKey,
+            created: paste.created
           })
 
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
