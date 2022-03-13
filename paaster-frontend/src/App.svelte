@@ -29,7 +29,7 @@
 </svelte:head>
 
 <Loading />
-<SvelteToast />
+<SvelteToast options={{duration: 1500}} />
 <Modals>
   <div
     slot="backdrop"
