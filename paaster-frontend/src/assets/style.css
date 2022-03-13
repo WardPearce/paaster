@@ -33,6 +33,9 @@ nav {
 
 .encrypted {
     color: rgb(7, 155, 32);
+    background-color: #17151f;
+    padding: .5em 1em;
+    border-radius: 1em;
 }
 
 a {
