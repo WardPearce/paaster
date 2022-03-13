@@ -21,8 +21,6 @@
 
       paswsordCrackTime = zx.crack_times_display.offline_slow_hashing_1e4_per_second
       passwordStrengh = zx.score
-
-      console.log(zx.score)
   }
 </script>
 
