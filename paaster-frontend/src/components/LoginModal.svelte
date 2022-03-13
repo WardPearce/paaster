@@ -2,8 +2,19 @@
   import Fa from 'svelte-fa'
   import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
+  import zxcvbn from 'zxcvbn'
+
   export let isOpen: boolean
+
   let createAccount = false
+  let username = ''
+  let plainPassword = ''
+
+  let passwordFeedbackMsg = ''
+
+  function passwordFeedback() {
+    passwordFeedbackMsg = zxcvbn(plainPassword).feedback.suggestions
+  }
 </script>
 
 {#if isOpen}
@@ -15,8 +26,12 @@
 
 
         <form>
-          <input type="text" placeholder="username">
-          <input type="password" placeholder="password">
+          <input bind:value={username} type="text" placeholder="username">
+          <input bind:value={plainPassword} on:input={passwordFeedback}
+           type="password" placeholder="password">
+          {#if createAccount && passwordFeedbackMsg}
+            <p style="font-size:.8em;margin-bottom:1em;text-align:center;">{ passwordFeedbackMsg }</p>
+          {/if}
   
           <button type="submit" class="dark-button" style="margin-bottom: .5em;">
             <Fa icon={faChevronRight} />
@@ -25,7 +40,7 @@
         </form>
         <button on:click={() => createAccount = !createAccount}
           class="trans-button">
-            {#if !createAccount}
+            {#if createAccount}
               login with an existing account
             {:else}
               register an account
