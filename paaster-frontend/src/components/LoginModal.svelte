@@ -18,7 +18,7 @@
           <input type="text" placeholder="username">
           <input type="password" placeholder="password">
   
-          <button class="dark-button" style="margin-bottom: .5em;">
+          <button type="submit" class="dark-button" style="margin-bottom: .5em;">
             <Fa icon={faChevronRight} />
             {#if !createAccount}login{:else}register{/if}
           </button>
