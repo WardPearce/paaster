@@ -227,3 +227,17 @@ progress::-moz-progress-bar {
     border-radius: 1em;
     background-color: #3b3457;
 }
+
+.captcha {
+    display: flex;
+    align-items: flex-start;
+}
+
+.captcha button {
+    margin-left: .5em;
+}
+
+.captcha img {
+    width: 80%;
+    border-radius: 1em;
+}
