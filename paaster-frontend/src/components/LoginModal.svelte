@@ -13,7 +13,12 @@
   let passwordFeedbackMsg = ''
 
   function passwordFeedback() {
-    passwordFeedbackMsg = zxcvbn(plainPassword).feedback.suggestions
+    if (!createAccount)
+      return
+
+    passwordFeedbackMsg = (
+      zxcvbn(plainPassword).feedback.suggestions
+      ).toString().replaceAll(',', ' ')
   }
 </script>
 
