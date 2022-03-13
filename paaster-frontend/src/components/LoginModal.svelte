@@ -42,7 +42,7 @@
             <p class="pass-feedback">
               This password would take { paswsordCrackTime } to guess
             </p>
-            <progress value="{passwordStrengh}" max="4">strengh</progress>
+            <progress value="{passwordStrengh}" max="4"></progress>
           {/if}
   
           <button type="submit" class="dark-button" style="margin-bottom: .5em;">
