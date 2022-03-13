@@ -10,6 +10,13 @@ Paaster is a secure by default end to end encrypted pastebin built with Svelte, 
 - `Ctrl+A` - Copy all code to clipboard.
 - `Ctrl+X` - Copy URL to clipboard.
 
+## Setup
+### Production
+- `git clone https://github.com/WardPearce/paaster/tree/Production`
+- Configure `docker-compose.yml`.
+- `sudo docker-compose build; sudo docker-compose up -d`
+- Proxy exposed port.
+
 # ToDo
 - Account system
 - Unit tests

@@ -15,6 +15,8 @@ services:
       READ_CHUNK: 1024
       # This is the max paste size of the encrypted data.
       MAX_PASTE_SIZE_MB: 3
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
     volumes:
       # If a non external 'SAVE_PATH' used this should be ensured that it isn't deleted
       - appdata:/app/pastes
@@ -35,6 +37,14 @@ services:
     ports:
       - "8889:80"
 
+  redis:
+    container_name: redis
+    image: redis
+    volumes: 
+      - redis:/data
+    networks:
+      - backend
+
   mongodb:
     image: mongo
     container_name: mongodb
@@ -52,6 +62,8 @@ networks:
     driver: bridge
 
 volumes:
+  redis:
+    driver: local
   mongodbdata:
     driver: local
   appdata:
