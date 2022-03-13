@@ -130,7 +130,7 @@ button {
 
 .dark-button:disabled {
     cursor: default;
-    background-color: #13121c;
+    background-color: #0d0d13;
 }
 
 /* 🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️ */
@@ -200,7 +200,7 @@ button {
     min-width: 30vw;
     border-radius: 1em;
     padding: 1rem;
-    background-color: #1e1c2c;
+    background-color: #13121c;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
