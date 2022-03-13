@@ -4,6 +4,8 @@
 
   import zxcvbn from 'zxcvbn'
 
+  import Captcha from './Captcha.svelte'
+
   export let isOpen: boolean
 
   let createAccount = false
@@ -43,6 +45,7 @@
           {/if}
 
           {#if !createAccount || passwordStrengh > 1}
+            <Captcha />
             <button type="submit" class="dark-button" style="margin-bottom: .5em;">
               <Fa icon={faChevronRight} />
               {#if !createAccount}login{:else}register{/if}

@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 
 MONGO_HOST = os.getenv("MONGO_IP", "localhost")
 MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))

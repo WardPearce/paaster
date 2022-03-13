@@ -9,6 +9,7 @@ from starlette.routing import Mount, Route
 
 from .settings import SettingsResource
 from .paste import PasteCreateResource, PasteResource
+from .captcha import CaptchaResource
 
 
 ROUTES = [
@@ -17,6 +18,7 @@ ROUTES = [
         Mount("/paste", routes=[
             Route("/create", PasteCreateResource),
             Route("/{paste_id}", PasteResource)
-        ])
+        ]),
+        Route("/captcha", CaptchaResource)
     ])
 ]

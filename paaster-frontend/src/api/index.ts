@@ -2,6 +2,8 @@ import type { iBackendDetails, iPaste } from 'src/api/interfaces'
 
 const backendUrl: string = import.meta.env.VITE_BACKEND as string
 
+export { backendUrl } 
+
 export async function getBackendSettings(): Promise<iBackendDetails> {
   const resp = await fetch(`${backendUrl}/api/settings`, {
     method: 'GET'

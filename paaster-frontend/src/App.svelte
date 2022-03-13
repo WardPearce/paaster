@@ -38,7 +38,7 @@
         E2EE
       </h4>
       <button
-        on:click={() => openModal(LoginModal, {})}
+        on:click={() => openModal(LoginModal)}
         class="dark-button"
         style="margin-left: .5em;"
         href="/"><Fa icon={faChevronRight} /> Login</button>

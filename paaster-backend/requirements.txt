@@ -5,3 +5,6 @@ aiofiles
 python-dotenv
 uvicorn
 bcrypt
+multicolorcaptcha
+aioredis
+starsessions
