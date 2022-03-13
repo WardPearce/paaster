@@ -124,6 +124,11 @@ button {
     cursor: pointer;
 }
 
+.dark-button:disabled {
+    cursor: default;
+    background-color: #13121c;
+}
+
 /* 🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️ */
 .trans-button {
     transition: 300ms;
@@ -202,7 +207,7 @@ progress {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
     border-radius: 1em;
     background-color: var(--darkBg) !important;
     border: none;

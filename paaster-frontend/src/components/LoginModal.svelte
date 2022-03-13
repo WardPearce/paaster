@@ -17,10 +17,10 @@
     if (!createAccount)
       return
 
-      const zx = zxcvbn(plainPassword)
+    const zx = zxcvbn(plainPassword)
 
-      paswsordCrackTime = zx.crack_times_display.offline_slow_hashing_1e4_per_second
-      passwordStrengh = zx.score
+    paswsordCrackTime = zx.crack_times_display.offline_slow_hashing_1e4_per_second
+    passwordStrengh = zx.score
   }
 </script>
 
@@ -30,7 +30,6 @@
         <div class="header">
           <h2>{#if !createAccount}Login{:else}Register{/if}</h2>
         </div>
-
 
         <form>
           <input bind:value={username} type="text" placeholder="username">
@@ -42,11 +41,17 @@
             </p>
             <progress value="{passwordStrengh}" max="4"></progress>
           {/if}
-  
-          <button type="submit" class="dark-button" style="margin-bottom: .5em;">
-            <Fa icon={faChevronRight} />
-            {#if !createAccount}login{:else}register{/if}
-          </button>
+
+          {#if !createAccount || passwordStrengh > 1}
+            <button type="submit" class="dark-button" style="margin-bottom: .5em;">
+              <Fa icon={faChevronRight} />
+              {#if !createAccount}login{:else}register{/if}
+            </button>
+          {:else}
+            <button type="submit" class="dark-button" disabled style="margin-bottom: .5em;">
+              stronger password required
+            </button>
+          {/if}
         </form>
         <button on:click={() => createAccount = !createAccount}
           class="trans-button">

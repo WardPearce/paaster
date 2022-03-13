@@ -17,7 +17,7 @@
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
   
-  import { getPaste, deletePaste } from '../api/index'
+  import { getPaste, deletePaste } from '../api'
 
   acts.show(true)
 
@@ -32,7 +32,9 @@
 
   getPaste(pasteId).then(encryptedData => {
     try {
-      code = CryptoJS.AES.decrypt(encryptedData, clientSecretKey).toString(CryptoJS.enc.Utf8)
+      code = CryptoJS.AES.decrypt(
+        encryptedData, clientSecretKey
+      ).toString(CryptoJS.enc.Utf8)
     } catch {
       toast.push('Unable to decrypt paste with provided key.')
       navigate('/')

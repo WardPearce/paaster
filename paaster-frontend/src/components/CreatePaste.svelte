@@ -4,7 +4,8 @@
   import { navigate } from 'svelte-navigator'
   import { toast } from '@zerodevx/svelte-toast'
 
-  import { getBackendSettings, savePaste } from '../api/index'
+  import { getBackendSettings, savePaste } from '../api'
+  import FileDrop from './FileDrop.svelte';
 
   let pastedCodePlain: string = ''
 
@@ -52,6 +53,8 @@
     })
   }
 </script>
+
+<FileDrop />
 
 {#if pastedCodePlain === ''}
   <textarea
