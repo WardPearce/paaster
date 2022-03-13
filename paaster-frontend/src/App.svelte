@@ -12,7 +12,17 @@
   import CreatePaste from './components/CreatePaste.svelte'
   import LoginModal from './components/LoginModal.svelte'
 
+  import { allPastes } from './helpers/localPastes'
+
+  import { storedPastes } from './store'
+
   const pageName = 'VITE_NAME' in import.meta.env ? import.meta.env.VITE_NAME : 'paaster'
+
+  let pastesStored = false
+  storedPastes.subscribe(value => {
+    pastesStored = value !== null && Object.keys(value).length !== 0
+  })
+
 </script>
 
 <svelte:head>
@@ -33,15 +43,21 @@
   <nav>
     <Link to="/"><h2>{ pageName }</h2></Link>
     <div class="nav-right">
+      {#if pastesStored}
+        <button
+          class="dark-button"
+          style="margin-right: .5em;"
+          href="/"><Fa icon={faChevronRight} /> Pastes</button>
+      {/if}
+      <button
+        on:click={() => openModal(LoginModal)}
+        class="dark-button"
+        style="margin-right: .5em;"
+        href="/"><Fa icon={faChevronRight} /> Login</button>
       <h4 class="encrypted">
         <Fa icon={faLock} />
         E2EE
       </h4>
-      <button
-        on:click={() => openModal(LoginModal)}
-        class="dark-button"
-        style="margin-left: .5em;"
-        href="/"><Fa icon={faChevronRight} /> Login</button>
     </div>
   </nav>
 

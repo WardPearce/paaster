@@ -18,6 +18,7 @@
   import { saveAs } from 'file-saver'
   
   import { getPaste, deletePaste } from '../api'
+  import { LocalPaste } from '../helpers/localPastes'
 
   acts.show(true)
 
@@ -26,8 +27,10 @@
   const pasteId: string = $params.pasteId
   // Client side generated encryption key.
   const clientSecretKey: string = location.hash.substring(1)
+
+  const localPaste = new LocalPaste(pasteId)
   // Used to delete an existing paste.
-  const serverSecret = localStorage.getItem(pasteId)
+  const pasteDetails = localPaste.getPaste()
   let code = ''
 
   getPaste(pasteId).then(encryptedData => {
@@ -80,11 +83,9 @@
   async function deletePasteOn(): Promise<void> {
     acts.show(true)
     try {
-      await deletePaste(pasteId, serverSecret)
+      await deletePaste(pasteId, pasteDetails.serverSecret)
       toast.push('Deleted paste!')
-      if (serverSecret) {
-        localStorage.removeItem(pasteId)
-      }
+      localPaste.deletePaste()
       navigate('/')
     } catch (error) {
       toast.push(error.toString())
@@ -97,7 +98,7 @@
     {@html rosPine}
 </svelte:head>
 
-{#if serverSecret}
+{#if pasteDetails}
   <div class="paste-del">
     <button on:click={deletePasteOn}>
       <Fa icon={faTrashAlt}></Fa>

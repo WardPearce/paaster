@@ -6,6 +6,7 @@
 
   import { getBackendSettings, savePaste } from '../api'
   import FileDrop from './FileDrop.svelte';
+  import { LocalPaste } from '../helpers/localPastes'
 
   let pastedCodePlain: string = ''
 
@@ -41,7 +42,12 @@
           const paste = await savePaste(encryptedCode)
           toast.push('Created paste!')
 
-          localStorage.setItem(paste.pasteId, paste.serverSecret)
+          new LocalPaste(paste.pasteId).setPaste({
+            serverSecret: paste.serverSecret,
+            pasteId: paste.pasteId,
+            clientSecret: clientSecretKey
+          })
+
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
         } catch (error) {
           pastedCodePlain = ''
