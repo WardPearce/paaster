@@ -8,6 +8,7 @@
     --textWhite: rgb(238, 238, 238);
     --toastBarBackground: #565174;
     --toastBackground: #211f29;
+    --toastContainerTop: 6em;
 }
 
 @font-face {
