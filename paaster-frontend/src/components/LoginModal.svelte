@@ -10,15 +10,19 @@
   let username = ''
   let plainPassword = ''
 
-  let passwordFeedbackMsg = ''
+  let paswsordCrackTime = ''
+  let passwordStrengh = 0
 
   function passwordFeedback() {
     if (!createAccount)
       return
 
-    passwordFeedbackMsg = (
-      zxcvbn(plainPassword).feedback.suggestions
-      ).toString().replaceAll(',', ' ')
+      const zx = zxcvbn(plainPassword)
+
+      paswsordCrackTime = zx.crack_times_display.offline_slow_hashing_1e4_per_second
+      passwordStrengh = zx.score
+
+      console.log(zx.score)
   }
 </script>
 
@@ -34,8 +38,11 @@
           <input bind:value={username} type="text" placeholder="username">
           <input bind:value={plainPassword} on:input={passwordFeedback}
            type="password" placeholder="password">
-          {#if createAccount && passwordFeedbackMsg}
-            <p style="font-size:.8em;margin-bottom:1em;text-align:center;">{ passwordFeedbackMsg }</p>
+          {#if createAccount && paswsordCrackTime}
+            <p class="pass-feedback">
+              This password would take { paswsordCrackTime } to guess
+            </p>
+            <progress value="{passwordStrengh}" max="4">strengh</progress>
           {/if}
   
           <button type="submit" class="dark-button" style="margin-bottom: .5em;">
