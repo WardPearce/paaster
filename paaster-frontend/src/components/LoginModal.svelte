@@ -61,6 +61,8 @@
               captcha.getCaptchaImg()
               userCaptchaInput = ''
               toast.push(json.error)
+            } else {
+              console.log(json)
             }
           }).catch(_ => toast.push('Unable to create account.'))
         })

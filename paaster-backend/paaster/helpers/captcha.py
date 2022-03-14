@@ -8,13 +8,13 @@ Version 3, 19 November 2007
 import bcrypt
 
 from typing import cast
-from itsdangerous import URLSafeSerializer
-from itsdangerous.exc import BadSignature
+from itsdangerous import URLSafeTimedSerializer
+from itsdangerous.exc import BadSignature, SignatureExpired
 
 from ..env import SIGNING_SECRET, CAPTCHA_SECRET
 
 
-signer = URLSafeSerializer(SIGNING_SECRET)
+signer = URLSafeTimedSerializer(SIGNING_SECRET)
 
 
 def hash_sign_captcha(captcha: str) -> str:
@@ -52,8 +52,8 @@ def validate_captcha_signing(user_input: str, signing: str) -> bool:
     """
 
     try:
-        captcha_hash = signer.loads(signing)
-    except BadSignature:
+        captcha_hash = signer.loads(signing, max_age=60)
+    except (BadSignature, SignatureExpired):
         return False
 
     return bcrypt.checkpw(

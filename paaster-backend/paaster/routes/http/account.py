@@ -33,14 +33,14 @@ class AccountResource(HTTPEndpoint):
                 "error": "Password isn't a SHA256 hash."
             }, status_code=400)
 
-        if await Sessions.mongo.find_one({
+        if await Sessions.mongo.account.find_one({
             "username": json["username"]
         }) is not None:
             return JSONResponse({"error": "Name taken"})
 
         user_id = str(uuid4())
 
-        await Sessions.mongo.insert_one({
+        await Sessions.mongo.account.insert_one({
             "_id": user_id,
             "username": json["username"],
             "passwordHash": bcrypt.hashpw(
