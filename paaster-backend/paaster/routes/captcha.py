@@ -12,6 +12,8 @@ from starlette.responses import Response
 from multicolorcaptcha import CaptchaGenerator
 from io import BytesIO
 
+from ..helpers.captcha import hash_sign_captcha
+
 
 generator = CaptchaGenerator(captcha_size_num=1)
 
@@ -27,12 +29,13 @@ class CaptchaResource(HTTPEndpoint):
             chars_mode="hex"
         )
 
-        request.session["captcha"] = captcha.characters
-
         buffer = BytesIO()
         captcha.image.save(buffer, format="PNG")
 
         return Response(
             buffer.getvalue(),
-            media_type="image/png"
+            media_type="image/png",
+            headers={
+                "Captcha-Signing": hash_sign_captcha(captcha.characters)
+            }
         )
