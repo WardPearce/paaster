@@ -1,6 +1,9 @@
 <script lang="ts">
   import Fa from 'svelte-fa'
-  import { faLock, faChevronRight, faClipboard } from '@fortawesome/free-solid-svg-icons'
+  import { 
+    faLock, faChevronRight, faClipboard,
+    faUser
+  } from '@fortawesome/free-solid-svg-icons'
 
   import { Route, Router, Link } from 'svelte-navigator'
 
@@ -13,7 +16,7 @@
   import LoginModal from './components/LoginModal.svelte'
   import ViewPastes from './components/ViewPastes.svelte'
 
-  import { storedPastes } from './store'
+  import { storedPastes, storedAccount } from './store'
 
   const pageName = 'VITE_NAME' in import.meta.env ? import.meta.env.VITE_NAME : 'paaster'
 
@@ -22,6 +25,10 @@
     pastesStored = value !== null && Object.keys(value).length !== 0
   })
 
+  let loggedIn = false
+  storedAccount.subscribe(value => {
+    loggedIn = value !== null && Object.keys(value).length !== 0
+  })
 </script>
 
 <svelte:head>
@@ -50,11 +57,20 @@
           ><Fa icon={faClipboard} /> My pastes</button>
         </Link>
       {/if}
-      <button
-        on:click={() => openModal(LoginModal)}
-        class="dark-button"
-        style="margin-right: .5em;"
-        ><Fa icon={faChevronRight} /> Login</button>
+      {#if !loggedIn}
+        <button
+          on:click={() => openModal(LoginModal)}
+          class="dark-button"
+          style="margin-right: .5em;"
+          ><Fa icon={faChevronRight} /> Login</button>
+      {:else}
+        <Link to="/">
+          <button
+          class="dark-button"
+          style="margin-right: .5em;height:100%;"
+          ><Fa icon={faUser} /> Account</button>
+        </Link>
+      {/if}
         <h4 class="encrypted">
           <Fa icon={faLock} />
           E2EE

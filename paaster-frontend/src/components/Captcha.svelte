@@ -1,6 +1,6 @@
 <script lang="ts">
   import Fa from 'svelte-fa'
-  import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons'
+  import { faArrowRotateRight, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
   import { createEventDispatcher } from 'svelte'
 
@@ -9,9 +9,15 @@
   const dispatch = createEventDispatcher()
 
   let captchaImage: string = ''
+
+  export let showingCaptcha = false
   export let userCaptchaInput: string = ''
 
-  export const getCaptchaImg = (): void => {
+  function captchaSubmited(): void {
+    dispatch('captchaSubmited')
+  }
+
+  export function generateCaptcha(): void {
     fetch(`${backendUrl}/api/captcha`, {
       method: 'GET'
     }).then(resp => {
@@ -24,13 +30,26 @@
     })
   }
 
-  getCaptchaImg()
+  export function displayCaptcha(show = true): void {
+    if (show) {
+      generateCaptcha()
+    }
+    showingCaptcha = show
+  }
 </script>
 
-<div class="captcha">
-  <img src={captchaImage} alt="Captcha">
-  <button class="dark-button" type="button" on:click={getCaptchaImg}>
-    <Fa icon={faArrowRotateRight} />
+{#if showingCaptcha}
+<form on:submit|preventDefault={captchaSubmited}>
+  <div class="captcha">
+    <img src={captchaImage} alt="Captcha">
+    <button class="dark-button" type="button" on:click={generateCaptcha}>
+      <Fa icon={faArrowRotateRight} />
+    </button>
+  </div>
+  <input bind:value={userCaptchaInput} type="text" placeholder="captcha">
+  <button type="submit" class="dark-button" style="margin-bottom: .5em;">
+    <Fa icon={faChevronRight} />
+    captcha completed
   </button>
-</div>
-<input bind:value={userCaptchaInput} type="text" placeholder="captcha">
+</form>
+{/if}

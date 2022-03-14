@@ -57,6 +57,6 @@ def validate_captcha_signing(user_input: str, signing: str) -> bool:
         return False
 
     return bcrypt.checkpw(
-        CAPTCHA_SECRET.encode() + user_input.encode(),
+        CAPTCHA_SECRET.encode() + user_input.lower().encode(),
         captcha_hash.encode()
     )

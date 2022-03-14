@@ -4,10 +4,14 @@
 
   import zxcvbn from 'zxcvbn'
   import { toast } from '@zerodevx/svelte-toast'
+  import { closeModal } from 'svelte-modals'
+  import { acts } from '@tadashi/svelte-loading'
 
   import Captcha from './Captcha.svelte'
 
   import { backendUrl } from '../api'
+  import { sha256Hash } from '../helpers/sha256'
+  import { setAccount } from '../helpers/account'
 
   export let isOpen: boolean
 
@@ -21,6 +25,7 @@
 
   let captchaSigning = ''
   let userCaptchaInput = ''
+  let showingCaptcha = false
   let captcha: Captcha
 
   function passwordFeedback(): void {
@@ -33,17 +38,9 @@
     passwordStrengh = zx.score
   }
 
-  function sha256Hash(toHash: string): Promise<string> {
-    const utf8 = new TextEncoder().encode(toHash)
-    return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
-        const hashArray = Array.from(new Uint8Array(hashBuffer))
-        return hashArray.map(
-          (bytes) => bytes.toString(16).padStart(2, '0')
-        ).join('')
-    })
-  }
-
   function loginCreate(): void {
+    acts.show(true)
+
     if (createAccount) {
       sha256Hash(plainPassword).then(passwordHash => {
         fetch(`${backendUrl}/api/account?captchaSigning=${captchaSigning}&captchaCode=${userCaptchaInput}`, {
@@ -57,14 +54,16 @@
           })
         }).then(resp => {
           resp.json().then(json => {
-            if (resp.status !== 200) {
-              captcha.getCaptchaImg()
-              userCaptchaInput = ''
-              toast.push(json.error)
+            if (resp.status === 200) {
+              closeModal()
+              setAccount(username, plainPassword)
             } else {
-              console.log(json)
+              toast.push(json.error)
+              captcha.displayCaptcha(false)
             }
           }).catch(_ => toast.push('Unable to create account.'))
+
+          acts.show(false)
         })
       })
     }
@@ -78,38 +77,46 @@
           <h2>{#if !createAccount}Login{:else}Register{/if}</h2>
         </div>
 
-        <form on:submit|preventDefault={loginCreate}>
-          <input bind:value={username} type="text" placeholder="username">
-          <input bind:value={plainPassword} on:input={passwordFeedback}
-           type="password" placeholder="password">
-          {#if createAccount && paswsordCrackTime}
-            <p class="pass-feedback">
-              This password would take { paswsordCrackTime } to guess
-            </p>
-            <progress value="{passwordStrengh}" max="4"></progress>
-          {/if}
-
-          {#if !createAccount || passwordStrengh > 1}
-            <Captcha bind:userCaptchaInput={userCaptchaInput} bind:this={captcha}
-             on:captcha={(event) => captchaSigning = event.detail.captchaSigning} />
-            <button type="submit" class="dark-button" style="margin-bottom: .5em;">
-              <Fa icon={faChevronRight} />
-              {#if !createAccount}login{:else}register{/if}
-            </button>
-          {:else}
-            <button type="submit" class="dark-button" disabled style="margin-bottom: .5em;">
-              stronger password required
-            </button>
-          {/if}
-        </form>
-        <button on:click={() => createAccount = !createAccount}
-          class="trans-button">
-            {#if createAccount}
-              login with an existing account
-            {:else}
-              register an account
+        {#if !showingCaptcha}
+          <form on:submit|preventDefault={() => captcha.displayCaptcha()}>
+            <input bind:value={username} type="text" placeholder="username">
+            <input bind:value={plainPassword} on:input={passwordFeedback}
+            type="password" placeholder="password">
+            {#if createAccount && paswsordCrackTime}
+              <p class="pass-feedback">
+                This password would take { paswsordCrackTime } to guess
+              </p>
+              <progress value="{passwordStrengh}" max="4"></progress>
             {/if}
-        </button>
+
+            {#if !createAccount || passwordStrengh > 1}
+              <button type="submit" class="dark-button" style="margin-bottom: .5em;">
+                <Fa icon={faChevronRight} />
+                {#if !createAccount}login{:else}register{/if}
+              </button>
+            {:else}
+              <button type="submit" class="dark-button" disabled style="margin-bottom: .5em;">
+                stronger password required
+              </button>
+            {/if}
+          </form>
+
+          <button on:click={() => createAccount = !createAccount}
+            class="trans-button">
+              {#if createAccount}
+                login with an existing account
+              {:else}
+                register an account
+              {/if}
+          </button>
+        {/if}
+
+        <Captcha
+          bind:userCaptchaInput={userCaptchaInput}
+          bind:showingCaptcha={showingCaptcha}
+          bind:this={captcha}
+          on:captcha={(event) => captchaSigning = event.detail.captchaSigning}
+          on:captchaSubmited={loginCreate} />
       </div>
   </div>
 {/if}

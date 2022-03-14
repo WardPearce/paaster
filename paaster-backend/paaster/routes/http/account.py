@@ -36,7 +36,7 @@ class AccountResource(HTTPEndpoint):
         if await Sessions.mongo.account.find_one({
             "username": json["username"]
         }) is not None:
-            return JSONResponse({"error": "Name taken"})
+            return JSONResponse({"error": "Name taken"}, status_code=400)
 
         user_id = str(uuid4())
 

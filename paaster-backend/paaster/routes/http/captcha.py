@@ -35,7 +35,7 @@ class CaptchaResource(HTTPEndpoint):
         captcha.image.save(buffer, format="PNG")
 
         return JSONResponse({
-            "captchaSigning": hash_sign_captcha(captcha.characters),
+            "captchaSigning": hash_sign_captcha(captcha.characters.lower()),
             "imageData": "data:image/png;base64," +
             base64.b64encode(buffer.getvalue()).decode("utf-8")
         })
