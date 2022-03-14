@@ -52,3 +52,7 @@ class AccountResource(HTTPEndpoint):
         return JSONResponse({
             "userId": user_id
         })
+
+    @require_captcha
+    async def get(self, request: Request) -> JSONResponse:
+        return JSONResponse({})
