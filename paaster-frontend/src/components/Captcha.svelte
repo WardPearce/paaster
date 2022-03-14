@@ -9,8 +9,9 @@
   const dispatch = createEventDispatcher()
 
   let captchaImage: string = ''
+  export let userCaptchaInput: string = ''
 
-  function getCaptchaImg(): void {
+  export const getCaptchaImg = (): void => {
     fetch(`${backendUrl}/api/captcha`, {
       method: 'GET'
     }).then(resp => {
@@ -32,4 +33,4 @@
     <Fa icon={faArrowRotateRight} />
   </button>
 </div>
-<input type="text" placeholder="captcha">
+<input bind:value={userCaptchaInput} type="text" placeholder="captcha">

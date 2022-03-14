@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+
+"""
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+"""
+
 from typing import Callable
 from functools import wraps
 
