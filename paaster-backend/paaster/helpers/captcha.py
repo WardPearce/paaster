@@ -39,6 +39,18 @@ def hash_sign_captcha(captcha: str) -> str:
 
 
 def validate_captcha_signing(user_input: str, signing: str) -> bool:
+    """Validate a captcha using the given signing.
+
+    Parameters
+    ----------
+    user_input : str
+    signing : str
+
+    Returns
+    -------
+    bool
+    """
+
     try:
         captcha_hash = signer.loads(signing)
     except BadSignature:

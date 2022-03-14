@@ -2,7 +2,11 @@
   import Fa from 'svelte-fa'
   import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons'
 
+  import { createEventDispatcher } from 'svelte'
+
   import { backendUrl } from '../api'
+
+  const dispatch = createEventDispatcher()
 
   let captchaImage: string = ''
 
@@ -10,7 +14,12 @@
     fetch(`${backendUrl}/api/captcha`, {
       method: 'GET'
     }).then(resp => {
-      resp.blob().then(blob => captchaImage = URL.createObjectURL(blob))
+      resp.json().then(json => {
+        dispatch('captcha', {
+          captchaSigning: json.captchaSigning
+        })
+        captchaImage = json.imageData
+      })
     })
   }
 
@@ -19,7 +28,7 @@
 
 <div class="captcha">
   <img src={captchaImage} alt="Captcha">
-  <button class="dark-button" type="button" on:click={() => getCaptchaImg()}>
+  <button class="dark-button" type="button" on:click={getCaptchaImg}>
     <Fa icon={faArrowRotateRight} />
   </button>
 </div>
