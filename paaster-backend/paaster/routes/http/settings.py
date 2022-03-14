@@ -9,7 +9,7 @@ from starlette.responses import JSONResponse
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 
-from ..env import MAX_PASTE_SIZE_MB
+from ...env import MAX_PASTE_SIZE_MB
 
 
 class SettingsResource(HTTPEndpoint):

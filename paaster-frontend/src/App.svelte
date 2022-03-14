@@ -42,10 +42,6 @@
   <nav>
     <Link to="/"><h2>{ pageName }</h2></Link>
     <div class="nav-right">
-      <h4 class="encrypted">
-        <Fa icon={faLock} />
-        E2EE
-      </h4>
       {#if pastesStored}
         <Link to="/pastes">
           <button
@@ -59,6 +55,10 @@
         class="dark-button"
         style="margin-right: .5em;"
         ><Fa icon={faChevronRight} /> Login</button>
+        <h4 class="encrypted">
+          <Fa icon={faLock} />
+          E2EE
+        </h4>
     </div>
   </nav>
 

@@ -14,7 +14,7 @@ from starlette.responses import JSONResponse
 from multicolorcaptcha import CaptchaGenerator
 from io import BytesIO
 
-from ..helpers.captcha import hash_sign_captcha
+from ...helpers.captcha import hash_sign_captcha
 
 
 generator = CaptchaGenerator(captcha_size_num=1)

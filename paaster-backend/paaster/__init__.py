@@ -14,7 +14,8 @@ from motor import motor_asyncio
 from .routes import ROUTES
 from .resources import Sessions
 from .env import (
-    MONGO_HOST, MONGO_PORT, MONGO_DB
+    MONGO_HOST, MONGO_PORT, MONGO_DB,
+    FRONTEND_PROXIED
 )
 
 
@@ -29,6 +30,6 @@ async def on_start() -> None:
 
 
 app = Starlette(routes=ROUTES, middleware=[
-    Middleware(CORSMiddleware, allow_origins=["*"],
-               allow_methods=["GET", "DELETE", "PUT"])
+    Middleware(CORSMiddleware, allow_origins=[FRONTEND_PROXIED],
+               allow_methods=["GET", "DELETE", "PUT", "POST"])
 ], on_startup=[on_start])

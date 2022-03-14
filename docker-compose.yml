@@ -17,6 +17,8 @@ services:
       MAX_PASTE_SIZE_MB: 3
       REDIS_HOST: "redis"
       REDIS_PORT: 6379
+      # Proxied Frontend URL.
+      FRONTEND_PROXIED: ""
     volumes:
       # If a non external 'SAVE_PATH' used this should be ensured that it isn't deleted
       - appdata:/app/pastes
@@ -30,7 +32,7 @@ services:
       dockerfile: ./Dockerfile
       context: ./paaster-frontend
       args:
-        # Proxied host URL, NO TRAILING SLASH!
+        # Proxied backend URL, NO TRAILING SLASH!
         VITE_BACKEND: "http://localhost:8888"
         VITE_NAME: "paaster"
     restart: unless-stopped

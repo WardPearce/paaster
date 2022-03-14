@@ -16,7 +16,10 @@
       <li>
         <div class="paste-item">
           <div class="paste-details">
-            <Link to={`/${pasteId}#${paste.clientSecret}`}>{ pasteId }</Link>
+            <div>
+              <Link to={`/${pasteId}#${paste.clientSecret}`}>{ pasteId }</Link>
+              <p style="font-size: .8em;">Stored locally</p>
+            </div>
             <h3>{ new Date(paste.created * 1000).toUTCString() }</h3>
           </div>
         </div>

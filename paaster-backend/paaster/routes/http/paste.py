@@ -19,11 +19,11 @@ from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse, StreamingResponse
 
-from ..env import (
+from ...env import (
     NANO_ID_LEN, SAVE_PATH,
     MAX_PASTE_SIZE_MB, READ_CHUNK
 )
-from ..resources import Sessions
+from ...resources import Sessions
 
 
 MAX_SIZE = MAX_PASTE_SIZE_MB * 1049000
