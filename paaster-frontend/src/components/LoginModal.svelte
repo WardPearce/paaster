@@ -115,7 +115,7 @@
           bind:userCaptchaInput={userCaptchaInput}
           bind:showingCaptcha={showingCaptcha}
           bind:this={captcha}
-          on:captcha={(event) => captchaSigning = event.detail.captchaSigning}
+          on:captchaGenerated={(event) => captchaSigning = event.detail.captchaSigning}
           on:captchaSubmited={loginCreate} />
       </div>
   </div>

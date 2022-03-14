@@ -22,7 +22,7 @@
       method: 'GET'
     }).then(resp => {
       resp.json().then(json => {
-        dispatch('captcha', {
+        dispatch('captchaGenerated', {
           captchaSigning: json.captchaSigning
         })
         captchaImage = json.imageData
