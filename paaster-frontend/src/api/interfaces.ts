@@ -7,3 +7,10 @@ export interface iPaste {
   serverSecret: string
   created?: number
 }
+
+
+export interface iEncryptedPaste {
+  pasteId: string
+  encryptedClientSecret: string
+  encryptedServerSecret: string
+}

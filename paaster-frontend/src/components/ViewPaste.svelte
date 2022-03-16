@@ -39,7 +39,7 @@
   let pasteDetails: iPasteStorage | null = null
   let localPaste: LocalPaste | null
   if (!loggedIn) {
-    const localPaste = new LocalPaste(pasteId)
+    localPaste = new LocalPaste(pasteId)
     // Used to delete an existing paste.
     pasteDetails = localPaste.getPaste()
   } else {
@@ -102,7 +102,7 @@
       toast.push('Deleted paste!')
       if (localPaste) {
         localPaste.deletePaste()
-      } else {}
+      }
       navigate('/')
     } catch (error) {
       toast.push(error.toString())

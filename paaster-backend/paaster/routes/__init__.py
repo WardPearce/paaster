@@ -12,6 +12,7 @@ from .http.paste import (
     PasteCreateResource, PasteResource,
     PasteCredentialsResource
 )
+from .http.pastes import PastesResource
 from .http.captcha import CaptchaResource
 from .http.account import AccountResource
 
@@ -24,6 +25,7 @@ ROUTES = [
             Route("/{paste_id}/credentials", PasteCredentialsResource),
             Route("/{paste_id}", PasteResource)
         ]),
+        Route("/pastes/credentials", PastesResource),
         Route("/account", AccountResource),
         Route("/captcha", CaptchaResource)
     ])

@@ -2,11 +2,10 @@ import CryptoJS from 'crypto-js'
 
 import { Buffer } from 'buffer'
 
-import type { iBackendDetails, iPaste } from '../api/interfaces'
-import type { iPasteStorage } from '../helpers/interfaces'
+import type { iBackendDetails, iPaste, iEncryptedPaste } from '../api/interfaces'
+import type { iAccount, iPasteStorage } from '../helpers/interfaces'
 
 import { storedAccount } from '../store'
-import type { iAccount } from '../helpers/interfaces'
 
 let accountDetails: iAccount | null
 let accountBasicAuth: string | null
@@ -115,12 +114,37 @@ export async function getPasteCredentials(pasteId: string): Promise<iPasteStorag
   }
 }
 
+export async function getAllPastesCredentials(): Promise<iEncryptedPaste[]> {
+  if (!accountDetails) {
+    throw new Error('Not logged in')
+  }
+
+  const resp = await fetch(`${backendUrl}/api/pastes/credentials`, {
+    method: 'GET',
+    headers: {
+      'Authorization': accountBasicAuth
+    },
+  })
+
+  const json = await resp.json()
+  if (resp.status !== 200) {
+    throw Error(json.error)
+  }
+
+  return json
+}
+
 export async function deletePaste(pasteId: string, serverSecret: string): Promise<void> {
+  const headers = {
+    'Content-Type': 'application/json'
+  }
+
+  if (accountBasicAuth)
+    headers['Authorization'] = accountBasicAuth
+
   const resp = await fetch(`${backendUrl}/api/paste/${pasteId}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: headers,
     body: JSON.stringify({serverSecret: serverSecret})
   })
   if (resp.status !== 200) {
