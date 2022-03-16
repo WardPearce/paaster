@@ -25,7 +25,6 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.0.0",
     "@tadashi/svelte-loading": "^2.1.0",
-    "buffer": "^6.0.3",
     "crypto-js": "^4.1.1",
     "file-saver": "^2.0.5",
     "mousetrap": "^1.6.5",
