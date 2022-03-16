@@ -33,6 +33,8 @@
   export function displayCaptcha(show = true): void {
     if (show) {
       generateCaptcha()
+    } else {
+      userCaptchaInput = ''
     }
     showingCaptcha = show
   }

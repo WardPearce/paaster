@@ -6,6 +6,7 @@
   import { toast } from '@zerodevx/svelte-toast'
   import { closeModal } from 'svelte-modals'
   import { acts } from '@tadashi/svelte-loading'
+  import { Buffer } from 'buffer'
 
   import Captcha from './Captcha.svelte'
 
@@ -67,7 +68,27 @@
         })
       })
     } else {
-      acts.show(false)
+      sha256Hash(plainPassword).then(passwordHash => {
+        fetch(`${backendUrl}/api/account?captchaSigning=${captchaSigning}&captchaCode=${userCaptchaInput}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + Buffer.from(
+              `${username}:${passwordHash}`
+            ).toString('base64')
+          },
+        }).then(resp => {
+          if (resp.status === 200) {
+            closeModal()
+            setAccount(username, plainPassword) 
+          } else {
+            captcha.displayCaptcha(false)
+            toast.push('Incorrect username or password')
+          }
+
+          acts.show(false)
+        })
+      })
     }
   }
 </script>

@@ -9,7 +9,17 @@ import { storedAccount } from '../store'
 import type { iAccount } from '../helpers/interfaces'
 
 let accountDetails: iAccount | null
-storedAccount.subscribe(value => accountDetails = value)
+let accountBasicAuth: string | null
+storedAccount.subscribe(value => {
+  accountDetails = value
+  if (value) {
+    accountBasicAuth = 'Basic ' + Buffer.from(
+      `${accountDetails.username}:${accountDetails.passwordSHA256}`
+    ).toString('base64')
+  } else {
+    accountBasicAuth = null
+  }
+})
 
 const backendUrl: string = import.meta.env.VITE_BACKEND as string
 
@@ -66,9 +76,7 @@ export async function storePasteCredentials(pasteId: string,
       encryptedServerSecret: encryptedServerSecret
     }),
     headers: {
-      'Authorization': 'Basic ' + Buffer.from(
-        `${accountDetails.username}:${accountDetails.passwordSHA256}`
-      ).toString('base64'),
+      'Authorization': accountBasicAuth,
       'Content-Type': 'application/json'
     },
   })
@@ -87,9 +95,7 @@ export async function getPasteCredentials(pasteId: string): Promise<iPasteStorag
   const resp = await fetch(`${backendUrl}/api/paste/${pasteId}/credentials`, {
     method: 'GET',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from(
-        `${accountDetails.username}:${accountDetails.passwordSHA256}`
-      ).toString('base64')
+      'Authorization': accountBasicAuth
     },
   })
 

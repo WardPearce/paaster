@@ -60,4 +60,11 @@ class AccountResource(HTTPEndpoint):
     @require_captcha
     @requires("authenticated")
     async def get(self, request: Request) -> JSONResponse:
-        return JSONResponse({})
+        result = await Sessions.mongo.account.find_one({
+            "_id": request.user.display_name
+        })
+
+        return JSONResponse({
+            "_id": result["_id"],
+            "created": result["created"].timestamp()
+        })
