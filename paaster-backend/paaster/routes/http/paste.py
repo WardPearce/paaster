@@ -18,6 +18,7 @@ from datetime import datetime
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse, StreamingResponse
+from starlette.authentication import requires
 
 from ...env import (
     NANO_ID_LEN, SAVE_PATH,
@@ -82,6 +83,36 @@ class PasteCreateResource(HTTPEndpoint):
 
 
 class PasteResource(HTTPEndpoint):
+    @requires("authenticated")
+    async def post(self, request: Request) -> JSONResponse:
+        json = await request.json()
+
+        if "encryptedClientSecret" not in json:
+            return JSONResponse({
+                "error": "Encrypted client secret not provided"
+            }, status_code=400)
+
+        if "encryptedServerSecret" not in json:
+            return JSONResponse({
+                "error": "Encrypted server secret not provided"
+            }, status_code=400)
+
+        if await Sessions.mongo.file.count_documents({
+            "_id": request.path_params["paste_id"]
+        }) == 0:
+            return JSONResponse({
+                "error": "Paste doesn't exist"
+            }, status_code=400)
+
+        await Sessions.mongo.paste.insert_one({
+            "_id": request.path_params["paste_id"],
+            "user_id": request.user.display_name,
+            "client_secret": json["encryptedClientSecret"],
+            "server_secret": json["encryptedServerSecret"]
+        })
+
+        return JSONResponse({})
+
     async def delete(self, request: Request) -> JSONResponse:
         json = await request.json()
         if "serverSecret" not in json:
@@ -106,9 +137,16 @@ class PasteResource(HTTPEndpoint):
             except FileNotFoundError:
                 pass
 
+            if request.user.is_authenticated:
+                await Sessions.mongo.paste.delete_many({
+                    "_id": result["_id"],
+                    "user_id": request.user.display_name
+                })
+
             await Sessions.mongo.file.delete_many({
                 "_id": result["_id"]
             })
+
             return JSONResponse({"pastedId": result["_id"]})
         else:
             return JSONResponse(

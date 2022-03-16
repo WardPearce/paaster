@@ -66,6 +66,8 @@
           acts.show(false)
         })
       })
+    } else {
+      acts.show(false)
     }
   }
 </script>

@@ -9,9 +9,12 @@ import bcrypt
 import validators
 
 from uuid import uuid4
+from datetime import datetime
+
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from starlette.authentication import requires
 
 from ..decorators import require_captcha
 
@@ -33,9 +36,9 @@ class AccountResource(HTTPEndpoint):
                 "error": "Password isn't a SHA256 hash."
             }, status_code=400)
 
-        if await Sessions.mongo.account.find_one({
+        if await Sessions.mongo.account.count_documents({
             "username": json["username"]
-        }) is not None:
+        }) > 0:
             return JSONResponse({"error": "Name taken"}, status_code=400)
 
         user_id = str(uuid4())
@@ -46,7 +49,8 @@ class AccountResource(HTTPEndpoint):
             "passwordHash": bcrypt.hashpw(
                 json["passwordSHA256"].encode(),
                 bcrypt.gensalt()
-            )
+            ),
+            "created": datetime.now()
         })
 
         return JSONResponse({
@@ -54,5 +58,6 @@ class AccountResource(HTTPEndpoint):
         })
 
     @require_captcha
+    @requires("authenticated")
     async def get(self, request: Request) -> JSONResponse:
         return JSONResponse({})

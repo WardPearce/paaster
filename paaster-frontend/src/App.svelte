@@ -49,7 +49,7 @@
   <nav>
     <Link to="/"><h2>{ pageName }</h2></Link>
     <div class="nav-right">
-      {#if pastesStored}
+      {#if pastesStored || loggedIn}
         <Link to="/pastes">
           <button
           class="dark-button"
