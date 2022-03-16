@@ -82,7 +82,7 @@ class PasteCreateResource(HTTPEndpoint):
         })
 
 
-class PasteResource(HTTPEndpoint):
+class PasteCredentialsResource(HTTPEndpoint):
     @requires("authenticated")
     async def post(self, request: Request) -> JSONResponse:
         json = await request.json()
@@ -113,6 +113,22 @@ class PasteResource(HTTPEndpoint):
 
         return JSONResponse({})
 
+    @requires("authenticated")
+    async def get(self, request: Request) -> JSONResponse:
+        result = await Sessions.mongo.paste.find_one({
+            "_id": request.path_params["paste_id"],
+            "user_id": request.user.display_name
+        })
+        if not result:
+            return JSONResponse({"error": "No credentials"}, status_code=404)
+
+        return JSONResponse({
+            "encryptedClientSecret": result["client_secret"],
+            "encryptedServerSecret": result["server_secret"]
+        })
+
+
+class PasteResource(HTTPEndpoint):
     async def delete(self, request: Request) -> JSONResponse:
         json = await request.json()
         if "serverSecret" not in json:

@@ -17,10 +17,18 @@
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
   
-  import { getPaste, deletePaste } from '../api'
+  import { getPaste, deletePaste, getPasteCredentials } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
 
+  import { storedAccount } from '../store'
+  import type { iPasteStorage } from '../helpers/interfaces';
+
   acts.show(true)
+
+  let loggedIn = false
+  storedAccount.subscribe(value => {
+    loggedIn = value !== null && Object.keys(value).length !== 0
+  })
 
   const params = useParams()
   // Server side paste id.
@@ -28,9 +36,16 @@
   // Client side generated encryption key.
   const clientSecretKey: string = location.hash.substring(1)
 
-  const localPaste = new LocalPaste(pasteId)
-  // Used to delete an existing paste.
-  const pasteDetails = localPaste.getPaste()
+  let pasteDetails: iPasteStorage | null = null
+  let localPaste: LocalPaste | null
+  if (!loggedIn) {
+    const localPaste = new LocalPaste(pasteId)
+    // Used to delete an existing paste.
+    pasteDetails = localPaste.getPaste()
+  } else {
+    getPasteCredentials(pasteId).then(paste => pasteDetails = paste)
+  }
+
   let code = ''
 
   getPaste(pasteId).then(encryptedData => {
@@ -85,7 +100,9 @@
     try {
       await deletePaste(pasteId, pasteDetails.serverSecret)
       toast.push('Deleted paste!')
-      localPaste.deletePaste()
+      if (localPaste) {
+        localPaste.deletePaste()
+      } else {}
       navigate('/')
     } catch (error) {
       toast.push(error.toString())

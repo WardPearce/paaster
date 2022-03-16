@@ -8,7 +8,10 @@ Version 3, 19 November 2007
 from starlette.routing import Mount, Route
 
 from .http.settings import SettingsResource
-from .http.paste import PasteCreateResource, PasteResource
+from .http.paste import (
+    PasteCreateResource, PasteResource,
+    PasteCredentialsResource
+)
 from .http.captcha import CaptchaResource
 from .http.account import AccountResource
 
@@ -18,6 +21,7 @@ ROUTES = [
         Route("/settings", SettingsResource),
         Mount("/paste", routes=[
             Route("/create", PasteCreateResource),
+            Route("/{paste_id}/credentials", PasteCredentialsResource),
             Route("/{paste_id}", PasteResource)
         ]),
         Route("/account", AccountResource),

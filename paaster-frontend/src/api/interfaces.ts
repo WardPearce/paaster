@@ -5,5 +5,5 @@ export interface iBackendDetails {
 export interface iPaste {
   pasteId: string
   serverSecret: string
-  created: number
+  created?: number
 }
