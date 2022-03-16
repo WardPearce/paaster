@@ -15,6 +15,7 @@
   import CreatePaste from './components/CreatePaste.svelte'
   import LoginModal from './components/LoginModal.svelte'
   import ViewPastes from './components/ViewPastes.svelte'
+  import Account from './components/Account.svelte'
 
   import { storedPastes, storedAccount } from './store'
 
@@ -64,7 +65,7 @@
           style="margin-right: .5em;"
           ><Fa icon={faChevronRight} /> Login</button>
       {:else}
-        <Link to="/">
+        <Link to="/account">
           <button
           class="dark-button"
           style="margin-right: .5em;height:100%;"
@@ -81,4 +82,5 @@
   <Route path="/" component={CreatePaste}></Route>
   <Route path="/pastes" component={ViewPastes}></Route>
   <Route path=":pasteId" component={ViewPaste}></Route>  
+  <Route path="/account" component={Account}></Route>
 </Router>
