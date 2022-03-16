@@ -7,20 +7,12 @@
   import { 
     getBackendSettings,
     savePaste,
-    storePasteCredentials
   } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
-  import { storedAccount } from '../store'
 
   import FileDrop from './FileDrop.svelte'
 
   let pastedCodePlain: string = ''
-
-  let loggedIn = false
-  storedAccount.subscribe(value => {
-    loggedIn = value !== null && Object.keys(value).length !== 0
-  })
-
   async function codePasted(): Promise<void> {
     acts.show(true)
 
@@ -53,24 +45,12 @@
           const paste = await savePaste(encryptedCode)
           toast.push('Created paste!')
 
-          if (!loggedIn) {
-            new LocalPaste(paste.pasteId).setPaste({
-              serverSecret: paste.serverSecret,
-              pasteId: paste.pasteId,
-              clientSecret: clientSecretKey,
-              created: paste.created
-            })
-          } else {
-            try {
-                await storePasteCredentials(
-                  paste.pasteId,
-                  clientSecretKey,
-                  paste.serverSecret
-                )
-            } catch (error) {
-              toast.push(error.toString())
-            }
-          }
+          new LocalPaste(paste.pasteId).setPaste({
+            serverSecret: paste.serverSecret,
+            pasteId: paste.pasteId,
+            clientSecret: clientSecretKey,
+            created: paste.created
+          })
 
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
         } catch (error) {

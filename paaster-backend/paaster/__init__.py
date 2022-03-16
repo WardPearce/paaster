@@ -18,7 +18,6 @@ from .env import (
     MONGO_HOST, MONGO_PORT, MONGO_DB,
     FRONTEND_PROXIED
 )
-from .middleware import BasicAuthBackend
 
 
 async def on_start() -> None:
@@ -32,8 +31,6 @@ async def on_start() -> None:
 
 
 app = Starlette(routes=ROUTES, middleware=[
-    Middleware(AuthenticationMiddleware, backend=BasicAuthBackend()),
     Middleware(CORSMiddleware, allow_origins=[FRONTEND_PROXIED],
-               allow_methods=["GET", "DELETE", "PUT", "POST"],
-               allow_credentials=True, allow_headers=["Authorization"]),
+               allow_methods=["GET", "DELETE", "PUT", "POST"]),
 ], on_startup=[on_start])

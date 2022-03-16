@@ -153,12 +153,6 @@ class PasteResource(HTTPEndpoint):
             except FileNotFoundError:
                 pass
 
-            if request.user.is_authenticated:
-                await Sessions.mongo.paste.delete_many({
-                    "_id": result["_id"],
-                    "user_id": request.user.display_name
-                })
-
             await Sessions.mongo.file.delete_many({
                 "_id": result["_id"]
             })

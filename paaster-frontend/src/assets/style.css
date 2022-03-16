@@ -160,53 +160,6 @@ button {
     background: rgb(75, 75, 72) !important;
 }
 
-.backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background: #0b0b0ea4;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-}
-
-.modal form {
-    display: flex;
-    flex-direction: column;
-}
-
-.modal form > input {
-    border-radius: 1em;
-    margin-bottom: .5em;
-}
-
-.header {
-    border-bottom: 2px solid #0c0b1052;
-    margin-bottom: .5em;
-}
-
-.contents {
-    min-width: 30vw;
-    border-radius: 1em;
-    padding: 1rem;
-    background-color: #13121c;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    pointer-events: auto;
-}
-
 .pastes {
     padding: 1em;
 }
@@ -251,18 +204,4 @@ progress::-webkit-progress-value {
 progress::-moz-progress-bar {
     border-radius: 1em;
     background-color: #3b3457;
-}
-
-.captcha {
-    display: flex;
-    align-items: flex-start;
-}
-
-.captcha button {
-    margin-left: .5em;
-}
-
-.captcha img {
-    width: 80%;
-    border-radius: 1em;
 }
