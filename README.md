@@ -17,7 +17,7 @@ Paaster is a secure by default end to end encrypted pastebin built with Svelte, 
 - `git clone https://github.com/WardPearce/paaster/tree/Production`.
 - Configure `docker-compose.yml`.
 - `sudo docker-compose build; sudo docker-compose up -d`.
-- Proxy exposed port.
+- Proxy exposed ports.
 
 # ToDo
 - Unit tests
