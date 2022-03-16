@@ -20,8 +20,6 @@
   import { getPaste, deletePaste } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
 
-  import type { iPasteStorage } from '../helpers/interfaces';
-
   acts.show(true)
 
 

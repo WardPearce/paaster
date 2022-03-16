@@ -4,7 +4,7 @@
 
   import { navigate } from 'svelte-navigator'
 
-  let LocalPastes: Record<string, iPasteStorage> | null = null
+  let LocalPastes: Record<string, iPasteStorage>
   storedPastes.subscribe(value => {
     LocalPastes = value
   })

@@ -1,9 +1,4 @@
-import CryptoJS from 'crypto-js'
-
-import { Buffer } from 'buffer'
-
-import type { iBackendDetails, iPaste, iEncryptedPaste } from '../api/interfaces'
-import type { iPasteStorage } from '../helpers/interfaces'
+import type { iBackendDetails, iPaste } from '../api/interfaces'
 
 const backendUrl: string = import.meta.env.VITE_BACKEND as string
 
