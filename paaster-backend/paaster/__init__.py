@@ -8,7 +8,6 @@ Version 3, 19 November 2007
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.middleware.authentication import AuthenticationMiddleware
 
 from motor import motor_asyncio
 

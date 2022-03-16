@@ -20,6 +20,5 @@ Paaster is a secure by default end to end encrypted pastebin built with Svelte, 
 - Proxy exposed port.
 
 # ToDo
-- Account system
 - Unit tests
 - Developer documentation
