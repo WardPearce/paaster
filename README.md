@@ -23,6 +23,9 @@ No. Anyone could modify the functionality of `paaster` to expose your secret key
 - `sudo docker-compose build; sudo docker-compose up -d`.
 - Proxy exposed ports.
 
+### Using Rclone
+[Using rclone with Docker Compose](https://rclone.org/docker/#using-with-swarm-or-compose)
+
 # ToDo
 - Unit tests
 - Developer documentation
