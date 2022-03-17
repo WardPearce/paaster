@@ -11,7 +11,6 @@ from .http.settings import SettingsResource
 from .http.paste import (
     PasteCreateResource, PasteResource
 )
-from .http.captcha import CaptchaResource
 
 
 ROUTES = [
@@ -20,7 +19,6 @@ ROUTES = [
         Mount("/paste", routes=[
             Route("/create", PasteCreateResource),
             Route("/{paste_id}", PasteResource)
-        ]),
-        Route("/captcha", CaptchaResource)
+        ])
     ])
 ]

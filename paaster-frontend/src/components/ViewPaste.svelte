@@ -1,7 +1,7 @@
 <script lang="ts">
   import CryptoJS from 'crypto-js'
 
-  import { HighlightSvelte } from 'svelte-highlight'
+  import { HighlightAuto } from 'svelte-highlight'
   import rosPine from 'svelte-highlight/src/styles/ros-pine'
 
   import { navigate } from 'svelte-navigator'
@@ -19,6 +19,9 @@
   
   import { getPaste, deletePaste } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
+
+  import hljs from 'highlight.js'
+  hljs.initHighlighting()
 
   acts.show(true)
 
@@ -109,4 +112,4 @@
   </div>
 {/if}
 
-<HighlightSvelte {code} />
+<HighlightAuto code={code} />
