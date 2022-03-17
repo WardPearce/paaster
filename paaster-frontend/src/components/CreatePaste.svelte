@@ -14,6 +14,7 @@
 
   let pastedCodePlain: string = ''
   async function codePasted(): Promise<void> {
+    console.log('pasted')
     acts.show(true)
 
     const backendSettings = await getBackendSettings()
@@ -70,6 +71,7 @@
   <textarea
     bind:value={pastedCodePlain}
     placeholder="paste your code here"
+    on:change={codePasted}
     on:input={codePasted}></textarea>
 {:else}
   <textarea value={pastedCodePlain} disabled></textarea>
