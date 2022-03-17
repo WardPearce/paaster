@@ -18,7 +18,7 @@ No. Anyone could modify the functionality of `paaster` to expose your secret key
 
 ## Setup
 ### Production
-- `git clone https://github.com/WardPearce/paaster/tree/Production`.
+- `git clone --branch Production https://github.com/WardPearce/paaster`.
 - Configure `docker-compose.yml`.
 - `sudo docker-compose build; sudo docker-compose up -d`.
 - Proxy exposed ports.
