@@ -21,7 +21,7 @@
   import { LocalPaste } from '../helpers/localPastes'
 
   import hljs from 'highlight.js'
-  hljs.initHighlighting()
+  hljs.highlightAll()
 
   acts.show(true)
 
