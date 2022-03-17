@@ -6,3 +6,4 @@ python-dotenv
 uvicorn
 bcrypt
 aioredis
+slowapi

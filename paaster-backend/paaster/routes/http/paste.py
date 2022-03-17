@@ -24,6 +24,7 @@ from ...env import (
     MAX_PASTE_SIZE_MB, READ_CHUNK
 )
 from ...resources import Sessions
+from ...limiter import LIMITER
 
 
 MAX_SIZE = MAX_PASTE_SIZE_MB * 1049000
@@ -45,6 +46,7 @@ def format_path(paste_id: str) -> str:
 
 
 class PasteCreateResource(HTTPEndpoint):
+    @LIMITER.limit("20/minute")
     async def put(self, request: Request) -> JSONResponse:
         paste_id = nanoid.generate(size=NANO_ID_LEN)
         server_secret = secrets.token_urlsafe()
@@ -82,6 +84,7 @@ class PasteCreateResource(HTTPEndpoint):
 
 
 class PasteResource(HTTPEndpoint):
+    @LIMITER.limit("20/minute")
     async def delete(self, request: Request) -> JSONResponse:
         json = await request.json()
         if "serverSecret" not in json:
@@ -117,6 +120,7 @@ class PasteResource(HTTPEndpoint):
                 status_code=403
             )
 
+    @LIMITER.limit("60/minute")
     async def get(self, request: Request) -> Union[StreamingResponse,
                                                    JSONResponse]:
         result = await Sessions.mongo.file.find_one({
