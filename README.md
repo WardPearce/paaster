@@ -7,6 +7,9 @@ E2EE or end to end encryption is a zero trust encryption methodology. When you p
 ### Can I trust a instance of paaster not hosted by me?
 No. Anyone could modify the functionality of `paaster` to expose your secret key to the server. We recommend using a instance you host or trust.
 
+### Requesting features
+- Open a [new issue](https://github.com/WardPearce/paaster/issues/new) to request a feature (one issue per feature.)
+
 ## Preview
 ![Video of paaster in action!](https://i.imgur.com/g78UTK2.gif)
 
