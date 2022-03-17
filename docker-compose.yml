@@ -1,6 +1,7 @@
 version: '3'
 services:
   starlette:
+    container_name: paaster_starlette
     build:
       dockerfile: ./Dockerfile
       context: ./paaster-backend
@@ -8,17 +9,17 @@ services:
     ports:
       - "8888:80"
     environment:
-      MONGO_IP: "mongodb"
+      MONGO_IP: "paaster_mongodb"
       MONGO_PORT: 27017
       MONGO_DB: "paaster"
       NANO_ID_LEN: 21
       READ_CHUNK: 1024
       # This is the max paste size of the encrypted data.
       MAX_PASTE_SIZE_MB: 3
-      REDIS_HOST: "redis"
+      REDIS_HOST: "paaster_redis"
       REDIS_PORT: 6379
       # Proxied Frontend URL.
-      FRONTEND_PROXIED: ""
+      FRONTEND_PROXIED: "http://localhost:8889"
     volumes:
       # If a non external 'SAVE_PATH' used this should be ensured that it isn't deleted
       - appdata:/app/pastes
@@ -28,6 +29,7 @@ services:
       - backend
 
   vite:
+    container_name: paaster_frontend
     build:
       dockerfile: ./Dockerfile
       context: ./paaster-frontend
@@ -40,7 +42,7 @@ services:
       - "8889:80"
 
   redis:
-    container_name: redis
+    container_name: paaster_redis
     image: redis
     volumes: 
       - redis:/data
@@ -49,7 +51,7 @@ services:
 
   mongodb:
     image: mongo
-    container_name: mongodb
+    container_name: paaster_mongodb
     restart: unless-stopped
     environment:
       MONGODB_DATA_DIR: /data/db
