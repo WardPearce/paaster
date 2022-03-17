@@ -5,8 +5,10 @@
 
 :root {
     --darkBg: #191724;
+    --textWhite: rgb(238, 238, 238);
     --toastBarBackground: #565174;
     --toastBackground: #211f29;
+    --toastContainerTop: 6em;
 }
 
 @font-face {
@@ -16,14 +18,14 @@
 
 body {
     font-family: IMBPlexMono;
-    color: rgb(238, 238, 238);
+    color: var(--textWhite);
     overflow-x: hidden;
     background-color: var(--darkBg);
 }
 
 nav {
     background-color: #0c0b10;
-    border-bottom: 2.5px solid rgb(238, 238, 238);
+    border-bottom: 2.5px solid var(--textWhite);
     height: 3rem;
     display: flex;
     align-items: center;
@@ -31,13 +33,24 @@ nav {
     justify-content: space-between;
 }
 
+nav .nav-right {
+    display: flex;
+    justify-content: space-around;
+}
+
 .encrypted {
     color: rgb(7, 155, 32);
+    padding: .5em 1em;
+    border-radius: 1em;
 }
 
 a {
     text-decoration: none;
-    color: rgb(238, 238, 238);
+    color: var(--textWhite)
+}
+
+a:hover {
+    color: rgb(157, 157, 157);
 }
 
 textarea {
@@ -45,14 +58,38 @@ textarea {
     width: 100%;
     resize: none;
     border: none;
-    color: rgb(238, 238, 238);
+    color: var(--textWhite);
     background-color: var(--darkBg);
     padding: 1em;
     outline: none;
 }
 
+input {
+    transition: 100ms;
+    color: var(--textWhite);
+    background-color: var(--darkBg);
+    border: 0 solid #3b3457;;
+    height: 1em;
+    padding: .5em 1em;
+}
+
+input:focus {
+    transition: 200ms;
+    outline: none;
+    border-bottom: 2.5px solid #3b3457;
+}
+
+button {
+    border-radius: 1em;
+}
+
+.pass-feedback {
+    font-size: .8em;
+    margin-left: .2em;
+}
+
 .paste-del {
-    position:absolute;
+    position: absolute;
     top:8;
     right:0;
     margin-right: 1em;
@@ -60,21 +97,57 @@ textarea {
 }
 
 .paste-del button {
+    transition: 300ms;
     text-align: center;
     border: none;
     padding: .5em 1em;
     background-color: rgb(121, 30, 10);
-    color: #fff;
+    color: var(--textWhite);
     outline: none;
-    outline: 0px solid rgb(121, 30, 10);
 }
 
 .paste-del button:hover {
     transition: 300ms;
     background-color: rgb(90, 27, 13);
-    outline: 1px solid rgb(121, 30, 10);
     cursor: pointer;
 }
+
+.dark-button {
+    transition: 300ms;
+    text-align: center;
+    border: none;
+    padding: .5em 1em;
+    background-color: var(--darkBg);
+    color: var(--textWhite);
+    outline: none;
+}
+
+.dark-button:hover {
+    transition: 300ms;
+    background-color: #16151d;
+    cursor: pointer;
+}
+
+.dark-button:disabled {
+    cursor: default;
+    background-color: #0d0d13;
+}
+
+/* 🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️ */
+.trans-button {
+    transition: 300ms;
+    background-color: transparent;
+    border: none;
+    color: var(--textWhite);
+    text-align: left;
+}
+
+.trans-button:hover {
+    transition: 300ms;
+    color: rgb(157, 157, 157);
+    cursor: pointer;
+}
+/* 🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️🏳️‍⚧️ */
 
 .hljs {
     min-height: 100vh;
@@ -85,4 +158,50 @@ textarea {
 ::-moz-selection, ::selection {
     color: rgb(255, 255, 255) !important;
     background: rgb(75, 75, 72) !important;
+}
+
+.pastes {
+    padding: 1em;
+}
+
+.pastes ul {
+    list-style: none;
+}
+
+.paste-item {
+    padding: 1.5em;
+    background-color: #0c0b10;
+    margin-bottom: .5em;
+    border-radius: 1em;
+}
+
+.paste-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+progress {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    margin-bottom: .5em;
+    border-radius: 1em;
+    background-color: var(--darkBg) !important;
+    border: none;
+}
+
+progress::-webkit-progress-bar {
+    border-radius: 1em;
+    background-color: var(--darkBg) !important;
+}
+
+progress::-webkit-progress-value {
+    border-radius: 1em;
+    background-color: #3b3457;
+}
+
+progress::-moz-progress-bar {
+    border-radius: 1em;
+    background-color: #3b3457;
 }

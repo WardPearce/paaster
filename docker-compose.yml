@@ -13,7 +13,15 @@ services:
       MONGO_DB: "paaster"
       NANO_ID_LEN: 21
       READ_CHUNK: 1024
-
+      # This is the max paste size of the encrypted data.
+      MAX_PASTE_SIZE_MB: 3
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      # Proxied Frontend URL.
+      FRONTEND_PROXIED: ""
+    volumes:
+      # If a non external 'SAVE_PATH' used this should be ensured that it isn't deleted
+      - appdata:/app/pastes
     depends_on:
       - mongodb
     networks:
@@ -24,12 +32,20 @@ services:
       dockerfile: ./Dockerfile
       context: ./paaster-frontend
       args:
-        # Proxied host URL, NO TRAILING SLASH!
+        # Proxied backend URL, NO TRAILING SLASH!
         VITE_BACKEND: "http://localhost:8888"
         VITE_NAME: "paaster"
     restart: unless-stopped
     ports:
       - "8889:80"
+
+  redis:
+    container_name: redis
+    image: redis
+    volumes: 
+      - redis:/data
+    networks:
+      - backend
 
   mongodb:
     image: mongo
@@ -48,6 +64,8 @@ networks:
     driver: bridge
 
 volumes:
+  redis:
+    driver: local
   mongodbdata:
     driver: local
   appdata:

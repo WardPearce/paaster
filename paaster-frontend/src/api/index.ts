@@ -1,6 +1,8 @@
-import type { iBackendDetails, iPaste } from 'src/api/interfaces'
+import type { iBackendDetails, iPaste } from '../api/interfaces'
 
 const backendUrl: string = import.meta.env.VITE_BACKEND as string
+
+export { backendUrl } 
 
 export async function getBackendSettings(): Promise<iBackendDetails> {
   const resp = await fetch(`${backendUrl}/api/settings`, {
@@ -31,6 +33,7 @@ export async function getPaste(pasteId: string): Promise<string> {
   }
   return await resp.text()
 }
+
 
 export async function deletePaste(pasteId: string, serverSecret: string): Promise<void> {
   const resp = await fetch(`${backendUrl}/api/paste/${pasteId}`, {

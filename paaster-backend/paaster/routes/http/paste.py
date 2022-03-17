@@ -13,16 +13,18 @@ import bcrypt
 
 from os import path
 from typing import AsyncGenerator, Union
+from datetime import datetime
 
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse, StreamingResponse
 
-from ..env import (
+from ...env import (
     NANO_ID_LEN, SAVE_PATH,
     MAX_PASTE_SIZE_MB, READ_CHUNK
 )
-from ..resources import Sessions
+from ...resources import Sessions
+from ...limiter import LIMITER
 
 
 MAX_SIZE = MAX_PASTE_SIZE_MB * 1049000
@@ -44,6 +46,7 @@ def format_path(paste_id: str) -> str:
 
 
 class PasteCreateResource(HTTPEndpoint):
+    @LIMITER.limit("20/minute")
     async def put(self, request: Request) -> JSONResponse:
         paste_id = nanoid.generate(size=NANO_ID_LEN)
         server_secret = secrets.token_urlsafe()
@@ -64,19 +67,24 @@ class PasteCreateResource(HTTPEndpoint):
 
                 await f_.write(chunk)
 
+        now = datetime.now()
+
         await Sessions.mongo.file.insert_one({
             "_id": paste_id,
             "server_secret": bcrypt.hashpw(server_secret.encode(),
-                                           bcrypt.gensalt())
+                                           bcrypt.gensalt()),
+            "created": now
         })
 
         return JSONResponse({
             "pasteId": paste_id,
-            "serverSecret": server_secret
+            "serverSecret": server_secret,
+            "created": now.timestamp()
         })
 
 
 class PasteResource(HTTPEndpoint):
+    @LIMITER.limit("20/minute")
     async def delete(self, request: Request) -> JSONResponse:
         json = await request.json()
         if "serverSecret" not in json:
@@ -104,6 +112,7 @@ class PasteResource(HTTPEndpoint):
             await Sessions.mongo.file.delete_many({
                 "_id": result["_id"]
             })
+
             return JSONResponse({"pastedId": result["_id"]})
         else:
             return JSONResponse(
@@ -111,6 +120,7 @@ class PasteResource(HTTPEndpoint):
                 status_code=403
             )
 
+    @LIMITER.limit("60/minute")
     async def get(self, request: Request) -> Union[StreamingResponse,
                                                    JSONResponse]:
         result = await Sessions.mongo.file.find_one({

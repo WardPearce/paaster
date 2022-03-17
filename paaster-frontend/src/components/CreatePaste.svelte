@@ -4,11 +4,16 @@
   import { navigate } from 'svelte-navigator'
   import { toast } from '@zerodevx/svelte-toast'
 
-  import { getBackendSettings, savePaste } from '../api/index'
+  import { 
+    getBackendSettings,
+    savePaste,
+  } from '../api'
+  import { LocalPaste } from '../helpers/localPastes'
+
+  import FileDrop from './FileDrop.svelte'
 
   let pastedCodePlain: string = ''
-
-  async function codePasted() {
+  async function codePasted(): Promise<void> {
     acts.show(true)
 
     const backendSettings = await getBackendSettings()
@@ -40,7 +45,13 @@
           const paste = await savePaste(encryptedCode)
           toast.push('Created paste!')
 
-          localStorage.setItem(paste.pasteId, paste.serverSecret)
+          new LocalPaste(paste.pasteId).setPaste({
+            serverSecret: paste.serverSecret,
+            pasteId: paste.pasteId,
+            clientSecret: clientSecretKey,
+            created: paste.created
+          })
+
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
         } catch (error) {
           pastedCodePlain = ''
@@ -52,6 +63,8 @@
     })
   }
 </script>
+
+<FileDrop />
 
 {#if pastedCodePlain === ''}
   <textarea

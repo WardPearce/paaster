@@ -7,8 +7,10 @@ Version 3, 19 November 2007
 
 from starlette.routing import Mount, Route
 
-from .settings import SettingsResource
-from .paste import PasteCreateResource, PasteResource
+from .http.settings import SettingsResource
+from .http.paste import (
+    PasteCreateResource, PasteResource
+)
 
 
 ROUTES = [

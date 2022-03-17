@@ -1,7 +1,7 @@
 <script lang="ts">
   import CryptoJS from 'crypto-js'
 
-  import { HighlightSvelte } from 'svelte-highlight'
+  import { HighlightAuto } from 'svelte-highlight'
   import rosPine from 'svelte-highlight/src/styles/ros-pine'
 
   import { navigate } from 'svelte-navigator'
@@ -17,22 +17,32 @@
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
   
-  import { getPaste, deletePaste } from '../api/index'
+  import { getPaste, deletePaste } from '../api'
+  import { LocalPaste } from '../helpers/localPastes'
+
+  import hljs from 'highlight.js'
+  hljs.initHighlighting()
 
   acts.show(true)
+
 
   const params = useParams()
   // Server side paste id.
   const pasteId: string = $params.pasteId
   // Client side generated encryption key.
   const clientSecretKey: string = location.hash.substring(1)
+
+  const localPaste = new LocalPaste(pasteId)
   // Used to delete an existing paste.
-  const serverSecret = localStorage.getItem(pasteId)
+  const pasteDetails = localPaste.getPaste()
+
   let code = ''
 
   getPaste(pasteId).then(encryptedData => {
     try {
-      code = CryptoJS.AES.decrypt(encryptedData, clientSecretKey).toString(CryptoJS.enc.Utf8)
+      code = CryptoJS.AES.decrypt(
+        encryptedData, clientSecretKey
+      ).toString(CryptoJS.enc.Utf8)
     } catch {
       toast.push('Unable to decrypt paste with provided key.')
       navigate('/')
@@ -48,8 +58,17 @@
   Mousetrap.bind(
     ['command+a', 'ctrl+a'],
     () => {
-      toast.push('Copied to clipboard!')
+      toast.push('Copied code to clipboard!')
       navigator.clipboard.writeText(code)
+      return false
+    }
+  )
+
+  Mousetrap.bind(
+    ['command+x', 'ctrl+x'],
+    () => {
+      toast.push('Copied URL to clipboard!')
+      navigator.clipboard.writeText(location.href)
       return false
     }
   )
@@ -57,6 +76,7 @@
   Mousetrap.bind(
     ['command+s', 'ctrl+s'],
     () => {
+      toast.push('Saving code!')
       saveAs(
         new Blob([code], {type: 'text/plain;charset=utf-8'}),
         `${pasteId}.txt`
@@ -65,14 +85,12 @@
     }
   )
 
-  async function deletePasteOn() {
+  async function deletePasteOn(): Promise<void> {
     acts.show(true)
     try {
-      await deletePaste(pasteId, serverSecret)
+      await deletePaste(pasteId, pasteDetails.serverSecret)
       toast.push('Deleted paste!')
-      if (serverSecret) {
-        localStorage.removeItem(pasteId)
-      }
+      localPaste.deletePaste()
       navigate('/')
     } catch (error) {
       toast.push(error.toString())
@@ -85,7 +103,7 @@
     {@html rosPine}
 </svelte:head>
 
-{#if serverSecret}
+{#if pasteDetails}
   <div class="paste-del">
     <button on:click={deletePasteOn}>
       <Fa icon={faTrashAlt}></Fa>
@@ -94,4 +112,4 @@
   </div>
 {/if}
 
-<HighlightSvelte {code} />
+<HighlightAuto code={code} />
