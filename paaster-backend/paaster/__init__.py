@@ -10,7 +10,7 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 from slowapi.middleware import SlowAPIMiddleware
-from slowapi import _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler  # type: ignore
 from slowapi.errors import RateLimitExceeded
 
 from motor import motor_asyncio

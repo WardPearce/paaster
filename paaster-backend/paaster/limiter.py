@@ -5,8 +5,8 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 Version 3, 19 November 2007
 """
 
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from slowapi import Limiter  # type: ignore
+from slowapi.util import get_remote_address  # type: ignore
 
 from .env import REDIS_HOST, REDIS_PORT
 
