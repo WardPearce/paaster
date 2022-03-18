@@ -153,6 +153,7 @@ button {
     min-height: 100vh;
     white-space: pre-wrap;
     margin-bottom: 60vh;
+    overflow-wrap: break-word;
 }
 
 ::-moz-selection, ::selection {
