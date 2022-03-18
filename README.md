@@ -1,11 +1,14 @@
 # Paaster
-Paaster is a secure by default end to end encrypted pastebin built with Svelte, Vite, Typescript, Python, Starlette, rclone & Docker.
+Paaster is a secure by default end to end encrypted pastebin built with the objective of simplicity.
+
+## Preview
+![Video of paaster in action!](https://i.imgur.com/6SetSUH.gif)
 
 ## Features
-- End to end encryption.
+- [End to end encryption](#what-is-e2ee).
 - Memory efficient.
 - File drag & drop.
-- Shortcuts.
+- [Shortcuts](#shortcuts).
 - Paste history.
 - Fast.
 
@@ -15,17 +18,22 @@ E2EE or end to end encryption is a zero trust encryption methodology. When you p
 ### Can I trust a instance of paaster not hosted by me?
 No. Anyone could modify the functionality of `paaster` to expose your secret key to the server. We recommend using a instance you host or trust.
 
-### Requesting features
-- Open a [new issue](https://github.com/WardPearce/paaster/issues/new) to request a feature (one issue per feature.)
-
-## Preview
-![Video of paaster in action!](https://i.imgur.com/6SetSUH.gif)
-
 ## Shortcuts
 - `Ctrl+V` - Paste code.
 - `Ctrl+S` - Download code as file.
 - `Ctrl+A` - Copy all code to clipboard.
 - `Ctrl+X` - Copy URL to clipboard.
+
+## Requesting features
+- Open a [new issue](https://github.com/WardPearce/paaster/issues/new) to request a feature (one issue per feature.)
+
+### What we won't add
+- Paste editing.
+    - `paaster` isn't a text editor, it's a pastebin.
+- Paste button.
+    - `paaster` isn't a text editor, when code is inputted it will always be automatically uploaded.
+- Optional encryption.
+    - `paaster` will never have opt-in / opt-out encryption, encryption will always be present.
 
 ## Setup
 ### Production
