@@ -23,7 +23,7 @@ MONGO_DB = os.getenv("MONGO_DB", "paaster")
 SIGNING_SECRET = os.getenv("SIGNING_SECRET", secrets.token_urlsafe(45))
 CAPTCHA_SECRET = os.getenv("CAPTCHA_SECRET", secrets.token_urlsafe(45))
 
-FRONTEND_PROXIED = os.getenv("FRONTEND_PROXIED", "http://localhost:3000")
+FRONTEND_PROXIED = os.getenv("FRONTEND_PROXIED", "https://localhost:3000")
 
 SAVE_PATH = os.getenv(
     "SAVE_PATH",

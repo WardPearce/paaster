@@ -14,7 +14,6 @@
 
   let pastedCodePlain: string = ''
   async function codePasted(): Promise<void> {
-    console.log('pasted')
     acts.show(true)
 
     const backendSettings = await getBackendSettings()
