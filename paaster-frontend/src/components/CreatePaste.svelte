@@ -5,7 +5,6 @@
   import { toast } from '@zerodevx/svelte-toast'
 
 	import { filedrop } from 'filedrop-svelte'
-  import type FileDropSelectEvent from 'filedrop-svelte'
 
   import { 
     getBackendSettings,
@@ -64,7 +63,7 @@
     })
   }
 
-  async function onFileDrop(event: FileDropSelectEvent) {
+  async function onFileDrop(event: CustomEvent) {
     pastedCodePlain = await  event.detail.files.accepted[0].text()
     await codePasted()
   }
