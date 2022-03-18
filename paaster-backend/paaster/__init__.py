@@ -34,8 +34,14 @@ async def on_start() -> None:
     Sessions.mongo = mongo[MONGO_DB]
 
 
+cors_origins = [FRONTEND_PROXIED.lower()]
+if cors_origins[0].startswith("https"):
+    cors_origins.append(cors_origins[0].replace("https", "http", 1))
+
+
 app = Starlette(routes=ROUTES, middleware=[
-    Middleware(CORSMiddleware, allow_origins=[FRONTEND_PROXIED],
+    Middleware(CORSMiddleware,
+               allow_origins=cors_origins,
                allow_methods=["GET", "DELETE", "PUT", "POST"]),
     Middleware(SlowAPIMiddleware)
 ], on_startup=[on_start])
