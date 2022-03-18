@@ -4,13 +4,14 @@
   import { navigate } from 'svelte-navigator'
   import { toast } from '@zerodevx/svelte-toast'
 
+	import { filedrop } from 'filedrop-svelte'
+  import type FileDropSelectEvent from 'filedrop-svelte'
+
   import { 
     getBackendSettings,
     savePaste,
   } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
-
-  import FileDrop from './FileDrop.svelte'
 
   let pastedCodePlain: string = ''
   async function codePasted(): Promise<void> {
@@ -62,14 +63,19 @@
       })
     })
   }
+
+  async function onFileDrop(event: FileDropSelectEvent) {
+    pastedCodePlain = await  event.detail.files.accepted[0].text()
+    await codePasted()
+  }
 </script>
 
-<FileDrop />
-
 {#if pastedCodePlain === ''}
+  <div use:filedrop={{fileLimit: 1, clickToUpload: false, windowDrop: true}} on:filedrop={async e => onFileDrop(e)}></div>
+
   <textarea
     bind:value={pastedCodePlain}
-    placeholder="paste your code here"
+    placeholder="paste or drag & drop your code here"
     on:change={codePasted}
     on:input={codePasted}></textarea>
 {:else}
