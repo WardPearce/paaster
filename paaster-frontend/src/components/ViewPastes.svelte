@@ -12,7 +12,7 @@
 
 <div class="pastes">
   <ul>
-    {#each Object.entries(LocalPastes) as [pasteId, paste]}
+    {#each Object.entries(LocalPastes).reverse() as [pasteId, paste]}
       <li>
         <div class="paste-item">
           <div class="paste-details">
