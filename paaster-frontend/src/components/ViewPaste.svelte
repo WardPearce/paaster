@@ -8,7 +8,7 @@
 
   import Fa from 'svelte-fa'
   import {
-    faTrashAlt, faClipboard, faDownload
+    faTrashAlt, faCopy, faDownload
   } from '@fortawesome/free-solid-svg-icons'
 
   import { acts } from '@tadashi/svelte-loading'
@@ -19,7 +19,7 @@
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
   
-  import { getPaste, deletePaste } from '../api'
+  import { getPaste, deletePaste, updateDeleteAfter } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
 
   import hljs from 'highlight.js'
@@ -36,7 +36,38 @@
 
   const localPaste = new LocalPaste(pasteId)
   // Used to delete an existing paste.
-  const pasteDetails = localPaste.getPaste()
+  let pasteDetails = localPaste.getPaste()
+
+  const deleteAfterOptions = {
+    'never': -1,
+    'being viewed': 0,
+    '5 mins': 0.08333,
+    '15 mins': 0.25,
+    '30 mins': 0.5,
+    '1 hr': 1,
+    '2 hrs': 2,
+    '3 hrs': 3,
+    '4 hrs': 4,
+    '5 hrs': 5,
+    '6 hrs': 6,
+    '7 hrs': 7,
+    '8 hrs': 8,
+    '9 hrs': 9,
+    '10 hrs': 10,
+    '11 hrs': 11,
+    '12 hrs': 12,
+    '1 day': 24,
+    '2 day': 48,
+    '3 day': 72,
+    '4 day': 96,
+    '5 day': 120,
+    '6 day': 144,
+    '1 wk': 168,
+    '2 wks': 336,
+    '1 mth': 730,
+    '2 mths': 1461,
+    '3 mths': 2192
+  }
 
   let code = ''
 
@@ -52,6 +83,10 @@
 
     acts.show(false)
   }).catch(error => {
+    if (pasteDetails) {
+      localPaste.deletePaste()
+    }
+
     toast.push(error.toString())
     navigate('/')
     acts.show(false)
@@ -107,18 +142,55 @@
     }
     acts.show(false)
   }
+
+  async function deleteAfter(hours: number): Promise<void> {
+    try {
+      await updateDeleteAfter(pasteId, hours, pasteDetails.serverSecret)
+
+      // Get human friendly string from hours.
+      const humanFriendlyDeleteAfter = Object.keys(
+        deleteAfterOptions
+      )[Object.values(deleteAfterOptions).indexOf(hours)]
+
+      const updatedDetails = {
+        deleteAfter: humanFriendlyDeleteAfter,
+        clientSecret: clientSecretKey,
+        pasteId: pasteId,
+        serverSecret: pasteDetails.serverSecret,
+        created: pasteDetails.created
+      }
+
+      // Overwite localStorage paste.
+      localPaste.setPaste(updatedDetails)
+      pasteDetails = updatedDetails
+  
+      toast.push(`Paste will be deleted after ${humanFriendlyDeleteAfter}`)
+    } catch (error) {
+      toast.push(error.toString())
+    }
+  }
 </script>
 
 <svelte:head>
-    {@html rosPine}
+  {@html rosPine}
 </svelte:head>
 
 {#if pasteDetails}
-  <div class="paste-del">
+  <div class="paste-owner">
     <button on:click={deletePasteOn}>
       <Fa icon={faTrashAlt}></Fa>
       Delete
     </button>
+
+    <select>
+      <option disabled selected hidden>
+        Delete after {#if pasteDetails.deleteAfter}{ pasteDetails.deleteAfter }{/if}
+      </option>
+
+      {#each Object.entries(deleteAfterOptions) as [title, hours]}
+        <option on:click={async () => deleteAfter(hours)}>{ title }</option>
+      {/each}
+    </select>
   </div>
 {/if}
 
@@ -129,7 +201,7 @@
   class="dark-button"
   style="height:80%;"
   on:click={copyToClip}
-  ><Fa icon={faClipboard} /> Copy all</button>
+  ><Fa icon={faCopy} /> Copy all</button>
   <button
   class="dark-button"
   style="height:80%; margin-left:1em;"
