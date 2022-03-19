@@ -2,7 +2,7 @@
 Paaster is a secure by default end to end encrypted pastebin built with the objective of simplicity.
 
 ## Preview
-![Video of paaster in action!](https://i.imgur.com/6SetSUH.gif)
+![Video of paaster in action!](https://s10.gifyu.com/images/burn-after.gif)
 ![Mobile preview](https://i.imgur.com/dKVq2mD.png)
 
 ## Features
