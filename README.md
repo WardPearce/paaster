@@ -12,6 +12,7 @@ Paaster is a secure by default end to end encrypted pastebin built with the obje
 - [Shortcuts](#shortcuts).
 - Paste history.
 - Fast.
+- Delete after view or X amount of time.
 
 ## What is E2EE?
 E2EE or end to end encryption is a zero trust encryption methodology. When you paste code into `paaster` the code is encrypted locally with a secret generated on your browser. This secret is never shared with the server & only people you share the link with can view the paste.

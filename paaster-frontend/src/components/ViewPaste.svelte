@@ -64,9 +64,9 @@
     '6 day': 144,
     '1 wk': 168,
     '2 wks': 336,
-    '1 month': 730,
-    '2 months': 1461,
-    '3 months': 2192
+    '1 mth': 730,
+    '2 mths': 1461,
+    '3 mths': 2192
   }
 
   let code = ''
