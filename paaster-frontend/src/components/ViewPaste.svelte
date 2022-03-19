@@ -78,9 +78,6 @@
       ).toString(CryptoJS.enc.Utf8)
     } catch {
       toast.push('Unable to decrypt paste with provided key.')
-      if (pasteDetails) {
-        localPaste.deletePaste()
-      }
       navigate('/')
     }
 
