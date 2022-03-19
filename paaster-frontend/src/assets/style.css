@@ -99,7 +99,6 @@ button {
 }
 
 .paste-owner select {
-    margin-top: .5em;
     border-radius: 1em;
     padding: .3em 1em;
     border: none;
@@ -191,6 +190,12 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.delete-after-lab {
+    font-size: .7em;
+    margin-top: .8em;
+    text-align: center;
 }
 
 progress {
