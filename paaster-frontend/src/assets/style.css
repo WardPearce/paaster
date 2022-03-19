@@ -88,15 +88,26 @@ button {
     margin-left: .2em;
 }
 
-.paste-del {
+.paste-owner {
     position: absolute;
     top:8;
     right:0;
     margin-right: 1em;
     margin-top: 1em;
+    display: flex;
+    flex-direction: column;
 }
 
-.paste-del button {
+.paste-owner select {
+    margin-top: .5em;
+    border-radius: 1em;
+    padding: .3em 1em;
+    border: none;
+    background-color: #24222e;
+    color: var(--textWhite);
+}
+
+.paste-owner button {
     transition: 300ms;
     text-align: center;
     border: none;
@@ -106,7 +117,7 @@ button {
     outline: none;
 }
 
-.paste-del button:hover {
+.paste-ownerbutton:hover {
     transition: 300ms;
     background-color: rgb(90, 27, 13);
     cursor: pointer;
