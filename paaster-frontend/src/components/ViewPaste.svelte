@@ -68,7 +68,7 @@
     '2 mths': 1461,
     '3 mths': 2192
   }
-  let selectedHrs = pasteDetails.deleteAfter ? deleteAfterOptions[pasteDetails.deleteAfter] : -1
+  let selectedHrs = pasteDetails && pasteDetails.deleteAfter ? deleteAfterOptions[pasteDetails.deleteAfter] : -1
 
   let code = ''
 
