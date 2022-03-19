@@ -8,7 +8,7 @@
 
   import Fa from 'svelte-fa'
   import {
-    faTrashAlt, faClipboard, faDownload
+    faTrashAlt, faCopy, faDownload
   } from '@fortawesome/free-solid-svg-icons'
 
   import { acts } from '@tadashi/svelte-loading'
@@ -38,6 +38,33 @@
   // Used to delete an existing paste.
   const pasteDetails = localPaste.getPaste()
 
+  const deleteAfterOptions = {
+    'being view': 0,
+    '1 hour': 1,
+    '2 hours': 2,
+    '3 hours': 3,
+    '4 hours': 4,
+    '5 hours': 5,
+    '6 hours': 6,
+    '7 hours': 7,
+    '8 hours': 8,
+    '9 hours': 9,
+    '10 hours': 10,
+    '11 hours': 11,
+    '12 hours': 12,
+    '1 day': 24,
+    '2 day': 48,
+    '3 day': 72,
+    '4 day': 96,
+    '5 day': 120,
+    '6 day': 144,
+    '1 week': 168,
+    '2 weeks': 336,
+    '1 month': 730,
+    '2 months': 1461,
+    '3 months': 2192,
+  }
+
   let code = ''
 
   getPaste(pasteId).then(encryptedData => {
@@ -47,6 +74,9 @@
       ).toString(CryptoJS.enc.Utf8)
     } catch {
       toast.push('Unable to decrypt paste with provided key.')
+      if (pasteDetails) {
+        localPaste.deletePaste()
+      }
       navigate('/')
     }
 
@@ -114,11 +144,19 @@
 </svelte:head>
 
 {#if pasteDetails}
-  <div class="paste-del">
+  <div class="paste-owner">
     <button on:click={deletePasteOn}>
       <Fa icon={faTrashAlt}></Fa>
       Delete
     </button>
+
+    <select>
+      <option disabled selected hidden>Delete after</option>
+
+      {#each Object.entries(deleteAfterOptions) as [title, value]}
+        <option>{ title }</option>
+      {/each}
+    </select>
   </div>
 {/if}
 
@@ -129,7 +167,7 @@
   class="dark-button"
   style="height:80%;"
   on:click={copyToClip}
-  ><Fa icon={faClipboard} /> Copy all</button>
+  ><Fa icon={faCopy} /> Copy all</button>
   <button
   class="dark-button"
   style="height:80%; margin-left:1em;"
