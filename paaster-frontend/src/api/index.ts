@@ -34,6 +34,23 @@ export async function getPaste(pasteId: string): Promise<string> {
   return await resp.text()
 }
 
+export async function updateDeleteAfter(pasteId: string, hours: number,
+                                        serverSecret: string): Promise<void> {
+  const resp = await fetch(`${backendUrl}/api/paste/${pasteId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      serverSecret: serverSecret,
+      deleteAfterHours: hours
+    })
+  })
+  if (resp.status !== 200) {
+    const json = await resp.json()
+    throw Error(json.error)
+  }
+}
 
 export async function deletePaste(pasteId: string, serverSecret: string): Promise<void> {
   const resp = await fetch(`${backendUrl}/api/paste/${pasteId}`, {

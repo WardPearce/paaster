@@ -117,7 +117,7 @@ button {
     outline: none;
 }
 
-.paste-ownerbutton:hover {
+.paste-owner button:hover {
     transition: 300ms;
     background-color: rgb(90, 27, 13);
     cursor: pointer;

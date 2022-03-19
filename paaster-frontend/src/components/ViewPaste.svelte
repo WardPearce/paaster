@@ -19,7 +19,7 @@
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
   
-  import { getPaste, deletePaste } from '../api'
+  import { getPaste, deletePaste, updateDeleteAfter } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
 
   import hljs from 'highlight.js'
@@ -36,10 +36,11 @@
 
   const localPaste = new LocalPaste(pasteId)
   // Used to delete an existing paste.
-  const pasteDetails = localPaste.getPaste()
+  let pasteDetails = localPaste.getPaste()
 
   const deleteAfterOptions = {
-    'being view': 0,
+    'never': -1,
+    'being viewed': 0,
     '1 hour': 1,
     '2 hours': 2,
     '3 hours': 3,
@@ -62,7 +63,7 @@
     '2 weeks': 336,
     '1 month': 730,
     '2 months': 1461,
-    '3 months': 2192,
+    '3 months': 2192
   }
 
   let code = ''
@@ -82,6 +83,10 @@
 
     acts.show(false)
   }).catch(error => {
+    if (pasteDetails) {
+      localPaste.deletePaste()
+    }
+
     toast.push(error.toString())
     navigate('/')
     acts.show(false)
@@ -137,10 +142,40 @@
     }
     acts.show(false)
   }
+
+  async function deleteAfter(hours: number): Promise<void> {
+    try {
+      await updateDeleteAfter(pasteId, hours, pasteDetails.serverSecret)
+
+      // Get human friendly string from hours.
+      const humanFriendlyDeleteAfter = Object.keys(
+        deleteAfterOptions
+      )[Object.values(deleteAfterOptions).indexOf(hours)]
+
+      console.log(humanFriendlyDeleteAfter)
+
+      const updatedDetails = {
+        deleteAfter: humanFriendlyDeleteAfter,
+        clientSecret: clientSecretKey,
+        pasteId: pasteId,
+        serverSecret: pasteDetails.serverSecret,
+        created: pasteDetails.created
+      }
+
+      // Overwite localStorage paste.
+      localPaste.setPaste(updatedDetails)
+
+      pasteDetails = updatedDetails
+  
+      toast.push(`Paste will be deleted after ${humanFriendlyDeleteAfter}`)
+    } catch (error) {
+      toast.push(error.toString())
+    }
+  }
 </script>
 
 <svelte:head>
-    {@html rosPine}
+  {@html rosPine}
 </svelte:head>
 
 {#if pasteDetails}
@@ -151,10 +186,12 @@
     </button>
 
     <select>
-      <option disabled selected hidden>Delete after</option>
+      <option disabled selected hidden>
+        Delete after {#if pasteDetails.deleteAfter}{ pasteDetails.deleteAfter }{/if}
+      </option>
 
-      {#each Object.entries(deleteAfterOptions) as [title, value]}
-        <option>{ title }</option>
+      {#each Object.entries(deleteAfterOptions) as [title, hours]}
+        <option on:click={async () => deleteAfter(hours)}>{ title }</option>
       {/each}
     </select>
   </div>
