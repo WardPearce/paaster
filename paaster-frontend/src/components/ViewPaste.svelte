@@ -41,26 +41,29 @@
   const deleteAfterOptions = {
     'never': -1,
     'being viewed': 0,
-    '1 hour': 1,
-    '2 hours': 2,
-    '3 hours': 3,
-    '4 hours': 4,
-    '5 hours': 5,
-    '6 hours': 6,
-    '7 hours': 7,
-    '8 hours': 8,
-    '9 hours': 9,
-    '10 hours': 10,
-    '11 hours': 11,
-    '12 hours': 12,
+    '5 mins': 0.08333,
+    '15 mins': 0.25,
+    '30 mins': 0.5,
+    '1 hr': 1,
+    '2 hrs': 2,
+    '3 hrs': 3,
+    '4 hrs': 4,
+    '5 hrs': 5,
+    '6 hrs': 6,
+    '7 hrs': 7,
+    '8 hrs': 8,
+    '9 hrs': 9,
+    '10 hrs': 10,
+    '11 hrs': 11,
+    '12 hrs': 12,
     '1 day': 24,
     '2 day': 48,
     '3 day': 72,
     '4 day': 96,
     '5 day': 120,
     '6 day': 144,
-    '1 week': 168,
-    '2 weeks': 336,
+    '1 wk': 168,
+    '2 wks': 336,
     '1 month': 730,
     '2 months': 1461,
     '3 months': 2192
@@ -152,8 +155,6 @@
         deleteAfterOptions
       )[Object.values(deleteAfterOptions).indexOf(hours)]
 
-      console.log(humanFriendlyDeleteAfter)
-
       const updatedDetails = {
         deleteAfter: humanFriendlyDeleteAfter,
         clientSecret: clientSecretKey,
@@ -164,7 +165,6 @@
 
       // Overwite localStorage paste.
       localPaste.setPaste(updatedDetails)
-
       pasteDetails = updatedDetails
   
       toast.push(`Paste will be deleted after ${humanFriendlyDeleteAfter}`)

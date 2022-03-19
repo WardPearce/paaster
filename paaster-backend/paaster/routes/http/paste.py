@@ -95,8 +95,8 @@ class PasteResource(HTTPEndpoint):
     async def post(self, request: Request) -> JSONResponse:
         json = await request.json()
 
-        if ("deleteAfterHours" not in json or not
-                isinstance(json["deleteAfterHours"], int)):
+        if ("deleteAfterHours" not in json or
+                type(json["deleteAfterHours"]) not in (int, float)):
             return JSONResponse(
                 {"error": "Delete after hours not provided"},
                 status_code=400
