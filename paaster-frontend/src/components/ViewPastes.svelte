@@ -12,7 +12,7 @@
 
 <div class="pastes">
   <ul>
-    {#each Object.entries(LocalPastes) as [pasteId, paste]}
+    {#each Object.entries(LocalPastes).reverse() as [pasteId, paste]}
       <li>
         <div class="paste-item">
           <div class="paste-details">
@@ -20,7 +20,7 @@
               <button on:click={() => navigate(`/${pasteId}#${paste.clientSecret}`)}
                 class="trans-button">{ pasteId }</button>
             </div>
-            <h3>{ new Date(paste.created * 1000).toUTCString() }</h3>
+            <h4>{ new Date(paste.created * 1000).toLocaleDateString() }</h4>
           </div>
         </div>
       </li>

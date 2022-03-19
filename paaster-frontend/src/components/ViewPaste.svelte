@@ -7,7 +7,9 @@
   import { navigate } from 'svelte-navigator'
 
   import Fa from 'svelte-fa'
-  import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+  import {
+    faTrashAlt, faClipboard, faDownload
+  } from '@fortawesome/free-solid-svg-icons'
 
   import { acts } from '@tadashi/svelte-loading'
   import { toast } from '@zerodevx/svelte-toast'
@@ -55,11 +57,23 @@
     acts.show(false)
   })
 
+  function copyToClip() {
+    toast.push('Copied code to clipboard!')
+    navigator.clipboard.writeText(code) 
+  }
+
+  function downloadCode() {
+    toast.push('Saving code!')
+    saveAs(
+      new Blob([code], {type: 'text/plain;charset=utf-8'}),
+      `${pasteId}.txt`
+    )
+  }
+
   Mousetrap.bind(
     ['command+a', 'ctrl+a'],
     () => {
-      toast.push('Copied code to clipboard!')
-      navigator.clipboard.writeText(code)
+      copyToClip()
       return false
     }
   )
@@ -76,11 +90,7 @@
   Mousetrap.bind(
     ['command+s', 'ctrl+s'],
     () => {
-      toast.push('Saving code!')
-      saveAs(
-        new Blob([code], {type: 'text/plain;charset=utf-8'}),
-        `${pasteId}.txt`
-      )
+      downloadCode()
       return false
     }
   )
@@ -113,3 +123,16 @@
 {/if}
 
 <HighlightAuto code={code} />
+
+<footer>
+  <button
+  class="dark-button"
+  style="height:80%;"
+  on:click={copyToClip}
+  ><Fa icon={faClipboard} /> Copy all</button>
+  <button
+  class="dark-button"
+  style="height:80%; margin-left:1em;"
+  on:click={downloadCode}
+  ><Fa icon={faDownload} /> Download</button>
+</footer>

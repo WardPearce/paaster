@@ -4,7 +4,7 @@
   import { navigate } from 'svelte-navigator'
   import { toast } from '@zerodevx/svelte-toast'
 
-	import { filedrop } from 'filedrop-svelte'
+  import { filedrop } from 'filedrop-svelte'
 
   import { 
     getBackendSettings,
