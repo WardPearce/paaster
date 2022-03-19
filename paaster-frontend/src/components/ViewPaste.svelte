@@ -68,6 +68,7 @@
     '2 mths': 1461,
     '3 mths': 2192
   }
+  let selectedHrs = pasteDetails.deleteAfter ? deleteAfterOptions[pasteDetails.deleteAfter] : -1
 
   let code = ''
 
@@ -143,14 +144,14 @@
     acts.show(false)
   }
 
-  async function deleteAfter(hours: number): Promise<void> {
+  async function deleteAfter(): Promise<void> {
     try {
-      await updateDeleteAfter(pasteId, hours, pasteDetails.serverSecret)
+      await updateDeleteAfter(pasteId, selectedHrs, pasteDetails.serverSecret)
 
       // Get human friendly string from hours.
       const humanFriendlyDeleteAfter = Object.keys(
         deleteAfterOptions
-      )[Object.values(deleteAfterOptions).indexOf(hours)]
+      )[Object.values(deleteAfterOptions).indexOf(selectedHrs)]
 
       const updatedDetails = {
         deleteAfter: humanFriendlyDeleteAfter,
@@ -182,13 +183,10 @@
       Delete
     </button>
 
-    <select>
-      <option disabled selected hidden>
-        Delete after {#if pasteDetails.deleteAfter}{ pasteDetails.deleteAfter }{/if}
-      </option>
-
+    <label class="delete-after-lab" for="delete-after">delete after</label>
+    <select name="delete-after" bind:value={selectedHrs} on:change={async () => deleteAfter()}>
       {#each Object.entries(deleteAfterOptions) as [title, hours]}
-        <option on:click={async () => deleteAfter(hours)}>{ title }</option>
+        <option value={hours}>{ title }</option>
       {/each}
     </select>
   </div>
