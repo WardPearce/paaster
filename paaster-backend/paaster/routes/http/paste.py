@@ -136,12 +136,18 @@ class PasteResource(HTTPEndpoint):
 
         background_task = None
         if "delete_after" in result and result["delete_after"] != -1:
-            if (result["delete_after"] == 0 or
-                datetime.now() > result["created"] +
-                    timedelta(hours=result["delete_after"])):
-
+            if result["delete_after"] == 0:
                 background_task = BackgroundTask(
                     delete_file, paste_id=result["_id"]
+                )
+            elif (datetime.now() > result["created"] +
+                    timedelta(hours=result["delete_after"])):
+                return JSONResponse(
+                    {"error": "Paste not found"},
+                    status_code=404,
+                    background=BackgroundTask(
+                        delete_file, paste_id=result["_id"]
+                    )
                 )
 
         async def stream_content() -> AsyncGenerator[bytes, None]:

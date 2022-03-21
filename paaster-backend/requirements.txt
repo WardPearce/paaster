@@ -7,3 +7,4 @@ uvicorn
 bcrypt
 aioredis
 slowapi
+requests

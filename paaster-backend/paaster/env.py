@@ -6,7 +6,6 @@ Version 3, 19 November 2007
 """
 
 import os
-import secrets
 
 from dotenv import load_dotenv
 
@@ -19,9 +18,6 @@ REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 MONGO_HOST = os.getenv("MONGO_IP", "localhost")
 MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
 MONGO_DB = os.getenv("MONGO_DB", "paaster")
-
-SIGNING_SECRET = os.getenv("SIGNING_SECRET", secrets.token_urlsafe(45))
-CAPTCHA_SECRET = os.getenv("CAPTCHA_SECRET", secrets.token_urlsafe(45))
 
 FRONTEND_PROXIED = os.getenv("FRONTEND_PROXIED", "https://localhost:3000")
 
