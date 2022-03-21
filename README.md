@@ -46,7 +46,3 @@ No. Anyone could modify the functionality of `paaster` to expose your secret key
 
 ### Using Rclone
 [Using rclone with Docker Compose](https://rclone.org/docker/#using-with-swarm-or-compose)
-
-# ToDo
-- Unit tests
-- Developer documentation
