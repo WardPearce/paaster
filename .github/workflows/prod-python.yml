@@ -37,7 +37,7 @@ jobs:
       - name: Run pyright
         run: pyright ./*
       - name: Run unit tests
-        run: python run_tests.py
+        run: python ./run_tests.py
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
