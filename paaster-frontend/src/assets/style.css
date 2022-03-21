@@ -198,31 +198,6 @@ button {
     text-align: center;
 }
 
-progress {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    margin-bottom: .5em;
-    border-radius: 1em;
-    background-color: var(--darkBg) !important;
-    border: none;
-}
-
-progress::-webkit-progress-bar {
-    border-radius: 1em;
-    background-color: var(--darkBg) !important;
-}
-
-progress::-webkit-progress-value {
-    border-radius: 1em;
-    background-color: #3b3457;
-}
-
-progress::-moz-progress-bar {
-    border-radius: 1em;
-    background-color: #3b3457;
-}
-
 footer {
     display: none;
 }

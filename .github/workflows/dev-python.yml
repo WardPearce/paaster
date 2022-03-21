@@ -36,3 +36,5 @@ jobs:
         run: npm install pyright -g
       - name: Run pyright
         run: pyright ./*
+      - name: Run unit tets
+        run: python run_tests.py
