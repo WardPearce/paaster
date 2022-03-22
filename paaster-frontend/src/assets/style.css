@@ -198,6 +198,11 @@ button {
     text-align: center;
 }
 
+.delete-after-lab {
+    background-color: #191724;
+    border-radius: 1em;
+}
+
 footer {
     display: none;
 }
