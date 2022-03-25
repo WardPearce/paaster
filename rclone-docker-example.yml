@@ -75,4 +75,9 @@ volumes:
   mongodbdata:
     driver: local
   appdata:
-    driver: local
+    driver: rclone
+    driver_opts:
+      remote: "backblaze:xxx"
+      allow_other: 'true'
+      vfs_cache_mode: full
+      poll_interval: 0
