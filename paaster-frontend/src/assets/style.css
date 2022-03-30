@@ -56,27 +56,11 @@ a:hover {
 textarea {
     height: 100vh;
     width: 100%;
-    resize: none;
     border: none;
     color: var(--textWhite);
     background-color: var(--darkBg);
     padding: 1em;
     outline: none;
-}
-
-input {
-    transition: 100ms;
-    color: var(--textWhite);
-    background-color: var(--darkBg);
-    border: 0 solid #3b3457;;
-    height: 1em;
-    padding: .5em 1em;
-}
-
-input:focus {
-    transition: 200ms;
-    outline: none;
-    border-bottom: 2.5px solid #3b3457;
 }
 
 button {
@@ -99,10 +83,19 @@ button {
 }
 
 .paste-owner select {
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+    appearance: none;
+
+    background: transparent;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+
     border-radius: 1em;
     padding: .3em 1em;
     border: none;
-    background-color: #24222e;
+    background-color: #24222e !important;
     color: var(--textWhite);
 }
 
