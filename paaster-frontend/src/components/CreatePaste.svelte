@@ -14,6 +14,16 @@
 
   let pastedCodePlain: string = ''
   async function codePasted(): Promise<void> {
+    if (!pastedCodePlain) {
+      // On Chrome & Safari 'on:input' isn't called if a value is binded
+      // Could use 'on:change' for for Chrome but doesn't work for Safari.
+      // This hackie way lets paaster work for all major browsers.
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      pastedCodePlain = document.getElementById('pastedCode').value
+    }
+
     acts.show(true)
 
     const backendSettings = await getBackendSettings()
@@ -73,9 +83,8 @@
   <div use:filedrop={{fileLimit: 1, clickToUpload: false, windowDrop: true}} on:filedrop={async e => onFileDrop(e)}></div>
 
   <textarea
-    bind:value={pastedCodePlain}
     placeholder="paste or drag & drop your code here"
-    on:change={codePasted}
+    id="pastedCode"
     on:input={codePasted}></textarea>
 {:else}
   <textarea value={pastedCodePlain} disabled></textarea>
