@@ -31,7 +31,7 @@ Client-sided secrets are stored in localStorage on paste creation (for paste his
 Server-sided secrets are stored in localStorage on paste creation, allowing you to modify or delete pastes later on. Server-sided secrets are generated on the server using the python `secrets` module & are stored in the database using `bcrypt` hashing.
 
 ### Cipher
-`paaster` is built using the [forge module](https://github.com/digitalbazaar/forge), using `AES` in `CBC` mode with PKCS7 padding & PBKDF2 key derivation at `50,000` iterations. 
+`paaster` is built using the [forge module](https://github.com/digitalbazaar/forge), using `AES-256` in `CBC` mode with PKCS7 padding & PBKDF2 key derivation at `50,000` iterations. 
 
 ## Shortcuts
 - `Ctrl+V` - Paste code.
