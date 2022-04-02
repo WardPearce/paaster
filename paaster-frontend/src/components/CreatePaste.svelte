@@ -1,9 +1,8 @@
 <script lang="ts">
-  import CryptoJS from 'crypto-js'
+  import forge from 'node-forge'
   import { acts } from '@tadashi/svelte-loading'
   import { navigate } from 'svelte-navigator'
   import { toast } from '@zerodevx/svelte-toast'
-
   import { filedrop } from 'filedrop-svelte'
 
   import { 
@@ -38,9 +37,19 @@
     ).then(key => {
       crypto.subtle.exportKey('jwk', key).then(async secret => {
         const clientSecretKey = secret.k
-        const encryptedCode = CryptoJS.AES.encrypt(
-          pastedCodePlain, clientSecretKey
-        ).toString()
+
+        const salt = forge.random.getBytesSync(128)
+        const iv = forge.random.getBytesSync(16)
+
+        const key = forge.pkcs5.pbkdf2(
+          clientSecretKey, salt, 50000, 32
+        )
+        const cipher = forge.cipher.createCipher('AES-CBC', key)
+        cipher.start({iv: iv})
+        cipher.update(forge.util.createBuffer(pastedCodePlain))
+        cipher.finish()
+
+        const encryptedCode = cipher.output.toHex()
 
         const maxInBytes = backendSettings.maxPasteSizeMb * 1049000
 
@@ -52,7 +61,11 @@
         }
 
         try {
-          const paste = await savePaste(encryptedCode)
+          const paste = await savePaste(
+            encryptedCode,
+            forge.util.bytesToHex(iv),
+            forge.util.bytesToHex(salt)
+          )
           toast.push('Created paste!')
 
           new LocalPaste(paste.pasteId).setPaste({

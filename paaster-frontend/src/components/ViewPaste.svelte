@@ -1,24 +1,18 @@
 <script lang="ts">
-  import CryptoJS from 'crypto-js'
-
+  import forge from 'node-forge'
   import { HighlightAuto } from 'svelte-highlight'
   import rosPine from 'svelte-highlight/src/styles/ros-pine'
-
   import { navigate } from 'svelte-navigator'
-
   import Fa from 'svelte-fa'
   import {
     faTrashAlt, faCopy, faDownload
   } from '@fortawesome/free-solid-svg-icons'
-
   import { acts } from '@tadashi/svelte-loading'
   import { toast } from '@zerodevx/svelte-toast'
-
   import { useParams } from 'svelte-navigator'
-
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
-  
+
   import { getPaste, deletePaste, updateDeleteAfter } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
 
@@ -26,7 +20,6 @@
   hljs.highlightAll()
 
   acts.show(true)
-
 
   const params = useParams()
   // Server side paste id.
@@ -72,14 +65,29 @@
 
   let code = ''
 
-  getPaste(pasteId).then(encryptedData => {
-    try {
-      code = CryptoJS.AES.decrypt(
-        encryptedData, clientSecretKey
-      ).toString(CryptoJS.enc.Utf8)
-    } catch {
-      toast.push('Unable to decrypt paste with provided key.')
+  getPaste(pasteId).then(response => {
+    const [hexIv, hex4Salt, hexEncryptedData] = response.split(',', 3)
+
+    const iv = forge.util.hexToBytes(hexIv)
+    const salt = forge.util.hexToBytes(hex4Salt)
+    const encryptedData = forge.util.createBuffer(
+      forge.util.hexToBytes(hexEncryptedData)
+    )
+
+    const key = forge.pkcs5.pbkdf2(
+          clientSecretKey, salt, 50000, 32
+    )
+    const decipher = forge.cipher.createDecipher('AES-CBC', key)
+    decipher.start({iv: iv})
+    decipher.update(encryptedData)
+
+    const completed = decipher.finish()
+
+    acts.show(false)
+    if (!completed) {
       navigate('/')
+    } else {
+      code = decipher.output.data
     }
 
     acts.show(false)
@@ -87,6 +95,8 @@
     if (pasteDetails) {
       localPaste.deletePaste()
     }
+
+    console.log(error)
 
     toast.push(error.toString())
     navigate('/')
