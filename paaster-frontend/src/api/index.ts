@@ -11,10 +11,12 @@ export async function getBackendSettings(): Promise<iBackendDetails> {
   return resp.json()
 }
 
-export async function savePaste(encryptedPaste: string): Promise<iPaste> {
+export async function savePaste(encryptedPaste: string,
+                                iv: string,
+                                salt: string): Promise<iPaste> {
   const resp = await fetch(`${backendUrl}/api/paste/create`, {
     method: 'PUT',
-    body: encryptedPaste
+    body: iv + ',' + salt + ',' + encryptedPaste
   })
   if (resp.status !== 200) {
     const json = await resp.json()
