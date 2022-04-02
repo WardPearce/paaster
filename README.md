@@ -1,3 +1,5 @@
+### [Follow the development of our desktop client here](https://github.com/WardPearce/paaster-client)
+
 # Paaster
 Paaster is a secure by default end to end encrypted pastebin built with the objective of simplicity.
 
