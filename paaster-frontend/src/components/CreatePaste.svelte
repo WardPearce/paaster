@@ -10,6 +10,7 @@
     savePaste,
   } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
+  import { tempPasteData } from '../store'
 
   let pastedCodePlain: string = ''
   async function codePasted(): Promise<void> {
@@ -74,6 +75,10 @@
             clientSecret: clientSecretKey,
             created: paste.created
           })
+
+          // Don't require paaster who already has
+          // the encrypted data, need to decrypt it again.
+          tempPasteData.set(pastedCodePlain)
 
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
         } catch (error) {
