@@ -12,9 +12,11 @@
   import { useParams } from 'svelte-navigator'
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
+  import { get } from 'svelte/store'
 
   import { getPaste, deletePaste, updateDeleteAfter } from '../api'
   import { LocalPaste } from '../helpers/localPastes'
+  import { tempPasteData } from '../store'
 
   import hljs from 'highlight.js'
   hljs.highlightAll()
@@ -25,7 +27,14 @@
   // Server side paste id.
   const pasteId: string = $params.pasteId
   // Client side generated encryption key.
-  const clientSecretKey: string = location.hash.substring(1)
+  const [
+    clientSecretKey, givenServerSecret
+  ]: string[] = location.hash.substring(1).split('&serverSecret=')
+
+  // Remove serverSecret out of URL ASAP if provided.
+  if (typeof givenServerSecret !== 'undefined') {
+    location.hash = `#${clientSecretKey}`
+  }
 
   const localPaste = new LocalPaste(pasteId)
   // Used to delete an existing paste.
@@ -65,43 +74,59 @@
 
   let code = ''
 
-  getPaste(pasteId).then(response => {
-    const [hexIv, hex4Salt, hexEncryptedData] = response.split(',', 3)
-
-    const iv = forge.util.hexToBytes(hexIv)
-    const salt = forge.util.hexToBytes(hex4Salt)
-    const encryptedData = forge.util.createBuffer(
-      forge.util.hexToBytes(hexEncryptedData)
-    )
-
-    const key = forge.pkcs5.pbkdf2(
-          clientSecretKey, salt, 50000, 32
-    )
-    const decipher = forge.cipher.createDecipher('AES-CBC', key)
-    decipher.start({iv: iv})
-    decipher.update(encryptedData)
-
-    const completed = decipher.finish()
-
+  const tempPasteDataValue = get(tempPasteData)
+  if (tempPasteDataValue) {
+    code = tempPasteDataValue
+    tempPasteData.set('')
     acts.show(false)
-    if (!completed) {
-      navigate('/')
-    } else {
-      code = decipher.output.data
-    }
+  } else {
+      getPaste(pasteId).then(response => {
+        const [hexIv, hex4Salt, hexEncryptedData] = response.split(',', 3)
 
-    acts.show(false)
-  }).catch(error => {
-    if (pasteDetails) {
-      localPaste.deletePaste()
-    }
+        const iv = forge.util.hexToBytes(hexIv)
+        const salt = forge.util.hexToBytes(hex4Salt)
+        const encryptedData = forge.util.createBuffer(
+          forge.util.hexToBytes(hexEncryptedData)
+        )
 
-    console.log(error)
+        const key = forge.pkcs5.pbkdf2(
+              clientSecretKey, salt, 50000, 32
+        )
+        const decipher = forge.cipher.createDecipher('AES-CBC', key)
+        decipher.start({iv: iv})
+        decipher.update(encryptedData)
 
-    toast.push(error.toString())
-    navigate('/')
-    acts.show(false)
-  })
+        const completed = decipher.finish()
+
+        acts.show(false)
+        if (!completed) {
+          navigate('/')
+        } else {
+          code = decipher.output.data
+          if (typeof givenServerSecret !== 'undefined') {
+            pasteDetails = {
+              pasteId: pasteId,
+              clientSecret: clientSecretKey,
+              serverSecret: givenServerSecret
+            }
+
+            localPaste.setPaste(pasteDetails)
+          }
+        }
+
+        acts.show(false)
+    }).catch(error => {
+        if (pasteDetails) {
+          localPaste.deletePaste()
+        }
+
+        console.log(error)
+
+        toast.push(error.toString())
+        navigate('/')
+        acts.show(false)
+    })
+  }
 
   function copyToClip() {
     toast.push('Copied code to clipboard!')
