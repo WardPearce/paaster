@@ -77,7 +77,7 @@
           })
 
           // Don't require paaster who already has
-          // the encrypted data, need to decrypt it again.
+          // the decrypted data, need to decrypt it again.
           tempPasteData.set(pastedCodePlain)
 
           navigate(`/${paste.pasteId}#${clientSecretKey}`)
