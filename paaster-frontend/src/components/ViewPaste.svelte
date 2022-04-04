@@ -100,6 +100,7 @@
 
         acts.show(false)
         if (!completed) {
+          toast.push('Invalid secret key!')
           navigate('/')
         } else {
           code = decipher.output.data
