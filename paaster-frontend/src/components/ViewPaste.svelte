@@ -108,7 +108,8 @@
             pasteDetails = {
               pasteId: pasteId,
               clientSecret: clientSecretKey,
-              serverSecret: givenServerSecret
+              serverSecret: givenServerSecret,
+              created: Math.floor(new Date().getTime() / 1000)
             }
 
             localPaste.setPaste(pasteDetails)
