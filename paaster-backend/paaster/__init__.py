@@ -8,6 +8,7 @@ Version 3, 19 November 2007
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
+from starlette.authentication import AuthenticationError
 
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi import _rate_limit_exceeded_handler  # type: ignore
@@ -16,6 +17,8 @@ from slowapi.errors import RateLimitExceeded
 from motor import motor_asyncio
 
 from .routes import ROUTES
+from .routes.errors import on_auth_error
+
 from .resources import Sessions
 from .env import (
     MONGO_HOST, MONGO_PORT, MONGO_DB,
@@ -43,9 +46,10 @@ app = Starlette(routes=ROUTES, middleware=[
     Middleware(CORSMiddleware,
                allow_origins=cors_origins,
                allow_methods=["GET", "DELETE", "PUT", "POST"]),
-    Middleware(SlowAPIMiddleware)
+    Middleware(SlowAPIMiddleware),
 ], on_startup=[on_start])
 
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(AuthenticationError, on_auth_error)
 
 app.state.limiter = LIMITER

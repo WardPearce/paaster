@@ -13,7 +13,9 @@ import aiofiles.os
 
 from typing import AsyncGenerator, Union
 from datetime import datetime, timedelta
+from json import JSONDecodeError
 
+from starlette.authentication import AuthenticationError
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse, StreamingResponse
@@ -82,18 +84,29 @@ class PasteResource(HTTPEndpoint):
                 status_code=404
             )
 
-        json = await request.json()
+        try:
+            json = await request.json()
+        except JSONDecodeError:
+            return JSONResponse({
+                "error": "Invalid payload"
+            }, status_code=400)
 
-        error = validate_server_secret(json, result["server_secret"])
-        if error is None:
+        try:
+            validate_server_secret(json, result["server_secret"])
+        except AuthenticationError:
+            raise
+        else:
             await delete_file(result["_id"])
             return JSONResponse({"pastedId": result["_id"]})
-        else:
-            return error  # type: ignore
 
     @LIMITER.limit("20/minute")
     async def post(self, request: Request) -> JSONResponse:
-        json = await request.json()
+        try:
+            json = await request.json()
+        except JSONDecodeError:
+            return JSONResponse({
+                "error": "Invalid payload"
+            }, status_code=400)
 
         if ("deleteAfterHours" not in json or
                 type(json["deleteAfterHours"]) not in (int, float)):
@@ -110,17 +123,17 @@ class PasteResource(HTTPEndpoint):
                 {"error": "Paste not found"},
                 status_code=404
             )
-
-        error = validate_server_secret(json, result["server_secret"])
-        if error is None:
+        try:
+            validate_server_secret(json, result["server_secret"])
+        except AuthenticationError:
+            raise
+        else:
             await Sessions.mongo.file.update_one(
                 {"_id": result["_id"]},
                 {"$set": {"delete_after": json["deleteAfterHours"]}}
             )
 
             return JSONResponse({"pastedId": result["_id"]})
-        else:
-            return error  # type: ignore
 
     @LIMITER.limit("60/minute")
     async def get(self, request: Request) -> Union[StreamingResponse,

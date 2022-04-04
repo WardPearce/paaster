@@ -4,7 +4,7 @@
 Paaster is a secure by default end to end encrypted pastebin built with the objective of simplicity.
 
 ## Preview
-![Video of paaster in action!](https://i.imgur.com/KwOsIxL.gif)
+![Video of paaster in action!](https://s7.gifyu.com/images/latest.gif)
 ![Mobile preview](https://i.imgur.com/00eIv0g.png)
 
 ## Features
@@ -15,6 +15,9 @@ Paaster is a secure by default end to end encrypted pastebin built with the obje
 - Paste history.
 - Fast.
 - Delete after view or X amount of time.
+
+## Looking to build a client for paaster?
+Check out our [Integration documentation](/paaster-backend#readme)
 
 ## Security
 ### What is E2EE?
@@ -33,7 +36,7 @@ Client-sided secrets are stored in localStorage on paste creation (for paste his
 Server-sided secrets are stored in localStorage on paste creation, allowing you to modify or delete pastes later on. Server-sided secrets are generated on the server using the python `secrets` module & are stored in the database using `bcrypt` hashing.
 
 ### Cipher
-`paaster` is built using the [forge module](https://github.com/digitalbazaar/forge), using `AES-256` in `CBC` mode with PKCS7 padding & PBKDF2 key derivation at `50,000` iterations. 
+`paaster` is built using the [forge module](https://github.com/digitalbazaar/forge), using `AES-256` in `CBC` mode with `PKCS7` padding & `PBKDF2` key derivation at `50,000` iterations. More details are located in our [Integration documentation](/paaster-backend#readme).
 
 ## Shortcuts
 - `Ctrl+V` - Paste code.

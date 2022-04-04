@@ -69,7 +69,7 @@ class TestPaaster(unittest.TestCase):
                 f"/api/paste/{json['pasteId']}",
                 json={"serverSecret": "invalid"}
             )
-            self.assertEqual(resp.status_code, 403)
+            self.assertEqual(resp.status_code, 401)
 
     def test_update_invalid_secret_paste(self) -> None:
         with TestClient(app) as client:
@@ -94,7 +94,7 @@ class TestPaaster(unittest.TestCase):
                     "deleteAfterHours": 0
                 }
             )
-            self.assertEqual(resp.status_code, 403)
+            self.assertEqual(resp.status_code, 401)
 
     def test_delete_paste(self) -> None:
         with TestClient(app) as client:
