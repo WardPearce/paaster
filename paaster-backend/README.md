@@ -106,7 +106,7 @@ formatted_for_paaster = (
 ```
 d69e3625f81bc7bb8e700f36e6258852,5d6e1524835c7b69e8a93b380954a8b25f85f634fee16534dfe1b4ffbc7cf1f9765f4fb2449352ef275102732ae767895294a240b65dd587af3a5ea63662018c06929727118694dd635daba28c8f91c336d52356ac35013787c24b6f93acd3d8f1a834830cae88c725615514048964403bb0bc62003f753b13fe1bf1aeaf3bfc,84f059b97d5b9c2e787e2517d9f20618
 ```
-##### Response
+#### Response
 - Status code - `200`
 ```json
 {
@@ -124,7 +124,7 @@ d69e3625f81bc7bb8e700f36e6258852,5d6e1524835c7b69e8a93b380954a8b25f85f634fee1653
 ##### URL
 `https://api.paaster.io/api/paste/{pasteId}`
 
-##### Response
+#### Response
 - Status code - `200`
 [Explained here](#formatting-encrypted-data-salts--ivs)
 ```
