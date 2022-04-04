@@ -86,7 +86,7 @@ formatted_for_paaster = (
 
 #### Invalid server secret
 #####  Response
-- Status code - `403`
+- Status code - `401`
 ```json
 {
 	"error": "Server secret invalid"

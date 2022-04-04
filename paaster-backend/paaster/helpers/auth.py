@@ -7,12 +7,11 @@ Version 3, 19 November 2007
 
 import bcrypt
 
-from typing import Union
-from starlette.responses import JSONResponse
+from starlette.authentication import AuthenticationError
 
 
 def validate_server_secret(json: dict, hash_password: bytes,
-                           ) -> Union[JSONResponse, None]:
+                           ) -> None:
     """Validates the server secret against the db.
 
     Parameters
@@ -29,14 +28,8 @@ def validate_server_secret(json: dict, hash_password: bytes,
     """
 
     if "serverSecret" not in json:
-        return JSONResponse(
-            {"error": "Server secret not provided"},
-            status_code=400
-        )
+        raise AuthenticationError("Server secret not provided")
 
     if not bcrypt.checkpw(json["serverSecret"].encode(),
                           hash_password):
-        return JSONResponse(
-            {"error": "Server secret invalid"},
-            status_code=403
-        )
+        raise AuthenticationError("Server secret invalid")
