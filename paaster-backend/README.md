@@ -94,13 +94,12 @@ formatted_for_paaster = (
 ```
 
 ### Create paste
+`https://api.paaster.io/api/paste/create`
+
 - Method - `PUT`
 - Body - `Plain`
 - Response - `Json`
 
-#### Request
-##### URL
-`https://api.paaster.io/api/paste/create`
 ##### Body
 
 [Explained here](#formatting-encrypted-data-salts--ivs)
@@ -117,13 +116,11 @@ d69e3625f81bc7bb8e700f36e6258852,5d6e1524835c7b69e8a93b380954a8b25f85f634fee1653
 }
 ```
 ### Get paste
+`https://api.paaster.io/api/paste/{pasteId}`
+
 - Method - `GET`
 - Body - `No body`
 - Response - `Json`
-
-#### Request
-##### URL
-`https://api.paaster.io/api/paste/{pasteId}`
 
 #### Response
 - Status code - `200`
