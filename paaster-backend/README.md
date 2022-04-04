@@ -5,7 +5,7 @@
 - Client secret
     - A securely generated 32 byte long secret generated on the local client, this secret should never be sent to the server for any reason.
 - Server secret
-    - A securely generated 16 byte long secret generated on the server, this secret is bcrypt hashed (with 12 rounds) & stored in the database.
+    - A securely generated 32 byte long secret generated on the server, this secret is bcrypt hashed (with 12 rounds) & stored in the database.
 
 ## Encryption
 `paaster` uses `AES-256` in `CBC` (16 byte IV) mode with `PKCS7` (128 block size) padding & `PBKDF2` key derivation at `50,000` iterations (with a 128 byte salt & SHA-1 algorithm).
@@ -99,8 +99,9 @@ formatted_for_paaster = (
 - Method - `PUT`
 - Body - `Plain`
 - Response - `Json`
+- Rate-limiting - `20/minute`
 
-##### Body
+#### Payload
 
 [Explained here](#formatting-encrypted-data-salts--ivs)
 ```
@@ -121,6 +122,31 @@ d69e3625f81bc7bb8e700f36e6258852,5d6e1524835c7b69e8a93b380954a8b25f85f634fee1653
 - Method - `GET`
 - Body - `No body`
 - Response - `Json`
+- Rate-limiting - `60/minute`
+
+#### Response
+- Status code - `200`
+```json
+{
+	"pastedId": "OO8Nn3LBna3gv2XsCD0TO"
+}
+```
+
+### Update paste
+`https://api.paaster.io/api/paste/{pasteId}`
+
+- Method - `POST`
+- Body - `Json`
+- Response - `Json`
+- Rate-limiting - `20/minute`
+
+#### Payload
+```json
+{
+	"serverSecret": "X52RpvhshiXMEXAnQgEhZAwYRfeBp5x_mMymI41_pn0",
+	"deleteAfterHours": 1
+}
+```
 
 #### Response
 - Status code - `200`
