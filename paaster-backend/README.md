@@ -93,6 +93,15 @@ formatted_for_paaster = (
 }
 ```
 
+#### Paste not found
+##### Response
+- Status code - `404`
+```json
+{
+	"error": "Paste not found"
+}
+```
+
 ### Create paste
 `https://api.paaster.io/api/paste/create`
 
@@ -145,6 +154,29 @@ d69e3625f81bc7bb8e700f36e6258852,5d6e1524835c7b69e8a93b380954a8b25f85f634fee1653
 {
 	"serverSecret": "X52RpvhshiXMEXAnQgEhZAwYRfeBp5x_mMymI41_pn0",
 	"deleteAfterHours": 1
+}
+```
+
+#### Response
+- Status code - `200`
+```json
+{
+	"pastedId": "OO8Nn3LBna3gv2XsCD0TO"
+}
+```
+
+### Delete paste
+`https://api.paaster.io/api/paste/{pasteId}`
+
+- Method - `DELETE`
+- Body - `Json`
+- Response - `Json`
+- Rate-limiting - `20/minute`
+
+#### Payload
+```json
+{
+	"serverSecret": "X52RpvhshiXMEXAnQgEhZAwYRfeBp5x_mMymI41_pn0"
 }
 ```
 
