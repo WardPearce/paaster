@@ -1,7 +1,7 @@
 <script lang="ts">
   import Fa from 'svelte-fa'
   import { 
-    faLock, faClipboard,
+    faLock, faClipboard
   } from '@fortawesome/free-solid-svg-icons'
 
   import { Route, Router, Link } from 'svelte-navigator'
@@ -42,10 +42,12 @@
           ><Fa icon={faClipboard} /> My pastes</button>
         </Link>
       {/if}
-        <h4 class="encrypted">
-          <Fa icon={faLock} />
-          E2EE
-        </h4>
+        <a href="https://github.com/WardPearce/paaster#security" target="_blank" rel="noopener noreferrer">
+          <h4 class="encrypted">
+            <Fa icon={faLock} />
+            E2EE
+          </h4>
+        </a>
     </div>
   </nav>
 
