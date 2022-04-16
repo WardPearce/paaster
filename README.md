@@ -57,10 +57,36 @@ Server-sided secrets are stored in localStorage on paste creation, allowing you 
 
 ## Setup
 ### Production
+- `git clone --branch Production https://github.com/WardPearce/paaster`
+- Configure `docker-compose.yml`
+- Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
+- [FRONTEND_PROXIED](https://github.com/WardPearce/paaster/blob/Development/docker-compose.yml#L24) should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
+- [VITE_BACKEND](https://github.com/WardPearce/paaster/blob/Development/docker-compose.yml#L41) should be the proxied address for "paaster_starlette".  E.g. for paaster.io this is "https://api.paaster.io"
+- `sudo docker-compose build; sudo docker-compose up -d`
+### Production without docker
+This setup is not recommended & requires more research / knowledge.
 - `git clone --branch Production https://github.com/WardPearce/paaster`.
-- Configure `docker-compose.yml`.
-- `sudo docker-compose build; sudo docker-compose up -d`.
-- Proxy exposed ports.
+- `cd paaster-frontend`
+- Create `.env`
+    - `VITE_NAME` - The name displayed on the website.
+    - `VITE_BACKEND` - The URL of the API.
+- Install nodejs
+    - `npm install`
+    - `npm run build`
+- Serve files generated in `dist` with Nginx (or whatever reverse proxy you use.)
+- `cd paaster-backend`
+- Install Python 3.7+
+    - `pip3 install -r requirements.txt`
+    - Configure `main.py` following the guide for [uvicorn](https://www.uvicorn.org/deployment/).
+- Pass environmental variables
+    - `REDIS_HOST`
+    - `REDIS_PORT`
+    - `MONGO_IP`
+    - `MONGO_PORT`
+    - `MONGO_DB`
+    - `FRONTEND_PROXIED` - The URL of the Frontend.
+- Proxy port with Nginx (or whatever reverse proxy you use.)
+
 
 #### Using Rclone
 [Using rclone with Docker Compose](https://rclone.org/docker/#getting-started)
