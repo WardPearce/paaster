@@ -94,7 +94,7 @@ This setup is not recommended & requires more research / knowledge.
 - Proxy port with Nginx (or whatever reverse proxy you use.)
 
 ### Development
-- git clone https://github.com/WardPearce/paaster`.
+- `git clone https://github.com/WardPearce/paaster`.
 - `cd paaster-frontend`
 - Create `.env`
     - `VITE_NAME` - The name displayed on the website.
