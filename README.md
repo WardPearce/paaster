@@ -92,3 +92,24 @@ This setup is not recommended & requires more research / knowledge.
     - `MONGO_DB`
     - `FRONTEND_PROXIED` - The URL of the Frontend.
 - Proxy port with Nginx (or whatever reverse proxy you use.)
+
+### Development
+- git clone https://github.com/WardPearce/paaster`.
+- `cd paaster-frontend`
+- Create `.env`
+    - `VITE_NAME` - The name displayed on the website.
+    - `VITE_BACKEND` - The URL of the API.
+- Install nodejs
+    - `npm install`
+    - `npm run dev`
+- `cd paaster-backend`
+- Pass environmental variables
+    - `REDIS_HOST`
+    - `REDIS_PORT`
+    - `MONGO_IP`
+    - `MONGO_PORT`
+    - `MONGO_DB`
+    - `FRONTEND_PROXIED` - The URL of the Frontend.
+- Install Python 3.7+
+    - `pip3 install -r requirements.txt`
+    - Run main.py
