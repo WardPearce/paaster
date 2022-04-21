@@ -1,4 +1,4 @@
-FROM node:lts AS builder
+FROM node AS builder
 COPY . .
 
 ARG VITE_NAME

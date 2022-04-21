@@ -1,7 +1,7 @@
 ### [Follow the development of our desktop client here](https://github.com/WardPearce/paaster-client)
 
 # Paaster
-Paaster is a secure by default end to end encrypted pastebin built with the objective of simplicity.
+Paaster is a secure by default end-to-end encrypted pastebin built with the objective of simplicity.
 
 ## Preview
 ![Video of paaster in action!](https://s7.gifyu.com/images/latest.gif)
@@ -56,13 +56,60 @@ Server-sided secrets are stored in localStorage on paste creation, allowing you 
     - `paaster` will never have opt-in / opt-out encryption, encryption will always be present.
 
 ## Setup
-### Production
-- `git clone --branch Production https://github.com/WardPearce/paaster`.
-- Configure `docker-compose.yml`.
-- `sudo docker-compose build; sudo docker-compose up -d`.
-- Proxy exposed ports.
+### Production with Docker
+- `git clone --branch Production https://github.com/WardPearce/paaster`
+- Configure `docker-compose.yml`
+- Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
+- [FRONTEND_PROXIED](https://github.com/WardPearce/paaster/blob/Development/docker-compose.yml#L24) should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
+- [VITE_BACKEND](https://github.com/WardPearce/paaster/blob/Development/docker-compose.yml#L41) should be the proxied address for "paaster_starlette".  E.g. for paaster.io this is "https://api.paaster.io"
+- `sudo docker-compose build; sudo docker-compose up -d`
 
 #### Using Rclone
 [Using rclone with Docker Compose](https://rclone.org/docker/#getting-started)
 
 Basically the most important part is to install `fuse`, create `/var/lib/docker-plugins/rclone/config` & `/var/lib/docker-plugins/rclone/cache`, install the docker plugin `docker plugin install rclone/docker-volume-rclone:amd64 args="-v" --alias rclone --grant-all-permissions`, configure the `rclone.conf` for the storage service you want to use & then configure your docker compose to use the rclone volume. [Example rclone docker compose](/rclone-docker-example.yml).
+
+### Production without docker
+This setup is not recommended & requires more research / knowledge.
+- `git clone --branch Production https://github.com/WardPearce/paaster`.
+- `cd paaster-frontend`
+- Create `.env`
+    - `VITE_NAME` - The name displayed on the website.
+    - `VITE_BACKEND` - The URL of the API.
+- Install nodejs
+    - `npm install`
+    - `npm run build`
+- Serve files generated in `dist` with Nginx (or whatever reverse proxy you use.)
+- `cd paaster-backend`
+- Install Python 3.7+
+    - `pip3 install -r requirements.txt`
+    - Configure `main.py` following the guide for [uvicorn](https://www.uvicorn.org/deployment/).
+- Pass environmental variables
+    - `REDIS_HOST`
+    - `REDIS_PORT`
+    - `MONGO_IP`
+    - `MONGO_PORT`
+    - `MONGO_DB`
+    - `FRONTEND_PROXIED` - The URL of the Frontend.
+- Proxy port with Nginx (or whatever reverse proxy you use.)
+
+### Development
+- `git clone https://github.com/WardPearce/paaster`.
+- `cd paaster-frontend`
+- Create `.env`
+    - `VITE_NAME` - The name displayed on the website.
+    - `VITE_BACKEND` - The URL of the API.
+- Install nodejs
+    - `npm install`
+    - `npm run dev`
+- `cd paaster-backend`
+- Pass environmental variables
+    - `REDIS_HOST`
+    - `REDIS_PORT`
+    - `MONGO_IP`
+    - `MONGO_PORT`
+    - `MONGO_DB`
+    - `FRONTEND_PROXIED` - The URL of the Frontend.
+- Install Python 3.7+
+    - `pip3 install -r requirements.txt`
+    - Run main.py
