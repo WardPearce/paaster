@@ -1,5 +1,5 @@
 nanoid
-starlette
+starlette==0.20.0
 motor
 aiofiles
 python-dotenv

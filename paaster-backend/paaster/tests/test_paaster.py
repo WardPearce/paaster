@@ -176,6 +176,8 @@ class TestPaaster(unittest.TestCase):
             resp = client.get(url)
             self.assertEqual(resp.status_code, 200)
 
+            time.sleep(10)
+
             resp = client.get(url)
             self.assertEqual(resp.status_code, 404)
             self.assertFalse(os.path.exists(file_path))
