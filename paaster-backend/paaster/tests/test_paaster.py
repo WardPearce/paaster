@@ -8,12 +8,21 @@ Version 3, 19 November 2007
 import unittest
 import os
 import time
+import base64
 
-from starlette.testclient import TestClient
+from fastapi.testclient import TestClient
 
 from ..env import SAVE_PATH
 
 from .. import app
+
+
+def basic_auth_header(username: str, password: str) -> dict:
+    return {
+        "Authorization": "Basic " + base64.b64encode(
+            f"{username}:{password}".encode()
+        ).decode()
+    }
 
 
 class TestPaaster(unittest.TestCase):
@@ -66,8 +75,24 @@ class TestPaaster(unittest.TestCase):
             json = resp.json()
 
             resp = client.delete(
-                f"/api/paste/{json['pasteId']}",
-                json={"serverSecret": "invalid"}
+                "/api/paste",
+                headers=basic_auth_header(json["pasteId"], "invalid"),
+                allow_redirects=True
+            )
+            self.assertEqual(resp.status_code, 401)
+
+    def test_delete_invalid_id_paste(self) -> None:
+        with TestClient(app) as client:
+            resp = client.put(
+                "/api/paste/create",
+                data=b"const foo = bar;"
+            )
+            json = resp.json()
+
+            resp = client.delete(
+                "/api/paste",
+                headers=basic_auth_header("123", json["serverSecret"]),
+                allow_redirects=True
             )
             self.assertEqual(resp.status_code, 401)
 
@@ -80,19 +105,23 @@ class TestPaaster(unittest.TestCase):
             json = resp.json()
 
             resp = client.post(
-                f"/api/paste/{json['pasteId']}",
+                "/api/paste",
+                headers=basic_auth_header(
+                    json["pasteId"], json["serverSecret"]
+                ), allow_redirects=True,
                 json={
-                    "serverSecret": json["serverSecret"]
+                    "delete_after_hours": "invalid_type"
                 }
             )
-            self.assertEqual(resp.status_code, 400)
+            self.assertEqual(resp.status_code, 422)
 
             resp = client.post(
-                f"/api/paste/{json['pasteId']}",
+                "/api/paste",
                 json={
-                    "serverSecret": "invalid",
-                    "deleteAfterHours": 0
-                }
+                    "delete_after_hours": 0
+                },
+                headers=basic_auth_header(json["pasteId"], "invalid"),
+                allow_redirects=True
             )
             self.assertEqual(resp.status_code, 401)
 
@@ -105,8 +134,10 @@ class TestPaaster(unittest.TestCase):
             json = resp.json()
 
             resp = client.delete(
-                f"/api/paste/{json['pasteId']}",
-                json={"serverSecret": json["serverSecret"]}
+                "/api/paste",
+                headers=basic_auth_header(
+                    json["pasteId"], json["serverSecret"]
+                ), allow_redirects=True
             )
             self.assertEqual(resp.status_code, 200)
 
@@ -124,16 +155,18 @@ class TestPaaster(unittest.TestCase):
             )
             json = resp.json()
 
-            url = f"/api/paste/{json['pasteId']}"
-
             resp = client.post(
-                url,
+                "/api/paste",
                 json={
-                    "deleteAfterHours": 0,
-                    "serverSecret": json["serverSecret"]
-                }
+                    "delete_after_hours": 0
+                },
+                headers=basic_auth_header(
+                    json["pasteId"], json["serverSecret"]
+                ), allow_redirects=True
             )
             self.assertEqual(resp.status_code, 200)
+
+            url = f"/api/paste/{json['pasteId']}"
 
             file_path = os.path.join(
                 SAVE_PATH,
@@ -143,6 +176,8 @@ class TestPaaster(unittest.TestCase):
 
             resp = client.get(url)
             self.assertEqual(resp.status_code, 200)
+
+            time.sleep(10.0)
 
             resp = client.get(url)
             self.assertEqual(resp.status_code, 404)
@@ -156,16 +191,18 @@ class TestPaaster(unittest.TestCase):
             )
             json = resp.json()
 
-            url = f"/api/paste/{json['pasteId']}"
-
             resp = client.post(
-                url,
+                "/api/paste",
                 json={
-                    "deleteAfterHours": 0.002778,
-                    "serverSecret": json["serverSecret"]
-                }
+                    "delete_after_hours": 0.002778
+                },
+                headers=basic_auth_header(
+                    json["pasteId"], json["serverSecret"]
+                ), allow_redirects=True
             )
             self.assertEqual(resp.status_code, 200)
+
+            url = f"/api/paste/{json['pasteId']}"
 
             file_path = os.path.join(
                 SAVE_PATH,
@@ -176,7 +213,7 @@ class TestPaaster(unittest.TestCase):
             resp = client.get(url)
             self.assertEqual(resp.status_code, 200)
 
-            time.sleep(10)
+            time.sleep(5)
 
             resp = client.get(url)
             self.assertEqual(resp.status_code, 404)
