@@ -144,7 +144,7 @@ class TestPaaster(unittest.TestCase):
             resp = client.get(url)
             self.assertEqual(resp.status_code, 200)
 
-            time.sleep(5)
+            time.sleep(15.0)
 
             resp = client.get(url)
             self.assertEqual(resp.status_code, 404)
@@ -178,11 +178,8 @@ class TestPaaster(unittest.TestCase):
             resp = client.get(url)
             self.assertEqual(resp.status_code, 200)
 
-            time.sleep(10.0)
+            time.sleep(15.0)
 
             resp = client.get(url)
             self.assertEqual(resp.status_code, 404)
-
-            time.sleep(5)
-
             self.assertFalse(os.path.exists(file_path))
