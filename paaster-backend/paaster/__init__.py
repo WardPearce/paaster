@@ -44,7 +44,9 @@ async def on_start() -> None:
 
 app = FastAPI(
     title="Paaster",
-    docs_url="/redocs",
+    redoc_url="/api/documentation",
+    openapi_url="/api/openapi.json",
+    docs_url=None,
     middleware=[
         Middleware(
             CORSMiddleware,
