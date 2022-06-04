@@ -1,15 +1,14 @@
 <script lang="ts">
   import forge from 'node-forge'
   import { HighlightAuto } from 'svelte-highlight'
-  import rosPine from 'svelte-highlight/src/styles/ros-pine'
-  import { navigate } from 'svelte-navigator'
+  import rosPine from 'svelte-highlight/styles/ros-pine'
+  import { navigate } from 'svelte-routing'
   import Fa from 'svelte-fa'
   import {
     faTrashAlt, faCopy, faDownload
   } from '@fortawesome/free-solid-svg-icons'
   import { acts } from '@tadashi/svelte-loading'
   import { toast } from '@zerodevx/svelte-toast'
-  import { useParams } from 'svelte-navigator'
   import Mousetrap from 'mousetrap'
   import { saveAs } from 'file-saver'
   import { get } from 'svelte/store'
@@ -23,9 +22,8 @@
 
   acts.show(true)
 
-  const params = useParams()
-  // Server side paste id.
-  const pasteId: string = $params.pasteId
+  export let pasteId: string
+
   // Client side generated encryption key.
   const [
     clientSecretKey, givenServerSecret

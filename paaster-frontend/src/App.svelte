@@ -4,7 +4,7 @@
     faLock, faClipboard
   } from '@fortawesome/free-solid-svg-icons'
 
-  import { Route, Router, Link } from 'svelte-navigator'
+  import { Route, Router, Link } from 'svelte-routing'
 
   import { Loading } from '@tadashi/svelte-loading'
   import { SvelteToast } from '@zerodevx/svelte-toast'
@@ -53,5 +53,7 @@
 
   <Route path="/" component={CreatePaste}></Route>
   <Route path="/pastes" component={ViewPastes}></Route>
-  <Route path=":pasteId" component={ViewPaste}></Route>  
+  <Route path=":pasteId" let:params>
+    <ViewPaste pasteId={params.pasteId} />
+  </Route>  
 </Router>

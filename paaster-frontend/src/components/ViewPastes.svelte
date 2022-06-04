@@ -2,7 +2,7 @@
   import { storedPastes } from '../store'
   import type { iPasteStorage } from '../helpers/interfaces'
 
-  import { navigate } from 'svelte-navigator'
+  import { navigate } from 'svelte-routing'
 
   let LocalPastes: Record<string, iPasteStorage>
   storedPastes.subscribe(value => {
