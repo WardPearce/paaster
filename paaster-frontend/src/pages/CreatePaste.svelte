@@ -1,7 +1,7 @@
 <script lang="ts">
   import forge from 'node-forge'
   import { acts } from '@tadashi/svelte-loading'
-  import { navigate } from 'svelte-navigator'
+  import { navigate } from 'svelte-routing'
   import { toast } from '@zerodevx/svelte-toast'
   import { filedrop } from 'filedrop-svelte'
 

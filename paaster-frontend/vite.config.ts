@@ -5,7 +5,6 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
   plugins: [svelte()],
   optimizeDeps: {
-    include: ['highlight.js/lib/core'],
-    exclude: ['svelte-navigator']
+    include: ['highlight.js/lib/core']
   }
 })

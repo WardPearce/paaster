@@ -28,6 +28,13 @@ def format_path(paste_id: str) -> str:
 
 
 async def delete_file(paste_id: str) -> None:
+    """Delete a file from database and disk.
+
+    Parameters
+    ----------
+    paste_id : str
+    """
+
     try:
         await aiofiles.os.remove(format_path(paste_id))
     except FileNotFoundError:

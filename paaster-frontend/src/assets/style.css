@@ -20,7 +20,7 @@ body {
     font-family: IMBPlexMono;
     color: var(--textWhite);
     overflow-x: hidden;
-    background-color: var(--darkBg);
+    background-color: var(--darkBg) !important;
 }
 
 nav {

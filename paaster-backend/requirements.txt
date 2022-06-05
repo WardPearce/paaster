@@ -1,10 +1,10 @@
 nanoid
-starlette
+fastapi
 motor
 aiofiles
 python-dotenv
 uvicorn
 bcrypt
+git+https://github.com/long2ice/fastapi-limiter.git
 aioredis
-slowapi
 requests
