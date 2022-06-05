@@ -18,7 +18,7 @@
 {#if LocalPastes}
   <div class="pastes">
     <ul>
-      {#each LocalPastes as paste}
+      {#each LocalPastes.reverse() as paste}
         <li>
           <div class="paste-item">
             <div class="paste-details">
