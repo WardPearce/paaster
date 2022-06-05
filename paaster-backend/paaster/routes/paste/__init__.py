@@ -11,20 +11,24 @@ import aiofiles
 import bcrypt
 import aiofiles.os
 
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import AsyncGenerator
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.requests import Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse
+from fastapi.background import BackgroundTasks
 
 from fastapi_limiter.depends import RateLimiter
 
 from ...env import (
     NANO_ID_LEN,
-    MAX_PASTE_SIZE_MB
+    MAX_PASTE_SIZE_MB,
+    READ_CHUNK
 )
 from ...resources import Sessions
-from ...helpers.path import format_path
+from ...helpers.path import format_path, delete_file
+from ...models.paste import CreatePasteResponse
 
 
 MAX_SIZE = MAX_PASTE_SIZE_MB * 1049000
@@ -36,9 +40,10 @@ router = APIRouter()
     "/create",
     dependencies=[
         Depends(RateLimiter(times=20, minutes=1))
-    ]
+    ],
+    response_model=CreatePasteResponse
 )
-async def create_paste_resource(request: Request) -> JSONResponse:
+async def create_paste_resource(request: Request) -> CreatePasteResponse:
     paste_id = nanoid.generate(size=NANO_ID_LEN)
     server_secret = secrets.token_urlsafe()
 
@@ -67,8 +72,55 @@ async def create_paste_resource(request: Request) -> JSONResponse:
         "created": now
     })
 
-    return JSONResponse({
-        "pasteId": paste_id,
-        "serverSecret": server_secret,
-        "created": now.timestamp()
+    return CreatePasteResponse(
+        pasteId=paste_id,
+        serverSecret=server_secret,
+        created=now.timestamp()
+    )
+
+
+@router.get(
+    "/{paste_id}",
+    dependencies=[
+        Depends(RateLimiter(times=20, minutes=1))
+    ]
+)
+async def get_paste_resource(paste_id: str) -> StreamingResponse:
+    result = await Sessions.mongo.file.find_one({
+        "_id": paste_id
     })
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Paste not found"
+        )
+
+    background_task = None
+    if "delete_after" in result and result["delete_after"] != -1:
+        if result["delete_after"] == 0:
+            background_task = BackgroundTasks()
+            background_task.add_task(delete_file, paste_id=result["_id"])
+        elif (datetime.now() > result["created"] +
+                timedelta(hours=result["delete_after"])):
+
+            await delete_file(paste_id=result["_id"])
+
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Paste not found"
+            )
+
+    async def stream_content() -> AsyncGenerator[bytes, None]:
+        try:
+            async with aiofiles.open(format_path(result["_id"]),
+                                     "rb") as f_:
+                while data := await f_.read(READ_CHUNK):
+                    yield data
+        except FileNotFoundError:
+            yield b""
+
+    return StreamingResponse(
+        stream_content(),
+        media_type="application/octet-stream",
+        background=background_task  # type: ignore
+    )
