@@ -16,6 +16,7 @@
     "@tadashi/svelte-loading": "^2.1.0",
     "@tsconfig/svelte": "^3.0.0",
     "@zerodevx/svelte-toast": "^0.7.1",
+    "buffer": "^6.0.3",
     "file-saver": "^2.0.5",
     "filedrop-svelte": "^0.1.1",
     "highlight.js": "^11.5.1",
