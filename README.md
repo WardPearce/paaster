@@ -15,9 +15,11 @@ Paaster is a secure by default end-to-end encrypted pastebin built with the obje
 - Paste history.
 - Fast.
 - Delete after view or X amount of time.
+- [Integration documentation](/paaster-backend#readme)
+- [API documentation](https://api.paaster.io/api/documentation)
 
 ## Looking to build a client for paaster?
-Check out our [Integration documentation](/paaster-backend#readme)
+Check out our [Integration documentation](/paaster-backend#readme) and our [API documentation](https://api.paaster.io/api/documentation).
 
 ## Security
 ### What is E2EE?
@@ -27,13 +29,13 @@ E2EE or end to end encryption is a zero trust encryption methodology. When you p
 No. Anyone could modify the functionality of `paaster` to expose your secret key to the server. We recommend using a instance you host or trust.
 
 ### How are client secrets stored?
-Client-sided secrets are stored in localStorage on paste creation (for paste history.) Anything else would be retrievable by the server or be overly complicated. This does make `paaster` vulnerable to malicious javascript being executed, but this would require malicious javascript to be present when the svelte application is built. If this was the case you'd have bigger issues, like the module just reading all inputs & getting the plain text paste.
+Client-sided secrets are stored with IndexedDB on paste creation (for paste history.) Anything else would be retrievable by the server or be overly complicated. This does make `paaster` vulnerable to malicious javascript being executed, but this would require malicious javascript to be present when the svelte application is built. If this was the case you'd have bigger issues, like the module just reading all inputs & getting the plain text paste.
 
 ### How are client secrets transported?
 `Paaster` uses URI fragments to transport secrets, according to the [Mozilla foundation](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_URL#anchor) URI fragments aren't meant to be sent to the server. Bitwarden also has a article covering this usage [here](https://bitwarden.com/blog/bitwarden-send-how-it-works/).
 
 ### How are server secrets stored?
-Server-sided secrets are stored in localStorage on paste creation, allowing you to modify or delete pastes later on. Server-sided secrets are generated on the server using the python `secrets` module & are stored in the database using `bcrypt` hashing.
+Server-sided secrets are stored with IndexedDB on paste creation, allowing you to modify or delete pastes later on. Server-sided secrets are generated on the server using the python `secrets` module & are stored in the database using `bcrypt` hashing (A hashing algorithm like Argon2 isn't needed due to the secrets already being secure.)
 
 ### Cipher
 `paaster` is built using the [forge module](https://github.com/digitalbazaar/forge), using `AES-256` in `CBC` mode with `PKCS7` padding & `PBKDF2` key derivation at `50,000` iterations. More details are located in our [Integration documentation](/paaster-backend#readme).
