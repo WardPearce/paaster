@@ -36,7 +36,8 @@
 
   const localPaste = new LocalPaste(pasteId)
   // Used to delete an existing paste.
-  let pasteDetails = localPaste.getPaste()
+  let pasteDetails
+  localPaste.getPaste().then(details => pasteDetails = details)
 
   const deleteAfterOptions = {
     'never': -1,

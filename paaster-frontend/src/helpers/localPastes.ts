@@ -1,3 +1,5 @@
+import { get, set, del, values } from 'idb-keyval'
+
 import type { iPasteStorage } from './interfaces'
 import { storedPastes } from '../store'
 
@@ -8,40 +10,21 @@ export class LocalPaste {
     this.key = key
   }
 
-  getPaste(): iPasteStorage | null {
-    const pastes = allPastes()
-    if (!pastes || !(this.key in pastes))
-      return null
-
-    return pastes[this.key]
+  async getPaste(): Promise<iPasteStorage | null> {
+    return get(this.key)
   }
 
-  setPaste(value: iPasteStorage): void {
-    let pastes = allPastes()
-    if (!pastes)
-      pastes = {}
-
-    pastes[this.key] = value
-
-    localStorage.setItem('pastes', JSON.stringify(pastes))
-    storedPastes.set(pastes)
+  async setPaste(value: iPasteStorage) {
+    set(this.key, value)
+    storedPastes.set(await allPastes())
   }
 
-  deletePaste() {
-    let pastes = allPastes()
-    if (pastes) {
-      delete pastes[this.key]
-
-      localStorage.setItem('pastes', JSON.stringify(pastes))
-      storedPastes.set(pastes)
-    }
+  async deletePaste() {
+    del(this.key)
+    storedPastes.set(await allPastes())
   }
 }
 
-export function allPastes(): Record<string, iPasteStorage> | null {
-  const pastes = JSON.parse(localStorage.getItem('pastes'))
-  if (!pastes || Object.keys(pastes).length === 0)
-    return null
-
-  return pastes
+export async function allPastes(): Promise<iPasteStorage[] | null> {
+  return await values()
 }
