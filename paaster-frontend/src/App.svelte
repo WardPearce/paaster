@@ -1,3 +1,22 @@
+<script lang="ts" context="module">
+  import { register } from 'svelte-loadable'
+
+  const ViewPaste = register({
+    loader: () => import('./pages/ViewPaste.svelte'),
+    resolve: () => import('./pages/ViewPaste.svelte'),
+  })
+
+  const CreatePaste = register({
+    loader: () => import('./pages/CreatePaste.svelte'),
+    resolve: () => import('./pages/CreatePaste.svelte'),
+  })
+
+  const ViewPastes = register({
+    loader: () => import('./pages/ViewPastes.svelte'),
+    resolve: () => import('./pages/ViewPastes.svelte'),
+  })
+</script>
+
 <script lang="ts">
   import Fa from 'svelte-fa'
   import { 
@@ -6,12 +25,10 @@
 
   import { Route, Router, Link } from 'svelte-routing'
 
+  import Loadable from 'svelte-loadable'
+
   import { Loading } from '@tadashi/svelte-loading'
   import { SvelteToast } from '@zerodevx/svelte-toast'
-
-  import ViewPaste from './components/ViewPaste.svelte'
-  import CreatePaste from './components/CreatePaste.svelte'
-  import ViewPastes from './components/ViewPastes.svelte'
 
   import { storedPastes } from './store'
 
@@ -51,9 +68,15 @@
     </div>
   </nav>
 
-  <Route path="/" component={CreatePaste}></Route>
-  <Route path="/pastes" component={ViewPastes}></Route>
+  <Route path="/">
+    <Loadable loader="{CreatePaste}" />
+  </Route>
+  <Route path="/pastes">
+    <Loadable loader="{ViewPastes}" />
+  </Route>
   <Route path=":pasteId" let:params>
-    <ViewPaste pasteId={params.pasteId} />
+    <Loadable loader="{ViewPaste}" pasteId={params.pasteId}>
+      <div slot="loading">Loading...</div>
+    </Loadable>
   </Route>  
 </Router>

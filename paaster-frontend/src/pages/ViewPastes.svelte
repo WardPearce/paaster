@@ -1,6 +1,7 @@
 <script lang="ts">
   import { storedPastes } from '../store'
   import type { iPasteStorage } from '../helpers/interfaces'
+  import { friendlyTime } from '../helpers/time'
 
   import { navigate } from 'svelte-routing'
 
@@ -25,7 +26,7 @@
                 <button on:click={() => navigate(`/${pasteId}#${paste.clientSecret}`)}
                   class="trans-button">{ pasteId }</button>
               </div>
-              <h4>{ new Date(paste.created * 1000).toLocaleDateString() }</h4>
+              <h4>{ friendlyTime(paste.created * 1000) }</h4>
             </div>
           </div>
         </li>
