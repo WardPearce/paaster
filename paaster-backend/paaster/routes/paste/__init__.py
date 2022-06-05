@@ -44,6 +44,12 @@ router = APIRouter()
     response_model=CreatePasteResponse
 )
 async def create_paste_resource(request: Request) -> CreatePasteResponse:
+    """paaster expects IVs, salts & encrypted data to be transformed
+    into hexadecimal (base16), these should be separated using commas (,).
+
+    formatted like the following, {iv},{salt},{encrypted_data}
+    """
+
     paste_id = nanoid.generate(size=NANO_ID_LEN)
     server_secret = secrets.token_urlsafe()
 
@@ -83,9 +89,13 @@ async def create_paste_resource(request: Request) -> CreatePasteResponse:
     "/{paste_id}",
     dependencies=[
         Depends(RateLimiter(times=20, minutes=1))
-    ]
+    ],
+    response_model=str
 )
 async def get_paste_resource(paste_id: str) -> StreamingResponse:
+    """Get the encrypted data.
+    Formatted like the following, {iv},{salt},{encrypted_data}
+    """
     result = await Sessions.mongo.file.find_one({
         "_id": paste_id
     })

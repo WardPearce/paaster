@@ -11,3 +11,7 @@ from typing import Union, Optional
 
 class UpdatePaste(BaseModel):
     delete_after_hours: Optional[Union[int, float]] = None
+
+
+class PasteModifyResponse(BaseModel):
+    pasteId: str

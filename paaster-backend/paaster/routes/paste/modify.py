@@ -6,14 +6,13 @@ Version 3, 19 November 2007
 """
 
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
 
 from fastapi_limiter.depends import RateLimiter
 
 from ...resources import Sessions
 from ...helpers.path import delete_file
 from ...basic_auth import validate_paste_auth
-from ...models.paste.modify import UpdatePaste
+from ...models.paste.modify import UpdatePaste, PasteModifyResponse
 
 
 router = APIRouter()
@@ -23,26 +22,28 @@ router = APIRouter()
     "/",
     dependencies=[
         Depends(RateLimiter(times=20, minutes=1))
-    ]
+    ],
+    response_model=PasteModifyResponse
 )
 async def delete_paste_resource(paste_id: str = Depends(validate_paste_auth)
-                                ) -> JSONResponse:
+                                ) -> PasteModifyResponse:
     """Delete a paste.
     """
 
     await delete_file(paste_id)
-    return JSONResponse({"pastedId": paste_id})
+    return PasteModifyResponse(pasteId=paste_id)
 
 
 @router.post(
     "/",
     dependencies=[
         Depends(RateLimiter(times=20, minutes=1))
-    ]
+    ],
+    response_model=PasteModifyResponse
 )
 async def update_paste_resource(update: UpdatePaste,
                                 paste_id: str = Depends(validate_paste_auth)
-                                ) -> JSONResponse:
+                                ) -> PasteModifyResponse:
     """Update a pastes details
     """
 
@@ -52,4 +53,4 @@ async def update_paste_resource(update: UpdatePaste,
             {"$set": {"delete_after": update.delete_after_hours}}
         )
 
-    return JSONResponse({"pastedId": paste_id})
+    return PasteModifyResponse(pasteId=paste_id)
