@@ -51,7 +51,8 @@ app = FastAPI(
         Middleware(
             CORSMiddleware,
             allow_origins=FRONTEND_PROXIED.lower(),
-            allow_methods=["GET", "DELETE", "PUT", "POST"]
+            allow_methods=["GET", "DELETE", "PUT", "POST"],
+            allow_headers=["Authorization"]
         ),
     ], on_startup=[on_start])
 
