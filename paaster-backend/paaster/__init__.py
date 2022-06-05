@@ -41,6 +41,9 @@ async def on_start() -> None:
     )
     await FastAPILimiter.init(redis)
 
+cors_origins = [FRONTEND_PROXIED.lower()]
+if cors_origins[0].startswith("https"):
+    cors_origins.append(cors_origins[0].replace("https", "http", 1))
 
 app = FastAPI(
     title="Paaster",
@@ -50,7 +53,7 @@ app = FastAPI(
     middleware=[
         Middleware(
             CORSMiddleware,
-            allow_origins=FRONTEND_PROXIED.lower(),
+            allow_origins=cors_origins,
             allow_methods=["GET", "DELETE", "PUT", "POST"],
             allow_headers=["Authorization"]
         ),
