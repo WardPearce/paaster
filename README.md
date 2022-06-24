@@ -1,5 +1,3 @@
-### [Follow the development of our desktop client here](https://github.com/WardPearce/paaster-client)
-
 # Paaster
 Paaster is a secure by default end-to-end encrypted pastebin built with the objective of simplicity.
 
@@ -17,6 +15,7 @@ Paaster is a secure by default end-to-end encrypted pastebin built with the obje
 - Delete after view or X amount of time.
 - [Integration documentation](/paaster-backend#readme)
 - [API documentation](https://api.paaster.io/api/documentation)
+- [CLI Client](https://github.com/WardPearce/paaster-cli)
 
 ## Looking to build a client for paaster?
 Check out our [Integration documentation](/paaster-backend#readme) and our [API documentation](https://api.paaster.io/api/documentation).
