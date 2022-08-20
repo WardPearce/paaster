@@ -3,7 +3,7 @@ name: Production Vite workflow
 on:
   push:
     branches:
-    - Production
+    - main
 
 jobs:
   build:
@@ -14,13 +14,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Install modules
-        run: npm install
-      - name: Check codebase
-        run: npm run check
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
