@@ -71,8 +71,8 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 Basically the most important part is to install `fuse`, create `/var/lib/docker-plugins/rclone/config` & `/var/lib/docker-plugins/rclone/cache`, install the docker plugin `docker plugin install rclone/docker-volume-rclone:amd64 args="-v" --alias rclone --grant-all-permissions`, configure the `rclone.conf` for the storage service you want to use & then configure your docker compose to use the rclone volume. [Example rclone docker compose](/rclone-docker-example.yml).
 
 ### Production without docker
-This setup is not recommended & requires more research / knowledge.
-- `git clone --branch Production https://github.com/WardPearce/paaster`.
+**This setup is not recommended & requires more research / knowledge.**
+- `git clone https://github.com/WardPearce/paaster`.
 - `cd paaster-frontend`
 - Create `.env`
     - `VITE_NAME` - The name displayed on the website.
