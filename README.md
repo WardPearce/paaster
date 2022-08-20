@@ -58,7 +58,7 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 
 ## Setup
 ### Production with Docker
-- `git clone --branch Production https://github.com/WardPearce/paaster`
+- `git clone https://github.com/WardPearce/paaster`
 - Configure `docker-compose.yml`
 - Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
 - [FRONTEND_PROXIED](https://github.com/WardPearce/paaster/blob/Development/docker-compose.yml#L24) should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
