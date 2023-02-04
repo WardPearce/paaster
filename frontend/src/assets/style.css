@@ -1,0 +1,168 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --darkBg: #191724;
+    --darkerBg: #0c0b10;
+    --lightBg: #1c1735;
+    --lighterBg: #8478c9;
+    --textWhite: #c7c3c3;
+    --line-number-color: var(--lighterBg);
+    --border-color: var(--lighterBg);
+}
+
+body {
+    background-color: var(--darkBg);
+    color: var(--textWhite);
+    font-family: FiraCode, monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: MajorMonoDisplay;
+    color: #ffffff;
+}
+
+@font-face {
+    font-family: MajorMonoDisplay;
+    src: url(./fonts/MajorMonoDisplay-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: FiraCode;
+    src: url(./fonts/FiraCode-Regular.ttf) format('truetype');
+}
+
+input {
+    background-color: var(--lightBg);
+    border: none;
+    color: var(--textWhite);
+    padding: .6em 1em;
+    font-size: 1em;
+    border-radius: 3em;
+}
+
+input:focus {
+    outline: none;
+}
+
+label {
+    display: block;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 3em;
+    background-color: var(--darkerBg);
+}
+
+main {
+    padding: 1em 3em 0;
+}
+
+textarea {
+    background-color: transparent;
+    color: var(--textWhite);
+    border: none;
+    resize: none;
+    box-sizing: border-box;
+    width: 90vw;
+    height: 80vh;
+    overflow: hidden;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+section {
+    background-color: var(--darkerBg);
+    padding: 1em 3em;
+    border-radius: 3em;
+}
+
+a {
+    color: var(--textWhite);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--lighterBg);
+}
+
+::-moz-selection,
+::selection {
+    color: rgb(255, 255, 255) !important;
+    background: rgb(75, 75, 72) !important;
+}
+
+button, .button {
+    text-transform: capitalize;
+    background-color: var(--lightBg);
+    padding: .6em 1em;
+    border-radius: 1em;
+    border: none;
+    color: var(--textWhite);
+    font-size: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button i,
+.button i {
+    margin-right: .2em;
+    font-size: 1.3em;
+}
+
+button:hover, .button:hover {
+    text-decoration: none;
+    background-color: var(--darkBg);
+    cursor: pointer;
+    color: var(--lighterBg);
+}
+
+button.danger, .button.danger {
+    background-color: var(--lighterBg);
+    color: var(--darkerBg);
+}
+
+button.danger:hover,
+.button.danger:hover {
+    background-color: var(--darkBg);
+    color: var(--lighterBg);
+}
+
+footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    background-color: var(--darkerBg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: .5em;
+    padding: 1em;
+}
+
+@media screen and (max-width: 600px) {
+    footer {
+        padding: 1em 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        row-gap: 1em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    main {
+        padding: 1em 0;
+    }
+}

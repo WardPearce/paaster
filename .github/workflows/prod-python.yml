@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./paaster-backend
+        working-directory: ./backend
 
     steps:
       - uses: actions/checkout@v2.3.2
@@ -27,6 +27,6 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: ./paaster-backend
+          context: ./backend
           push: true
           tags: wardpearce/paaster-backend:latest

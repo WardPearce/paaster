@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./paaster-frontend
+        working-directory: ./frontend
 
     steps:
       - uses: actions/checkout@v2
