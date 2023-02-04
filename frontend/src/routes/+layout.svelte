@@ -1,6 +1,8 @@
 <script lang="ts">
 	import '../assets/style.css';
 	import '../assets/icons/1.3.0/css/line-awesome.min.css';
+
+	import { Loading } from '@tadashi/svelte-loading';
 </script>
 
 <nav>
@@ -9,3 +11,10 @@
 </nav>
 
 <slot />
+
+<Loading
+	animation="Jelly"
+	color="var(--lighterBg)"
+	--tadashi_svelte_loading_background_color="var(--darkBgTrans)"
+	--tadashi_svelte_loading_zindex="1011"
+/>

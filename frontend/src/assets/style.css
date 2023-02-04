@@ -6,6 +6,7 @@
 :root {
     --darkBg: #191724;
     --darkerBg: #0c0b10;
+    --darkBgTrans: #0c0b10b7;
     --lightBg: #1c1735;
     --lighterBg: #8478c9;
     --textWhite: #c7c3c3;
@@ -146,7 +147,7 @@ footer {
     justify-content: center;
     column-gap: .5em;
     padding: 1em;
-    z-index: 9999;
+    z-index: 1010;
 }
 
 @media screen and (max-width: 600px) {

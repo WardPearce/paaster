@@ -26,9 +26,10 @@
 	<section>
 		<h3>owner panel</h3>
 		<div class="owner-panel">
-			<button><i class="las la-share" />share</button>
 			<button><i class="las la-pencil-alt" />rename</button>
+			<button><i class="las la-share" />share</button>
 			<button><i class="las la-clone" />clone</button>
+			<button><i class="las la-graduation-cap" />shortcuts</button>
 			<button class="danger"><i class="las la-trash" />delete</button>
 		</div>
 	</section>
