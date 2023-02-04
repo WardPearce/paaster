@@ -146,6 +146,7 @@ footer {
     justify-content: center;
     column-gap: .5em;
     padding: 1em;
+    z-index: 9999;
 }
 
 @media screen and (max-width: 600px) {

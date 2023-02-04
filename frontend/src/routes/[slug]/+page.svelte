@@ -2,17 +2,19 @@
 	import { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import rosPine from 'svelte-highlight/styles/ros-pine';
 
-	$: code = `* { 
-    margin: 0; 
-    padding: 0; 
+	$: code = `* {
+    margin: 0;
+    padding: 0;
 }
 
 :root {
     --darkBg: #191724;
-    --textWhite: rgb(238, 238, 238);
-    --toastBarBackground: #565174;
-    --toastBackground: #211f29;
-    --toastContainerTop: 6em;
+    --darkerBg: #0c0b10;
+    --lightBg: #1c1735;
+    --lighterBg: #8478c9;
+    --textWhite: #c7c3c3;
+    --line-number-color: var(--lighterBg);
+    --border-color: var(--lighterBg);
 }`;
 </script>
 
@@ -47,6 +49,7 @@
 <style>
 	.content {
 		margin-top: 1em;
+		margin-bottom: 20em;
 	}
 
 	.owner-panel {
