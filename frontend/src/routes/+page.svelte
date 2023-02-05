@@ -2,6 +2,8 @@
 	import sodium from 'libsodium-wrappers';
 	import { acts } from '@tadashi/svelte-loading';
 	import type { PasteCreatedModel } from '../lib/client/models/PasteCreatedModel';
+	import { pasteStore } from '../stores';
+	import { goto } from '$app/navigation';
 
 	let isLoading = false;
 
@@ -31,8 +33,12 @@
 		});
 		let createdPaste: PasteCreatedModel = await response.json();
 
+		pasteStore.set({ rawPaste: event.data });
+
 		isLoading = false;
 		acts.show(false);
+
+		goto(`/${createdPaste._id}#${rawUrlSafeKey}`);
 	}
 </script>
 

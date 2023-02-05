@@ -5,9 +5,9 @@ import bcrypt
 import nanoid
 from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
-from app.models.paste import PasteCreatedModel
+from app.models.paste import PasteCreatedModel, PasteModel
 from app.resources import Sessions
-from starlite import HTTPException, Request, Router, post
+from starlite import HTTPException, NotFoundException, Request, Router, get, post
 from starlite.middleware import RateLimitConfig
 
 
@@ -86,9 +86,27 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     }
     await Sessions.mongo.paste.insert_one(paste)
 
+    paste.pop("owner_secret")
+
     return PasteCreatedModel(
-        **paste.pop("owner_secret"), owner_secret=owner_secret, download_url=""
+        **paste,
+        owner_secret=owner_secret,
+        download_url=f"{SETTINGS.s3.download_url}/{file_key}",
     )
 
 
-router = Router(path="/paste", route_handlers=[create_paste])
+@get(
+    "/{paste_id:str}",
+    middleware=[RateLimitConfig(rate_limit=("minute", 60)).middleware],
+)
+async def get_paste(paste_id: str) -> PasteModel:
+    paste = await Sessions.mongo.paste.find_one({"_id": paste_id})
+    if not paste:
+        raise NotFoundException(detail="No paste found")
+
+    return PasteModel(
+        **paste, download_url=f"{SETTINGS.s3.download_url}/{format_file_path(paste_id)}"
+    )
+
+
+router = Router(path="/paste", route_handlers=[create_paste, get_paste])
