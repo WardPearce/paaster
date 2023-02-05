@@ -6,9 +6,10 @@ from app.env import MAX_IV_SIZE, MAX_PASTE_SIZE
 from app.models.paste import PasteCreatedModel
 from app.resources import Sessions
 from starlite import HTTPException, Request, post
+from starlite.middleware import RateLimitConfig
 
 
-@post("/{iv:str}")
+@post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 5)).middleware])
 async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     if len(iv) > MAX_IV_SIZE:
         raise HTTPException(detail="IV too large", status_code=400)
@@ -24,7 +25,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     paste = {
         "iv": iv,
         "created": datetime.now(),
-        "expires": None,
+        "expires_in_hours": None,
         # Bcrypt hash only used to defend against timing attacks,
         # secret itself already secure enough to avoid brute forcing.
         "owner_secret": bcrypt.hashpw(owner_secret.encode(), bcrypt.gensalt()),

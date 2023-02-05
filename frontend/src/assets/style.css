@@ -8,10 +8,11 @@
     --darkerBg: #0c0b10;
     --darkBgTrans: #0c0b10b7;
     --lightBg: #1c1735;
+    --lineColors: #312b50;
     --lighterBg: #8478c9;
     --textWhite: #c7c3c3;
-    --line-number-color: var(--lighterBg);
-    --border-color: var(--lighterBg);
+    --line-number-color: var(--lineColors);
+    --border-color: var(--lineColors);
 }
 
 body {
@@ -79,6 +80,12 @@ textarea:focus {
     outline: none;
 }
 
+textarea:placeholder-shown {
+    color: var(--lighterBg);
+    font-size: 1.2em;
+    font-family: FiraCode;
+}
+
 section {
     background-color: var(--darkerBg);
     padding: 1em 3em;
@@ -96,8 +103,8 @@ a:hover {
 
 ::-moz-selection,
 ::selection {
-    color: rgb(255, 255, 255) !important;
-    background: rgb(75, 75, 72) !important;
+    color: var(--textWhite) !important;
+    background: var(--lighterBg) !important;
 }
 
 button, .button {
@@ -148,6 +155,12 @@ footer {
     column-gap: .5em;
     padding: 1em;
     z-index: 1010;
+}
+
+@media screen and (max-width: 600px) {
+    section {
+        border-radius: 0;
+    }
 }
 
 @media screen and (max-width: 600px) {

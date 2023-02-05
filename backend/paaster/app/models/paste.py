@@ -21,7 +21,7 @@ class PasteModel(BaseModel):
     id: ObjectIdStr = Field(..., alias="_id")
     iv: str
     created: datetime
-    expires: Optional[datetime] = None
+    expires_in_hours: Optional[float] = None
     download_url: str
 
 
