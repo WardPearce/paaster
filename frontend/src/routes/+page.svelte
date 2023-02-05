@@ -1,6 +1,7 @@
 <script lang="ts">
 	import sodium from 'libsodium-wrappers';
 	import { acts } from '@tadashi/svelte-loading';
+	import type { PasteCreatedModel } from '../lib/client/models/PasteCreatedModel';
 
 	let isLoading = false;
 
@@ -10,15 +11,25 @@
 
 		await sodium.ready;
 
-		const rawKey = sodium.crypto_secretbox_keygen();
-		const rawIv = sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES);
+		const rawKey = sodium.crypto_aead_xchacha20poly1305_ietf_keygen();
+		const rawIv = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
 
-		const cipherArray = sodium.crypto_secretbox_easy(
+		const cipherArray = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
 			new TextEncoder().encode(event.data),
+			null,
+			null,
 			rawIv,
 			rawKey
 		);
 		const rawUrlSafeKey = sodium.to_base64(rawKey, sodium.base64_variants.URLSAFE_NO_PADDING);
+		const rawUrlSafeIv = sodium.to_base64(rawIv, sodium.base64_variants.URLSAFE_NO_PADDING);
+
+		// Not supported by OpenAPI.
+		let response = await fetch(`${import.meta.env.VITE_API_URL}/controller/paste/${rawUrlSafeIv}`, {
+			method: 'POST',
+			body: new Blob([cipherArray.buffer])
+		});
+		let createdPaste: PasteCreatedModel = await response.json();
 
 		isLoading = false;
 		acts.show(false);
@@ -31,6 +42,7 @@
 		placeholder="paste or drag & drop your code here"
 		name="create-paste"
 		disabled={isLoading}
+		value=""
 	/>
 
 	<section>

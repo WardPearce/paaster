@@ -39,5 +39,8 @@ class Settings(BaseSettings):
     s3: S3
     open_api: OpenAPI = OpenAPI()
 
+    class Config:
+        env_prefix = "paaster_"
 
-SETTINGS = Settings()
+
+SETTINGS = Settings()  # type: ignore (will be filled via env)

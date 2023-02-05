@@ -1,3 +1,4 @@
+from app.controllers import router
 from app.env import SETTINGS
 from app.resources import Sessions
 from motor import motor_asyncio
@@ -14,7 +15,7 @@ async def start_motor() -> None:
 
 
 app = Starlite(
-    route_handlers=[],
+    route_handlers=[router],
     on_startup=[start_motor],
     debug=SETTINGS.proxy_urls.frontend.endswith("localhost"),
     openapi_config=OpenAPIConfig(

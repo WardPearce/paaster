@@ -11,7 +11,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+    	"generate": "openapi --input http://boring.localhost/api/schema/openapi.json --output ./src/lib/client --name PaasterClient"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -25,6 +26,7 @@
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
 		"libsodium-wrappers": "^0.7.10",
+		"openapi-typescript-codegen": "^0.23.0",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"svelte": "^3.54.0",

@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional
 
-from bson.objectid import ObjectId
 from pydantic import BaseModel, Field
 
 
@@ -11,6 +10,11 @@ class PasteModel(BaseModel):
     created: datetime
     expires_in_hours: Optional[float] = None
     download_url: str
+
+    class Config:
+        json_encoders = {
+            datetime: lambda dt: dt.timestamp(),
+        }
 
 
 class PasteCreatedModel(PasteModel):
