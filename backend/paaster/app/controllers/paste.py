@@ -19,13 +19,16 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     # Shorter then Mongo IDs
     paste_id = nanoid.generate()
     file_key = format_file_path(paste_id)
+    chunk_buffer = b""
 
     total_size = 0
     part_number = 0
     async with s3_create_client() as client:
         multipart = await client.create_multipart_upload(Bucket=BUCKET, Key=file_key)
         async for chunk in request.stream():
+            chunk_buffer += chunk
             total_size += len(chunk)
+
             if total_size > MAX_PASTE_SIZE:
                 await client.abort_multipart_upload(
                     Bucket=BUCKET,
@@ -34,15 +37,28 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
                 )
                 raise HTTPException(detail="Paste too large", status_code=400)
 
+            elif len(chunk_buffer) >= 655400:
+                await client.upload_part(
+                    Bucket=BUCKET,
+                    Key=file_key,
+                    PartNumber=part_number,
+                    UploadId=multipart["UploadId"],
+                    Body=chunk_buffer,
+                )
+
+                chunk_buffer = b""
+                part_number += 1
+
+        if chunk_buffer:
+            # Upload any remaining bytes after stream completed.
             await client.upload_part(
                 Bucket=BUCKET,
                 Key=file_key,
                 PartNumber=part_number,
                 UploadId=multipart["UploadId"],
-                Body=chunk,
+                Body=chunk_buffer,
             )
-
-            part_number += 1
+            chunk_buffer = b""
 
         await client.complete_multipart_upload(
             Bucket=BUCKET, Key=file_key, UploadId=multipart["UploadId"]
