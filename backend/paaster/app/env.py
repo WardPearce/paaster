@@ -1,27 +1,43 @@
 from os import environ
+from typing import Optional
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-MONGO_HOST = environ.get("MONGO_IP", "localhost")
-MONGO_PORT = int(environ.get("MONGO_PORT", 27017))
-MONGO_COLLECTION = environ.get("MONGO_COLLECTION", "paasterv2")
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings
 
 
-FRONTEND_URL = environ.get("FRONTEND_URL", "http://paaster.localhost")
-BACKEND_URL = environ.get("BACKEND_URL", "http://paaster.localhost/api")
+class MongoDB(BaseModel):
+    host: str = "localhost"
+    port: int = 27017
+    collection: str = "paasterv2"
 
-MAX_PASTE_SIZE = int(environ.get("MAX_PASTE_SIZE", 1049000))
-MAX_IV_SIZE = int(environ.get("MAX_IV_SIZE", 42))
 
-REGION_NAME = environ["REGION_NAME"]
-SECRET_ACCESS_KEY = environ["SECRET_ACCESS_KEY"]
-ACCESS_KEY_ID = environ["ACCESS_KEY_ID"]
-BUCKET = environ["BUCKET"]
-FOLDER = environ.get("FOLDER", "pastes")
-DOWNLOAD_URL = environ["DOWNLOAD_URL"]
-ENDPOINT_URL = environ.get("ENDPOINT_URL", None)
+class ProxiedUrls(BaseModel):
+    frontend: AnyHttpUrl = AnyHttpUrl(url="paaster.localhost", scheme="http")
+    backend: AnyHttpUrl = AnyHttpUrl(url="paaster.localhost/api", scheme="http")
 
-API_TITLE = environ.get("API_TITLE", "paaster.io")
-API_VERSION = environ.get("API_VERSION", "2.0.0")
+
+class S3(BaseModel):
+    region_name: str
+    secret_access_key: str
+    access_key_id: str
+    bucket: str
+    folder: str = "pastes"
+    download_url: str
+    endpoint_url: Optional[str] = None
+
+
+class OpenAPI(BaseModel):
+    title: str = "paaster.io"
+    version: str = "2.0.0"
+
+
+class Settings(BaseSettings):
+    max_paste_size: int = 1049000
+    max_iv_size: int = 42
+
+    mongo: MongoDB = MongoDB()
+    proxy_urls: ProxiedUrls = ProxiedUrls()
+    s3: S3
+    open_api: OpenAPI = OpenAPI()
+
+
+SETTINGS = Settings()

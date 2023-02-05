@@ -1,12 +1,4 @@
-from app.env import (
-    API_TITLE,
-    API_VERSION,
-    BACKEND_URL,
-    FRONTEND_URL,
-    MONGO_COLLECTION,
-    MONGO_HOST,
-    MONGO_PORT,
-)
+from app.env import SETTINGS
 from app.resources import Sessions
 from motor import motor_asyncio
 from pydantic import AnyUrl, BaseModel
@@ -16,21 +8,20 @@ from starlite import CORSConfig, OpenAPIConfig, Starlite
 
 async def start_motor() -> None:
     # Connect mongodb.
-    mongo = motor_asyncio.AsyncIOMotorClient(MONGO_HOST, MONGO_PORT)
+    mongo = motor_asyncio.AsyncIOMotorClient(SETTINGS.mongo.host, SETTINGS.mongo.port)
     await mongo.server_info()
-    Sessions.mongo = mongo[MONGO_COLLECTION]
+    Sessions.mongo = mongo[SETTINGS.mongo.collection]
 
 
 app = Starlite(
     route_handlers=[],
     on_startup=[start_motor],
-    debug=FRONTEND_URL.endswith("localhost"),
+    debug=SETTINGS.proxy_urls.frontend.endswith("localhost"),
     openapi_config=OpenAPIConfig(
-        title=API_TITLE,
-        version=API_VERSION,
+        **SETTINGS.open_api.dict(),
         root_schema_site="redoc",
         description="OpenAPI specification for paaster.io, you are expected to read our encryption implementation to implement it yourself.",
-        servers=[Server(url=BACKEND_URL)],
+        servers=[Server(url=SETTINGS.proxy_urls.backend)],
         by_alias=True,
         contact=Contact(
             name="Paaster API team",
@@ -39,7 +30,8 @@ app = Starlite(
         ),
     ),
     cors_config=CORSConfig(
-        allow_origins=[BACKEND_URL, FRONTEND_URL], allow_credentials=True
+        allow_origins=[SETTINGS.proxy_urls.backend, SETTINGS.proxy_urls.frontend],
+        allow_credentials=True,
     ),
     type_encoders={BaseModel: lambda m: m.dict(by_alias=True)},
 )

@@ -3,7 +3,7 @@ from secrets import token_urlsafe
 
 import bcrypt
 import nanoid
-from app.env import BUCKET, MAX_IV_SIZE, MAX_PASTE_SIZE
+from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteCreatedModel
 from app.resources import Sessions
@@ -13,7 +13,7 @@ from starlite.middleware import RateLimitConfig
 
 @post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 5)).middleware])
 async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
-    if len(iv) > MAX_IV_SIZE:
+    if len(iv) > SETTINGS.max_iv_size:
         raise HTTPException(detail="IV too large", status_code=400)
 
     # Shorter then Mongo IDs
@@ -24,14 +24,16 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     total_size = 0
     part_number = 0
     async with s3_create_client() as client:
-        multipart = await client.create_multipart_upload(Bucket=BUCKET, Key=file_key)
+        multipart = await client.create_multipart_upload(
+            Bucket=SETTINGS.s3.bucket, Key=file_key
+        )
         async for chunk in request.stream():
             chunk_buffer += chunk
             total_size += len(chunk)
 
-            if total_size > MAX_PASTE_SIZE:
+            if total_size > SETTINGS.max_paste_size:
                 await client.abort_multipart_upload(
-                    Bucket=BUCKET,
+                    Bucket=SETTINGS.s3.bucket,
                     Key=file_key,
                     UploadId=multipart["UploadId"],
                 )
@@ -39,7 +41,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
 
             elif len(chunk_buffer) >= 655400:
                 await client.upload_part(
-                    Bucket=BUCKET,
+                    Bucket=SETTINGS.s3.bucket,
                     Key=file_key,
                     PartNumber=part_number,
                     UploadId=multipart["UploadId"],
@@ -52,7 +54,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
         if chunk_buffer:
             # Upload any remaining bytes after stream completed.
             await client.upload_part(
-                Bucket=BUCKET,
+                Bucket=SETTINGS.s3.bucket,
                 Key=file_key,
                 PartNumber=part_number,
                 UploadId=multipart["UploadId"],
@@ -61,7 +63,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
             chunk_buffer = b""
 
         await client.complete_multipart_upload(
-            Bucket=BUCKET, Key=file_key, UploadId=multipart["UploadId"]
+            Bucket=SETTINGS.s3.bucket, Key=file_key, UploadId=multipart["UploadId"]
         )
 
     owner_secret = token_urlsafe(32)
