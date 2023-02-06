@@ -8,11 +8,10 @@
     --darkerBg: #0c0b10;
     --darkBgTrans: #0c0b10b7;
     --lightBg: #1c1735;
-    --lineColors: #312b50;
     --lighterBg: #8478c9;
     --textWhite: #c7c3c3;
-    --line-number-color: var(--lineColors);
-    --border-color: var(--lineColors);
+    --line-number-color: var(--lighterBg);
+    --border-color: var(--lighterBg);
 }
 
 body {
