@@ -74,6 +74,7 @@ textarea {
     width: 90vw;
     height: 80vh;
     overflow: hidden;
+    font-family: FiraCode;
 }
 
 textarea:focus {
@@ -155,6 +156,17 @@ footer {
     column-gap: .5em;
     padding: 1em;
     z-index: 1010;
+}
+
+.toast {
+    background-color: var(--lightBg) !important;
+    color: #ffffff !important;
+    border-radius: 3em !important;
+    font: FiraCode;
+}
+
+.hljs {
+    font-family: FiraCode !important;
 }
 
 @media screen and (max-width: 600px) {

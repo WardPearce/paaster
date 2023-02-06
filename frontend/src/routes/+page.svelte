@@ -4,6 +4,8 @@
 	import type { PasteCreatedModel } from '../lib/client/models/PasteCreatedModel';
 	import { pasteStore } from '../stores';
 	import { goto } from '$app/navigation';
+	import { ApiError } from '$lib/client/core/ApiError';
+	import toast from 'svelte-french-toast';
 
 	let isLoading = false;
 
@@ -13,27 +15,38 @@
 
 		await sodium.ready;
 
-		const rawKey = sodium.crypto_aead_xchacha20poly1305_ietf_keygen();
-		const rawIv = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
+		let createdPaste: PasteCreatedModel;
+		let rawUrlSafeKey: string;
 
-		const cipherArray = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
-			new TextEncoder().encode(event.data),
-			null,
-			null,
-			rawIv,
-			rawKey
-		);
-		const rawUrlSafeKey = sodium.to_base64(rawKey, sodium.base64_variants.URLSAFE_NO_PADDING);
-		const rawUrlSafeIv = sodium.to_base64(rawIv, sodium.base64_variants.URLSAFE_NO_PADDING);
+		try {
+			const rawKey = sodium.crypto_aead_xchacha20poly1305_ietf_keygen();
+			const rawIv = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
 
-		// Not supported by OpenAPI.
-		let response = await fetch(`${import.meta.env.VITE_API_URL}/controller/paste/${rawUrlSafeIv}`, {
-			method: 'POST',
-			body: new Blob([cipherArray.buffer])
-		});
-		let createdPaste: PasteCreatedModel = await response.json();
+			const cipherArray = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+				new TextEncoder().encode(event.data),
+				null,
+				null,
+				rawIv,
+				rawKey
+			);
+			rawUrlSafeKey = sodium.to_base64(rawKey, sodium.base64_variants.URLSAFE_NO_PADDING);
+			const rawUrlSafeIv = sodium.to_base64(rawIv, sodium.base64_variants.URLSAFE_NO_PADDING);
 
-		pasteStore.set({ rawPaste: event.data });
+			// Not supported by OpenAPI.
+			let response = await fetch(
+				`${import.meta.env.VITE_API_URL}/controller/paste/${rawUrlSafeIv}`,
+				{
+					method: 'POST',
+					body: new Blob([cipherArray.buffer])
+				}
+			);
+			createdPaste = await response.json();
+		} catch (error) {
+			if (error instanceof ApiError) toast.error(error.body.detail);
+			else if (error instanceof Error) toast.error(error.toString());
+			return;
+		}
+		pasteStore.set(event.data);
 
 		isLoading = false;
 		acts.show(false);

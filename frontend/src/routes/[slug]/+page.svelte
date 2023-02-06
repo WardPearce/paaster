@@ -7,34 +7,96 @@
 	import sodium from 'libsodium-wrappers';
 	import { page } from '$app/stores';
 	import { paasterClient } from '$lib/client';
+	import { acts } from '@tadashi/svelte-loading';
+	import toast from 'svelte-french-toast';
+	import { showSaveFilePicker } from 'native-file-system-adapter';
+	import { goto } from '$app/navigation';
+	import type { PasteModel } from '$lib/client/models/PasteModel';
+	import { ApiError } from '$lib/client/core/ApiError';
 
 	let code = '';
+	acts.show(true);
+
+	async function download() {
+		const fileHandler = await showSaveFilePicker();
+		const writer = await fileHandler.createWritable();
+		await writer.write(new Blob([code]));
+		await writer.close();
+	}
+
+	async function copyToClipboard() {
+		await navigator.clipboard.writeText(code);
+		toast.success('Paste copied');
+	}
 
 	onMount(async () => {
+		// If user just created paste,
+		// avoid needing to download & decrypt paste for speed reasons.
 		let storedPaste = get(pasteStore);
-		if (storedPaste.rawPaste !== '') {
-			code = storedPaste.rawPaste;
-			pasteStore.set({ rawPaste: '' });
+		if (storedPaste !== '') {
+			code = storedPaste;
+			pasteStore.set('');
 			return;
 		}
 
-		let rawSecretKey = sodium.from_base64(
-			location.hash.substring(1),
-			sodium.base64_variants.URLSAFE_NO_PADDING
-		);
+		await sodium.ready;
 
-		let paste = await paasterClient.default.controllerPasteGetPaste($page.params.slug);
-		let response = await fetch(paste.download_url);
+		if (location.hash === '') {
+			toast.error('Paste secret key not provided');
+			acts.show(false);
+			goto('/');
+			return;
+		}
 
-		code = new TextDecoder('utf8').decode(
-			sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
-				null,
-				new Uint8Array(await response.arrayBuffer()),
-				null,
-				sodium.from_base64(paste.iv, sodium.base64_variants.URLSAFE_NO_PADDING),
-				rawSecretKey
-			)
-		);
+		let rawSecretKey: Uint8Array;
+		try {
+			rawSecretKey = sodium.from_base64(
+				location.hash.substring(1),
+				sodium.base64_variants.URLSAFE_NO_PADDING
+			);
+		} catch {
+			toast.error('Invalid Secret key format');
+			acts.show(false);
+			goto('/');
+			return;
+		}
+
+		let paste: PasteModel;
+		try {
+			paste = await paasterClient.default.controllerPasteGetPaste($page.params.slug);
+		} catch (error) {
+			if (error instanceof ApiError) toast.error(error.body.detail);
+			else if (error instanceof Error) toast.error(error.toString());
+			return;
+		}
+		let response: Response;
+		try {
+			response = await fetch(paste.download_url);
+		} catch {
+			toast.error('Unable to download paste from CDN, try again later');
+			acts.show(false);
+			goto('/');
+			return;
+		}
+
+		try {
+			code = new TextDecoder('utf8').decode(
+				sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+					null,
+					new Uint8Array(await response.arrayBuffer()),
+					null,
+					sodium.from_base64(paste.iv, sodium.base64_variants.URLSAFE_NO_PADDING),
+					rawSecretKey
+				)
+			);
+		} catch (error) {
+			if (error instanceof Error) toast.error(error.toString());
+			acts.show(false);
+			goto('/');
+			return;
+		}
+
+		acts.show(false);
 	});
 </script>
 
@@ -55,8 +117,8 @@
 </main>
 
 <footer>
-	<button><i class="las la-download" />Download</button>
-	<button><i class="las la-copy" />Copy</button>
+	<button on:click={download}><i class="las la-download" />Download</button>
+	<button on:click={copyToClipboard}><i class="las la-copy" />Copy</button>
 	<button><i class="las la-save" />Save</button>
 </footer>
 

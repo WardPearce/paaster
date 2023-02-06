@@ -2,6 +2,7 @@
 	import '../assets/style.css';
 	import '../assets/icons/1.3.0/css/line-awesome.min.css';
 
+	import { Toaster } from 'svelte-french-toast';
 	import { Loading } from '@tadashi/svelte-loading';
 </script>
 
@@ -18,3 +19,5 @@
 	--tadashi_svelte_loading_background_color="var(--darkBgTrans)"
 	--tadashi_svelte_loading_zindex="1011"
 />
+
+<Toaster toastOptions={{ className: 'toast' }} />

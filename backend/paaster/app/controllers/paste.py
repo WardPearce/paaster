@@ -80,6 +80,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
         "iv": iv,
         "created": datetime.now(),
         "expires_in_hours": None,
+        "delete_after_view": False,
         # Bcrypt hash only used to defend against timing attacks,
         # secret itself already secure enough to avoid brute forcing.
         "owner_secret": bcrypt.hashpw(owner_secret.encode(), bcrypt.gensalt()),

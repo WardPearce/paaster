@@ -1,5 +1,3 @@
 import { writable } from "svelte/store";
 
-export const pasteStore = writable({
-    rawPaste: "",
-});
+export const pasteStore = writable("");

@@ -9,6 +9,7 @@ class PasteModel(BaseModel):
     iv: str
     created: datetime
     expires_in_hours: Optional[float] = None
+    delete_after_view: bool = False
     download_url: str
 
     class Config:
