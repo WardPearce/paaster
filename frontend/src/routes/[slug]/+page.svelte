@@ -13,7 +13,7 @@
 	import { goto } from '$app/navigation';
 	import type { PasteModel } from '$lib/client/models/PasteModel';
 	import { ApiError } from '$lib/client/core/ApiError';
-	import { getPaste, savePaste } from '$lib/client/savedPaste';
+	import { deletePaste, getPaste, savePaste } from '$lib/client/savedPaste';
 	import Mousetrap from 'mousetrap';
 
 	let ownerSecret = '';
@@ -88,8 +88,11 @@
 		try {
 			paste = await paasterClient.default.controllerPasteGetPaste($page.params.slug);
 		} catch (error) {
-			if (error instanceof ApiError) toast.error(error.body.detail);
-			else if (error instanceof Error) toast.error(error.toString());
+			if (error instanceof ApiError) {
+				toast.error(error.body.detail);
+				// Delete paste from local storage if no longer exists on server.
+				if (error.status === 404) await deletePaste($page.params.slug);
+			} else if (error instanceof Error) toast.error(error.toString());
 			return;
 		}
 		let response: Response;
@@ -135,7 +138,6 @@
 			download();
 			return false;
 		});
-
 	});
 </script>
 

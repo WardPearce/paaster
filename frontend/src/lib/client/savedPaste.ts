@@ -46,3 +46,8 @@ export async function setPasteName(pasteId: string, name: string) {
 export async function listPastes(): Promise<SavedPaste[]> {
     return await values();
 }
+
+
+export async function deletePaste(pasteId: string) {
+    await del(pasteId);
+}

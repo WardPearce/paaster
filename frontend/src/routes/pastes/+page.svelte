@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { listPastes, type SavedPaste } from '$lib/client/savedPaste';
+	import { listPastes, deletePaste, type SavedPaste } from '$lib/client/savedPaste';
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
 
@@ -7,6 +7,12 @@
 	onMount(async () => {
 		savedPastes = (await listPastes()).sort((a, b) => b.created - a.created);
 	});
+
+	async function deletePasteCall(pasteId: string, ownerSecret?: string) {
+		// Add logic to delete paste from server if owner
+		await deletePaste(pasteId);
+		savedPastes = savedPastes.filter((paste) => paste.pasteId !== pasteId);
+	}
 
 	async function shareLinkToClipboard(pasteId: string, secretKey: string) {
 		await navigator.clipboard.writeText(`${window.location.origin}/${pasteId}#${secretKey}`);
@@ -43,7 +49,11 @@
 								await shareLinkToClipboard(paste.pasteId, paste.b64EncodedRawKey)}
 							><i class="las la-share" />share</button
 						>
-						<button class="danger"><i class="las la-trash" />delete</button>
+						<button
+							class="danger"
+							on:click={async () => await deletePasteCall(paste.pasteId, paste.ownerSecret)}
+							><i class="las la-trash" />delete</button
+						>
 					</div>
 				</li>
 			{/if}
