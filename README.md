@@ -8,12 +8,11 @@ TO BE UPDATED
 
 ## Features
 
-- [End to end encryption](#what-is-e2ee).
+- [End-to-end encryption](#what-is-e2ee).
 - Memory efficient.
 - File drag & drop.
 - [Shortcuts](#shortcuts).
 - Paste history.
-- Fast.
 - Delete after view or X amount of time.
 - [API documentation](https://api.paaster.io/api/documentation)
 
