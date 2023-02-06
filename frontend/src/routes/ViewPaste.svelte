@@ -20,7 +20,7 @@
 
   let ownerSecret = "";
   let isSaved = false;
-  let code = "";
+  let rawCode = "";
   let pasteCreated: number;
 
   acts.show(true);
@@ -33,7 +33,7 @@
   async function download() {
     const fileHandler = await showSaveFilePicker();
     const writer = await fileHandler.createWritable();
-    await writer.write(new Blob([code]));
+    await writer.write(new Blob([rawCode]));
     await writer.close();
   }
 
@@ -44,7 +44,7 @@
   }
 
   async function copyToClipboard() {
-    await navigator.clipboard.writeText(code);
+    await navigator.clipboard.writeText(rawCode);
     toast.success("Paste copied");
   }
 
@@ -59,7 +59,7 @@
     // avoid needing to download & decrypt paste for speed reasons.
     let storedPaste = get(pasteStore);
     if (storedPaste !== "") {
-      code = storedPaste;
+      rawCode = storedPaste;
       pasteStore.set("");
       acts.show(false);
       return;
@@ -109,7 +109,7 @@
     }
 
     try {
-      code = new TextDecoder("utf8").decode(
+      rawCode = new TextDecoder("utf8").decode(
         sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
           null,
           new Uint8Array(await response.arrayBuffer()),
@@ -175,9 +175,9 @@
   {/if}
 </footer>
 
-{#if code !== ""}
+{#if rawCode !== ""}
   <div class="content">
-    <HighlightAuto {code} let:highlighted>
+    <HighlightAuto code={rawCode} let:highlighted>
       <LineNumbers {highlighted} />
     </HighlightAuto>
   </div>
