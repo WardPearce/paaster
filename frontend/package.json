@@ -1,50 +1,37 @@
 {
-	"name": "paaster",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"test": "playwright test",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:unit": "vitest",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write .",
-		"generate": "openapi --input http://boring.localhost/api/schema/openapi.json --output ./src/lib/client --name PaasterClient"
-	},
-	"devDependencies": {
-		"@playwright/test": "^1.28.1",
-		"@sveltejs/adapter-auto": "^1.0.0",
-		"@sveltejs/kit": "^1.0.0",
-		"@tadashi/svelte-loading": "^3.0.0",
-		"@types/libsodium-wrappers": "^0.7.10",
-		"@types/mousetrap": "^1.6.11",
-		"@typescript-eslint/eslint-plugin": "^5.45.0",
-		"@typescript-eslint/parser": "^5.45.0",
-		"eslint": "^8.28.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte3": "^4.0.0",
-		"filedrop-svelte": "^0.1.2",
-		"idb-keyval": "^6.2.0",
-		"libsodium-wrappers": "^0.7.10",
-		"mousetrap": "^1.6.5",
-		"openapi-typescript-codegen": "^0.23.0",
-		"prettier": "^2.8.0",
-		"prettier-plugin-svelte": "^2.8.1",
-		"svelte": "^3.54.0",
-		"svelte-check": "^3.0.1",
-		"svelte-french-toast": "^1.0.3",
-		"svelte-highlight": "^7.1.2",
-		"svelte-modals": "^1.2.1",
-		"tslib": "^2.4.1",
-		"typescript": "^4.9.3",
-		"vite": "^4.0.0",
-		"vitest": "^0.25.3"
-	},
-	"type": "module",
-	"dependencies": {
-		"native-file-system-adapter": "^3.0.0"
-	}
+  "name": "paaster",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "generate": "openapi --input http://boring.localhost/api/schema/openapi.json --output ./src/lib/client --name PaasterClient"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.0.2",
+    "@tadashi/svelte-loading": "^3.0.0",
+    "@tsconfig/svelte": "^3.0.0",
+    "@types/libsodium-wrappers": "^0.7.10",
+    "@types/mousetrap": "^1.6.11",
+    "filedrop-svelte": "^0.1.2",
+    "idb-keyval": "^6.2.0",
+    "libsodium-wrappers": "^0.7.10",
+    "mousetrap": "^1.6.5",
+    "native-file-system-adapter": "^3.0.0",
+    "openapi-typescript-codegen": "^0.23.0",
+    "svelte": "^3.55.1",
+    "svelte-check": "^2.10.3",
+    "svelte-french-toast": "^1.0.3",
+    "svelte-highlight": "^7.1.2",
+    "svelte-modals": "^1.2.1",
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0"
+  },
+  "dependencies": {
+    "svelte-navigator": "^3.2.2"
+  }
 }
