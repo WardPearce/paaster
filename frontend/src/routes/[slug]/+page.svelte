@@ -14,6 +14,7 @@
 	import type { PasteModel } from '$lib/client/models/PasteModel';
 	import { ApiError } from '$lib/client/core/ApiError';
 	import { getPaste, savePaste } from '$lib/client/savedPaste';
+	import Mousetrap from 'mousetrap';
 
 	let ownerSecret = '';
 	let isSaved = false;
@@ -121,6 +122,20 @@
 		pasteCreated = Number(paste.created);
 
 		acts.show(false);
+
+		Mousetrap.bind(['command+a', 'ctrl+a'], () => {
+			copyToClipboard();
+			return false;
+		});
+		Mousetrap.bind(['command+x', 'ctrl+x'], () => {
+			copyToClipboard();
+			return false;
+		});
+		Mousetrap.bind(['command+s', 'ctrl+s'], () => {
+			download();
+			return false;
+		});
+
 	});
 </script>
 
