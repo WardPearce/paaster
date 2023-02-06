@@ -6,10 +6,17 @@
 	import { goto } from '$app/navigation';
 	import { ApiError } from '$lib/client/core/ApiError';
 	import toast from 'svelte-french-toast';
+	import { filedrop } from 'filedrop-svelte';
+	import { savePaste } from '$lib/client/savedPaste';
 
 	let isLoading = false;
 
-	async function pasteSubmit(event: Event & { data: string }) {
+	async function onFileDrop(event: CustomEvent) {
+		pasteSubmit(await event.detail.files.accepted[0].text());
+	}
+
+	async function pasteSubmit(event: (Event & { data: string }) | string) {
+		let data = event instanceof Event ? event.data : event;
 		isLoading = true;
 		acts.show(true);
 
@@ -23,7 +30,7 @@
 			const rawIv = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
 
 			const cipherArray = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
-				new TextEncoder().encode(event.data),
+				new TextEncoder().encode(data),
 				null,
 				null,
 				rawIv,
@@ -46,14 +53,26 @@
 			else if (error instanceof Error) toast.error(error.toString());
 			return;
 		}
-		pasteStore.set(event.data);
+		pasteStore.set(data);
 
 		isLoading = false;
 		acts.show(false);
 
+		await savePaste(
+			createdPaste._id,
+			rawUrlSafeKey,
+			createdPaste.created,
+			createdPaste.owner_secret
+		);
+
 		goto(`/${createdPaste._id}#${rawUrlSafeKey}`);
 	}
 </script>
+
+<div
+	use:filedrop={{ fileLimit: 1, clickToUpload: false, windowDrop: true }}
+	on:filedrop={onFileDrop}
+/>
 
 <main>
 	<textarea

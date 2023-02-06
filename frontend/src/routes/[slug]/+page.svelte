@@ -13,9 +13,19 @@
 	import { goto } from '$app/navigation';
 	import type { PasteModel } from '$lib/client/models/PasteModel';
 	import { ApiError } from '$lib/client/core/ApiError';
+	import { getPaste, savePaste } from '$lib/client/savedPaste';
 
+	let ownerSecret = '';
+	let isSaved = false;
 	let code = '';
+	let pasteCreated: number;
+
 	acts.show(true);
+
+	async function shareLinkToClipboard() {
+		await navigator.clipboard.writeText(window.location.href);
+		toast.success('Share link copied');
+	}
 
 	async function download() {
 		const fileHandler = await showSaveFilePicker();
@@ -24,18 +34,30 @@
 		await writer.close();
 	}
 
+	async function savePasteLocal() {
+		await savePaste($page.params.slug, location.hash.substring(1), pasteCreated);
+		toast.success('Paste saved');
+	}
+
 	async function copyToClipboard() {
 		await navigator.clipboard.writeText(code);
 		toast.success('Paste copied');
 	}
 
 	onMount(async () => {
+		try {
+			const savedPaste = await getPaste($page.params.slug);
+			if (savedPaste.ownerSecret) ownerSecret = savedPaste.ownerSecret;
+			isSaved = true;
+		} catch {}
+
 		// If user just created paste,
 		// avoid needing to download & decrypt paste for speed reasons.
 		let storedPaste = get(pasteStore);
 		if (storedPaste !== '') {
 			code = storedPaste;
 			pasteStore.set('');
+			acts.show(false);
 			return;
 		}
 
@@ -96,6 +118,8 @@
 			return;
 		}
 
+		pasteCreated = Number(paste.created);
+
 		acts.show(false);
 	});
 </script>
@@ -104,29 +128,35 @@
 	{@html rosPine}
 </svelte:head>
 
-<main>
-	<section>
-		<h3>owner panel</h3>
-		<div class="owner-panel">
-			<button><i class="las la-pencil-alt" />rename</button>
-			<button><i class="las la-share" />share</button>
-			<button><i class="las la-clone" />clone</button>
-			<button class="danger"><i class="las la-trash" />delete</button>
-		</div>
-	</section>
-</main>
+{#if ownerSecret !== ''}
+	<main>
+		<section>
+			<h3>owner panel</h3>
+			<div class="owner-panel">
+				<button><i class="las la-pencil-alt" />rename</button>
+				<button on:click={shareLinkToClipboard}><i class="las la-share" />share</button>
+				<button class="danger"><i class="las la-trash" />delete</button>
+			</div>
+		</section>
+	</main>
+{/if}
 
 <footer>
 	<button on:click={download}><i class="las la-download" />Download</button>
 	<button on:click={copyToClipboard}><i class="las la-copy" />Copy</button>
-	<button><i class="las la-save" />Save</button>
+
+	{#if !isSaved}
+		<button on:click={savePasteLocal}><i class="las la-save" />Save</button>
+	{/if}
 </footer>
 
-<div class="content">
-	<HighlightAuto {code} let:highlighted>
-		<LineNumbers {highlighted} />
-	</HighlightAuto>
-</div>
+{#if code !== ''}
+	<div class="content">
+		<HighlightAuto {code} let:highlighted>
+			<LineNumbers {highlighted} />
+		</HighlightAuto>
+	</div>
+{/if}
 
 <style>
 	.content {
