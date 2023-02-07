@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import toast from "svelte-french-toast";
+  import { openModal } from "svelte-modals";
 
   import {
     listPastes,
@@ -10,8 +11,19 @@
 
   let savedPastes: SavedPaste[] = [];
   onMount(async () => {
-    savedPastes = (await listPastes()).sort((a, b) => b.created - a.created);
+    await getPastes();
   });
+
+  function renamePaste(pasteId: string) {
+    openModal(() => import("../components/RenamePaste.svelte"), {
+      pasteId: pasteId,
+      completedEvent: () => getPastes(),
+    });
+  }
+
+  async function getPastes() {
+    savedPastes = (await listPastes()).sort((a, b) => b.created - a.created);
+  }
 
   async function deletePasteCall(pasteId: string, ownerSecret?: string) {
     // Add logic to delete paste from server if owner
@@ -50,7 +62,9 @@
             </div>
           </a>
           <div class="actions">
-            <button><i class="las la-pencil-alt" />rename</button>
+            <button on:click={() => renamePaste(paste.pasteId)}
+              ><i class="las la-pencil-alt" />rename</button
+            >
             <button
               on:click={async () =>
                 await shareLinkToClipboard(

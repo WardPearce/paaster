@@ -8,6 +8,7 @@
   import { acts } from "@tadashi/svelte-loading";
   import toast from "svelte-french-toast";
   import { showSaveFilePicker } from "native-file-system-adapter";
+  import { openModal } from "svelte-modals";
   import Mousetrap from "mousetrap";
 
   import { pasteStore } from "../stores";
@@ -24,6 +25,12 @@
   let pasteCreated: number;
 
   acts.show(true);
+
+  function renamePaste() {
+    openModal(() => import("../components/RenamePaste.svelte"), {
+      pasteId: pasteId,
+    });
+  }
 
   async function shareLinkToClipboard() {
     await navigator.clipboard.writeText(window.location.href);
@@ -156,7 +163,9 @@
     <section>
       <h3>owner panel</h3>
       <div class="owner-panel">
-        <button><i class="las la-pencil-alt" />rename</button>
+        <button on:click={renamePaste}
+          ><i class="las la-pencil-alt" />rename</button
+        >
         <button on:click={shareLinkToClipboard}
           ><i class="las la-share" />share</button
         >

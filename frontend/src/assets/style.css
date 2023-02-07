@@ -165,6 +165,45 @@ footer {
     font: FiraCode;
 }
 
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.modal .contents {
+    min-width: 30vw;
+    padding: 2em;
+    background: var(--darkerBg);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: auto;
+    border-radius: 3em;
+}
+
+.modal .contents > .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5em;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: var(--darkBgTrans);
+}
+
 pre > code {
     font-family: FiraCode, monospace;
     font-size: .8em;

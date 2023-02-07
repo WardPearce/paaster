@@ -2,6 +2,7 @@
   import "./assets/style.css";
   import "./assets/icons/1.3.0/css/line-awesome.min.css";
   import { Router, link, Route } from "svelte-navigator";
+  import { Modals, closeModal } from "svelte-modals";
 
   import { Toaster } from "svelte-french-toast";
   import { Loading } from "@tadashi/svelte-loading";
@@ -45,3 +46,12 @@
 />
 
 <Toaster toastOptions={{ className: "toast" }} />
+
+<Modals>
+  <div
+    slot="backdrop"
+    class="backdrop"
+    on:click={closeModal}
+    on:keydown={() => {}}
+  />
+</Modals>
