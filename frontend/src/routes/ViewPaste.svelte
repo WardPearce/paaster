@@ -7,7 +7,6 @@
   import sodium from "libsodium-wrappers";
   import { acts } from "@tadashi/svelte-loading";
   import toast from "svelte-french-toast";
-  import { showSaveFilePicker } from "native-file-system-adapter";
   import { openModal } from "svelte-modals";
   import Mousetrap from "mousetrap";
 
@@ -38,10 +37,13 @@
   }
 
   async function download() {
-    const fileHandler = await showSaveFilePicker();
-    const writer = await fileHandler.createWritable();
-    await writer.write(new Blob([rawCode]));
-    await writer.close();
+    const anchor = document.createElement("a");
+    const url = window.URL.createObjectURL(
+      new Blob([rawCode], { type: "octet/stream" })
+    );
+    anchor.href = url;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
   }
 
   async function savePasteLocal() {
@@ -99,9 +101,13 @@
       paste = await paasterClient.default.controllerPasteGetPaste(pasteId);
     } catch (error) {
       if (error instanceof ApiError) {
-        toast.error(error.body.detail);
         // Delete paste from local storage if no longer exists on server.
-        if (error.status === 404) await deletePaste(pasteId);
+        if (error.status === 404) {
+          await deletePaste(pasteId);
+          toast.error("Paste no longer exists");
+        } else {
+          toast.error(error.body.detail);
+        }
       } else if (error instanceof Error) toast.error(error.toString());
       return;
     }

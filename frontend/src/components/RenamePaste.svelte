@@ -29,7 +29,6 @@
     <div class="contents">
       <div class="header">
         <h2>rename paste</h2>
-        <button on:click={closeModal}><i class="las la-times" /></button>
       </div>
       <form
         on:submit|preventDefault={nameUpdated}

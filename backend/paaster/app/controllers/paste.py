@@ -7,7 +7,15 @@ from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteCreatedModel, PasteModel
 from app.resources import Sessions
-from starlite import HTTPException, NotFoundException, Request, Router, get, post
+from starlite import (
+    HTTPException,
+    NotFoundException,
+    Request,
+    Router,
+    delete,
+    get,
+    post,
+)
 from starlite.middleware import RateLimitConfig
 
 
@@ -96,6 +104,14 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     )
 
 
+@delete(
+    "/{paste_id:str}",
+    middleware=[RateLimitConfig(rate_limit=("minute", 10)).middleware],
+)
+async def delete_paste(paste_id: str) -> None:
+    pass
+
+
 @get(
     "/{paste_id:str}",
     middleware=[RateLimitConfig(rate_limit=("minute", 60)).middleware],
@@ -110,4 +126,4 @@ async def get_paste(paste_id: str) -> PasteModel:
     )
 
 
-router = Router(path="/paste", route_handlers=[create_paste, get_paste])
+router = Router(path="/paste", route_handlers=[create_paste, get_paste, delete_paste])
