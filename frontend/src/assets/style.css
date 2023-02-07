@@ -14,6 +14,7 @@
     --border-color: var(--lighterBg);
     --border: solid 2px var(--lighterBg);
     --placeholder-color: var(--textWhite);
+    --tooltip-background-color: var(--lighterBg) !important;
 }
 
 body {

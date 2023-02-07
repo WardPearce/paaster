@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import toast from "svelte-french-toast";
   import { openModal } from "svelte-modals";
+  import { tooltip } from "@svelte-plugins/tooltips";
 
   import {
     listPastes,
@@ -49,7 +50,10 @@
               <p class="name">
                 {paste.name ? paste.name : paste.pasteId}
                 {#if !paste.ownerSecret}
-                  <i class="las la-share-alt" />
+                  <i
+                    class="las la-share-alt"
+                    use:tooltip={{ content: "Shared with you" }}
+                  />
                 {/if}
               </p>
               <p class="info">

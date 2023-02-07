@@ -11,6 +11,7 @@
     "generate": "openapi --input http://boring.localhost/api/schema/openapi.json --output ./src/lib/client --name PaasterClient"
   },
   "devDependencies": {
+    "@svelte-plugins/tooltips": "^0.1.6",
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "@tadashi/svelte-loading": "^3.0.0",
     "@tsconfig/svelte": "^3.0.0",
