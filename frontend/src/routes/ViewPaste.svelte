@@ -9,6 +9,7 @@
   import toast from "svelte-french-toast";
   import { openModal } from "svelte-modals";
   import Mousetrap from "mousetrap";
+  import Select from "svelte-select";
 
   import { pasteStore } from "../stores";
   import { paasterClient } from "../lib/client";
@@ -22,6 +23,37 @@
   let isSaved = false;
   let rawCode = "";
   let pasteCreated: number;
+  let timePeriods = [
+    { value: -1, label: "being view" },
+    { value: 0, label: "never" },
+    { value: 0.08333, label: "5 minutes" },
+    { value: 0.25, label: "15 minutes" },
+    { value: 0.5, label: "30 minutes" },
+    { value: 1, label: "1 hour" },
+    { value: 2, label: "2 hour" },
+    { value: 3, label: "3 hour" },
+    { value: 4, label: "4 hour" },
+    { value: 5, label: "5 hour" },
+    { value: 6, label: "6 hour" },
+    { value: 7, label: "7 hour" },
+    { value: 8, label: "8 hour" },
+    { value: 9, label: "9 hour" },
+    { value: 10, label: "10 hour" },
+    { value: 11, label: "11 hour" },
+    { value: 12, label: "12 hour" },
+    { value: 24, label: "1 day" },
+    { value: 48, label: "2 days" },
+    { value: 72, label: "3 days" },
+    { value: 96, label: "4 days" },
+    { value: 120, label: "5 days" },
+    { value: 144, label: "6 days" },
+    { value: 168, label: "1 week" },
+    { value: 336, label: "2 weeks" },
+    { value: 504, label: "3 weeks" },
+    { value: 730, label: "1 month" },
+    { value: 1461, label: "2 months" },
+    { value: 2192, label: "3 months" },
+  ];
 
   acts.show(true);
 
@@ -175,6 +207,11 @@
         <button on:click={shareLinkToClipboard}
           ><i class="las la-share" />share</button
         >
+        <Select
+          items={timePeriods}
+          clearable={false}
+          placeholder="Expire after"
+        />
         <button class="danger"><i class="las la-trash" />delete</button>
       </div>
     </section>

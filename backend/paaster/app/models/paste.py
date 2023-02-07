@@ -20,8 +20,7 @@ class PasteModel(BaseModel):
     id: str = Field(..., alias="_id")
     iv: str
     created: DatetimeToUTC
-    expires_in_hours: Optional[float] = Field(..., ge=0.001, le=99999.0)
-    delete_after_view: bool = False
+    expires_in_hours: Optional[float] = Field(..., ge=-1.0, le=99999.0)
     download_url: str
 
 
