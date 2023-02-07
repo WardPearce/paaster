@@ -186,11 +186,12 @@ footer {
     justify-content: space-between;
     pointer-events: auto;
     border-radius: 3em;
+    border: solid 3px var(--darkBg);
 }
 
 .modal .contents > .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     margin-bottom: 1.5em;
 }
@@ -207,6 +208,12 @@ footer {
 pre > code {
     font-family: FiraCode, monospace;
     font-size: .8em;
+}
+
+@media screen and (max-width: 600px) {
+    .modal .contents {
+        border-radius: 0;
+    }
 }
 
 @media screen and (max-width: 600px) {
