@@ -15,9 +15,7 @@
   <nav>
     <a href="/" use:link
       ><h1>
-        {import.meta.env.VITE_PAGE_NAME
-          ? import.meta.env.VITE_PAGE_NAME
-          : "paaster"}
+        {import.meta.env.VITE_NAME ? import.meta.env.VITE_NAME : "paaster"}
       </h1></a
     >
     <a href="/pastes" use:link class="button"
