@@ -67,15 +67,13 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 
 ### Production with Docker
 
-### Production with Docker
-
 - During configuration, no provided URLs should be suffixed with a slash.
 - `git clone https://github.com/WardPearce/paaster`
-- Configure `docker-compose.yml`
+- Configure `docker-compose.yml` (example [here](./docker-compose.yml))
 - Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
 - `paaster_proxy_urls.frontend` should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
 - `VITE_API_URL` should be the proxied address for "paaster_backend". E.g. for paaster.io this is "https://api.paaster.io"
-- Configure `paaster_s3`.
+- `paaster_s3` should contain your S3 secrets.
 - `sudo docker compose build; sudo docker compose up -d`.
 
 #### Using Rclone
