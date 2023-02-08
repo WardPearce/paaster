@@ -41,7 +41,7 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 
 ### Cipher
 
-TO BE UPDATED
+[ChaCha20-Poly1305-IETF](https://libsodium.gitbook.io/doc/secret-key_cryptography/aead/chacha20-poly1305/ietf_chacha20-poly1305_construction) using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
 
 ## Shortcuts
 
