@@ -63,9 +63,15 @@ class Paste:
             download_url=self.download_url,
         )
 
+        if "delete_next_request" in paste and paste["delete_next_request"]:
+            await self.__delete()
+            raise NotFoundException(detail="No paste found")
+
         if paste["expires_in_hours"] is not None:
             if paste["expires_in_hours"] < 0:
-                await self.__delete()
+                await Sessions.mongo.paste.update_one(
+                    {"_id": self.paste_id}, {"$set": {"delete_next_request": True}}
+                )
                 return model
 
             elif datetime.now() > paste["created"] + timedelta(
