@@ -106,7 +106,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
 
 @delete(
     "/{paste_id:str}/{owner_secret:str}",
-    middleware=[RateLimitConfig(rate_limit=("minute", 10)).middleware],
+    middleware=[RateLimitConfig(rate_limit=("minute", 120)).middleware],
 )
 async def delete_paste(paste_id: str, owner_secret: str) -> None:
     await Paste(paste_id).delete(owner_secret)
