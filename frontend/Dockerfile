@@ -2,10 +2,10 @@ FROM node AS builder
 COPY . .
 
 ARG VITE_NAME
-ARG VITE_BACKEND
+ARG VITE_API_URL
 
 RUN touch /.env
-RUN echo "VITE_NAME=${VITE_NAME}\nVITE_BACKEND=${VITE_BACKEND}" > .env
+RUN echo "VITE_NAME=${VITE_NAME}\nVITE_API_URL=${VITE_API_URL}" > .env
 
 RUN npm install && npm run build
 

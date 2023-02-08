@@ -67,4 +67,19 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 
 ### Production with Docker
 
-TO BE UPDATED
+### Production with Docker
+
+- During configuration, no provided URLs should be suffixed with a slash.
+- `git clone https://github.com/WardPearce/paaster`
+- Configure `docker-compose.yml`
+- Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
+- `paaster_proxy_urls.frontend` should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
+- `VITE_API_URL` should be the proxied address for "paaster_backend". E.g. for paaster.io this is "https://api.paaster.io"
+- Configure `paaster_s3`.
+- `sudo docker compose build; sudo docker compose up -d`.
+
+#### Using Rclone
+
+Rclone is no longer supported for performance reasons & paaster is now only s3 compatible.
+
+Luckily you can get cheap & easy to setup s3 compatible storage from [idrive e2](https://www.idrive.com/e2/) or [backblaze b2](https://www.backblaze.com/b2/cloud-storage.html).

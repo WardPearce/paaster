@@ -17,7 +17,6 @@ async def start_motor() -> None:
 app = Starlite(
     route_handlers=[router],
     on_startup=[start_motor],
-    debug=SETTINGS.proxy_urls.frontend.endswith("localhost"),
     openapi_config=OpenAPIConfig(
         **SETTINGS.open_api.dict(),
         root_schema_site="redoc",
