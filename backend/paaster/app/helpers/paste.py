@@ -1,4 +1,6 @@
+from collections.abc import Mapping
 from datetime import datetime, timedelta
+from typing import Any
 
 import bcrypt
 from app.env import SETTINGS
@@ -39,7 +41,7 @@ class Paste:
             download_url=self.download_url,
         )
 
-    async def __get_raw(self) -> dict:
+    async def __get_raw(self) -> Mapping[str, Any]:
         paste = await Sessions.mongo.paste.find_one({"_id": self.paste_id})
         if not paste:
             raise NotFoundException(detail="No paste found")

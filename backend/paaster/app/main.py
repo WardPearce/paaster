@@ -10,7 +10,7 @@ from starlite import CORSConfig, OpenAPIConfig, Starlite
 async def start_motor() -> None:
     # Connect mongodb.
     mongo = motor_asyncio.AsyncIOMotorClient(SETTINGS.mongo.host, SETTINGS.mongo.port)
-    await mongo.server_info()
+    await mongo.server_info(None)
     Sessions.mongo = mongo[SETTINGS.mongo.collection]
 
 

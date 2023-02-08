@@ -23,6 +23,12 @@ uvicorn = "^0.20.0"
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.1"
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+mypy = "^1.0.0"
+types-aiobotocore = "^2.4.2"
+motor-types = "^1.0.0b0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

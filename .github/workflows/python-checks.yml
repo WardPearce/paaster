@@ -25,16 +25,9 @@ jobs:
 
           poetry install
       - name: Black check
-        uses: jpetrucciani/black-check@master
-        with:
-          path: './backend/paaster'
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Install pyright
-        run: npm install pyright -g
+        run: poetry run black ./**/*.py
       - name: Run pyright
-        run: pyright ./*
+        run: poetry run mypy ./**/*.py
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.7.0
       - name: Run unit tests

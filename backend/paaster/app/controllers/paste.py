@@ -2,7 +2,7 @@ from datetime import datetime
 from secrets import token_urlsafe
 
 import bcrypt
-import nanoid
+import nanoid  # type: ignore
 from app.env import SETTINGS
 from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client

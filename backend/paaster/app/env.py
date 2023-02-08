@@ -43,4 +43,4 @@ class Settings(BaseSettings):
         env_prefix = "paaster_"
 
 
-SETTINGS = Settings()  # type: ignore (will be filled via env)
+SETTINGS = Settings()  # type: ignore
