@@ -54,6 +54,7 @@
     { value: 1461, label: "2 months" },
     { value: 2192, label: "3 months" },
   ];
+  let selectedTime = null;
 
   acts.show(true);
 
@@ -66,6 +67,21 @@
   async function shareLinkToClipboard() {
     await navigator.clipboard.writeText(window.location.href);
     toast.success("Share link copied");
+  }
+
+  async function expireAfter(event: {
+    detail: { value: number; label: string };
+  }) {
+    await toast.promise(
+      paasterClient.default.controllerPasteUpdatePaste(pasteId, ownerSecret, {
+        expires_in_hours: event.detail.value,
+      }),
+      {
+        loading: "Updating expire after",
+        success: `Paste set to expire in ${event.detail.label}`,
+        error: "Unable to set expire after",
+      }
+    );
   }
 
   async function deletePasteCall() {
@@ -162,6 +178,16 @@
       navigate("/", { replace: true });
       return;
     }
+
+    if (ownerSecret !== "" && paste.expires_in_hours !== null) {
+      timePeriods.forEach((time) => {
+        if (time.value === paste.expires_in_hours) {
+          selectedTime = time;
+          return true;
+        }
+      });
+    }
+
     let response: Response;
     try {
       response = await fetch(paste.download_url);
@@ -230,6 +256,8 @@
           items={timePeriods}
           clearable={false}
           placeholder="Expire after"
+          on:change={expireAfter}
+          bind:value={selectedTime}
         />
         <button class="danger" on:click={deletePasteCall}
           ><i class="las la-trash" />delete</button

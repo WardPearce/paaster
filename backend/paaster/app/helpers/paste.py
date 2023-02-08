@@ -55,18 +55,19 @@ class Paste:
 
     async def get(self) -> PasteModel:
         paste = await self.__get_raw()
+
         model = PasteModel(
             **paste,
             download_url=self.download_url,
         )
 
-        if model.expires_in_hours is not None:
-            if model.expires_in_hours < 0:
+        if paste["expires_in_hours"] is not None:
+            if paste["expires_in_hours"] < 0:
                 await self.__delete()
                 return model
 
-            elif datetime.now() > model.created + timedelta(
-                hours=model.expires_in_hours
+            elif datetime.now() > paste["created"] + timedelta(
+                hours=paste["expires_in_hours"]
             ):
                 await self.__delete()
                 raise NotFoundException(detail="No paste found")
