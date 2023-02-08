@@ -16,11 +16,14 @@ class DatetimeToUTC(datetime):
         return v.timestamp()
 
 
-class PasteModel(BaseModel):
+class UpdatePasteModel(BaseModel):
+    expires_in_hours: Optional[float] = Field(..., ge=-1.0, le=99999.0)
+
+
+class PasteModel(UpdatePasteModel):
     id: str = Field(..., alias="_id")
     iv: str
     created: DatetimeToUTC
-    expires_in_hours: Optional[float] = Field(..., ge=-1.0, le=99999.0)
     download_url: str
 
 

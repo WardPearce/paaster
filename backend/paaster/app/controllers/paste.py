@@ -4,8 +4,9 @@ from secrets import token_urlsafe
 import bcrypt
 import nanoid
 from app.env import SETTINGS
+from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client
-from app.models.paste import PasteCreatedModel, PasteModel
+from app.models.paste import PasteCreatedModel, PasteModel, UpdatePasteModel
 from app.resources import Sessions
 from starlite import (
     HTTPException,
@@ -88,7 +89,6 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
         "iv": iv,
         "created": datetime.now(),
         "expires_in_hours": None,
-        "delete_after_view": False,
         # Bcrypt hash only used to defend against timing attacks,
         # secret itself already secure enough to avoid brute forcing.
         "owner_secret": bcrypt.hashpw(owner_secret.encode(), bcrypt.gensalt()),
@@ -105,11 +105,21 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
 
 
 @delete(
-    "/{paste_id:str}",
+    "/{paste_id:str}/{owner_secret:str}",
     middleware=[RateLimitConfig(rate_limit=("minute", 10)).middleware],
 )
-async def delete_paste(paste_id: str) -> None:
-    pass
+async def delete_paste(paste_id: str, owner_secret: str) -> None:
+    await Paste(paste_id).delete(owner_secret)
+
+
+@post(
+    "/{paste_id:str}/{owner_secret:str}",
+    middleware=[RateLimitConfig(rate_limit=("minute", 10)).middleware],
+)
+async def update_paste(
+    paste_id: str, owner_secret: str, data: UpdatePasteModel
+) -> None:
+    await Paste(paste_id).update(data, owner_secret)
 
 
 @get(
@@ -117,13 +127,9 @@ async def delete_paste(paste_id: str) -> None:
     middleware=[RateLimitConfig(rate_limit=("minute", 60)).middleware],
 )
 async def get_paste(paste_id: str) -> PasteModel:
-    paste = await Sessions.mongo.paste.find_one({"_id": paste_id})
-    if not paste:
-        raise NotFoundException(detail="No paste found")
-
-    return PasteModel(
-        **paste, download_url=f"{SETTINGS.s3.download_url}/{format_file_path(paste_id)}"
-    )
+    return await Paste(paste_id).get()
 
 
-router = Router(path="/paste", route_handlers=[create_paste, get_paste, delete_paste])
+router = Router(
+    path="/paste", route_handlers=[create_paste, get_paste, delete_paste, update_paste]
+)

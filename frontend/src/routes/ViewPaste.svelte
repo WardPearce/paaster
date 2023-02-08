@@ -68,6 +68,23 @@
     toast.success("Share link copied");
   }
 
+  async function deletePasteCall() {
+    try {
+      await toast.promise(
+        paasterClient.default.controllerPasteDeletePaste(pasteId, ownerSecret),
+        {
+          loading: "Deleting paste",
+          success: "Paste deleted",
+          error: "Paste not found",
+        }
+      );
+      await deletePaste(pasteId);
+      navigate("/", { replace: true });
+    } catch {
+      toast.error("Unable to delete paste");
+    }
+  }
+
   async function download() {
     const anchor = document.createElement("a");
     const url = window.URL.createObjectURL(
@@ -141,6 +158,8 @@
           toast.error(error.body.detail);
         }
       } else if (error instanceof Error) toast.error(error.toString());
+      acts.show(false);
+      navigate("/", { replace: true });
       return;
     }
     let response: Response;
@@ -212,7 +231,9 @@
           clearable={false}
           placeholder="Expire after"
         />
-        <button class="danger"><i class="las la-trash" />delete</button>
+        <button class="danger" on:click={deletePasteCall}
+          ><i class="las la-trash" />delete</button
+        >
       </div>
     </section>
   </main>

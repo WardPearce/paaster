@@ -11,5 +11,6 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { PasteCreatedModel } from './models/PasteCreatedModel';
 export type { PasteModel } from './models/PasteModel';
+export type { UpdatePasteModel } from './models/UpdatePasteModel';
 
 export { DefaultService } from './services/DefaultService';

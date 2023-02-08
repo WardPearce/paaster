@@ -9,6 +9,8 @@
     deletePaste,
     type SavedPaste,
   } from "../lib/client/savedPaste";
+  import { paasterClient } from "../lib/client";
+  import { ApiError } from "../lib/client/core/ApiError";
 
   let savedPastes: SavedPaste[] = [];
   onMount(async () => {
@@ -27,7 +29,17 @@
   }
 
   async function deletePasteCall(pasteId: string, ownerSecret?: string) {
-    // Add logic to delete paste from server if owner
+    if (ownerSecret) {
+      await toast.promise(
+        paasterClient.default.controllerPasteDeletePaste(pasteId, ownerSecret),
+        {
+          loading: "Deleting paste",
+          error: "Paste not found on server",
+          success: "Paste deleted from server",
+        }
+      );
+    }
+
     await deletePaste(pasteId);
     savedPastes = savedPastes.filter((paste) => paste.pasteId !== pasteId);
   }
