@@ -8,19 +8,11 @@ from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteCreatedModel, PasteModel, UpdatePasteModel
 from app.resources import Sessions
-from starlite import (
-    HTTPException,
-    NotFoundException,
-    Request,
-    Router,
-    delete,
-    get,
-    post,
-)
+from starlite import HTTPException, Request, Router, delete, get, post
 from starlite.middleware import RateLimitConfig
 
 
-@post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 5)).middleware])
+@post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 30)).middleware])
 async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     if len(iv) > SETTINGS.max_iv_size:
         raise HTTPException(detail="IV too large", status_code=400)
@@ -114,7 +106,7 @@ async def delete_paste(paste_id: str, owner_secret: str) -> None:
 
 @post(
     "/{paste_id:str}/{owner_secret:str}",
-    middleware=[RateLimitConfig(rate_limit=("minute", 10)).middleware],
+    middleware=[RateLimitConfig(rate_limit=("minute", 30)).middleware],
 )
 async def update_paste(
     paste_id: str, owner_secret: str, data: UpdatePasteModel
