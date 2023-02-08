@@ -13,7 +13,13 @@
 
 <Router primary={false}>
   <nav>
-    <a href="/" use:link><h1>paaster</h1></a>
+    <a href="/" use:link
+      ><h1>
+        {import.meta.env.VITE_PAGE_NAME
+          ? import.meta.env.VITE_PAGE_NAME
+          : "paaster"}
+      </h1></a
+    >
     <a href="/pastes" use:link class="button"
       ><i class="lab la-buffer" />Saved pastes</a
     >

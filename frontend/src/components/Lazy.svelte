@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  export let component: Promise<any>;
+  export let component: any;
   export let delayMs: number | null = null;
 
   let loadedComponent: any = null;

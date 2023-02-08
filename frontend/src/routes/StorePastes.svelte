@@ -10,7 +10,6 @@
     type SavedPaste,
   } from "../lib/client/savedPaste";
   import { paasterClient } from "../lib/client";
-  import { ApiError } from "../lib/client/core/ApiError";
 
   let savedPastes: SavedPaste[] = [];
   onMount(async () => {
