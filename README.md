@@ -81,3 +81,30 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 Rclone is no longer supported for performance reasons & paaster is now only s3 compatible.
 
 Luckily you can get cheap & easy to setup s3 compatible storage from [idrive e2](https://www.idrive.com/e2/) or [backblaze b2](https://www.backblaze.com/b2/cloud-storage.html).
+
+### Production without docker
+
+**This setup is not recommended & requires more research / knowledge.**
+
+- `git clone https://github.com/WardPearce/paaster`.
+- `cd frontend`
+- Create `.env`
+  - `VITE_NAME` - The name displayed on the website.
+  - `VITE_API_URL` - The URL of the API.
+- Install nodejs
+  - `npm install`
+  - `npm run build`
+- Serve files generated in `dist` with Nginx (or whatever reverse proxy you use.)
+- `cd backend`
+- Install Python 3.10+
+  - `curl -sSL https://install.python-poetry.org | python3 -`
+  - Configure `run.py` following the guide for [uvicorn](https://www.uvicorn.org/deployment/).
+- Pass environmental variables
+  - `paaster_proxy_urls`.
+  - `paaster_s3`.
+  - `paaster_mongo`.
+  - `paaster_open_api`.
+  - `paaster_max_iv_size`.
+  - `paaster_max_paste_size`.
+- Run `poetry run server`, to start server.
+- Proxy port with Nginx (or whatever reverse proxy you use.)
