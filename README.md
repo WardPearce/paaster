@@ -5,7 +5,7 @@ Paaster is a secure by default end-to-end encrypted pastebin built with the obje
 ## Preview
 
 ![Desktop preview](https://files.catbox.moe/5pa9zc.gif)
-![Mobile preview](https://i.imgur.com/Zb63YTO.png)
+![Mobile preview](https://i.imgur.com/3lLW9bB.png)
 
 ## Features
 
