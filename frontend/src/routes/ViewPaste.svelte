@@ -24,8 +24,8 @@
   let rawCode = "";
   let pasteCreated: number;
   let timePeriods = [
+    { value: null, label: "never" },
     { value: -1, label: "being view" },
-    { value: 0, label: "never" },
     { value: 0.08333, label: "5 minutes" },
     { value: 0.25, label: "15 minutes" },
     { value: 0.5, label: "30 minutes" },
@@ -180,6 +180,7 @@
     }
 
     if (ownerSecret !== "" && paste.expires_in_hours !== null) {
+      // Allows us to change the period label in the future.
       timePeriods.forEach((time) => {
         if (time.value === paste.expires_in_hours) {
           selectedTime = time;
