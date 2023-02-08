@@ -3,7 +3,6 @@ name = "paaster"
 version = "2.0.0"
 description = ""
 authors = ["WardPearce <wardpearce@protonmail.com>"]
-readme = "README.md"
 packages = [
     {include = "*", from = "app"},
     {include = "run.py"}
