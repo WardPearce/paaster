@@ -11,15 +11,23 @@
   import type { PasteCreatedModel } from "../lib/client/models/PasteCreatedModel";
 
   let isLoading = false;
+  let pastedCode = "";
 
   async function onFileDrop(event: CustomEvent) {
-    pasteSubmit(await event.detail.files.accepted[0].text());
+    pastedCode = await event.detail.files.accepted[0].text();
+    await pasteSubmit();
   }
 
-  async function pasteSubmit(event: (Event & { data: string }) | string) {
-    let data = event instanceof Event ? event.data : event;
+  async function pasteSubmit() {
     isLoading = true;
     acts.show(true);
+
+    if (pastedCode === "") {
+      // Adds support for Chrome and Webkit
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      pastedCode = document.getElementById("pastedCode").value;
+    }
 
     await sodium.ready;
 
@@ -33,7 +41,7 @@
       );
 
       const cipherArray = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
-        new TextEncoder().encode(data),
+        new TextEncoder().encode(pastedCode),
         null,
         null,
         rawIv,
@@ -62,7 +70,7 @@
       else if (error instanceof Error) toast.error(error.toString());
       return;
     }
-    pasteStore.set(data);
+    pasteStore.set(pastedCode);
 
     isLoading = false;
     acts.show(false);
@@ -86,10 +94,11 @@
 <main>
   <textarea
     on:input={pasteSubmit}
+    value=""
     placeholder="paste or drag & drop your code here"
     name="create-paste"
     disabled={isLoading}
-    value=""
+    id="pastedCode"
   />
 
   <section>
