@@ -30,7 +30,8 @@
     "svelte-select": "^5.2.1",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "vite-plugin-pwa": "^0.14.3"
   },
   "dependencies": {
     "svelte-navigator": "^3.2.2"
