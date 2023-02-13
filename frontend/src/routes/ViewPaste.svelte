@@ -228,7 +228,7 @@
       return false;
     });
     Mousetrap.bind(["command+x", "ctrl+x"], () => {
-      copyToClipboard();
+      shareLinkToClipboard();
       return false;
     });
     Mousetrap.bind(["command+s", "ctrl+s"], () => {
