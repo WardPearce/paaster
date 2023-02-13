@@ -1,5 +1,5 @@
 # Paaster
-Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and efficient memory usage, Paaster ensures that your pasted code remains confidential and accessible. 
+Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and paste history, Paaster ensures that your pasted code remains confidential and accessible. 
 
 ## Preview
 
