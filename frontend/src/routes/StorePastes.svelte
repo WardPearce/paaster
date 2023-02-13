@@ -3,6 +3,8 @@
   import toast from "svelte-french-toast";
   import { openModal } from "svelte-modals";
   import { tooltip } from "@svelte-plugins/tooltips";
+  import Search from "svelte-search";
+  import Fuse from "fuse.js";
 
   import {
     listPastes,
@@ -12,6 +14,8 @@
   import { paasterClient } from "../lib/client";
 
   let savedPastes: SavedPaste[] = [];
+  let showPastes: SavedPaste[] = [];
+  let fuse;
   onMount(async () => {
     await getPastes();
   });
@@ -25,6 +29,21 @@
 
   async function getPastes() {
     savedPastes = (await listPastes()).sort((a, b) => b.created - a.created);
+    showPastes = savedPastes;
+    fuse = new Fuse(savedPastes, {
+      keys: ["name", "pasteId"],
+      useExtendedSearch: true,
+      threshold: 0.1,
+    });
+  }
+
+  function onClear() {
+    showPastes = savedPastes;
+  }
+
+  function onSearch(event: { detail: string }) {
+    if (event.detail.length <= 1) showPastes = savedPastes;
+    else showPastes = fuse.search(event.detail).map((item) => item.item);
   }
 
   async function deletePasteCall(pasteId: string, ownerSecret?: string) {
@@ -52,55 +71,58 @@
 </script>
 
 <main>
-  <ul>
-    {#each savedPastes as paste}
-      {#if paste.b64EncodedRawKey}
-        <li>
-          <a href={`${paste.pasteId}#${paste.b64EncodedRawKey}`}>
-            <div>
-              <p class="name">
-                {paste.name ? paste.name : paste.pasteId}
-                {#if !paste.ownerSecret}
-                  <i
-                    class="las la-share-alt"
-                    use:tooltip={{ content: "Shared with you" }}
-                  />
-                {/if}
-              </p>
-              <p class="info">
-                {new Date(paste.created * 1000).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          </a>
-          <div class="actions">
-            <button on:click={() => renamePaste(paste.pasteId)}
-              ><i class="las la-pencil-alt" />rename</button
-            >
-            <button
-              on:click={async () =>
-                await shareLinkToClipboard(
-                  paste.pasteId,
-                  paste.b64EncodedRawKey
-                )}><i class="las la-share" />share</button
-            >
-            <button
-              class="danger"
-              on:click={async () =>
-                await deletePasteCall(paste.pasteId, paste.ownerSecret)}
-              ><i class="las la-trash" />delete</button
-            >
-          </div>
-        </li>
-      {/if}
-    {/each}
-  </ul>
-
   {#if savedPastes.length === 0}
     <h3>no saved pastes <i class="las la-heart-broken" /></h3>
+  {:else}
+    <section>
+      <Search hideLabel on:type={onSearch} on:clear={onClear} />
+    </section>
+    <ul>
+      {#each showPastes as paste}
+        {#if paste.b64EncodedRawKey}
+          <li>
+            <a href={`${paste.pasteId}#${paste.b64EncodedRawKey}`}>
+              <div>
+                <p class="name">
+                  {paste.name ? paste.name : paste.pasteId}
+                  {#if !paste.ownerSecret}
+                    <i
+                      class="las la-share-alt"
+                      use:tooltip={{ content: "Shared with you" }}
+                    />
+                  {/if}
+                </p>
+                <p class="info">
+                  {new Date(paste.created * 1000).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+            </a>
+            <div class="actions">
+              <button on:click={() => renamePaste(paste.pasteId)}
+                ><i class="las la-pencil-alt" />rename</button
+              >
+              <button
+                on:click={async () =>
+                  await shareLinkToClipboard(
+                    paste.pasteId,
+                    paste.b64EncodedRawKey
+                  )}><i class="las la-share" />share</button
+              >
+              <button
+                class="danger"
+                on:click={async () =>
+                  await deletePasteCall(paste.pasteId, paste.ownerSecret)}
+                ><i class="las la-trash" />delete</button
+              >
+            </div>
+          </li>
+        {/if}
+      {/each}
+    </ul>
   {/if}
 </main>
 
