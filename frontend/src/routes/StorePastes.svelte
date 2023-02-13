@@ -60,6 +60,7 @@
 
     await deletePaste(pasteId);
     savedPastes = savedPastes.filter((paste) => paste.pasteId !== pasteId);
+    showPastes = savedPastes;
   }
 
   async function shareLinkToClipboard(pasteId: string, secretKey: string) {
