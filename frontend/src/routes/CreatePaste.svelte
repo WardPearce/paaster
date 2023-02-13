@@ -97,7 +97,7 @@
 
 <main>
   <textarea
-    on:input={pasteSubmit}
+    on:input={async () => await pasteSubmit(false)}
     value=""
     placeholder="paste or drag & drop your code here"
     name="create-paste"

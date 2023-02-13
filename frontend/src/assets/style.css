@@ -233,6 +233,13 @@ footer {
     border: none !important;
 }
 
+[data-svelte-search] input {
+    width: 100%;
+    margin: 1em 0;
+    box-sizing: border-box;
+    height: 3em;
+}
+
 pre > code {
     font-family: FiraCode, monospace;
     font-size: .8em;
