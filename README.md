@@ -1,5 +1,6 @@
 # Paaster
-Paaster is a secure and user-friendly pastebin tool that uses end-to-end encryption and offers features such as file drag & drop, paste history, expiration times, API documentation, rate limiting, Vercel support, and various keyboard shortcuts for easy paste, download, copy, and share functionality.
+Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and efficient memory usage, Paaster ensures that your pasted code remains confidential and accessible. 
+
 ## Preview
 
 ![Desktop preview](https://files.catbox.moe/5pa9zc.gif)
