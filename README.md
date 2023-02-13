@@ -1,7 +1,5 @@
 # Paaster
-
-Paaster is a secure by default end-to-end encrypted pastebin built with the objective of simplicity.
-
+Paaster is a secure and user-friendly pastebin tool that uses end-to-end encryption and offers features such as file drag & drop, paste history, expiration times, API documentation, rate limiting, Vercel support, and various keyboard shortcuts for easy paste, download, copy, and share functionality.
 ## Preview
 
 ![Desktop preview](https://files.catbox.moe/5pa9zc.gif)
@@ -23,28 +21,24 @@ Paaster is a secure by default end-to-end encrypted pastebin built with the obje
 ## Security
 
 ### What is E2EE?
-
-E2EE or end-to-end encryption is a zero trust encryption methodology. When you paste code into `paaster` the code is encrypted locally with a secret generated on your browser. This secret is never shared with the server & only people you share the link with can view the paste.
+End-to-end encryption (E2EE) is a zero-trust encryption methodology. When you paste code into Paaster, it is encrypted locally in your browser using a secret that is never shared with the server. Only people you share the link with can view the paste.
 
 ### Can I trust a instance of paaster not hosted by me?
 
 No. Anyone could modify the functionality of `paaster` to expose your secret key to the server. We recommend using a instance you host or trust.
 
 ### How are client secrets stored?
-
-Client-sided secrets are stored with IndexedDB on paste creation (for paste history.) Anything else would be retrievable by the server or be overly complicated. This does make `paaster` vulnerable to malicious javascript being executed, but this would require malicious javascript to be present when the svelte application is built. If this was the case you'd have bigger issues, like the module just reading all inputs & getting the plain text paste.
+Client secrets are stored with IndexedDB when the paste is created, allowing for paste history. This method of storage makes Paaster vulnerable to malicious JavaScript, but it would require malicious code to be present when the Svelte application is built.
 
 ### How are client secrets transported?
 
 `Paaster` uses URI fragments to transport secrets, according to the [Mozilla foundation](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_URL#anchor) URI fragments aren't meant to be sent to the server. Bitwarden also has a article covering this usage [here](https://bitwarden.com/blog/bitwarden-send-how-it-works/).
 
 ### How are server secrets stored?
-
-Server-sided secrets are stored with IndexedDB on paste creation, allowing you to modify or delete pastes later on. Server-sided secrets are generated on the server using the python `secrets` module & are stored in the database using `bcrypt` hashing (A hashing algorithm like Argon2 isn't needed due to the secrets already being secure.)
+Server secrets are stored with IndexedDB when the paste is created, allowing for modification or deletion of pastes later on. The server-sided secrets are generated using the Python secrets module and stored in the database using bcrypt hashing.
 
 ### Cipher
-
-[XChaCha20-Poly1305](https://libsodium.gitbook.io/doc/secret-key_cryptography/aead/chacha20-poly1305/xchacha20-poly1305_construction) using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
+Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libsodium-wrappers](https://www.npmjs.com/package/libsodium-wrappers) library.
 
 ## Shortcuts
 
