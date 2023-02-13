@@ -15,10 +15,10 @@
 
   async function onFileDrop(event: CustomEvent) {
     pastedCode = await event.detail.files.accepted[0].text();
-    await pasteSubmit();
+    await pasteSubmit(true);
   }
 
-  async function pasteSubmit() {
+  async function pasteSubmit(pastePrefilled = false) {
     isLoading = true;
     acts.show(true);
 
@@ -27,6 +27,10 @@
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       pastedCode = document.getElementById("pastedCode").value;
+    } else if (!pastePrefilled) {
+      // Handle how mobile sends input events for each line
+      // of inputted code.
+      return;
     }
 
     await sodium.ready;
