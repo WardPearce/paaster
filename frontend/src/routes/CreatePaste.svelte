@@ -79,12 +79,18 @@
     isLoading = false;
     acts.show(false);
 
-    await savePaste(
-      createdPaste._id,
-      rawUrlSafeKey,
-      createdPaste.created,
-      createdPaste.owner_secret
-    );
+    try {
+      await savePaste(
+        createdPaste._id,
+        rawUrlSafeKey,
+        createdPaste.created,
+        createdPaste.owner_secret
+      );
+    } catch {
+      toast.error(
+        "Unable to save paste secrets, most likely because your in a private window."
+      );
+    }
 
     navigate(`/${createdPaste._id}#${rawUrlSafeKey}`, { replace: true });
   }
