@@ -75,7 +75,7 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
 - `sudo docker compose build; sudo docker compose up -d`.
 
 #### Vercel
-Paaster's frontend is also configured to support [Vercel](https://vercel.com). Using Vercel can add a extra layer of security by separating the servers the frontend and backend code runs on. Using Vercel will also result in performance benefits too.
+Paaster's frontend is also configured to work with [Vercel](https://vercel.com), which offers enhanced security through server separation and improved performance.
 
 #### Using Rclone
 
