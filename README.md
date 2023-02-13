@@ -16,6 +16,9 @@ Paaster is a secure by default end-to-end encrypted pastebin built with the obje
 - Paste history (with support for [unix-like search](https://fusejs.io/examples.html#extended-search)).
 - Delete after view or X amount of time.
 - [API documentation](https://api.paaster.io/schema).
+- Rate limiting.
+- No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time. 
+- [Vercel](https://vercel.com) support.
 
 ## Security
 
@@ -75,6 +78,9 @@ Server-sided secrets are stored with IndexedDB on paste creation, allowing you t
 - `VITE_API_URL` should be the proxied address for "paaster_backend". E.g. for paaster.io this is "https://api.paaster.io"
 - `paaster_s3` should contain your S3 secrets.
 - `sudo docker compose build; sudo docker compose up -d`.
+
+#### Vercel
+Paaster's frontend is also configured to support [Vercel](https://vercel.com). Using Vercel can add a extra layer of security by separating the servers the frontend and backend code runs on. Using Vercel will also result in performance benefits too.
 
 #### Using Rclone
 
