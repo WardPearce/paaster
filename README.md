@@ -13,10 +13,9 @@ Paaster is a secure by default end-to-end encrypted pastebin built with the obje
 - Memory efficient.
 - File drag & drop.
 - [Shortcuts](#shortcuts).
-- Paste history.
+- Paste history (with support for [unix-like search](https://fusejs.io/examples.html#extended-search).
 - Delete after view or X amount of time.
-- [API documentation](https://api.paaster.io/api/documentation)
-- Support for [unix-like search](https://fusejs.io/examples.html#extended-search).
+- [API documentation](https://api.paaster.io/schema).
 
 ## Security
 
