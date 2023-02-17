@@ -1,6 +1,3 @@
-name: 'Dependency Review'
-on: [pull_request]
-
 version: 2
 updates:
   - package-ecosystem: "pip"
