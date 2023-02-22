@@ -19,12 +19,12 @@
 
   export let pasteId: string;
   let ownerSecret = "";
-  const [base64EncryptionKey, givenServerSecret]: string[] = location.hash
+  const [base64EncryptionKey, givenOwnerSecret]: string[] = location.hash
     .substring(1)
-    .split("&serverSecret=");
+    .split("&ownerSecret=");
 
-  // Remove serverSecret out of URL ASAP if provided.
-  if (typeof givenServerSecret !== "undefined") {
+  // Remove ownerSecret out of URL ASAP if provided.
+  if (typeof givenOwnerSecret !== "undefined") {
     location.hash = `#${base64EncryptionKey}`;
   }
 
@@ -136,6 +136,10 @@
       if (savedPaste.ownerSecret) ownerSecret = savedPaste.ownerSecret;
       isSaved = true;
     } catch {}
+
+    if (typeof givenOwnerSecret !== "undefined") {
+      ownerSecret = givenOwnerSecret;
+    }
 
     // If user just created paste,
     // avoid needing to download & decrypt paste for speed reasons.
