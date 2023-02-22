@@ -18,8 +18,16 @@
   import { deletePaste, getPaste, savePaste } from "../lib/client/savedPaste";
 
   export let pasteId: string;
-
   let ownerSecret = "";
+  const [base64EncryptionKey, givenServerSecret]: string[] = location.hash
+    .substring(1)
+    .split("&serverSecret=");
+
+  // Remove serverSecret out of URL ASAP if provided.
+  if (typeof givenServerSecret !== "undefined") {
+    location.hash = `#${base64EncryptionKey}`;
+  }
+
   let isSaved = false;
   let rawCode = "";
   let pasteCreated: number;
@@ -112,7 +120,7 @@
   }
 
   async function savePasteLocal() {
-    await savePaste(pasteId, location.hash.substring(1), pasteCreated);
+    await savePaste(pasteId, base64EncryptionKey, pasteCreated);
     toast.success("Paste saved");
     isSaved = true;
   }
@@ -141,7 +149,7 @@
 
     await sodium.ready;
 
-    if (location.hash === "") {
+    if (base64EncryptionKey === "") {
       toast.error("Paste secret key not provided");
       acts.show(false);
       navigate("/", { replace: true });
@@ -151,7 +159,7 @@
     let rawSecretKey: Uint8Array;
     try {
       rawSecretKey = sodium.from_base64(
-        location.hash.substring(1),
+        base64EncryptionKey,
         sodium.base64_variants.URLSAFE_NO_PADDING
       );
     } catch {
