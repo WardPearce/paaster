@@ -72,6 +72,13 @@
     });
   }
 
+  function generateQRCode() {
+    openModal(() => import("../components/QRCode.svelte"), {
+      pasteId: pasteId,
+      b64EncodedRawKey: b64EncodedRawKey,
+    });
+  }
+
   async function shareLinkToClipboard() {
     await navigator.clipboard.writeText(window.location.href);
     toast.success("Share link copied");
@@ -268,6 +275,9 @@
         >
         <button on:click={shareLinkToClipboard}
           ><i class="las la-share" />share</button
+        >
+        <button on:click={generateQRCode}
+          ><i class="las la-qrcode" />generate qr code</button
         >
         <Select
           items={timePeriods}

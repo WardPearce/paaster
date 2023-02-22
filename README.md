@@ -18,6 +18,7 @@ Paaster is a secure and user-friendly pastebin application that prioritizes priv
 - [API documentation](https://api.paaster.io/schema).
 - [CLI Tool](https://github.com/WardPearce/paaster-cli).
 - Rate limiting.
+- Share via QR code.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - [Vercel](https://vercel.com) support.
 

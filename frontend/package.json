@@ -28,6 +28,7 @@
     "svelte-french-toast": "^1.0.3",
     "svelte-highlight": "^7.1.2",
     "svelte-modals": "^1.2.1",
+    "svelte-qrcode": "^1.0.0",
     "svelte-search": "^2.0.1",
     "svelte-select": "^5.2.1",
     "tslib": "^2.5.0",
