@@ -16,6 +16,7 @@ Paaster is a secure and user-friendly pastebin application that prioritizes priv
 - Paste history (with support for [unix-like search](https://fusejs.io/examples.html#extended-search)).
 - Delete after view or X amount of time.
 - [API documentation](https://api.paaster.io/schema).
+- [CLI Tool](https://github.com/WardPearce/paaster-cli).
 - Rate limiting.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - [Vercel](https://vercel.com) support.
