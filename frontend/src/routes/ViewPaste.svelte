@@ -19,13 +19,13 @@
 
   export let pasteId: string;
   let ownerSecret = "";
-  const [base64EncryptionKey, givenOwnerSecret]: string[] = location.hash
+  const [b64EncodedRawKey, givenOwnerSecret]: string[] = location.hash
     .substring(1)
     .split("&ownerSecret=");
 
   // Remove ownerSecret out of URL ASAP if provided.
   if (typeof givenOwnerSecret !== "undefined") {
-    location.hash = `#${base64EncryptionKey}`;
+    location.hash = `#${b64EncodedRawKey}`;
   }
 
   let isSaved = false;
@@ -120,7 +120,7 @@
   }
 
   async function savePasteLocal() {
-    await savePaste(pasteId, base64EncryptionKey, pasteCreated);
+    await savePaste(pasteId, b64EncodedRawKey, pasteCreated);
     toast.success("Paste saved");
     isSaved = true;
   }
@@ -137,10 +137,6 @@
       isSaved = true;
     } catch {}
 
-    if (typeof givenOwnerSecret !== "undefined") {
-      ownerSecret = givenOwnerSecret;
-    }
-
     // If user just created paste,
     // avoid needing to download & decrypt paste for speed reasons.
     let storedPaste = get(pasteStore);
@@ -153,7 +149,7 @@
 
     await sodium.ready;
 
-    if (base64EncryptionKey === "") {
+    if (b64EncodedRawKey === "") {
       toast.error("Paste secret key not provided");
       acts.show(false);
       navigate("/", { replace: true });
@@ -163,7 +159,7 @@
     let rawSecretKey: Uint8Array;
     try {
       rawSecretKey = sodium.from_base64(
-        base64EncryptionKey,
+        b64EncodedRawKey,
         sodium.base64_variants.URLSAFE_NO_PADDING
       );
     } catch {
@@ -189,6 +185,14 @@
       acts.show(false);
       navigate("/", { replace: true });
       return;
+    }
+
+    if (typeof givenOwnerSecret !== "undefined") {
+      ownerSecret = givenOwnerSecret;
+      try {
+        await savePaste(pasteId, b64EncodedRawKey, paste.created, ownerSecret);
+        isSaved = true;
+      } catch {}
     }
 
     if (ownerSecret !== "" && paste.expires_in_hours !== null) {
