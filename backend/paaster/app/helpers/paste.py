@@ -19,11 +19,11 @@ class Paste:
         self.paste_id = paste_id
 
     async def delete(self, owner_secret: str) -> None:
-        await self.__get_paste_require_owner(owner_secret)
+        await self.__validate_owner(owner_secret)
         await self.__delete()
 
     async def update(self, update: UpdatePasteModel, owner_secret: str) -> None:
-        await self.__get_paste_require_owner(owner_secret)
+        await self.__validate_owner(owner_secret)
 
         to_set = update.dict(exclude_unset=True)
         if "access_code" in to_set:
@@ -35,22 +35,22 @@ class Paste:
         )
 
     async def __delete(self) -> None:
+        paste = await self._get_raw()
+
         await Sessions.mongo.paste.delete_one({"_id": self.paste_id})
 
         async with s3_create_client() as client:
-            await client.delete_object(Bucket=SETTINGS.s3.bucket, Key=self.file_key)
+            await client.delete_object(
+                Bucket=SETTINGS.s3.bucket,
+                Key=self.file_key(paste.get("download_id", None)),
+            )
 
-    async def __get_paste_require_owner(self, owner_secret: str) -> PasteModel:
+    async def __validate_owner(self, owner_secret: str) -> None:
         paste = await self._get_raw()
         # Not Argon2, because is always a 256 bit random string,
         # Bcrypt used to protect against timing attacks.
         if not bcrypt.checkpw(owner_secret.encode(), paste["owner_secret"]):
             raise NotAuthorizedException()
-
-        return PasteModel(
-            **paste,
-            download_url=self.download_url,
-        )
 
     async def _get_raw(self) -> Mapping[str, Any]:
         paste = await Sessions.mongo.paste.find_one({"_id": self.paste_id})
@@ -58,13 +58,12 @@ class Paste:
             raise NotFoundException(detail="No paste found")
         return paste
 
-    @property
-    def file_key(self) -> str:
-        return format_file_path(self.paste_id)
+    def file_key(self, download_id: Optional[str] = None) -> str:
+        # Use paste id if download doesn't exist for paste.
+        return format_file_path(download_id if download_id else self.paste_id)
 
-    @property
-    def download_url(self) -> str:
-        return f"{SETTINGS.s3.download_url}/{self.file_key}"
+    def download_url(self, download_id: Optional[str] = None) -> str:
+        return f"{SETTINGS.s3.download_url}/{self.file_key(download_id)}"
 
     async def get(self, access_code: Optional[str] = None) -> PasteModel:
         paste = await self._get_raw()
@@ -80,7 +79,7 @@ class Paste:
 
         model = PasteModel(
             **paste,
-            download_url=self.download_url,
+            download_url=self.download_url(paste.get("download_id", None)),
         )
 
         if "delete_next_request" in paste and paste["delete_next_request"]:

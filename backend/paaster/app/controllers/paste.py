@@ -19,8 +19,8 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
         raise HTTPException(detail="IV too large", status_code=400)
 
     # Shorter then Mongo IDs
-    paste_id = nanoid.generate(size=21)
-    file_key = format_file_path(paste_id)
+    download_id = token_urlsafe(32)
+    file_key = format_file_path(download_id)
     chunk_buffer = b""
 
     total_size = 0
@@ -78,8 +78,9 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     owner_secret = token_urlsafe(32)
 
     paste = {
-        "_id": paste_id,
+        "_id": nanoid.generate(size=21),
         "iv": iv,
+        "download_id": download_id,
         "created": datetime.now(),
         "expires_in_hours": None,
         "access_code": None,
