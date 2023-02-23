@@ -4,8 +4,8 @@ from aiobotocore.session import get_session
 from app.env import SETTINGS
 
 
-def format_file_path(paste_id: str) -> str:
-    return path.join(SETTINGS.s3.folder, f"{paste_id}.bin")
+def format_file_path(download_id: str) -> str:
+    return path.join(SETTINGS.s3.folder, f"{download_id}.bin")
 
 
 def s3_create_client():
