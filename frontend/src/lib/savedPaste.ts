@@ -1,4 +1,4 @@
-import { set, get, del, values } from 'idb-keyval';
+import { set, get, del, values } from "idb-keyval";
 
 
 export interface SavedPaste {
@@ -6,6 +6,7 @@ export interface SavedPaste {
     b64EncodedRawKey: string,
     created: number,
     ownerSecret?: string
+    accessCode?: string,
     name?: string
 }
 
@@ -36,10 +37,10 @@ export async function getPaste(pasteId: string): Promise<SavedPaste> {
 }
 
 
-export async function setPasteName(pasteId: string, name: string) {
+export async function updatePaste(pasteId: string, updated: Record<string, string>) {
     const paste = await getPaste(pasteId);
     await del(pasteId);
-    await set(pasteId, { ...paste, name: name });
+    await set(pasteId, { ...paste, ...updated });
 }
 
 

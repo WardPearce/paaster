@@ -51,6 +51,30 @@ def test_valid_paste(create_paste: PasteCreatedModel) -> None:
 
 
 @pytest.mark.parametrize("deletion_status", [204])
+def test_access_code_protect_paste(
+    create_paste: PasteCreatedModel, client: TestClient
+) -> None:
+    response = client.post(
+        f"/controller/paste/{create_paste.id}/{create_paste.owner_secret}",
+        json={"access_code": "some_epic_password"},
+    )
+    assert response.status_code == 201
+
+    response = client.get(f"/controller/paste/{create_paste.id}")
+    assert response.status_code == 401
+
+    response = client.get(
+        f"/controller/paste/{create_paste.id}?access_code=some_epic_password"
+    )
+    assert response.status_code == 200
+
+    response = client.get(
+        f"/controller/paste/{create_paste.id}?access_code=no_so_epic_password"
+    )
+    assert response.status_code == 401
+
+
+@pytest.mark.parametrize("deletion_status", [204])
 def test_delete_invalid_id_paste(
     create_paste: PasteCreatedModel, client: TestClient
 ) -> None:

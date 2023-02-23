@@ -3,7 +3,8 @@
 /* eslint-disable */
 
 export type PasteCreatedModel = {
-    expires_in_hours: number;
+    expires_in_hours?: number;
+    access_code?: string;
     _id: string;
     iv: string;
     created: string;

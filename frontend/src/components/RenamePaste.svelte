@@ -2,7 +2,7 @@
   import { closeModal } from "svelte-modals";
   import toast from "svelte-french-toast";
 
-  import { getPaste, setPasteName } from "../lib/client/savedPaste";
+  import { getPaste, updatePaste } from "../lib/savedPaste";
   import { onMount } from "svelte";
 
   export let isOpen: boolean;
@@ -17,7 +17,7 @@
   });
 
   async function nameUpdated() {
-    await setPasteName(pasteId, newName);
+    await updatePaste(pasteId, { name: newName });
     if (completedEvent) completedEvent(pasteId);
     toast.success("Name updated");
     closeModal();
@@ -30,11 +30,13 @@
       <div class="header">
         <h2>rename paste</h2>
       </div>
-      <form
-        on:submit|preventDefault={nameUpdated}
-        style="display: flex;justify-content: center;column-gap: 1em;"
-      >
-        <input bind:value={newName} type="text" placeholder="..." />
+      <form on:submit|preventDefault={nameUpdated} class="inline-form">
+        <input
+          bind:value={newName}
+          type="text"
+          placeholder="..."
+          autofocus={true}
+        />
         <button>rename</button>
       </form>
     </div>

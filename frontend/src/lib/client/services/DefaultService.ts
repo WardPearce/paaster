@@ -34,17 +34,22 @@ export class DefaultService {
 
     /**
      * @param pasteId
+     * @param accessCode
      * @returns PasteModel Request fulfilled, document follows
      * @throws ApiError
      */
     public controllerPasteGetPaste(
         pasteId: string,
+        accessCode?: null,
     ): CancelablePromise<PasteModel> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/controller/paste/{paste_id}',
             path: {
                 'paste_id': pasteId,
+            },
+            query: {
+                'access_code': accessCode,
             },
             errors: {
                 400: `Bad request syntax or unsupported method`,

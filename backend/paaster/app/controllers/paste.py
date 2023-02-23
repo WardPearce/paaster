@@ -1,5 +1,6 @@
 from datetime import datetime
 from secrets import token_urlsafe
+from typing import Optional
 
 import bcrypt
 import nanoid  # type: ignore
@@ -12,7 +13,7 @@ from starlite import HTTPException, Request, Router, delete, get, post
 from starlite.middleware import RateLimitConfig
 
 
-@post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 30)).middleware])
+@post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 35)).middleware])
 async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     if len(iv) > SETTINGS.max_iv_size:
         raise HTTPException(detail="IV too large", status_code=400)
@@ -81,6 +82,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
         "iv": iv,
         "created": datetime.now(),
         "expires_in_hours": None,
+        "access_code": None,
         # Bcrypt hash only used to defend against timing attacks,
         # secret itself already secure enough to avoid brute forcing.
         "owner_secret": bcrypt.hashpw(owner_secret.encode(), bcrypt.gensalt()),
@@ -106,7 +108,7 @@ async def delete_paste(paste_id: str, owner_secret: str) -> None:
 
 @post(
     "/{paste_id:str}/{owner_secret:str}",
-    middleware=[RateLimitConfig(rate_limit=("minute", 30)).middleware],
+    middleware=[RateLimitConfig(rate_limit=("minute", 40)).middleware],
 )
 async def update_paste(
     paste_id: str, owner_secret: str, data: UpdatePasteModel
@@ -118,8 +120,8 @@ async def update_paste(
     "/{paste_id:str}",
     middleware=[RateLimitConfig(rate_limit=("minute", 60)).middleware],
 )
-async def get_paste(paste_id: str) -> PasteModel:
-    return await Paste(paste_id).get()
+async def get_paste(paste_id: str, access_code: Optional[str] = None) -> PasteModel:
+    return await Paste(paste_id).get(access_code=access_code)
 
 
 router = Router(

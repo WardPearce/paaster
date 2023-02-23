@@ -17,7 +17,8 @@ class DatetimeToUTC(datetime):
 
 
 class UpdatePasteModel(BaseModel):
-    expires_in_hours: Optional[float] = Field(..., ge=-1.0, le=99999.0)
+    expires_in_hours: Optional[float] = Field(None, ge=-1.0, le=99999.0)
+    access_code: Optional[str] = Field(None, min_length=1, max_length=256)
 
 
 class PasteModel(UpdatePasteModel):

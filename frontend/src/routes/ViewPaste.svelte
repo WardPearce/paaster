@@ -15,9 +15,10 @@
   import { paasterClient } from "../lib/client";
   import type { PasteModel } from "../lib/client/models/PasteModel";
   import { ApiError } from "../lib/client/core/ApiError";
-  import { deletePaste, getPaste, savePaste } from "../lib/client/savedPaste";
+  import { deletePaste, getPaste, savePaste } from "../lib/savedPaste";
 
   export let pasteId: string;
+
   let ownerSecret = "";
   const [b64EncodedRawKey, givenOwnerSecret]: string[] = location.hash
     .substring(1)
@@ -69,6 +70,14 @@
   function renamePaste() {
     openModal(() => import("../components/RenamePaste.svelte"), {
       pasteId: pasteId,
+    });
+  }
+
+  function setAccessCode() {
+    openModal(() => import("../components/SetAccessCode.svelte"), {
+      pasteId: pasteId,
+      ownerSecret: ownerSecret,
+      b64EncodedRawKey: b64EncodedRawKey,
     });
   }
 
@@ -137,7 +146,9 @@
     toast.success("Paste copied");
   }
 
-  onMount(async () => {
+  async function loadPaste(accessCode?: string) {
+    acts.show(true);
+
     try {
       const savedPaste = await getPaste(pasteId);
       if (savedPaste.ownerSecret) ownerSecret = savedPaste.ownerSecret;
@@ -178,13 +189,24 @@
 
     let paste: PasteModel;
     try {
-      paste = await paasterClient.default.controllerPasteGetPaste(pasteId);
+      paste = await paasterClient.default.controllerPasteGetPaste(
+        pasteId,
+        accessCode
+      );
     } catch (error) {
       if (error instanceof ApiError) {
         // Delete paste from local storage if no longer exists on server.
         if (error.status === 404) {
           await deletePaste(pasteId);
           toast.error("Paste no longer exists");
+        } else if (error.status == 401) {
+          toast.error(error.body.detail);
+          openModal(() => import("../components/ProvideAccessCode.svelte"), {
+            loadPasteFunc: loadPaste,
+            b64EncodedRawKey: b64EncodedRawKey,
+          });
+          acts.show(false);
+          return;
         } else {
           toast.error(error.body.detail);
         }
@@ -258,6 +280,10 @@
       download();
       return false;
     });
+  }
+
+  onMount(async () => {
+    await loadPaste();
   });
 </script>
 
@@ -277,7 +303,10 @@
           ><i class="las la-share" />share</button
         >
         <button on:click={generateQRCode}
-          ><i class="las la-qrcode" />generate qr code</button
+          ><i class="las la-qrcode" />generate QR code</button
+        >
+        <button on:click={setAccessCode}
+          ><i class="las la-key" />set access code</button
         >
         <Select
           items={timePeriods}
@@ -323,7 +352,7 @@
     column-gap: 1em;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 1200px) {
     .owner-panel {
       flex-direction: column;
       row-gap: 1em;
