@@ -19,6 +19,7 @@ bcrypt = "^4.0.1"
 aiobotocore = "^2.4.2"
 nanoid = "^2.0.0"
 uvicorn = "^0.20.0"
+argon2-cffi = "^21.3.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.1"
@@ -28,6 +29,7 @@ black = "^23.1.0"
 mypy = "^1.0.0"
 types-aiobotocore = "^2.4.2"
 motor-types = "^1.0.0b0"
+pytest-asyncio = "^0.20.3"
 
 [build-system]
 requires = ["poetry-core"]

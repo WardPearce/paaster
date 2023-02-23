@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 export type UpdatePasteModel = {
-    expires_in_hours: number;
+    expires_in_hours?: number;
+    access_code?: string;
 };
 

@@ -208,6 +208,12 @@ footer {
     background: var(--darkBgTrans);
 }
 
+.inline-form {
+    display: flex;
+    justify-content: center;
+    column-gap: 1em;
+}
+
 .svelte-select {
     background-color: var(--lightBg) !important;
     color: var(--textWhite) !important;
@@ -245,7 +251,7 @@ pre > code {
     font-size: .8em;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1200px) {
     .svelte-select {
         width: 100% !important;
     }
@@ -254,6 +260,13 @@ pre > code {
 @media screen and (max-width: 600px) {
     .modal .contents {
         border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .inline-form {
+        flex-direction: column;
+        row-gap: 1em;
     }
 }
 

@@ -7,7 +7,7 @@
 
   import { pasteStore } from "../stores";
   import { ApiError } from "../lib/client/core/ApiError";
-  import { savePaste } from "../lib/client/savedPaste";
+  import { savePaste } from "../lib/savedPaste";
   import type { PasteCreatedModel } from "../lib/client/models/PasteCreatedModel";
 
   let isLoading = false;

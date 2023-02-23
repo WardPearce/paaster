@@ -6,11 +6,7 @@
   import Search from "svelte-search";
   import Fuse from "fuse.js";
 
-  import {
-    listPastes,
-    deletePaste,
-    type SavedPaste,
-  } from "../lib/client/savedPaste";
+  import { listPastes, deletePaste, type SavedPaste } from "../lib/savedPaste";
   import { paasterClient } from "../lib/client";
 
   let savedPastes: SavedPaste[] = [];

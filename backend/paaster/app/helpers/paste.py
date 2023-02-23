@@ -1,13 +1,17 @@
 from collections.abc import Mapping
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Optional
 
 import bcrypt
 from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteModel, UpdatePasteModel
 from app.resources import Sessions
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 from starlite import NotAuthorizedException, NotFoundException
+
+PASSWORD_HASHER = PasswordHasher()
 
 
 class Paste:
@@ -20,9 +24,14 @@ class Paste:
 
     async def update(self, update: UpdatePasteModel, owner_secret: str) -> None:
         await self.__get_paste_require_owner(owner_secret)
+
+        to_set = update.dict(exclude_unset=True)
+        if "access_code" in to_set:
+            to_set["access_code"] = PASSWORD_HASHER.hash(to_set["access_code"])
+
         await Sessions.mongo.paste.update_one(
             {"_id": self.paste_id},
-            {"$set": {"expires_in_hours": update.expires_in_hours}},
+            {"$set": to_set},
         )
 
     async def __delete(self) -> None:
@@ -32,7 +41,9 @@ class Paste:
             await client.delete_object(Bucket=SETTINGS.s3.bucket, Key=self.file_key)
 
     async def __get_paste_require_owner(self, owner_secret: str) -> PasteModel:
-        paste = await self.__get_raw()
+        paste = await self._get_raw()
+        # Not Argon2, because is always a 256 bit random string,
+        # Bcrypt used to protect against timing attacks.
         if not bcrypt.checkpw(owner_secret.encode(), paste["owner_secret"]):
             raise NotAuthorizedException()
 
@@ -41,7 +52,7 @@ class Paste:
             download_url=self.download_url,
         )
 
-    async def __get_raw(self) -> Mapping[str, Any]:
+    async def _get_raw(self) -> Mapping[str, Any]:
         paste = await Sessions.mongo.paste.find_one({"_id": self.paste_id})
         if not paste:
             raise NotFoundException(detail="No paste found")
@@ -55,8 +66,17 @@ class Paste:
     def download_url(self) -> str:
         return f"{SETTINGS.s3.download_url}/{self.file_key}"
 
-    async def get(self) -> PasteModel:
-        paste = await self.__get_raw()
+    async def get(self, access_code: Optional[str] = None) -> PasteModel:
+        paste = await self._get_raw()
+
+        if "access_code" in paste and paste["access_code"] is not None:
+            if not access_code:
+                raise NotAuthorizedException()
+
+            try:
+                PASSWORD_HASHER.verify(paste["access_code"], access_code)
+            except VerifyMismatchError:
+                raise NotAuthorizedException()
 
         model = PasteModel(
             **paste,
