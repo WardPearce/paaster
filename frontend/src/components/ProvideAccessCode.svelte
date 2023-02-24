@@ -39,9 +39,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .generate-pass input {
-    width: 100%;
-  }
-</style>
