@@ -130,7 +130,7 @@ Luckily you can get cheap / free & easy to setup s3 compatible storage from [idr
 - Find the appropriate [ISO 639-1 language code](https://www.wikiwand.com/en/List_of_ISO_639-1_codes).
 - Fork the repo.
 - Navigate to [frontend/src/i18n](./frontend/src/i18n/).
-- Copy `en.json` & rename with the appropriate ISO 639-1 language code.
+- Copy `en.json` & rename with the appropriate ISO 639-1 language code. If the translation already exists, review it. As many of our existing translations where generated automatically.
 - Translate the contents of the JSON file.
 - Navigate to [frontend/src/i18n/index.ts](./frontend/src/i18n/index.ts).
 - Add `register("iso language code here", () => import("./iso language code here.json"));`.
