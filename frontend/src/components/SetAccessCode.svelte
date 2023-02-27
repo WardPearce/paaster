@@ -3,6 +3,7 @@
   import sodium from "libsodium-wrappers";
   import toast from "svelte-french-toast";
   import { closeModal } from "svelte-modals";
+  import { _ } from "svelte-i18n";
 
   import { paasterClient } from "../lib/client";
 
@@ -22,7 +23,11 @@
 
   async function setAccessCode() {
     if (accessCode.length < 6) {
-      toast.error("Access code must be longer then 6 characters");
+      toast.error(
+        $_("paste_actions.access_code.access_code_len", {
+          values: { max_length: 6 },
+        })
+      );
       return;
     }
     await toast.promise(
@@ -33,14 +38,18 @@
         ),
       }),
       {
-        loading: "Setting access code",
-        success: "Access code set",
-        error: "Unable to set access code",
+        loading: $_("paste_actions.access_code.loading"),
+        success: $_("paste_actions.access_code.success"),
+        error: $_("paste_actions.access_code.error"),
       }
     );
 
-    toast.success("Access code copied to clipboard");
-    await navigator.clipboard.writeText(accessCode);
+    try {
+      await navigator.clipboard.writeText(accessCode);
+      toast.success(
+        $_("paste_actions.access_code.success_copied_to_clipboard")
+      );
+    } catch {}
 
     closeModal();
   }
@@ -50,24 +59,25 @@
   <div role="dialog" class="modal">
     <div class="contents">
       <div class="header">
-        <h2>set paste access code</h2>
+        <h2>{$_("paste_actions.access_code.model.header")}</h2>
       </div>
       <form on:submit|preventDefault={setAccessCode} class="inline-form">
         <div class="generate-pass">
           <input
             bind:value={accessCode}
             type="text"
-            placeholder="Enter access code"
+            placeholder={$_("paste_actions.access_code.model.input")}
             autofocus={true}
           />
           <button
             on:click={generateAccessCode}
             type="button"
-            use:tooltip={{ content: "Generate access code" }}
-            ><i class="las la-redo-alt" /></button
+            use:tooltip={{
+              content: $_("paste_actions.access_code.model.tooltip"),
+            }}><i class="las la-redo-alt" /></button
           >
         </div>
-        <button>Set access code</button>
+        <button>{$_("paste_actions.access_code.model.button")}</button>
       </form>
     </div>
   </div>

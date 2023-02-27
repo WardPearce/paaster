@@ -3,45 +3,49 @@
   import "./assets/icons/1.3.0/css/line-awesome.min.css";
   import { Router, link, Route } from "svelte-navigator";
   import { Modals, closeModal } from "svelte-modals";
+  import { isLoading, _ } from "svelte-i18n";
 
   import { Toaster } from "svelte-french-toast";
   import { Loading } from "@tadashi/svelte-loading";
   import CreatePaste from "./routes/CreatePaste.svelte";
   import LazyRoute from "./components/LazyRoute.svelte";
   import PageLoading from "./components/PageLoading.svelte";
+
+  import "./i18n";
 </script>
 
-<Router primary={false}>
-  <nav>
-    <a href="/" use:link
-      ><h1>
-        {import.meta.env.VITE_NAME ? import.meta.env.VITE_NAME : "paaster"}
-      </h1></a
-    >
-    <a href="/pastes" use:link class="button"
-      ><i class="lab la-buffer" />Saved pastes</a
-    >
-  </nav>
+{#if !$isLoading}
+  <Router primary={false}>
+    <nav>
+      <a href="/" use:link
+        ><h1>
+          {import.meta.env.VITE_NAME ? import.meta.env.VITE_NAME : "paaster"}
+        </h1></a
+      >
+      <a href="/pastes" use:link class="button"
+        ><i class="lab la-buffer" />{$_("saved_pastes")}</a
+      >
+    </nav>
 
-  <Route path="/">
-    <CreatePaste />
-  </Route>
-  <LazyRoute
-    path="/pastes"
-    delayMs={500}
-    component={() => import("./routes/StorePastes.svelte")}
-  >
-    <PageLoading />
-  </LazyRoute>
-  <LazyRoute
-    path="/:pasteId"
-    delayMs={500}
-    component={() => import("./routes/ViewPaste.svelte")}
-  >
-    <PageLoading />
-  </LazyRoute>
-</Router>
-
+    <Route path="/">
+      <CreatePaste />
+    </Route>
+    <LazyRoute
+      path="/pastes"
+      delayMs={500}
+      component={() => import("./routes/StorePastes.svelte")}
+    >
+      <PageLoading />
+    </LazyRoute>
+    <LazyRoute
+      path="/:pasteId"
+      delayMs={500}
+      component={() => import("./routes/ViewPaste.svelte")}
+    >
+      <PageLoading />
+    </LazyRoute>
+  </Router>
+{/if}
 <Loading
   animation="Jelly"
   color="var(--lighterBg)"

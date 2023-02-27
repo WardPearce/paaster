@@ -1,3 +1,7 @@
+# Translations needed!
+
+Help support Paaster by providing translations. [Learn how to add translations here](#adding-translations).
+
 # Paaster
 
 Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and paste history, Paaster ensures that your pasted code remains confidential and accessible.
@@ -21,6 +25,7 @@ Paaster is a secure and user-friendly pastebin application that prioritizes priv
 - Rate limiting.
 - Share via QR code.
 - PWA Support.
+- i18n support.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - [Vercel](https://vercel.com) support.
 
@@ -75,7 +80,7 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
 ### Production with Docker
 
 - During configuration, no provided URLs should be suffixed with a slash.
-- `git clone https://github.com/WardPearce/paaster`
+- Clone this repo with `git clone https://github.com/WardPearce/paaster` or use our docker hub images [paaster-backend](https://hub.docker.com/r/wardpearce/paaster-backend) / [paaster-frontend](https://hub.docker.com/r/wardpearce/paaster-frontend).
 - Configure `docker-compose.yml` (example [here](./docker-compose.yml))
 - Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
 - `paaster_proxy_urls.frontend` should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
@@ -119,3 +124,14 @@ Luckily you can get cheap / free & easy to setup s3 compatible storage from [idr
   - `paaster_max_paste_size`.
 - Run `poetry run server`, to start server.
 - Proxy port with Nginx (or whatever reverse proxy you use.)
+
+## Adding translations
+
+- Find the appropriate [ISO 639-1 language code](https://www.wikiwand.com/en/List_of_ISO_639-1_codes).
+- Fork the repo.
+- Navigate to [frontend/src/i18n](./frontend/src/i18n/).
+- Copy `en.json` & rename with the appropriate ISO 639-1 language code.
+- Translate the contents of the JSON file.
+- Navigate to [frontend/src/i18n/index.ts](./frontend/src/i18n/index.ts).
+- Add `register("iso language code here", () => import("./iso language code here.json"));`.
+- Create a PR request.

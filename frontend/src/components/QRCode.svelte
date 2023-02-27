@@ -1,5 +1,6 @@
 <script lang="ts">
   import QrCode from "svelte-qrcode";
+  import { _ } from "svelte-i18n";
 
   export let pasteId: string;
   export let b64EncodedRawKey: string;
@@ -10,7 +11,7 @@
   <div role="dialog" class="modal">
     <div class="contents">
       <div class="header">
-        <h2>scan to access paste</h2>
+        <h2>{$_("paste_actions.qr_code.model.header")}</h2>
       </div>
       <QrCode
         color="#8478c9"

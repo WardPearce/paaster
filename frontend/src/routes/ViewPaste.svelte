@@ -10,6 +10,7 @@
   import { openModal } from "svelte-modals";
   import Mousetrap from "mousetrap";
   import Select from "svelte-select";
+  import { _ } from "svelte-i18n";
 
   import { pasteStore } from "../stores";
   import { paasterClient } from "../lib/client";
@@ -33,35 +34,38 @@
   let rawCode = "";
   let pasteCreated: number;
   let timePeriods = [
-    { value: null, label: "never" },
-    { value: -1, label: "being view" },
-    { value: 0.08333, label: "5 minutes" },
-    { value: 0.25, label: "15 minutes" },
-    { value: 0.5, label: "30 minutes" },
-    { value: 1, label: "1 hour" },
-    { value: 2, label: "2 hours" },
-    { value: 3, label: "3 hours" },
-    { value: 4, label: "4 hours" },
-    { value: 5, label: "5 hours" },
-    { value: 6, label: "6 hours" },
-    { value: 7, label: "7 hours" },
-    { value: 8, label: "8 hours" },
-    { value: 9, label: "9 hours" },
-    { value: 10, label: "10 hours" },
-    { value: 11, label: "11 hours" },
-    { value: 12, label: "12 hours" },
-    { value: 24, label: "1 day" },
-    { value: 48, label: "2 days" },
-    { value: 72, label: "3 days" },
-    { value: 96, label: "4 days" },
-    { value: 120, label: "5 days" },
-    { value: 144, label: "6 days" },
-    { value: 168, label: "1 week" },
-    { value: 336, label: "2 weeks" },
-    { value: 504, label: "3 weeks" },
-    { value: 730, label: "1 month" },
-    { value: 1461, label: "2 months" },
-    { value: 2192, label: "3 months" },
+    { value: null, label: $_("paste_actions.expire.periods.never") },
+    { value: -1, label: $_("paste_actions.expire.periods.being_viewed") },
+    {
+      value: 0.08333,
+      label: `5 ${$_("paste_actions.expire.periods.minutes")}`,
+    },
+    { value: 0.25, label: `15 ${$_("paste_actions.expire.periods.minutes")}` },
+    { value: 0.5, label: `30 ${$_("paste_actions.expire.periods.minutes")}` },
+    { value: 1, label: `1 ${$_("paste_actions.expire.periods.hour")}` },
+    { value: 2, label: `2 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 3, label: `3 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 4, label: `4 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 5, label: `5 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 6, label: `6 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 7, label: `7 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 8, label: `8 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 9, label: `9 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 10, label: `10 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 11, label: `11 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 12, label: `12 ${$_("paste_actions.expire.periods.hours")}` },
+    { value: 24, label: `1 ${$_("paste_actions.expire.periods.day")}` },
+    { value: 48, label: `2 ${$_("paste_actions.expire.periods.days")}` },
+    { value: 72, label: `3 ${$_("paste_actions.expire.periods.days")}` },
+    { value: 96, label: `4 ${$_("paste_actions.expire.periods.days")}` },
+    { value: 120, label: `5 ${$_("paste_actions.expire.periods.days")}` },
+    { value: 144, label: `6 ${$_("paste_actions.expire.periods.days")}` },
+    { value: 168, label: `1 ${$_("paste_actions.expire.periods.week")}` },
+    { value: 336, label: `2 ${$_("paste_actions.expire.periods.weeks")}` },
+    { value: 504, label: `3 ${$_("paste_actions.expire.periods.weeks")}` },
+    { value: 730, label: `1 ${$_("paste_actions.expire.periods.month")}` },
+    { value: 1461, label: `2 ${$_("paste_actions.expire.periods.months")}` },
+    { value: 2192, label: `3 ${$_("paste_actions.expire.periods.months")}` },
   ];
   let selectedTime = null;
 
@@ -90,7 +94,7 @@
 
   async function shareLinkToClipboard() {
     await navigator.clipboard.writeText(window.location.href);
-    toast.success("Share link copied");
+    toast.success($_("paste_actions.share.success"));
   }
 
   async function expireAfter(event: {
@@ -101,9 +105,11 @@
         expires_in_hours: event.detail.value,
       }),
       {
-        loading: "Updating expire after",
-        success: `Paste set to expire in ${event.detail.label}`,
-        error: "Unable to set expire after",
+        loading: $_("paste_actions.expire.loading"),
+        success: $_("paste_actions.expire.success", {
+          values: { period: event.detail.label },
+        }),
+        error: $_("paste_actions.expire.error"),
       }
     );
   }
@@ -113,9 +119,9 @@
       await toast.promise(
         paasterClient.default.controllerPasteDeletePaste(pasteId, ownerSecret),
         {
-          loading: "Deleting paste",
-          success: "Paste deleted",
-          error: "Paste not found",
+          loading: $_("paste_actions.delete.loading"),
+          error: $_("paste_actions.delete.error"),
+          success: $_("paste_actions.delete.success"),
         }
       );
       await deletePaste(pasteId);
@@ -137,13 +143,13 @@
 
   async function savePasteLocal() {
     await savePaste(pasteId, b64EncodedRawKey, pasteCreated);
-    toast.success("Paste saved");
+    toast.success($_("paste_actions.save.success"));
     isSaved = true;
   }
 
   async function copyToClipboard() {
     await navigator.clipboard.writeText(rawCode);
-    toast.success("Paste copied");
+    toast.success($_("paste_actions.clipboard.success"));
   }
 
   async function loadPaste(accessCode?: string) {
@@ -168,7 +174,7 @@
     await sodium.ready;
 
     if (b64EncodedRawKey === "") {
-      toast.error("Paste secret key not provided");
+      toast.error($_("view.no_key"));
       acts.show(false);
       navigate("/", { replace: true });
       return;
@@ -181,7 +187,7 @@
         sodium.base64_variants.URLSAFE_NO_PADDING
       );
     } catch {
-      toast.error("Invalid Secret key format");
+      toast.error($_("view.invalid_format"));
       acts.show(false);
       navigate("/", { replace: true });
       return;
@@ -198,7 +204,7 @@
         // Delete paste from local storage if no longer exists on server.
         if (error.status === 404) {
           await deletePaste(pasteId);
-          toast.error("Paste no longer exists");
+          toast.error($_("view.404"));
         } else if (error.status == 401) {
           toast.error(error.body.detail);
           openModal(() => import("../components/ProvideAccessCode.svelte"), {
@@ -238,7 +244,7 @@
     try {
       response = await fetch(paste.download_url);
     } catch {
-      toast.error("Unable to download paste from CDN, try again later");
+      toast.error($_("view.cdn_down"));
       acts.show(false);
       navigate("/", { replace: true });
       return;
@@ -297,26 +303,32 @@
       <h3>owner panel</h3>
       <div class="owner-panel">
         <button on:click={renamePaste}
-          ><i class="las la-pencil-alt" />rename</button
+          ><i class="las la-pencil-alt" />{$_(
+            "paste_actions.rename.button"
+          )}</button
         >
         <button on:click={shareLinkToClipboard}
-          ><i class="las la-share" />share</button
+          ><i class="las la-share" />{$_("paste_actions.share.button")}</button
         >
         <button on:click={generateQRCode}
-          ><i class="las la-qrcode" />generate QR code</button
+          ><i class="las la-qrcode" />{$_(
+            "paste_actions.qr_code.button"
+          )}</button
         >
         <button on:click={setAccessCode}
-          ><i class="las la-key" />set access code</button
+          ><i class="las la-key" />{$_(
+            "paste_actions.access_code.button"
+          )}</button
         >
         <Select
           items={timePeriods}
           clearable={false}
-          placeholder="Expire after"
+          placeholder={$_("paste_actions.expire.button")}
           on:change={expireAfter}
           bind:value={selectedTime}
         />
         <button class="danger" on:click={deletePasteCall}
-          ><i class="las la-trash" />delete</button
+          ><i class="las la-trash" />{$_("paste_actions.delete.button")}</button
         >
       </div>
     </section>
@@ -324,11 +336,17 @@
 {/if}
 
 <footer>
-  <button on:click={download}><i class="las la-download" />Download</button>
-  <button on:click={copyToClipboard}><i class="las la-copy" />Copy</button>
+  <button on:click={download}
+    ><i class="las la-download" />{$_("paste_actions.download.button")}</button
+  >
+  <button on:click={copyToClipboard}
+    ><i class="las la-copy" />{$_("paste_actions.clipboard.button")}</button
+  >
 
   {#if !isSaved}
-    <button on:click={savePasteLocal}><i class="las la-save" />Save</button>
+    <button on:click={savePasteLocal}
+      ><i class="las la-save" />{$_("paste_actions.save.button")}</button
+    >
   {/if}
 </footer>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { closeModal } from "svelte-modals";
   import sodium from "libsodium-wrappers";
+  import { _ } from "svelte-i18n";
 
   export let isOpen: boolean;
   export let b64EncodedRawKey: string;
@@ -23,19 +24,29 @@
   <div role="dialog" class="modal">
     <div class="contents">
       <div class="header">
-        <h2>enter access code</h2>
+        <h2>{$_("require_access_code_model.header")}</h2>
       </div>
       <form on:submit|preventDefault={attemptAccessCode} class="inline-form">
-        <div class="generate-pass">
+        <div class="require-access-code">
           <input
             bind:value={givenAccessCode}
             type="password"
-            placeholder="Enter access code"
+            placeholder={$_("require_access_code_model.input")}
             autofocus={true}
           />
         </div>
-        <button>Submit</button>
+        <button>{$_("require_access_code_model.button")}</button>
       </form>
     </div>
   </div>
 {/if}
+
+<style>
+  .require-access-code {
+    display: flex;
+  }
+
+  .require-access-code input {
+    width: 100%;
+  }
+</style>

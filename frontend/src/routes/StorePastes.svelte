@@ -5,6 +5,7 @@
   import { tooltip } from "@svelte-plugins/tooltips";
   import Search from "svelte-search";
   import Fuse from "fuse.js";
+  import { _ } from "svelte-i18n";
 
   import { listPastes, deletePaste, type SavedPaste } from "../lib/savedPaste";
   import { paasterClient } from "../lib/client";
@@ -47,9 +48,9 @@
       await toast.promise(
         paasterClient.default.controllerPasteDeletePaste(pasteId, ownerSecret),
         {
-          loading: "Deleting paste",
-          error: "Paste not found on server",
-          success: "Paste deleted from server",
+          loading: $_("paste_actions.delete.loading"),
+          error: $_("paste_actions.delete.error"),
+          success: $_("paste_actions.delete.success"),
         }
       );
     }
@@ -63,16 +64,21 @@
     await navigator.clipboard.writeText(
       `${window.location.origin}/${pasteId}#${secretKey}`
     );
-    toast.success("Share link copied");
+    toast.success($_("paste_actions.share.success"));
   }
 </script>
 
 <main>
   {#if savedPastes.length === 0}
-    <h3>no saved pastes <i class="las la-heart-broken" /></h3>
+    <h3>{$_("no_saved_pastes")} <i class="las la-heart-broken" /></h3>
   {:else}
     <section>
-      <Search hideLabel on:type={onSearch} on:clear={onClear} />
+      <Search
+        hideLabel
+        placeholder={$_("search")}
+        on:type={onSearch}
+        on:clear={onClear}
+      />
     </section>
     <ul>
       {#each showPastes as paste}
@@ -85,7 +91,7 @@
                   {#if !paste.ownerSecret}
                     <i
                       class="las la-share-alt"
-                      use:tooltip={{ content: "Shared with you" }}
+                      use:tooltip={{ content: $_("shared_with") }}
                     />
                   {/if}
                 </p>
@@ -100,20 +106,27 @@
             </a>
             <div class="actions">
               <button on:click={() => renamePaste(paste.pasteId)}
-                ><i class="las la-pencil-alt" />rename</button
+                ><i class="las la-pencil-alt" />{$_(
+                  "paste_actions.rename.button"
+                )}</button
               >
               <button
                 on:click={async () =>
                   await shareLinkToClipboard(
                     paste.pasteId,
                     paste.b64EncodedRawKey
-                  )}><i class="las la-share" />share</button
+                  )}
+                ><i class="las la-share" />{$_(
+                  "paste_actions.share.button"
+                )}</button
               >
               <button
                 class="danger"
                 on:click={async () =>
                   await deletePasteCall(paste.pasteId, paste.ownerSecret)}
-                ><i class="las la-trash" />delete</button
+                ><i class="las la-trash" />{$_(
+                  "paste_actions.delete.button"
+                )}</button
               >
             </div>
           </li>
