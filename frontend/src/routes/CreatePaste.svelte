@@ -4,6 +4,7 @@
   import toast from "svelte-french-toast";
   import { filedrop } from "filedrop-svelte";
   import { navigate } from "svelte-navigator";
+  import { _ } from "svelte-i18n";
 
   import { pasteStore } from "../stores";
   import { ApiError } from "../lib/client/core/ApiError";
@@ -87,9 +88,7 @@
         createdPaste.owner_secret
       );
     } catch {
-      toast.error(
-        "Unable to save paste secrets, most likely because your in a private window."
-      );
+      toast.error($_("create.errors.private_window"));
     }
 
     navigate(`/${createdPaste._id}#${rawUrlSafeKey}`, { replace: true });
@@ -105,23 +104,24 @@
   <textarea
     on:input={async () => await pasteSubmit(false)}
     value=""
-    placeholder="paste or drag & drop your code here"
+    placeholder={$_("create.input")}
     name="create-paste"
     disabled={isLoading}
     id="pastedCode"
   />
 
   <section>
-    <h3>how we protect your privacy.</h3>
+    <h3>{$_("about.title")}</h3>
     <p>
-      Paaster utilizes end-to-end encryption for storing and sharing pastes,
-      meaning even the server can't view what you save here.
+      {$_("about.content")}
     </p>
     <p>
-      Our source code is completely open source and can be reviewed on <a
-        href="https://github.com/WardPearce/paaster"
-        referrerpolicy="no-referrer">Github</a
-      >.
+      {@html $_("about.source_code", {
+        values: {
+          github:
+            '<a href="https://github.com/WardPearce/paaster"referrerpolicy="no-referrer">Github</a>',
+        },
+      })}
     </p>
   </section>
 </main>

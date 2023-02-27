@@ -3,4 +3,4 @@ from app.main import app
 
 
 def main():
-    uvicorn.run(app, port=80)
+    uvicorn.run(app)
