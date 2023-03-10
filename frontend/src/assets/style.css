@@ -190,6 +190,7 @@ footer {
     pointer-events: auto;
     border-radius: 3em;
     border: solid 3px var(--darkBg);
+    z-index: 1010;
 }
 
 .modal .contents > .header {
