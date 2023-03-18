@@ -39,6 +39,8 @@ def create_paste(
 
     PasteModel(**r_json)
 
+    assert r_model.id not in r_model.download_url
+
     yield r_model
 
     response = client.delete(f"/controller/paste/{r_model.id}/{r_model.owner_secret}")

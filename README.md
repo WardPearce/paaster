@@ -24,7 +24,7 @@ Paaster is a secure and user-friendly pastebin application that prioritizes priv
 - Access code protection (Require an additional password to view paste.)
 - Rate limiting.
 - Share via QR code.
-- PWA Support.
+- PWA support.
 - i18n support.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - [Vercel](https://vercel.com) support.
@@ -45,7 +45,7 @@ Client secrets are stored with IndexedDB when the paste is created, allowing for
 
 ### How are client secrets transported?
 
-Paaster uses URI fragments to transport secrets, according to the [Mozilla foundation](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_a_URL#anchor) URI fragments aren't meant to be sent to the server. Bitwarden also has a article covering this usage [here](https://bitwarden.com/blog/bitwarden-send-how-it-works/).
+Paaster uses URI fragments to transport secrets, according to the [Mozilla foundation](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL#anchor) URI fragments aren't meant to be sent to the server. Bitwarden also has a article covering this usage [here](https://bitwarden.com/blog/bitwarden-send-how-it-works/).
 
 ### How are server secrets stored?
 

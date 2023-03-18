@@ -212,6 +212,7 @@ footer {
     right: 0;
     left: 0;
     background: var(--darkBgTrans);
+    z-index: 1010;
 }
 
 .inline-form {
