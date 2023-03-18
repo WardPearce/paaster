@@ -23,8 +23,7 @@
     "libsodium-wrappers": "^0.7.11",
     "mousetrap": "^1.6.5",
     "openapi-typescript-codegen": "^0.23.0",
-    "svelte": "^3.55.1",
-    "svelte-check": "^3.1.2",
+    "svelte": "^3.57.0",
     "svelte-french-toast": "^1.0.3",
     "svelte-highlight": "^7.2.0",
     "svelte-modals": "^1.2.1",
@@ -32,8 +31,8 @@
     "svelte-search": "^2.0.1",
     "svelte-select": "^5.5.2",
     "tslib": "^2.5.0",
-    "typescript": "^4.9.3",
-    "vite": "^4.1.4",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.0",
     "vite-plugin-pwa": "^0.14.4"
   },
   "dependencies": {

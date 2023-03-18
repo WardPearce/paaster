@@ -194,6 +194,10 @@ footer {
     z-index: 1010;
 }
 
+.hljs {
+    z-index: 1009;
+}
+
 .modal .contents > .header {
     display: flex;
     justify-content: space-around;
