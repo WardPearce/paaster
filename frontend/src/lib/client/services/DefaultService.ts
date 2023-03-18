@@ -40,7 +40,7 @@ export class DefaultService {
      */
     public controllerPasteGetPaste(
         pasteId: string,
-        accessCode?: null,
+        accessCode?: (null | string),
     ): CancelablePromise<PasteModel> {
         return this.httpRequest.request({
             method: 'GET',

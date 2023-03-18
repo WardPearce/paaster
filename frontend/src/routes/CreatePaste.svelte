@@ -2,7 +2,7 @@
   import sodium from "libsodium-wrappers";
   import { acts } from "@tadashi/svelte-loading";
   import toast from "svelte-french-toast";
-  import { filedrop } from "filedrop-svelte";
+  import { filedrop, type FileDropSelectEvent } from "filedrop-svelte";
   import { navigate } from "svelte-navigator";
   import { _ } from "svelte-i18n";
 
@@ -14,7 +14,7 @@
   let isLoading = false;
   let pastedCode = "";
 
-  async function onFileDrop(event: CustomEvent) {
+  async function onFileDrop(event: CustomEvent<FileDropSelectEvent>) {
     pastedCode = await event.detail.files.accepted[0].text();
     await pasteSubmit(true);
   }
@@ -96,8 +96,8 @@
 </script>
 
 <div
-  use:filedrop={{ fileLimit: 1, clickToUpload: false, windowDrop: true }}
   on:filedrop={onFileDrop}
+  use:filedrop={{ fileLimit: 1, clickToUpload: false, windowDrop: true }}
 />
 
 <main>

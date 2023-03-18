@@ -21,5 +21,7 @@ jobs:
           node-version: 18
       - name: Install modules
         run: npm install
+      - name: Check linting
+        run: npm run check
       - name: Attempt to build codebase
         run: npm run build
