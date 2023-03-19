@@ -69,7 +69,7 @@
             "button": "Expire after",
             "periods": {
                 "never": "never",
-                "being_viewed": "being view",
+                "being_viewed": "being viewed",
                 "minute": "minute",
                 "minutes": "minutes",
                 "hour": "hour",
