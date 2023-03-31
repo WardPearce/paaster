@@ -23,7 +23,7 @@
     "libsodium-wrappers": "^0.7.11",
     "mousetrap": "^1.6.5",
     "openapi-typescript-codegen": "^0.23.0",
-    "svelte": "^3.57.0",
+    "svelte": "^3.58.0",
     "svelte-check": "^3.1.4",
     "svelte-french-toast": "^1.0.3",
     "svelte-highlight": "^7.2.0",
