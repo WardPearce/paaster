@@ -32,7 +32,7 @@
     "svelte-search": "^2.0.1",
     "svelte-select": "^5.5.3",
     "tslib": "^2.5.0",
-    "typescript": "^5.0.3",
+    "typescript": "^5.0.4",
     "vite": "^4.2.1",
     "vite-plugin-pwa": "^0.14.7"
   },
