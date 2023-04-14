@@ -2,6 +2,7 @@
   import sodium from "libsodium-wrappers";
   import toast from "svelte-french-toast";
   import { _ } from "svelte-i18n";
+  import { closeModal } from "svelte-modals";
 
   import { paasterClient } from "../lib/client";
   import { generatePassphrase } from "../lib/niceware";
@@ -40,6 +41,8 @@
         $_("paste_actions.access_code.success_copied_to_clipboard")
       );
     } catch {}
+
+    closeModal();
   }
 </script>
 

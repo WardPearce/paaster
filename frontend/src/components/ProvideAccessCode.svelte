@@ -10,10 +10,12 @@
   let accessCode = ["", "", "", ""];
 
   async function onCodeInputted(event) {
-    if (event.data === null) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    let inputtedCode = document.getElementById("inputtedCode").value;
 
-    if (event.data.includes("-")) {
-      accessCode = event.data.split("-");
+    if (inputtedCode.includes("-")) {
+      accessCode = inputtedCode.split("-");
       await attemptAccessCode();
     }
   }
@@ -48,6 +50,7 @@
                   type="text"
                   bind:value={accessCode[index]}
                   autofocus={index === 0}
+                  id="inputtedCode"
                   on:input={onCodeInputted}
                 />
                 <p>-</p>
