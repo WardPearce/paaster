@@ -292,7 +292,7 @@ pre > code {
 }
 
 @media screen and (max-width: 1265px) {
-    form {
+    .generate-pass-form {
         align-items: center;
     }
 }
