@@ -8,7 +8,7 @@ Paaster is a secure and user-friendly pastebin application that prioritizes priv
 
 ## Preview
 
-![Desktop preview](https://files.catbox.moe/53m2n4.gif)
+![Desktop preview](https://files.catbox.moe/u8me5t.gif)
 ![Mobile preview](https://i.imgur.com/3lLW9bB.png)
 
 ## Features
