@@ -21,7 +21,7 @@ Paaster is a secure and user-friendly pastebin application that prioritizes priv
 - Delete after view or X amount of time.
 - [API documentation](https://api.paaster.io/schema).
 - [CLI Tool](https://github.com/WardPearce/paaster-cli).
-- Access code protection (Require an additional password to view paste.)
+- Access code protection (Require a passphrase to view paste.)
 - Rate limiting.
 - Share via QR code.
 - PWA support.
