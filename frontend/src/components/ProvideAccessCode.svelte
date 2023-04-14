@@ -41,7 +41,10 @@
       <div class="header">
         <h2>{$_("require_access_code_model.header")}</h2>
       </div>
-      <form on:submit|preventDefault={() => {}} class="generate-pass-form">
+      <form
+        on:submit|preventDefault={attemptAccessCode}
+        class="generate-pass-form"
+      >
         <div class="generate-pass">
           <ul>
             {#each Array(accessCode.length) as _, index}
@@ -58,7 +61,7 @@
             {/each}
           </ul>
         </div>
-        <button type="button" on:click={attemptAccessCode}
+        <button type="submit" on:click={attemptAccessCode}
           >{$_("require_access_code_model.button")}</button
         >
       </form>
