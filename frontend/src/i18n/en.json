@@ -37,7 +37,7 @@
                 "header": "set paste access code",
                 "input": "Enter access code",
                 "tooltip": "Generate code",
-                "button": "Set access code"
+                "button": "Copy code"
             },
             "access_code_len": "Access code must be {max_length} characters or more",
             "loading": "Setting access code",
