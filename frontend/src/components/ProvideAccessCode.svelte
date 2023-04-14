@@ -7,16 +7,29 @@
   export let b64EncodedRawKey: string;
   export let loadPasteFunc: Function;
 
-  let givenAccessCode: string;
+  let accessCode = ["", "", "", ""];
+
+  async function onCodeInputted(event) {
+    if (event.data === null) return;
+
+    if (event.data.includes("-")) {
+      accessCode = event.data.split("-");
+      await attemptAccessCode();
+    }
+  }
 
   async function attemptAccessCode() {
-    closeModal();
     await loadPasteFunc(
       sodium.to_base64(
-        sodium.crypto_generichash(64, givenAccessCode, b64EncodedRawKey),
+        sodium.crypto_generichash(
+          64,
+          accessCode.join("-").toLowerCase(),
+          b64EncodedRawKey
+        ),
         sodium.base64_variants.URLSAFE_NO_PADDING
       )
     );
+    closeModal();
   }
 </script>
 
@@ -26,27 +39,26 @@
       <div class="header">
         <h2>{$_("require_access_code_model.header")}</h2>
       </div>
-      <form on:submit|preventDefault={attemptAccessCode} class="inline-form">
-        <div class="require-access-code">
-          <input
-            bind:value={givenAccessCode}
-            type="password"
-            placeholder={$_("require_access_code_model.input")}
-            autofocus={true}
-          />
+      <form on:submit|preventDefault={() => {}} class="generate-pass-form">
+        <div class="generate-pass">
+          <ul>
+            {#each Array(accessCode.length) as _, index}
+              <li>
+                <input
+                  type="text"
+                  bind:value={accessCode[index]}
+                  autofocus={index === 0}
+                  on:input={onCodeInputted}
+                />
+                <p>-</p>
+              </li>
+            {/each}
+          </ul>
         </div>
-        <button>{$_("require_access_code_model.button")}</button>
+        <button type="button" on:click={attemptAccessCode}
+          >{$_("require_access_code_model.button")}</button
+        >
       </form>
     </div>
   </div>
 {/if}
-
-<style>
-  .require-access-code {
-    display: flex;
-  }
-
-  .require-access-code input {
-    width: 100%;
-  }
-</style>

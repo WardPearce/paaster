@@ -8,7 +8,7 @@ export default defineConfig({
     svelte(),
     VitePWA({
       manifest: {
-        description: " Paaster is a secure by default end-to-end encrypted pastebin built with the objective of simplicity.",
+        description: "Paaster is a secure by default end-to-end encrypted pastebin built with the objective of simplicity.",
         icons: [
           {
             src: "/android-icon-36x36.png",

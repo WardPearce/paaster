@@ -258,6 +258,63 @@ pre > code {
     font-size: .8em;
 }
 
+.generate-pass-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.generate-pass-form button {
+    margin-top: 1em;
+}
+
+.generate-pass {
+    display: flex;
+}
+
+.generate-pass ul {
+    list-style: none;
+    display: flex;
+}
+
+.generate-pass li {
+    align-items: center;
+    display: flex;
+}
+
+.generate-pass li:not(:last-child) p {
+    margin: 0 0.2em;
+    font-size: 2.4em;
+}
+
+.generate-pass li:is(:last-child) p {
+    display: none;
+}
+
+@media screen and (max-width: 1265px) {
+    form {
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 1265px) {
+    .generate-pass ul {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 1265px) {
+    .generate-pass li {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 1265px) {
+    .generate-pass li:not(:last-child) p {
+        font-size: 2em;
+    }
+}
+
 @media screen and (max-width: 1200px) {
     .svelte-select {
         width: 100% !important;
