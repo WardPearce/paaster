@@ -2269,19 +2269,18 @@ files = [
 
 [[package]]
 name = "types-aiobotocore"
-version = "2.5.0.post1"
-description = "Type annotations for aiobotocore 2.5.0 generated with mypy-boto3-builder 7.13.0"
+version = "2.5.0.post2"
+description = "Type annotations for aiobotocore 2.5.0 generated with mypy-boto3-builder 7.14.5"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "types-aiobotocore-2.5.0.post1.tar.gz", hash = "sha256:7192f50051cc8d88a1ce4e3aa1d407dc3133442a8810b4298f1a0acbb9e25fec"},
-    {file = "types_aiobotocore-2.5.0.post1-py3-none-any.whl", hash = "sha256:6d5ea5cf2daa781418e81b8e2ed48924061b8928c74913d0b403c682ea544384"},
+    {file = "types-aiobotocore-2.5.0.post2.tar.gz", hash = "sha256:e0e46a6834841db86083ce0dad3d5efbaebe0a43c18f783b0e8c95ea1f7e80c5"},
+    {file = "types_aiobotocore-2.5.0.post2-py3-none-any.whl", hash = "sha256:75ddccdaf5cdf080a1a62cb74346f2704187a53b9ff1a8d63428c2e1de4e05f7"},
 ]
 
 [package.dependencies]
 botocore-stubs = "*"
-typing-extensions = ">=4.1.0"
 
 [package.extras]
 accessanalyzer = ["types-aiobotocore-accessanalyzer (>=2.5.0,<2.6.0)"]
@@ -2864,4 +2863,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c887cdaaec3ec405e07c2261f38037f3f05128f969ce1faf1dc64fa90766c26c"
+content-hash = "b9707e7cfe5f9e7c0e59885b5c958f6edc6935db67b3f9d98c18ca97d8365eb0"
