@@ -8,4 +8,4 @@ updates:
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
-      interval: "weakly"
+      interval: "weekly"
