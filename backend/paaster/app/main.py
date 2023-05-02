@@ -1,10 +1,10 @@
 from app.controllers import router
 from app.env import SETTINGS
 from app.resources import Sessions
+from litestar import CORSConfig, Litestar, OpenAPIConfig
 from motor import motor_asyncio
 from pydantic import AnyUrl, BaseModel
 from pydantic_openapi_schema.v3_1_0 import Contact, Server
-from starlite import CORSConfig, OpenAPIConfig, Starlite
 
 
 async def start_motor() -> None:
@@ -14,7 +14,7 @@ async def start_motor() -> None:
     Sessions.mongo = mongo[SETTINGS.mongo.collection]
 
 
-app = Starlite(
+app = Litestar(
     route_handlers=[router],
     on_startup=[start_motor],
     openapi_config=OpenAPIConfig(

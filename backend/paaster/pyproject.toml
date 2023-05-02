@@ -13,13 +13,12 @@ server = "run:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-starlite = {extras = ["full"], version = "^1.51.11"}
 motor = "^3.1.2"
 bcrypt = "^4.0.1"
 aiobotocore = "^2.4.2"
 nanoid = "^2.0.0"
-uvicorn = "^0.22.0"
 argon2-cffi = "^21.3.0"
+litestar = {extras = ["full"], version = "^2.0.0a5"}
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"
