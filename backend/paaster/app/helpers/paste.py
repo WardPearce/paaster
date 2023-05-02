@@ -9,7 +9,7 @@ from app.models.paste import PasteModel, UpdatePasteModel
 from app.resources import Sessions
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-from litestar import NotAuthorizedException, NotFoundException
+from litestar.exceptions import NotAuthorizedException, NotFoundException
 
 PASSWORD_HASHER = PasswordHasher()
 

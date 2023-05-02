@@ -9,8 +9,9 @@ from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteCreatedModel, PasteModel, UpdatePasteModel
 from app.resources import Sessions
-from litestar import HTTPException, Request, Router, delete, get, post
-from litestar.middleware import RateLimitConfig
+from litestar import Request, Router, delete, get, post
+from litestar.exceptions import HTTPException
+from litestar.middleware.rate_limit import RateLimitConfig
 
 
 @post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 35)).middleware])
