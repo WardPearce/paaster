@@ -1,10 +1,12 @@
 from app.controllers import router
 from app.env import SETTINGS
 from app.resources import Sessions
-from litestar import CORSConfig, Litestar, OpenAPIConfig
+from litestar import Litestar
+from litestar.config.cors import CORSConfig
+from litestar.openapi import OpenAPIConfig
+from litestar.openapi.spec import Contact, Server
 from motor import motor_asyncio
 from pydantic import AnyUrl, BaseModel
-from pydantic_openapi_schema.v3_1_0 import Contact, Server
 
 
 async def start_motor() -> None:
@@ -18,11 +20,11 @@ app = Litestar(
     route_handlers=[router],
     on_startup=[start_motor],
     openapi_config=OpenAPIConfig(
-        **SETTINGS.open_api.dict(),
+        title=SETTINGS.open_api.title,
+        version=SETTINGS.open_api.version,
         root_schema_site="redoc",
         description="OpenAPI specification for paaster.io, you are expected to read our encryption implementation to implement it yourself.",
         servers=[Server(url=SETTINGS.proxy_urls.backend)],
-        by_alias=True,
         contact=Contact(
             name="Paaster API team",
             email="wardpearce@pm.me",
