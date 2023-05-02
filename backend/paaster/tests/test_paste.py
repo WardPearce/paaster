@@ -5,7 +5,7 @@ from typing import Iterator
 import pytest
 from app.main import app
 from app.models.paste import PasteCreatedModel, PasteModel
-from litestar import TestClient
+from litestar.testing import TestClient
 
 
 @pytest.fixture
