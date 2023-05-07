@@ -3,7 +3,7 @@
   import { acts } from "@tadashi/svelte-loading";
   import toast from "svelte-french-toast";
   import { filedrop, type FileDropSelectEvent } from "filedrop-svelte";
-  import { navigate } from "svelte-navigator";
+  import { link, navigate } from "svelte-navigator";
   import { _ } from "svelte-i18n";
 
   import { pasteStore } from "../stores";
@@ -123,5 +123,11 @@
         },
       })}
     </p>
+    <a href="/privacy-policy" use:link style="margin-top: 1em;display: block;"
+      >Privacy policy</a
+    >
+    <a href="/terms-of-service" use:link style="display: block;"
+      >Terms of service</a
+    >
   </section>
 </main>
