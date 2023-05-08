@@ -13,7 +13,7 @@ server = "run:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-starlite = {extras = ["full"], version = "^1.51.11"}
+starlite = {extras = ["full"], version = "^1.51.12"}
 motor = "^3.1.2"
 bcrypt = "^4.0.1"
 aiobotocore = "^2.4.2"
