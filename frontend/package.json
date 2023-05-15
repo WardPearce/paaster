@@ -24,7 +24,7 @@
     "mousetrap": "^1.6.5",
     "niceware": "^4.0.0",
     "openapi-typescript-codegen": "^0.24.0",
-    "svelte": "^3.59.0",
+    "svelte": "^3.59.1",
     "svelte-check": "^3.3.2",
     "svelte-french-toast": "^1.0.3",
     "svelte-highlight": "^7.3.0",
