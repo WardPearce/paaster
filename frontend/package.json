@@ -27,7 +27,7 @@
     "svelte": "^3.59.0",
     "svelte-check": "^3.3.1",
     "svelte-french-toast": "^1.0.3",
-    "svelte-highlight": "^7.2.1",
+    "svelte-highlight": "^7.3.0",
     "svelte-modals": "^1.2.1",
     "svelte-qrcode": "^1.0.0",
     "svelte-search": "^2.0.1",
