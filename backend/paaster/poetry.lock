@@ -1324,14 +1324,14 @@ zstd = ["pymongo[zstd] (>=4.1,<5)"]
 
 [[package]]
 name = "motor-types"
-version = "1.0.0b1"
+version = "1.0.0b2"
 description = "Python stubs for Motor, a Non-Blocking MongoDB driver for Python's Tornado and AsyncIO based applications."
 category = "dev"
 optional = false
 python-versions = ">=3.8.0,<4.0"
 files = [
-    {file = "motor_types-1.0.0b1-py3-none-any.whl", hash = "sha256:b61f24a30c3ca2a2831a2e2961bb04f6995317e7a42a4ece0767de0a5218f8e6"},
-    {file = "motor_types-1.0.0b1.tar.gz", hash = "sha256:1fb264f8867406aca5eef9c920fc00d5818f2014d3109b91da75c9040b0b0d57"},
+    {file = "motor_types-1.0.0b2-py3-none-any.whl", hash = "sha256:f02e57c5ba957020ee2e8ea147fde1c847d753f8481f89114dafdf54b5577b91"},
+    {file = "motor_types-1.0.0b2.tar.gz", hash = "sha256:b00745e6562a4bdfd41b4de1e4d9221b3e3bd3f755458e4cb758b44a7a1dd8d4"},
 ]
 
 [package.dependencies]
@@ -2862,4 +2862,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c453856fd9cdc03ae0e65edf3af5e44455d9979adbc5c29023b5b000880d6ab9"
+content-hash = "055b05b10d31f01693a4095a024de00b55dc0d58a062a2d5d1ff32cd0fdb87a2"
