@@ -35,7 +35,7 @@
     "tslib": "^2.5.3",
     "typescript": "^5.0.4",
     "vite": "^4.3.9",
-    "vite-plugin-pwa": "^0.15.1"
+    "vite-plugin-pwa": "^0.16.3"
   },
   "dependencies": {
     "svelte-i18n": "^3.6.0",
