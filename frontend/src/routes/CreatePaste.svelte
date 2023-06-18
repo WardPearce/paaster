@@ -1,15 +1,15 @@
 <script lang="ts">
-  import sodium from "libsodium-wrappers";
   import { acts } from "@tadashi/svelte-loading";
-  import toast from "svelte-french-toast";
   import { filedrop, type FileDropSelectEvent } from "filedrop-svelte";
-  import { link, navigate } from "svelte-navigator";
+  import sodium from "libsodium-wrappers";
+  import toast from "svelte-french-toast";
   import { _ } from "svelte-i18n";
+  import { link, navigate } from "svelte-navigator";
 
-  import { pasteStore } from "../stores";
   import { ApiError } from "../lib/client/core/ApiError";
-  import { savePaste } from "../lib/savedPaste";
   import type { PasteCreatedModel } from "../lib/client/models/PasteCreatedModel";
+  import { savePaste } from "../lib/savedPaste";
+  import { pasteStore } from "../stores";
 
   let isLoading = false;
   let pastedCode = "";
@@ -70,9 +70,21 @@
         }
       );
       createdPaste = await response.json();
+
+      if (!response.ok) {
+        toast.error((createdPaste as any).detail);
+        isLoading = false;
+        acts.show(false);
+        pastedCode = "";
+        return;
+      }
     } catch (error) {
       if (error instanceof ApiError) toast.error(error.body.detail);
       else if (error instanceof Error) toast.error(error.toString());
+
+      isLoading = false;
+      acts.show(false);
+      pastedCode = "";
       return;
     }
     pasteStore.set(pastedCode);
@@ -103,7 +115,7 @@
 <main>
   <textarea
     on:input={async () => await pasteSubmit(false)}
-    value=""
+    value={pastedCode}
     placeholder={$_("create.input")}
     name="create-paste"
     disabled={isLoading}
