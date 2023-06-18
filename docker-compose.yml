@@ -1,40 +1,53 @@
+# Please read.
+# https://github.com/WardPearce/paaster#production-with-docker
+
+# Need help? Open a Issue.
+# https://github.com/WardPearce/paaster/issues/new
+
 version: '3'
 services:
-  starlette:
+  paaster_backend:
     container_name: paaster_backend
-    build:
-      dockerfile: ./Dockerfile
-      context: ./backend
+    image: wardpearce/paaster-backend:latest
     restart: unless-stopped
     ports:
       - "8888:80"
     environment:
+      # Max paste size in bytes.
       paaster_max_paste_size: 1049000
       paaster_max_iv_size: 42
       paaster_open_api: '{"title": "paaster.io", "version": "2.0.0"}'
       paaster_mongo: '{"host": "paaster_mongodb", "port": 27017, "collection": "paasterv2"}'
+      # paaster_s3.download_url should be the URL to access a given file.
+      # This should be a public bucket, without allowing directory listing.
       paaster_s3: '{"endpoint_url": "","secret_access_key": "","access_key_id": "","region_name": "","bucket": "","folder": "pastes","download_url": ""}'
+      # Proxied URLs, NO TRAILING SLASH!
+      # paaster_proxy_urls.frontend should be the address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io" 
+      # paaster_proxy_urls.backend should be the address for "paaster_backend". E.g. for paaster.io this is "https://api.paaster.io"
       paaster_proxy_urls: '{"frontend": "http://localhost:8889", "backend": "http://localhost:8888"}'
     depends_on:
-      - mongodb
+      - paaster_mongodb
     networks:
-      - backend
+      - paaster_network
 
-  vite:
+  # If using Vercel, delete this section.
+  paaster_frontend:
     container_name: paaster_frontend
     build:
       dockerfile: ./Dockerfile
       context: ./frontend
-      args:
-        # Proxied backend URL, NO TRAILING SLASH!
-        VITE_API_URL: "http://localhost:8888"
-        # Name what appears on the website.
-        VITE_NAME: "paaster"
     restart: unless-stopped
+    environment:
+      # Name what appears on the website.
+      # name should be lower case due to font.
+      VITE_NAME: "paaster.io"
+      # Proxied backend URL, NO TRAILING SLASH!
+      # Should be the proxied address for "paaster_backend". E.g. for paaster.io this is "https://api.paaster.io"
+      VITE_API_URL: "http://localhost:8888"
     ports:
       - "8889:80"
 
-  mongodb:
+  paaster_mongodb:
     image: mongo
     container_name: paaster_mongodb
     restart: unless-stopped
@@ -42,14 +55,14 @@ services:
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     volumes:
-      - mongodbdata:/data/db
+      - paaster_data:/data/db
     networks:
-      - backend
+      - paaster_network
 
 networks:
-  backend:
+  paaster_network:
     driver: bridge
 
 volumes:
-  mongodbdata:
+  paaster_data:
     driver: local

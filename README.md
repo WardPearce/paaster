@@ -34,6 +34,7 @@
 - PWA support.
 - i18n support.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
+- Use of `package-lock.json`, `poetry.lock` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
 - [Vercel](https://vercel.com) support.
 
 # Security
@@ -87,13 +88,9 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
 ## Production with Docker
 
 - During configuration, no provided URLs should be suffixed with a slash.
-- Clone this repo with `git clone https://github.com/WardPearce/paaster` or use our docker hub images [paaster-backend](https://hub.docker.com/r/wardpearce/paaster-backend) / [paaster-frontend](https://hub.docker.com/r/wardpearce/paaster-frontend).
 - Configure `docker-compose.yml` (example [here](./docker-compose.yml))
-- Proxy exposed ports using Nginx (or whatever reverse proxy you prefer.)
-- `paaster_proxy_urls.frontend` should be the proxied address for "paaster_frontend". E.g. for paaster.io this is "https://paaster.io"
-- `VITE_API_URL` should be the proxied address for "paaster_backend". E.g. for paaster.io this is "https://api.paaster.io"
-- `paaster_s3` should contain your S3 secrets.
 - `sudo docker compose build; sudo docker compose up -d`.
+- Proxy exposed ports using Caddy/Nginx/Apache2 (or whatever reverse proxy you prefer.)
 
 ### Vercel
 
@@ -103,7 +100,7 @@ Paaster's frontend is also configured to work with [Vercel](https://vercel.com),
 
 Rclone is no longer supported for performance reasons & paaster is now only s3 compatible.
 
-Luckily you can get cheap / free & easy to setup s3 compatible storage from [idrive e2](https://www.idrive.com/e2/) or [backblaze b2](https://www.backblaze.com/b2/cloud-storage.html).
+Luckily you can get cheap / free & easy to setup s3 compatible storage from [idrive e2](https://www.idrive.com/e2/) (no free tier anymore) or [backblaze b2](https://www.backblaze.com/b2/cloud-storage.html) (10 GB free).
 
 ## Production without docker
 
@@ -130,7 +127,7 @@ Luckily you can get cheap / free & easy to setup s3 compatible storage from [idr
   - `paaster_max_iv_size`.
   - `paaster_max_paste_size`.
 - Run `poetry run server`, to start server.
-- Proxy port with Nginx (or whatever reverse proxy you use.)
+- Proxy exposed ports using Caddy/Nginx/Apache2 (or whatever reverse proxy you prefer.)
 
 # Adding translations
 
