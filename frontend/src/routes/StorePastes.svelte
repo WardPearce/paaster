@@ -1,14 +1,15 @@
 <script lang="ts">
+  import { tooltip } from "@svelte-plugins/tooltips";
+  import Fuse from "fuse.js";
   import { onMount } from "svelte";
   import toast from "svelte-french-toast";
-  import { openModal } from "svelte-modals";
-  import { tooltip } from "@svelte-plugins/tooltips";
-  import Search from "svelte-search";
-  import Fuse from "fuse.js";
   import { _ } from "svelte-i18n";
+  import { openModal } from "svelte-modals";
+  import Search from "svelte-search";
 
-  import { listPastes, deletePaste, type SavedPaste } from "../lib/savedPaste";
   import { paasterClient } from "../lib/client";
+  import { relativeDate } from "../lib/date";
+  import { deletePaste, listPastes, type SavedPaste } from "../lib/savedPaste";
 
   let savedPastes: SavedPaste[] = [];
   let showPastes: SavedPaste[] = [];
@@ -96,11 +97,7 @@
                   {/if}
                 </p>
                 <p class="info">
-                  {new Date(paste.created * 1000).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {relativeDate(paste.created * 1000)}
                 </p>
               </div>
             </a>
