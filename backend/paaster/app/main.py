@@ -40,16 +40,16 @@ app = Starlite(
             Server(url=SETTINGS.proxy_urls.backend, description="Production server.")
         ],
         by_alias=True,
-        terms_of_service="https://paaster.io/terms-of-service",
+        terms_of_service="https://paaster.io/terms-of-service",  # type: ignore
         license=License(
             name="GNU Affero General Public License v3.0",
             identifier="AGPL-3.0",
-            url="https://github.com/WardPearce/paaster/blob/main/LICENSE",
+            url="https://github.com/WardPearce/paaster/blob/main/LICENSE",  # type: ignore
         ),
         contact=Contact(
             name="Paaster API team",
             email="wardpearce@pm.me",
-            url="https://github.com/WardPearce/Paaster",
+            url="https://github.com/WardPearce/Paaster",  # type: ignore
         ),
     ),
     cors_config=CORSConfig(
