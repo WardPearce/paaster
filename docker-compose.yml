@@ -33,9 +33,7 @@ services:
   # If using Vercel, delete this section.
   paaster_frontend:
     container_name: paaster_frontend
-    build:
-      dockerfile: ./Dockerfile
-      context: ./frontend
+    image: wardpearce/paaster-frontend:latest
     restart: unless-stopped
     environment:
       # Name what appears on the website.
