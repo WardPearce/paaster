@@ -87,10 +87,25 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
 
 ## Production with Docker
 
+NOTE: Latest MongoDB requires CPU with AVX support. If you're using virtual CPU (e.g. `kvm64`) it will not work.
+To fix that, either downgrade MongoDB to 4.x, or adjust your VM CPU configuration.
+
+### Public S3
 - During configuration, no provided URLs should be suffixed with a slash.
-- Configure `docker-compose.yml` (example [here](./docker-compose.yml))
-- `sudo docker compose build; sudo docker compose up -d`.
-- Proxy exposed ports using Caddy/Nginx/Apache2 (or whatever reverse proxy you prefer.)
+- Configure `docker-compose.yml` (example [here](docker-public-s3/docker-compose.yml))
+- Fine-tune networks and/or volumes, if needed
+- `sudo docker compose up -d`
+- Proxy exposed ports using Caddy/Traefik/Nginx/Apache2 (or whatever reverse proxy you prefer)
+
+### Self-hosted S3 (using [MinIO](https://github.com/minio/minio))
+- Create `.env` file (example [here](docker-selfhosted-s3/.env.example))
+- Create `docker-compose.yml` (example [here](docker-selfhosted-s3/docker-compose.yml))
+- Fine-tune networks and/or volumes, if needed
+- `sudo docker compose up -d`
+- Proxy exposed ports using Caddy/Traefik/Nginx/Apache2 (or whatever reverse proxy you prefer)
+
+NOTE: the self-hosted version uses a temporary container (`paaster-minio-init`) to create initial bucket
+in MinIO container and configure it for public access.
 
 ### Vercel
 
@@ -133,7 +148,8 @@ Luckily you can get cheap / free & easy to setup s3 compatible storage from [idr
 
 Paaster uses Amazon S3 for storing large files, specifically, encrypted pastes. This allows us to save and share data
 quickly and easily through a Content Delivery Network (CDN). Some key advantages of using S3 are splitting data
-into smaller chunks, fast data sharing, and making copies of data for safety.
+into smaller chunks, fast data sharing, and making copies of data for safety. The S3 buckets are expected to be publicly
+downloadable (they are end-to-end encrypted anyway), but the public directory listing should be disabled.
 
 We use MongoDB for handling metadata information about each encrypted paste. It includes details like when the
 paste will expire, storage of access codes, initialization vector (IV) storage, and owner's secrets.
