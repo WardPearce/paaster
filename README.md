@@ -149,7 +149,7 @@ Luckily you can get cheap / free & easy to setup s3 compatible storage from [idr
 Paaster uses Amazon S3 for storing large files, specifically, encrypted pastes. This allows us to save and share data
 quickly and easily through a Content Delivery Network (CDN). Some key advantages of using S3 are splitting data
 into smaller chunks, fast data sharing, and making copies of data for safety. The S3 buckets are expected to be publicly
-downloadable (they are end-to-end encrypted anyway).
+downloadable (they are end-to-end encrypted anyway), but the public directory listing should be disabled.
 
 We use MongoDB for handling metadata information about each encrypted paste. It includes details like when the
 paste will expire, storage of access codes, initialization vector (IV) storage, and owner's secrets.
