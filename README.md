@@ -115,7 +115,17 @@ Paaster's frontend is also configured to work with [Vercel](https://vercel.com),
 
 Rclone is no longer supported for performance reasons & paaster is now only s3 compatible.
 
-Luckily you can get cheap / free & easy to setup s3 compatible storage from [idrive e2](https://www.idrive.com/e2/) (no free tier anymore) or [backblaze b2](https://www.backblaze.com/b2/cloud-storage.html) (10 GB free).
+Look at [Self-hosted S3](#self-hosted-s3-using-minio) or [Storage providers](#object-storage-providers) for cheap / free s3 storage.
+
+### Object storage providers
+- [iDrive e2](https://www.idrive.com/e2/) (no free tier anymore)
+- [Backblaze b2](https://www.backblaze.com/b2/cloud-storage.html) (10 GB free)
+- [Wasabi Hot Cloud Storage](https://wasabi.com/hot-cloud-storage/)
+- [Storj](https://www.storj.io/) (25GB free tier)
+- [Contabo object storage](https://contabo.com/en/object-storage/)
+- [Cloudflare R2](https://www.cloudflare.com/products/r2/)
+- [Amazon S3](https://aws.amazon.com/s3/)
+- [Google Cloud Storage](https://cloud.google.com/storage)
 
 ## Production without docker
 
