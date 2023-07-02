@@ -195,7 +195,21 @@
   }
 
   async function loadPaste(accessCode?: string) {
+    await sodium.ready;
+
     acts.show(true);
+
+    try {
+      rawSecretKey = sodium.from_base64(
+        b64EncodedRawKey,
+        sodium.base64_variants.URLSAFE_NO_PADDING
+      );
+    } catch (error) {
+      toast.error($_("view.invalid_format"));
+      acts.show(false);
+      navigate("/", { replace: true });
+      return;
+    }
 
     try {
       const savedPaste = await getPaste(pasteId);
@@ -213,22 +227,8 @@
       return;
     }
 
-    await sodium.ready;
-
     if (b64EncodedRawKey === "") {
       toast.error($_("view.no_key"));
-      acts.show(false);
-      navigate("/", { replace: true });
-      return;
-    }
-
-    try {
-      rawSecretKey = sodium.from_base64(
-        b64EncodedRawKey,
-        sodium.base64_variants.URLSAFE_NO_PADDING
-      );
-    } catch {
-      toast.error($_("view.invalid_format"));
       acts.show(false);
       navigate("/", { replace: true });
       return;
