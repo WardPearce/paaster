@@ -33,6 +33,7 @@
 - Share via QR code.
 - PWA support.
 - i18n support.
+- Automatic or manual language detection.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - Use of `package-lock.json`, `poetry.lock` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
 - [Vercel](https://vercel.com) support.
