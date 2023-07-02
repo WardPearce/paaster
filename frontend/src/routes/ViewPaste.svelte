@@ -1,22 +1,23 @@
 <script lang="ts">
-  import { navigate } from "svelte-navigator";
-  import { HighlightAuto, LineNumbers } from "svelte-highlight";
-  import rosPine from "svelte-highlight/styles/ros-pine";
-  import { get } from "svelte/store";
-  import { onMount } from "svelte";
-  import sodium from "libsodium-wrappers";
   import { acts } from "@tadashi/svelte-loading";
-  import toast from "svelte-french-toast";
-  import { openModal } from "svelte-modals";
+  import sodium from "libsodium-wrappers";
   import Mousetrap from "mousetrap";
-  import Select from "svelte-select";
+  import { onMount } from "svelte";
+  import toast from "svelte-french-toast";
+  import Highlight, { HighlightAuto, LineNumbers } from "svelte-highlight";
+  import rosPine from "svelte-highlight/styles/ros-pine";
   import { _ } from "svelte-i18n";
+  import { openModal } from "svelte-modals";
+  import { navigate } from "svelte-navigator";
+  import Select from "svelte-select";
+  import { get } from "svelte/store";
 
-  import { pasteStore } from "../stores";
+  import type { LanguageType } from "svelte-highlight/languages";
   import { paasterClient } from "../lib/client";
-  import type { PasteModel } from "../lib/client/models/PasteModel";
   import { ApiError } from "../lib/client/core/ApiError";
+  import type { PasteModel } from "../lib/client/models/PasteModel";
   import { deletePaste, getPaste, savePaste } from "../lib/savedPaste";
+  import { pasteStore } from "../stores";
 
   export let pasteId: string;
 
@@ -30,6 +31,7 @@
     location.hash = `#${b64EncodedRawKey}`;
   }
 
+  let rawSecretKey: Uint8Array;
   let isSaved = false;
   let rawCode = "";
   let pasteCreated: number;
@@ -69,6 +71,12 @@
   ];
   let selectedTime = null;
 
+  let selectedLang;
+  let supportedLangs: {
+    [key: string]: LanguageType<string>;
+  } = {};
+  let langImport: LanguageType<string> | null = null;
+
   acts.show(true);
 
   function renamePaste() {
@@ -90,6 +98,40 @@
       pasteId: pasteId,
       b64EncodedRawKey: b64EncodedRawKey,
     });
+  }
+
+  async function setLang() {
+    langImport = supportedLangs[selectedLang.value];
+
+    const langIv = sodium.randombytes_buf(
+      sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES
+    );
+    const langCipher = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+      new TextEncoder().encode(selectedLang.value),
+      null,
+      null,
+      langIv,
+      rawSecretKey
+    );
+
+    await paasterClient.default.controllerPasteUpdatePaste(
+      pasteId,
+      ownerSecret,
+      {
+        language: {
+          cipher_text: sodium.to_base64(
+            langCipher,
+            sodium.base64_variants.URLSAFE_NO_PADDING
+          ),
+          iv: sodium.to_base64(
+            langIv,
+            sodium.base64_variants.URLSAFE_NO_PADDING
+          ),
+        },
+      }
+    );
+
+    toast.success($_("paste_actions.lang_updated"));
   }
 
   async function shareLinkToClipboard() {
@@ -180,7 +222,6 @@
       return;
     }
 
-    let rawSecretKey: Uint8Array;
     try {
       rawSecretKey = sodium.from_base64(
         b64EncodedRawKey,
@@ -230,14 +271,39 @@
       } catch {}
     }
 
-    if (ownerSecret !== "" && paste.expires_in_hours !== null) {
-      // Allows us to change the period label in the future.
-      timePeriods.forEach((time) => {
-        if (time.value === paste.expires_in_hours) {
-          selectedTime = time;
-          return true;
-        }
-      });
+    if (ownerSecret !== "") {
+      if (paste.expires_in_hours !== null) {
+        // Allows us to change the period label in the future.
+        timePeriods.forEach((time) => {
+          if (time.value === paste.expires_in_hours) {
+            selectedTime = time;
+            return true;
+          }
+        });
+      }
+    }
+
+    if (paste.language) {
+      const rawLang = new TextDecoder("utf8").decode(
+        sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(
+          null,
+          sodium.from_base64(
+            paste.language.cipher_text,
+            sodium.base64_variants.URLSAFE_NO_PADDING
+          ),
+          null,
+          sodium.from_base64(
+            paste.language.iv,
+            sodium.base64_variants.URLSAFE_NO_PADDING
+          ),
+          rawSecretKey
+        )
+      );
+
+      if (rawLang in supportedLangs) {
+        selectedLang = rawLang;
+        langImport = supportedLangs[rawLang];
+      }
     }
 
     let response: Response;
@@ -289,6 +355,15 @@
   }
 
   onMount(async () => {
+    const rawSupportedLangs = await import("svelte-highlight/languages");
+
+    supportedLangs = Object.keys(rawSupportedLangs).reduce((result, key) => {
+      if (key !== "default") {
+        result[key] = rawSupportedLangs[key];
+      }
+      return result;
+    }, {});
+
     await loadPaste();
   });
 </script>
@@ -327,6 +402,13 @@
           on:change={expireAfter}
           bind:value={selectedTime}
         />
+        <Select
+          items={Object.keys(supportedLangs)}
+          clearable={false}
+          bind:value={selectedLang}
+          on:change={setLang}
+          placeholder="Auto-detect language"
+        />
         <button class="danger" on:click={deletePasteCall}
           ><i class="las la-trash" />{$_("paste_actions.delete.button")}</button
         >
@@ -352,9 +434,14 @@
 
 {#if rawCode !== ""}
   <div class="content">
-    <HighlightAuto code={rawCode} let:highlighted>
+    <svelte:component
+      this={langImport ? Highlight : HighlightAuto}
+      language={langImport}
+      code={rawCode}
+      let:highlighted
+    >
       <LineNumbers {highlighted} />
-    </HighlightAuto>
+    </svelte:component>
   </div>
 {/if}
 
