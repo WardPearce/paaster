@@ -15,10 +15,6 @@
     including:
   </p>
   <ul>
-    <li>
-      The IP address of your device, which is required to communicate with your
-      device.
-    </li>
     <li>Any text you paste into the paste bin.</li>
   </ul>
   <p>
