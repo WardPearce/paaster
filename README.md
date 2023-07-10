@@ -85,7 +85,6 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
   - Paaster will never have opt-in / opt-out encryption, encryption will always be present.
 
 # Setup
-
 ## Production with Docker
 
 NOTE: Latest MongoDB requires CPU with AVX support. If you're using virtual CPU (e.g. `kvm64`) it will not work.
@@ -107,6 +106,15 @@ To fix that, either downgrade MongoDB to 4.x, or adjust your VM CPU configuratio
 
 NOTE: the self-hosted version uses a temporary container (`paaster-minio-init`) to create initial bucket
 in MinIO container and configure it for public access.
+
+### Recommended headers for frontend
+**Disable automatically via Vercel**
+
+- `Strict-Transport-Security: max-age=31536000`
+- `X-XSS-Protection: 1; mode=block`
+- `X-Frame-Options: DENY`
+- `Content-Security-Policy: default-src 'self'`
+- `Feature-Policy: microphone 'none'; camera 'none'; geolocation 'none'; payment 'none'`
 
 ### Vercel
 
