@@ -113,7 +113,7 @@ in MinIO container and configure it for public access.
 - `Strict-Transport-Security: max-age=31536000`
 - `X-XSS-Protection: 1; mode=block`
 - `X-Frame-Options: DENY`
-- `Content-Security-Policy: default-src 'self'`
+- `Content-Security-Policy: Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:;`
 - `Feature-Policy: microphone 'none'; camera 'none'; geolocation 'none'; payment 'none';`
 
 ### Vercel
