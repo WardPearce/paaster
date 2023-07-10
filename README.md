@@ -114,7 +114,7 @@ in MinIO container and configure it for public access.
 - `X-XSS-Protection: 1; mode=block`
 - `X-Frame-Options: DENY`
 - `Content-Security-Policy: default-src 'self'`
-- `Feature-Policy: microphone 'none'; camera 'none'; geolocation 'none'; payment 'none'`
+- `Feature-Policy: microphone 'none'; camera 'none'; geolocation 'none'; payment 'none';`
 
 ### Vercel
 

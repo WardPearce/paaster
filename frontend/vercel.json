@@ -21,7 +21,7 @@
 				},
 				{
 					"key": "Feature-Policy",
-					"value": "microphone 'none'; camera 'none'; geolocation 'none'; payment 'none'"
+					"value": "microphone 'none'; camera 'none'; geolocation 'none'; payment 'none';"
 				}
 			]
 		}
