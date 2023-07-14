@@ -33,8 +33,7 @@
   <h2>data use</h2>
   <p>
     We use the data we collect in order to provide you with the paaster.io
-    service. specifically, we use your IP address and the text you paste into
-    the paste bin to store and display the information you have provided.
+    service.
   </p>
 
   <h2>sharing your information</h2>
