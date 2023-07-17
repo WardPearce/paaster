@@ -25,7 +25,7 @@ argon2-cffi = "^21.3.0"
 pytest = "^7.4.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
+black = "^23.7.0"
 mypy = "^1.4.1"
 types-aiobotocore = "^2.5.2"
 motor-types = "^1.0.0b2"
