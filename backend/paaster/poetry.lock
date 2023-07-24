@@ -2107,13 +2107,13 @@ files = [
 
 [[package]]
 name = "starlite"
-version = "1.51.12"
+version = "1.51.13"
 description = "Performant, light and flexible ASGI API Framework"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "starlite-1.51.12-py3-none-any.whl", hash = "sha256:efc9d478660c4500fd26f86f853a7f014a4aa510cbb0825669028934f6106c3f"},
-    {file = "starlite-1.51.12.tar.gz", hash = "sha256:c785d26291a361dedc52dbf5145be5dfeb41676f0204c49e506fcbafb0a10268"},
+    {file = "starlite-1.51.13-py3-none-any.whl", hash = "sha256:43544dcddf98883adeb8554eabd06781519448ef68cedf839aff5d94ddbe3b5d"},
+    {file = "starlite-1.51.13.tar.gz", hash = "sha256:969f175bd3fed21f41090be8be0577a6f5f709c9432d48f9e2fb8ded68680401"},
 ]
 
 [package.dependencies]
@@ -2130,7 +2130,7 @@ msgspec = ">=0.11.0"
 multidict = ">=6.0.2"
 opentelemetry-instrumentation-asgi = {version = "*", optional = true, markers = "extra == \"opentelemetry\" or extra == \"full\""}
 picologging = {version = "*", optional = true, markers = "extra == \"picologging\" or extra == \"standard\" or extra == \"full\""}
-pydantic = "*"
+pydantic = "<2"
 pydantic-factories = "*"
 pydantic-openapi-schema = ">=1.5.0"
 python-jose = {version = "*", optional = true, markers = "extra == \"jwt\" or extra == \"full\""}
@@ -2780,4 +2780,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "7b7b14b188ef4718765b9d3a5c043a759f33fcd8bcf60c4424251b4f1b4b40f4"
+content-hash = "6b7e5b50f4a37b742c7a85b44bae35701a60ff63f91847f3239ea4201794e385"
