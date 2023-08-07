@@ -14,6 +14,8 @@
 
 &nbsp;
 
+[![translation badge](https://inlang.com/badge?url=github.com/WardPearce/paaster)](https://inlang.com/editor/github.com/WardPearce/paaster?ref=badge)
+
 # Preview
 
 ![Desktop preview](https://files.catbox.moe/gk2x3q.gif)
@@ -32,7 +34,7 @@
 - Rate limiting.
 - Share via QR code.
 - PWA support.
-- i18n support.
+- i18n support ([Contribute](https://inlang.com/editor/github.com/WardPearce/paaster)).
 - Automatic or manual language detection.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - Use of `package-lock.json`, `poetry.lock` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
@@ -173,12 +175,4 @@ We use MongoDB for handling metadata information about each encrypted paste. It 
 paste will expire, storage of access codes, initialization vector (IV) storage, and owner's secrets.
 
 # Adding translations
-
-- Find the appropriate [ISO 639-1 language code](https://www.wikiwand.com/en/List_of_ISO_639-1_codes).
-- Fork the repo.
-- Navigate to [frontend/src/i18n](./frontend/src/i18n/).
-- Copy `en.json` & rename with the appropriate ISO 639-1 language code. If the translation already exists, review it. As many of our existing translations where generated automatically.
-- Translate the contents of the JSON file.
-- Navigate to [frontend/src/i18n/index.ts](./frontend/src/i18n/index.ts).
-- Add `register("iso language code here", () => import("./iso language code here.json"));`.
-- Create a PR request.
+[Use inlang to contribute to translations](https://inlang.com/editor/github.com/WardPearce/paaster)
