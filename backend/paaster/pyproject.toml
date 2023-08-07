@@ -16,7 +16,7 @@ python = "^3.10"
 starlite = {extras = ["full"], version = "^1.51.13"}
 motor = "^3.2.0"
 bcrypt = "^4.0.1"
-aiobotocore = "^2.5.2"
+aiobotocore = "^2.5.3"
 nanoid = "^2.0.0"
 uvicorn = "^0.23.2"
 argon2-cffi = "^21.3.0"
