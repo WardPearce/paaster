@@ -94,5 +94,6 @@
     "title": "come proteggiamo la tua privacy.",
     "content": "Paaster utilizza la crittografia end-to-end per l'archiviazione e la condivisione delle paste, il che significa che anche il server non può visualizzare ciò che salvi qui.",
     "source_code": "Il nostro codice sorgente è completamente open source e può essere rivisto su {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Lingua aggiornata"
 }

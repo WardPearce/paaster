@@ -94,5 +94,6 @@
     "title": "bagaimana kami melindungi privasi Anda.",
     "content": "Paaster menggunakan enkripsi end-to-end untuk menyimpan dan berbagi pasta, artinya bahkan server tidak dapat melihat apa yang Anda simpan di sini.",
     "source_code": "Kode sumber kami sepenuhnya open source dan dapat ditinjau di {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Bahasa diperbarui"
 }

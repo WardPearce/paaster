@@ -94,5 +94,6 @@
     "title": "kuinka suojaamme yksityisyyttäsi.",
     "content": "Paaster käyttää päästä päähän -salausta tahojen tallentamiseen ja jakamiseen, mikä tarkoittaa, että edes palvelin ei voi nähdä, mitä tallennat tänne.",
     "source_code": "Lähdekoodimme on täysin avoimen lähdekoodin, ja sen voi tarkistaa osoitteessa {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Kieli päivitetty"
 }

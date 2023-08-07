@@ -94,5 +94,6 @@
     "title": "kaip mes saugome jūsų privatumą.",
     "content": "„Paaster“ naudoja tiesioginį šifravimą įklijavimui ir dalinimuisi, o tai reiškia, kad net serveris negali peržiūrėti, ką čia išsaugojote.",
     "source_code": "Mūsų šaltinio kodas yra visiškai atviro kodo ir jį galima peržiūrėti {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Kalba atnaujinta"
 }

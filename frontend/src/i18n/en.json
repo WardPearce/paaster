@@ -7,9 +7,9 @@
         }
     },
     "view": {
+        "404": "Paste no longer exists",
         "no_key": "Paste secret key not provided",
         "invalid_format": "Invalid Secret key format",
-        "404": "Paste no longer exists",
         "cdn_down": "Unable to download paste from CDN, try again later"
     },
     "search": "Search pastes...",

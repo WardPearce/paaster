@@ -94,5 +94,6 @@
     "title": "我们如何保护您的隐私。",
     "content": "Paaster 使用端到端加密来存储和共享粘贴，这意味着即使服务器也无法查看您在此处保存的内容。",
     "source_code": "我们的源代码是完全开源的，可以在 {github} 上查看"
-  }
+  },
+  "paste_actions.lang_updated": "语言已更新"
 }

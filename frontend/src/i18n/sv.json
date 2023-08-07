@@ -94,5 +94,6 @@
     "title": "hur vi skyddar din integritet.",
     "content": "Paaster använder end-to-end-kryptering för att lagra och dela pastor, vilket innebär att inte ens servern kan se vad du sparar här.",
     "source_code": "Vår källkod är helt öppen källkod och kan granskas på {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Språket uppdaterat"
 }

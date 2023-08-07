@@ -94,5 +94,6 @@
     "title": "kā mēs aizsargājam jūsu privātumu.",
     "content": "Paaster izmanto pilnīgu šifrēšanu pastas glabāšanai un kopīgošanai, kas nozīmē, ka pat serveris nevar skatīt šeit saglabāto saturu.",
     "source_code": "Mūsu pirmkods ir pilnībā atvērts avots, un to var pārskatīt vietnē {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Valoda ir atjaunināta"
 }

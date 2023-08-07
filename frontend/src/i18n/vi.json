@@ -94,5 +94,6 @@
     "title": "cách chúng tôi bảo vệ quyền riêng tư của bạn.",
     "content": "Paaster sử dụng mã hóa đầu cuối để lưu trữ và chia sẻ các bản ghi, nghĩa là ngay cả máy chủ cũng không thể xem những gì bạn lưu ở đây.",
     "source_code": "Mã nguồn của chúng tôi là mã nguồn mở hoàn toàn và có thể được xem lại trên {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Ngôn ngữ được cập nhật"
 }
