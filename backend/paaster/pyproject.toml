@@ -19,7 +19,7 @@ bcrypt = "^4.0.1"
 aiobotocore = "^2.6.0"
 nanoid = "^2.0.0"
 uvicorn = "^0.23.2"
-argon2-cffi = "^21.3.0"
+argon2-cffi = "^23.1.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.0"
