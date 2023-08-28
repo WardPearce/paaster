@@ -14,7 +14,7 @@
     "@svelte-plugins/tooltips": "^0.1.6",
     "@sveltejs/vite-plugin-svelte": "^2.4.5",
     "@tadashi/svelte-loading": "^3.0.0",
-    "@tsconfig/svelte": "^5.0.0",
+    "@tsconfig/svelte": "^5.0.2",
     "@types/libsodium-wrappers": "^0.7.10",
     "@types/mousetrap": "^1.6.11",
     "dayjs": "^1.11.9",
