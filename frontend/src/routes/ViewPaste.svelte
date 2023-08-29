@@ -361,7 +361,7 @@
     const rawSupportedLangs = await import("svelte-highlight/languages");
 
     supportedLangs = Object.keys(rawSupportedLangs).reduce((result, key) => {
-      if (typeof key === "string" && key !== "default") {
+      if (key !== "default") {
         result[key] = rawSupportedLangs[key];
       }
       return result;
