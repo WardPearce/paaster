@@ -69,9 +69,12 @@
     { value: 1461, label: `2 ${$_("paste_actions.expire.periods.months")}` },
     { value: 2192, label: `3 ${$_("paste_actions.expire.periods.months")}` },
   ];
-  let selectedTime = null;
+  let selectedTime: {
+    value: number;
+    label: string;
+  } | null = null;
 
-  let selectedLang;
+  let selectedLang: { label: string; value: string };
   let supportedLangs: {
     [key: string]: LanguageType<string>;
   } = {};
@@ -301,7 +304,7 @@
       );
 
       if (rawLang in supportedLangs) {
-        selectedLang = rawLang;
+        selectedLang = { value: rawLang, label: rawLang };
         langImport = supportedLangs[rawLang];
       }
     }
@@ -358,7 +361,7 @@
     const rawSupportedLangs = await import("svelte-highlight/languages");
 
     supportedLangs = Object.keys(rawSupportedLangs).reduce((result, key) => {
-      if (key !== "default") {
+      if (typeof key === "string" && key !== "default") {
         result[key] = rawSupportedLangs[key];
       }
       return result;
@@ -434,14 +437,15 @@
 
 {#if rawCode !== ""}
   <div class="content">
-    <svelte:component
-      this={langImport ? Highlight : HighlightAuto}
-      language={langImport}
-      code={rawCode}
-      let:highlighted
-    >
-      <LineNumbers {highlighted} />
-    </svelte:component>
+    {#if langImport}
+      <Highlight language={langImport} code={rawCode} let:highlighted>
+        <LineNumbers {highlighted} />
+      </Highlight>
+    {:else}
+      <HighlightAuto code={rawCode} let:highlighted>
+        <LineNumbers {highlighted} />
+      </HighlightAuto>
+    {/if}
   </div>
 {/if}
 

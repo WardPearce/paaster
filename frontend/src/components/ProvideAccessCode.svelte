@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { closeModal } from "svelte-modals";
   import sodium from "libsodium-wrappers";
   import { _ } from "svelte-i18n";
+  import { closeModal } from "svelte-modals";
 
   export let isOpen: boolean;
   export let b64EncodedRawKey: string;
@@ -9,7 +9,7 @@
 
   let accessCode = ["", "", "", ""];
 
-  async function onCodeInputted(event) {
+  async function onCodeInputted() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     let inputtedCode = document.getElementById("inputtedCode").value;
