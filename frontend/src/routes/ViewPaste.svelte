@@ -358,7 +358,10 @@
   }
 
   onMount(async () => {
-    const rawSupportedLangs = await import("svelte-highlight/languages");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawSupportedLangs: { [key: string]: any } = await import(
+      "svelte-highlight/languages"
+    );
 
     supportedLangs = Object.keys(rawSupportedLangs).reduce((result, key) => {
       if (key !== "default") {

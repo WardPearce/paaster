@@ -19,4 +19,4 @@ declare namespace svelte.JSX {
     }
 }
 
-declare type QrCode = any;
+declare module "svelte-qrcode";
