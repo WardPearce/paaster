@@ -13,7 +13,7 @@
 
   let savedPastes: SavedPaste[] = [];
   let showPastes: SavedPaste[] = [];
-  let fuse;
+  let fuse: Fuse<SavedPaste>;
   onMount(async () => {
     await getPastes();
   });
