@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export let component: any;
   export let delayMs: number | null = null;
 
@@ -22,8 +21,7 @@
         showFallback = true;
       }, delayMs);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    component().then((module) => {
+    component().then((module: any) => {
       loadedComponent = module.default;
     });
     return () => clearTimeout(timeout);
