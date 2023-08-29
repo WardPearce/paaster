@@ -363,12 +363,16 @@
       "svelte-highlight/languages"
     );
 
-    supportedLangs = Object.keys(rawSupportedLangs).reduce((result, key) => {
-      if (key !== "default") {
-        result[key] = rawSupportedLangs[key];
-      }
-      return result;
-    }, {});
+    supportedLangs = Object.keys(rawSupportedLangs).reduce(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (result: { [key: string]: any }, key) => {
+        if (key !== "default") {
+          result[key] = rawSupportedLangs[key];
+        }
+        return result;
+      },
+      {}
+    );
 
     await loadPaste();
   });

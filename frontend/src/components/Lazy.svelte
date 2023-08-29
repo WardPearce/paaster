@@ -22,6 +22,7 @@
         showFallback = true;
       }, delayMs);
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     component().then((module) => {
       loadedComponent = module.default;
     });
