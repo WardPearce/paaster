@@ -22,7 +22,7 @@ uvicorn = "^0.23.2"
 argon2-cffi = "^23.1.0"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.4.0"
+pytest = "^7.4.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
