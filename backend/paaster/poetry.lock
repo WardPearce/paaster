@@ -1256,13 +1256,13 @@ files = [
 
 [[package]]
 name = "motor"
-version = "3.3.0"
+version = "3.3.1"
 description = "Non-blocking MongoDB driver for Tornado or asyncio"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "motor-3.3.0-py3-none-any.whl", hash = "sha256:32bb0680f5ac3e245dcc98d41d009f3be5d45c1e4a1b2d17951d9f63c8f41ea0"},
-    {file = "motor-3.3.0.tar.gz", hash = "sha256:f18b90089acf914e21485d002c116f27a2215c85174b3bd3e2221d633e8cf7ab"},
+    {file = "motor-3.3.1-py3-none-any.whl", hash = "sha256:a0dee83ad0d47b353932ac37467ba397b1e649ce7e3eea7f5a90554883d7cdbe"},
+    {file = "motor-3.3.1.tar.gz", hash = "sha256:c5eb400e27d722a3db03a9826656b6d13acf9b6c70c2fb4604f474eac9da5be4"},
 ]
 
 [package.dependencies]
@@ -2794,4 +2794,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "06aa66f9289d99bce223392972c4f62a7ac552250e76d4173e1ac9eed884318c"
+content-hash = "5fad1ecdb5b4da9996924398ce82140f4bb4081f88dd163aad8d53bebabcd9ab"
