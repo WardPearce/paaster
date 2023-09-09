@@ -47,7 +47,10 @@
   async function deletePasteCall(pasteId: string, ownerSecret?: string) {
     if (ownerSecret) {
       await toast.promise(
-        paasterClient.default.controllerPasteDeletePaste(pasteId, ownerSecret),
+        paasterClient.default.controllerPastePasteIdOwnerSecretDeletePaste(
+          pasteId,
+          ownerSecret
+        ),
         {
           loading: $_("paste_actions.delete.loading"),
           error: $_("paste_actions.delete.error"),

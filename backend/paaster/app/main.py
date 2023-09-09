@@ -1,19 +1,12 @@
 from app.controllers import router
 from app.env import SETTINGS
-from app.resources import Sessions
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
+from litestar.datastructures import State
 from litestar.openapi import OpenAPIConfig, OpenAPIController
 from litestar.openapi.spec import Contact, License, Server
 from motor import motor_asyncio
 from pydantic import BaseModel
-
-
-async def start_motor() -> None:
-    # Connect mongodb.
-    mongo = motor_asyncio.AsyncIOMotorClient(SETTINGS.mongo.host, SETTINGS.mongo.port)
-    await mongo.server_info(None)
-    Sessions.mongo = mongo[SETTINGS.mongo.collection]
 
 
 class OpenAPIControllerRouteFix(OpenAPIController):
@@ -31,7 +24,13 @@ class OpenAPIControllerRouteFix(OpenAPIController):
 
 app = Litestar(
     route_handlers=[router],
-    on_startup=[start_motor],
+    state=State(
+        {
+            "mongo": motor_asyncio.AsyncIOMotorClient(
+                SETTINGS.mongo.host, SETTINGS.mongo.port
+            )[SETTINGS.mongo.collection],
+        }
+    ),
     openapi_config=OpenAPIConfig(
         **SETTINGS.open_api.dict(),
         root_schema_site="elements",
@@ -41,21 +40,21 @@ app = Litestar(
         servers=[
             Server(url=SETTINGS.proxy_urls.backend, description="Production server.")
         ],
-        terms_of_service="https://paaster.io/terms-of-service",  # type: ignore
+        terms_of_service="https://paaster.io/terms-of-service",
         license=License(
             name="GNU Affero General Public License v3.0",
             identifier="AGPL-3.0",
-            url="https://github.com/WardPearce/paaster/blob/main/LICENSE",  # type: ignore
+            url="https://github.com/WardPearce/paaster/blob/main/LICENSE",
         ),
         contact=Contact(
             name="Paaster API team",
             email="wardpearce@pm.me",
-            url="https://github.com/WardPearce/Paaster",  # type: ignore
+            url="https://github.com/WardPearce/Paaster",
         ),
     ),
     cors_config=CORSConfig(
         allow_origins=[SETTINGS.proxy_urls.backend, SETTINGS.proxy_urls.frontend],
         allow_credentials=True,
     ),
-    type_encoders={BaseModel: lambda m: m.dict(by_alias=True)},
+    type_encoders={BaseModel: lambda m: m.dict(by_alias=False)},
 )

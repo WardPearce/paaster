@@ -8,14 +8,14 @@ from app.env import SETTINGS
 from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteCreatedModel, PasteModel, UpdatePasteModel
-from app.resources import Sessions
+from app.state import State
 from litestar import Request, Router, delete, get, post
 from litestar.exceptions import HTTPException
 from litestar.middleware.rate_limit import RateLimitConfig
 
 
 @post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 35)).middleware])
-async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
+async def create_paste(state: State, request: Request, iv: str) -> PasteCreatedModel:
     if len(iv) > SETTINGS.max_iv_size:
         raise HTTPException(detail="IV too large", status_code=400)
 
@@ -88,7 +88,7 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
         # secret itself already secure enough to avoid brute forcing.
         "owner_secret": bcrypt.hashpw(owner_secret.encode(), bcrypt.gensalt()),
     }
-    await Sessions.mongo.paste.insert_one(paste)
+    await state.mongo.paste.insert_one(paste)
 
     paste.pop("owner_secret")
 
@@ -103,8 +103,8 @@ async def create_paste(request: Request, iv: str) -> PasteCreatedModel:
     "/{paste_id:str}/{owner_secret:str}",
     middleware=[RateLimitConfig(rate_limit=("minute", 120)).middleware],
 )
-async def delete_paste(paste_id: str, owner_secret: str) -> None:
-    await Paste(paste_id).delete(owner_secret)
+async def delete_paste(state: State, paste_id: str, owner_secret: str) -> None:
+    await Paste(state, paste_id).delete(owner_secret)
 
 
 @post(
@@ -112,17 +112,19 @@ async def delete_paste(paste_id: str, owner_secret: str) -> None:
     middleware=[RateLimitConfig(rate_limit=("minute", 40)).middleware],
 )
 async def update_paste(
-    paste_id: str, owner_secret: str, data: UpdatePasteModel
+    state: State, paste_id: str, owner_secret: str, data: UpdatePasteModel
 ) -> None:
-    await Paste(paste_id).update(data, owner_secret)
+    await Paste(state, paste_id).update(data, owner_secret)
 
 
 @get(
     "/{paste_id:str}",
     middleware=[RateLimitConfig(rate_limit=("minute", 60)).middleware],
 )
-async def get_paste(paste_id: str, access_code: Optional[str] = None) -> PasteModel:
-    return await Paste(paste_id).get(access_code=access_code)
+async def get_paste(
+    state: State, paste_id: str, access_code: Optional[str] = None
+) -> PasteModel:
+    return await Paste(state, paste_id).get(access_code=access_code)
 
 
 router = Router(

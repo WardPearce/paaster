@@ -6,7 +6,7 @@ import bcrypt
 from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteModel, UpdatePasteModel
-from app.resources import Sessions
+from app.state import State
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from litestar.exceptions import NotAuthorizedException, NotFoundException
@@ -15,7 +15,8 @@ PASSWORD_HASHER = PasswordHasher()
 
 
 class Paste:
-    def __init__(self, paste_id: str) -> None:
+    def __init__(self, state: State, paste_id: str) -> None:
+        self.__state = state
         self.paste_id = paste_id
 
     async def delete(self, owner_secret: str) -> None:
@@ -29,7 +30,7 @@ class Paste:
         if "access_code" in to_set:
             to_set["access_code"] = PASSWORD_HASHER.hash(to_set["access_code"])
 
-        await Sessions.mongo.paste.update_one(
+        await self.__state.mongo.paste.update_one(
             {"_id": self.paste_id},
             {"$set": to_set},
         )
@@ -37,7 +38,7 @@ class Paste:
     async def __delete(self) -> None:
         paste = await self._get_raw()
 
-        await Sessions.mongo.paste.delete_one({"_id": self.paste_id})
+        await self.__state.mongo.paste.delete_one({"_id": self.paste_id})
 
         async with s3_create_client() as client:
             await client.delete_object(
@@ -53,7 +54,7 @@ class Paste:
             raise NotAuthorizedException()
 
     async def _get_raw(self) -> Mapping[str, Any]:
-        paste = await Sessions.mongo.paste.find_one({"_id": self.paste_id})
+        paste = await self.__state.mongo.paste.find_one({"_id": self.paste_id})
         if not paste:
             raise NotFoundException(detail="No paste found")
         return paste
@@ -88,7 +89,7 @@ class Paste:
 
         if paste["expires_in_hours"] is not None:
             if paste["expires_in_hours"] < 0:
-                await Sessions.mongo.paste.update_one(
+                await self.__state.mongo.paste.update_one(
                     {"_id": self.paste_id}, {"$set": {"delete_next_request": True}}
                 )
                 return model
