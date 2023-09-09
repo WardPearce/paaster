@@ -70,7 +70,7 @@
     { value: 2192, label: `3 ${$_("paste_actions.expire.periods.months")}` },
   ];
   let selectedTime: {
-    value: number;
+    value: number | null;
     label: string;
   } | null = null;
 
@@ -117,7 +117,7 @@
       rawSecretKey
     );
 
-    await paasterClient.default.controllerPasteUpdatePaste(
+    await paasterClient.default.controllerPastePasteIdOwnerSecretUpdatePaste(
       pasteId,
       ownerSecret,
       {
@@ -146,9 +146,13 @@
     detail: { value: number; label: string };
   }) {
     await toast.promise(
-      paasterClient.default.controllerPasteUpdatePaste(pasteId, ownerSecret, {
-        expires_in_hours: event.detail.value,
-      }),
+      paasterClient.default.controllerPastePasteIdOwnerSecretUpdatePaste(
+        pasteId,
+        ownerSecret,
+        {
+          expires_in_hours: event.detail.value,
+        }
+      ),
       {
         loading: $_("paste_actions.expire.loading"),
         success: $_("paste_actions.expire.success", {
@@ -162,7 +166,10 @@
   async function deletePasteCall() {
     try {
       await toast.promise(
-        paasterClient.default.controllerPasteDeletePaste(pasteId, ownerSecret),
+        paasterClient.default.controllerPastePasteIdOwnerSecretDeletePaste(
+          pasteId,
+          ownerSecret
+        ),
         {
           loading: $_("paste_actions.delete.loading"),
           error: $_("paste_actions.delete.error"),
@@ -239,7 +246,7 @@
 
     let paste: PasteModel;
     try {
-      paste = await paasterClient.default.controllerPasteGetPaste(
+      paste = await paasterClient.default.controllerPastePasteIdGetPaste(
         pasteId,
         accessCode
       );

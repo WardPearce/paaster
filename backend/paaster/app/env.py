@@ -1,4 +1,3 @@
-from os import environ
 from typing import Optional
 
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings

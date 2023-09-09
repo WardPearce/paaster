@@ -20,12 +20,16 @@
     codeString = accessCode.join("-").toLowerCase();
 
     await toast.promise(
-      paasterClient.default.controllerPasteUpdatePaste(pasteId, ownerSecret, {
-        access_code: sodium.to_base64(
-          sodium.crypto_generichash(64, codeString, b64EncodedRawKey),
-          sodium.base64_variants.URLSAFE_NO_PADDING
-        ),
-      }),
+      paasterClient.default.controllerPastePasteIdOwnerSecretUpdatePaste(
+        pasteId,
+        ownerSecret,
+        {
+          access_code: sodium.to_base64(
+            sodium.crypto_generichash(64, codeString, b64EncodedRawKey),
+            sodium.base64_variants.URLSAFE_NO_PADDING
+          ),
+        }
+      ),
       {
         loading: $_("paste_actions.access_code.loading"),
         success: $_("paste_actions.access_code.success"),

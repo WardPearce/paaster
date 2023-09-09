@@ -94,7 +94,7 @@
 
     try {
       await savePaste(
-        createdPaste._id,
+        createdPaste.id,
         rawUrlSafeKey,
         createdPaste.created,
         createdPaste.owner_secret
@@ -103,7 +103,7 @@
       toast.error($_("create.errors.private_window"));
     }
 
-    navigate(`/${createdPaste._id}#${rawUrlSafeKey}`, { replace: true });
+    navigate(`/${createdPaste.id}#${rawUrlSafeKey}`, { replace: true });
   }
 </script>
 

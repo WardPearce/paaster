@@ -5,7 +5,7 @@ from typing import Iterator
 import pytest
 from app.main import app
 from app.models.paste import PasteCreatedModel, PasteModel
-from starlite import TestClient
+from litestar.testing import TestClient
 
 
 @pytest.fixture
@@ -29,7 +29,7 @@ def create_paste(
     r_json = response.json()
     r_json["created"] = datetime.fromtimestamp(r_json["created"])
 
-    r_model = PasteCreatedModel(**r_json)
+    r_model = PasteCreatedModel(**r_json, _id=r_json["id"])
 
     response = client.get(f"/controller/paste/{r_model.id}")
     assert response.status_code == 200
@@ -37,7 +37,7 @@ def create_paste(
     r_json = response.json()
     r_json["created"] = datetime.fromtimestamp(r_json["created"])
 
-    PasteModel(**r_json)
+    PasteModel(**r_json, _id=r_json["id"])
 
     assert r_model.id not in r_model.download_url
 

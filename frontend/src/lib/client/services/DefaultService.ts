@@ -1,3 +1,4 @@
+/* generated using openapi-typescript-codegen -- do no edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -13,11 +14,12 @@ export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
+     * CreatePaste
      * @param iv
      * @returns PasteCreatedModel Document created, URL follows
      * @throws ApiError
      */
-    public controllerPasteCreatePaste(
+    public controllerPasteIvCreatePaste(
         iv: string,
     ): CancelablePromise<PasteCreatedModel> {
         return this.httpRequest.request({
@@ -33,12 +35,13 @@ export class DefaultService {
     }
 
     /**
+     * GetPaste
      * @param pasteId
      * @param accessCode
      * @returns PasteModel Request fulfilled, document follows
      * @throws ApiError
      */
-    public controllerPasteGetPaste(
+    public controllerPastePasteIdGetPaste(
         pasteId: string,
         accessCode?: (null | string),
     ): CancelablePromise<PasteModel> {
@@ -58,13 +61,14 @@ export class DefaultService {
     }
 
     /**
+     * UpdatePaste
      * @param pasteId
      * @param ownerSecret
      * @param requestBody
      * @returns any Document created, URL follows
      * @throws ApiError
      */
-    public controllerPasteUpdatePaste(
+    public controllerPastePasteIdOwnerSecretUpdatePaste(
         pasteId: string,
         ownerSecret: string,
         requestBody: UpdatePasteModel,
@@ -85,12 +89,13 @@ export class DefaultService {
     }
 
     /**
+     * DeletePaste
      * @param pasteId
      * @param ownerSecret
      * @returns void
      * @throws ApiError
      */
-    public controllerPasteDeletePaste(
+    public controllerPastePasteIdOwnerSecretDeletePaste(
         pasteId: string,
         ownerSecret: string,
     ): CancelablePromise<void> {

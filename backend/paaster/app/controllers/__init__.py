@@ -1,5 +1,5 @@
 from app.controllers import paste
-from starlite import Router
+from litestar import Router
 
 __all__ = ["router"]
 
