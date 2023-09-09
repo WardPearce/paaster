@@ -1,7 +1,7 @@
 <script lang="ts">
   import { acts } from "@tadashi/svelte-loading";
   import { filedrop, type FileDropSelectEvent } from "filedrop-svelte";
-  import sodium from "libsodium-wrappers";
+  import sodium from "libsodium-wrappers-sumo";
   import toast from "svelte-french-toast";
   import { _ } from "svelte-i18n";
   import { link, navigate } from "svelte-navigator";

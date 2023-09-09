@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from env import SETTINGS
 from pydantic import BaseModel, Field
@@ -22,9 +22,19 @@ class PasteLanguage(BaseModel):
     iv: str = Field(..., max_length=SETTINGS.max_iv_size)
 
 
+class PasteAccessCodeKdf(BaseModel):
+    salt: str = Field(max_length=32)
+    ops_limit: int
+    mem_limit: int
+
+
+class PasteAccessCode(PasteAccessCodeKdf):
+    code: str = Field(min_length=1, max_length=256)
+
+
 class UpdatePasteModel(BaseModel):
     expires_in_hours: Optional[float] = Field(None, ge=-1.0, le=99999.0)
-    access_code: Optional[str] = Field(None, min_length=1, max_length=256)
+    access_code: Union[Optional[PasteAccessCode], Optional[str]] = None
     language: Optional[PasteLanguage] = None
 
 

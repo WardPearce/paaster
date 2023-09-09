@@ -7,7 +7,12 @@ import nanoid  # type: ignore
 from app.env import SETTINGS
 from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client
-from app.models.paste import PasteCreatedModel, PasteModel, UpdatePasteModel
+from app.models.paste import (
+    PasteAccessCodeKdf,
+    PasteCreatedModel,
+    PasteModel,
+    UpdatePasteModel,
+)
 from app.state import State
 from litestar import Request, Router, delete, get, post
 from litestar.exceptions import HTTPException
@@ -127,6 +132,12 @@ async def get_paste(
     return await Paste(state, paste_id).get(access_code=access_code)
 
 
+@get("/{paste_id:str}/kdf")
+async def get_paste_kdf(state: State, paste_id: str) -> PasteAccessCodeKdf:
+    return await Paste(state, paste_id).access_code_kdf()
+
+
 router = Router(
-    path="/paste", route_handlers=[create_paste, get_paste, delete_paste, update_paste]
+    path="/paste",
+    route_handlers=[create_paste, get_paste, delete_paste, update_paste, get_paste_kdf],
 )

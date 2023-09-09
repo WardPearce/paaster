@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { PasteAccessCodeKdf } from '../models/PasteAccessCodeKdf';
 import type { PasteCreatedModel } from '../models/PasteCreatedModel';
 import type { PasteModel } from '../models/PasteModel';
 import type { UpdatePasteModel } from '../models/UpdatePasteModel';
@@ -105,6 +106,27 @@ export class DefaultService {
             path: {
                 'paste_id': pasteId,
                 'owner_secret': ownerSecret,
+            },
+            errors: {
+                400: `Bad request syntax or unsupported method`,
+            },
+        });
+    }
+
+    /**
+     * GetPasteKdf
+     * @param pasteId
+     * @returns PasteAccessCodeKdf Request fulfilled, document follows
+     * @throws ApiError
+     */
+    public controllerPastePasteIdKdfGetPasteKdf(
+        pasteId: string,
+    ): CancelablePromise<PasteAccessCodeKdf> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/controller/paste/{paste_id}/kdf',
+            path: {
+                'paste_id': pasteId,
             },
             errors: {
                 400: `Bad request syntax or unsupported method`,
