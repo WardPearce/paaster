@@ -1,3 +1,5 @@
+from typing import cast
+
 from app.controllers import router
 from app.env import SETTINGS
 from litestar import Litestar, Request
@@ -10,16 +12,16 @@ from pydantic import BaseModel
 
 
 class OpenAPIControllerRouteFix(OpenAPIController):
-    def render_stoplight_elements(self, request: Request) -> str:
+    def render_stoplight_elements(self, request: Request) -> bytes:
         # Gross hack to overwrite the path for the openapi schema file.
         # due to reverse proxying.
         path_copy = str(self.path)
         self.path = SETTINGS.proxy_urls.backend + self.path
 
-        render = super().render_stoplight_elements(request)
+        spotlight_elements = cast(bytes, super().render_stoplight_elements(request))
 
         self.path = path_copy
-        return render
+        return spotlight_elements
 
 
 app = Litestar(
