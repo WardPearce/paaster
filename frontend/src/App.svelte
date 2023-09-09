@@ -1,13 +1,13 @@
 <script lang="ts">
-  import "./assets/style.css";
-  import "./assets/icons/1.3.0/css/line-awesome.min.css";
-  import { Router, link, Route } from "svelte-navigator";
+  import { tooltip } from "@svelte-plugins/tooltips";
+  import { _, isLoading } from "svelte-i18n";
   import { Modals, closeModal } from "svelte-modals";
-  import { isLoading, _ } from "svelte-i18n";
+  import { Router, link } from "svelte-navigator";
+  import "./assets/icons/1.3.0/css/line-awesome.min.css";
+  import "./assets/style.css";
 
-  import { Toaster } from "svelte-french-toast";
   import { Loading } from "@tadashi/svelte-loading";
-  import CreatePaste from "./routes/CreatePaste.svelte";
+  import { Toaster } from "svelte-french-toast";
   import LazyRoute from "./components/LazyRoute.svelte";
   import PageLoading from "./components/PageLoading.svelte";
 
@@ -22,24 +22,56 @@
           {import.meta.env.VITE_NAME ? import.meta.env.VITE_NAME : "paaster"}
         </h1></a
       >
-      <a href="/pastes" use:link class="button"
-        ><i class="lab la-buffer" />{$_("saved_pastes")}</a
-      >
+      <ul>
+        <li>
+          <a
+            use:tooltip={{ content: "Star us on Github", position: "bottom" }}
+            href="https://github.com/WardPearce/paaster"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="lab la-github" /></a
+          >
+        </li>
+        <li>
+          <a href="/pastes" use:link class="button"
+            ><i class="lab la-buffer" />{$_("saved_pastes")}</a
+          >
+        </li>
+      </ul>
     </nav>
 
-    <Route path="/">
-      <CreatePaste />
-    </Route>
+    <LazyRoute
+      path="/"
+      delayMs={100}
+      component={() => import("./routes/CreatePaste.svelte")}
+    >
+      <PageLoading />
+    </LazyRoute>
     <LazyRoute
       path="/pastes"
-      delayMs={500}
+      delayMs={100}
       component={() => import("./routes/StorePastes.svelte")}
     >
       <PageLoading />
     </LazyRoute>
     <LazyRoute
+      path="/privacy-policy"
+      delayMs={100}
+      component={() => import("./routes/PrivacyPolicy.svelte")}
+    >
+      <PageLoading />
+    </LazyRoute>
+    <LazyRoute
+      path="/terms-of-service"
+      delayMs={100}
+      component={() => import("./routes/TermsOfService.svelte")}
+    >
+      <PageLoading />
+    </LazyRoute>
+    <LazyRoute
       path="/:pasteId"
-      delayMs={500}
+      delayMs={100}
       component={() => import("./routes/ViewPaste.svelte")}
     >
       <PageLoading />

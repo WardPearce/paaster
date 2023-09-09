@@ -94,5 +94,6 @@
     "title": "hvordan vi beskytter personvernet ditt.",
     "content": "Paaster bruker ende-til-ende-kryptering for lagring og deling av pastaer, noe som betyr at selv serveren ikke kan se det du lagrer her.",
     "source_code": "Kildekoden vår er fullstendig åpen kildekode og kan gjennomgås på {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Språket er oppdatert"
 }

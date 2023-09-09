@@ -15,20 +15,20 @@ server = "run:main"
 python = "^3.10"
 motor = "^3.1.2"
 bcrypt = "^4.0.1"
-aiobotocore = "^2.4.2"
+aiobotocore = "^2.6.0"
 nanoid = "^2.0.0"
 argon2-cffi = "^21.3.0"
 litestar = {extras = ["full"], version = "^2.0.0a5"}
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.3.1"
+pytest = "^7.4.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
-mypy = "^1.2.0"
-types-aiobotocore = "^2.5.0"
-motor-types = "^1.0.0b0"
-pytest-asyncio = "^0.21.0"
+black = "^23.7.0"
+mypy = "^1.5.1"
+types-aiobotocore = "^2.6.0"
+motor-types = "^1.0.0b3"
+pytest-asyncio = "^0.21.1"
 
 [build-system]
 requires = ["poetry-core"]

@@ -63,6 +63,20 @@ nav {
     background-color: var(--darkerBg);
 }
 
+nav ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+nav ul li:not(:last-child) {
+    margin-right: .5em;
+}
+
+nav ul li i {
+    font-size: 2.3em;
+}
+
 main {
     padding: 1em 3em 0;
 }

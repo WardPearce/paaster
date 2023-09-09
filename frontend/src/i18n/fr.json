@@ -94,5 +94,6 @@
     "title": "comment nous protégeons votre vie privée.",
     "content": "Paaster utilise un chiffrement de bout en bout pour stocker et partager les notes, ce qui signifie que même le serveur ne peut pas voir ce que vous enregistrez ici.",
     "source_code": "Notre code est entièrement open source et peut être consulté sur {github}"
-  }
+  },
+  "paste_actions.lang_updated": "Langue mise à jour"
 }

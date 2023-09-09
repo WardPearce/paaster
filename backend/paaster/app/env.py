@@ -10,8 +10,8 @@ class MongoDB(BaseModel):
 
 
 class ProxiedUrls(BaseModel):
-    frontend: AnyHttpUrl = AnyHttpUrl(url="paaster.localhost", scheme="http")
-    backend: AnyHttpUrl = AnyHttpUrl(url="paaster.localhost/api", scheme="http")
+    frontend: str = "http://localhost"
+    backend: str = "http://localhost/api"
 
 
 class S3(BaseModel):

@@ -94,5 +94,6 @@
     "title": "wie wir Ihre Privatsphäre schützen.",
     "content": "Paaster verwendet End-to-End-Verschlüsselung zum Speichern und Teilen von Pasten, was bedeutet, dass selbst der Server nicht sehen kann, was Sie hier speichern.",
     "source_code": "Unser Quellcode ist vollständig Open Source und kann auf {github} überprüft werden."
-  }
+  },
+  "paste_actions.lang_updated": "Sprache aktualisiert"
 }

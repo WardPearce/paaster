@@ -1,3 +1,31 @@
 {
-	"rewrites": [{ "source": "/(.*)", "destination": "/" }]
+	"headers": [
+		{
+			"source": "/(.*)",
+			"headers": [
+				{
+					"key": "Strict-Transport-Security",
+					"value": "max-age=31536000;"
+				},
+				{
+					"key": "X-XSS-Protection",
+					"value": "1; mode=block"
+				},
+				{
+					"key": "X-Frame-Options",
+					"value": "DENY"
+				},
+				{
+					"key": "Feature-Policy",
+					"value": "microphone 'none'; camera 'none'; geolocation 'none'; payment 'none';"
+				}
+			]
+		}
+	],
+	"rewrites": [
+		{
+			"source": "/(.*)",
+			"destination": "/"
+		}
+	]
 }
