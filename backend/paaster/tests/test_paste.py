@@ -58,7 +58,14 @@ def test_access_code_protect_paste(
 ) -> None:
     response = client.post(
         f"/controller/paste/{create_paste.id}/{create_paste.owner_secret}",
-        json={"access_code": "some_epic_password"},
+        json={
+            "access_code": {
+                "salt": "123",
+                "code": "some_epic_password",
+                "ops_limit": 0,
+                "mem_limit": 0,
+            }
+        },
     )
     assert response.status_code == 201
 
