@@ -1,11 +1,12 @@
 from collections.abc import Mapping
 from datetime import datetime, timedelta
+from secrets import token_urlsafe
 from typing import Any, Optional
 
 import bcrypt
 from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
-from app.models.paste import PasteModel, UpdatePasteModel
+from app.models.paste import PasteAccessCodeKdf, PasteModel, UpdatePasteModel
 from app.state import State
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
@@ -24,11 +25,29 @@ class Paste:
         await self.__delete()
 
     async def update(self, update: UpdatePasteModel, owner_secret: str) -> None:
-        await self.__validate_owner(owner_secret)
+        paste = await self.__validate_owner(owner_secret)
 
         to_set = update.dict(exclude_unset=True)
         if "access_code" in to_set:
-            to_set["access_code"] = PASSWORD_HASHER.hash(to_set["access_code"])
+            to_set["access_code"] = {
+                **to_set["access_code"],
+                "code": PASSWORD_HASHER.hash(to_set["access_code"]["code"]),
+            }
+            to_set["download_id"] = token_urlsafe(32)
+
+            old_key = format_file_path(paste["download_id"])
+
+            async with s3_create_client() as client:
+                await client.copy_object(
+                    Bucket=SETTINGS.s3.bucket,
+                    CopySource={
+                        "Bucket": SETTINGS.s3.bucket,
+                        "Key": old_key,
+                    },
+                    Key=format_file_path(to_set["download_id"]),
+                )
+
+                await client.delete_object(Bucket=SETTINGS.s3.bucket, Key=old_key)
 
         await self.__state.mongo.paste.update_one(
             {"_id": self.paste_id},
@@ -46,12 +65,14 @@ class Paste:
                 Key=self.file_key(paste.get("download_id", None)),
             )
 
-    async def __validate_owner(self, owner_secret: str) -> None:
+    async def __validate_owner(self, owner_secret: str) -> Mapping[str, Any]:
         paste = await self._get_raw()
         # Not Argon2, because is always a 256 bit random string,
         # Bcrypt used to protect against timing attacks.
         if not bcrypt.checkpw(owner_secret.encode(), paste["owner_secret"]):
             raise NotAuthorizedException()
+
+        return paste
 
     async def _get_raw(self) -> Mapping[str, Any]:
         paste = await self.__state.mongo.paste.find_one({"_id": self.paste_id})
@@ -66,6 +87,21 @@ class Paste:
     def download_url(self, download_id: Optional[str] = None) -> str:
         return f"{SETTINGS.s3.download_url}/{self.file_key(download_id)}"
 
+    async def access_code_kdf(self) -> PasteAccessCodeKdf:
+        paste = await self._get_raw()
+        if (
+            "access_code" not in paste
+            or paste["access_code"] is None
+            or isinstance(paste["access_code"], str)
+        ):
+            raise NotFoundException()
+
+        return PasteAccessCodeKdf(
+            salt=paste["access_code"]["salt"],
+            ops_limit=paste["access_code"]["ops_limit"],
+            mem_limit=paste["access_code"]["mem_limit"],
+        )
+
     async def get(self, access_code: Optional[str] = None) -> PasteModel:
         paste = await self._get_raw()
 
@@ -73,8 +109,15 @@ class Paste:
             if not access_code:
                 raise NotAuthorizedException()
 
+            # Check if uses legacy access code
+            server_access_code = (
+                paste["access_code"]
+                if isinstance(paste["access_code"], str)
+                else paste["access_code"]["code"]
+            )
+
             try:
-                PASSWORD_HASHER.verify(paste["access_code"], access_code)
+                PASSWORD_HASHER.verify(server_access_code, access_code)
             except VerifyMismatchError:
                 raise NotAuthorizedException()
 

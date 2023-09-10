@@ -1,11 +1,13 @@
 <script lang="ts">
-  import sodium from "libsodium-wrappers";
+  import sodium from "libsodium-wrappers-sumo";
   import { _ } from "svelte-i18n";
   import { closeModal } from "svelte-modals";
+  import { paasterClient } from "../lib/client";
 
   export let isOpen: boolean;
   export let b64EncodedRawKey: string;
   export let loadPasteFunc: Function;
+  export let pasteId: string;
 
   let accessCode = ["", "", "", ""];
 
@@ -21,16 +23,33 @@
   }
 
   async function attemptAccessCode() {
-    await loadPasteFunc(
-      sodium.to_base64(
-        sodium.crypto_generichash(
-          64,
-          accessCode.join("-").toLowerCase(),
-          b64EncodedRawKey
-        ),
+    const codeString = accessCode.join("-").toLowerCase();
+
+    let attemptedCode: string;
+    try {
+      const kdf =
+        await paasterClient.default.controllerPastePasteIdKdfGetPasteKdf(
+          pasteId
+        );
+
+      attemptedCode = sodium.to_base64(
+        sodium.crypto_pwhash(
+          32,
+          codeString,
+          sodium.from_base64(kdf.salt),
+          kdf.ops_limit,
+          kdf.mem_limit,
+          sodium.crypto_pwhash_ALG_DEFAULT
+        )
+      );
+    } catch (error) {
+      attemptedCode = sodium.to_base64(
+        sodium.crypto_generichash(64, codeString, b64EncodedRawKey),
         sodium.base64_variants.URLSAFE_NO_PADDING
-      )
-    );
+      );
+    }
+
+    await loadPasteFunc(attemptedCode);
     closeModal();
   }
 </script>

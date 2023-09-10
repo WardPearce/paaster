@@ -1,5 +1,5 @@
 <script lang="ts">
-  import sodium from "libsodium-wrappers";
+  import sodium from "libsodium-wrappers-sumo";
   import toast from "svelte-french-toast";
   import { _ } from "svelte-i18n";
   import { closeModal } from "svelte-modals";
@@ -19,15 +19,30 @@
     accessCode = generatePassphrase(8);
     codeString = accessCode.join("-").toLowerCase();
 
+    const salt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
+    const opsLimit = sodium.crypto_pwhash_OPSLIMIT_MODERATE;
+    const memLimit = sodium.crypto_pwhash_MEMLIMIT_MODERATE;
+
+    const derivedCode = sodium.crypto_pwhash(
+      32,
+      codeString,
+      salt,
+      opsLimit,
+      memLimit,
+      sodium.crypto_pwhash_ALG_DEFAULT
+    );
+
     await toast.promise(
       paasterClient.default.controllerPastePasteIdOwnerSecretUpdatePaste(
         pasteId,
         ownerSecret,
         {
-          access_code: sodium.to_base64(
-            sodium.crypto_generichash(64, codeString, b64EncodedRawKey),
-            sodium.base64_variants.URLSAFE_NO_PADDING
-          ),
+          access_code: {
+            code: sodium.to_base64(derivedCode),
+            mem_limit: memLimit,
+            ops_limit: opsLimit,
+            salt: sodium.to_base64(salt),
+          },
         }
       ),
       {

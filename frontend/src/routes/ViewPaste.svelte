@@ -1,6 +1,6 @@
 <script lang="ts">
   import { acts } from "@tadashi/svelte-loading";
-  import sodium from "libsodium-wrappers";
+  import sodium from "libsodium-wrappers-sumo";
   import Mousetrap from "mousetrap";
   import { onMount } from "svelte";
   import toast from "svelte-french-toast";
@@ -261,6 +261,7 @@
           openModal(() => import("../components/ProvideAccessCode.svelte"), {
             loadPasteFunc: loadPaste,
             b64EncodedRawKey: b64EncodedRawKey,
+            pasteId: pasteId,
           });
           acts.show(false);
           return;

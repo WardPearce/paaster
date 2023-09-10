@@ -10,6 +10,8 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { PasteAccessCode } from './models/PasteAccessCode';
+export type { PasteAccessCodeKdf } from './models/PasteAccessCodeKdf';
 export type { PasteCreatedModel } from './models/PasteCreatedModel';
 export type { PasteLanguage } from './models/PasteLanguage';
 export type { PasteModel } from './models/PasteModel';
