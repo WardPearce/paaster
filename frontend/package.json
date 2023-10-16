@@ -39,7 +39,7 @@
     "vite-plugin-pwa": "^0.16.5"
   },
   "dependencies": {
-    "svelte-i18n": "^3.7.4",
+    "svelte-i18n": "^4.0.0",
     "svelte-navigator": "^3.2.2"
   }
 }
