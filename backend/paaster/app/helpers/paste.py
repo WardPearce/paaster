@@ -4,13 +4,14 @@ from secrets import token_urlsafe
 from typing import Any, Optional
 
 import bcrypt
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
+from litestar.exceptions import NotAuthorizedException, NotFoundException
+
 from app.env import SETTINGS
 from app.helpers.s3 import format_file_path, s3_create_client
 from app.models.paste import PasteAccessCodeKdf, PasteModel, UpdatePasteModel
 from app.state import State
-from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError
-from litestar.exceptions import NotAuthorizedException, NotFoundException
 
 PASSWORD_HASHER = PasswordHasher()
 
@@ -27,7 +28,7 @@ class Paste:
     async def update(self, update: UpdatePasteModel, owner_secret: str) -> None:
         paste = await self.__validate_owner(owner_secret)
 
-        to_set = update.dict(exclude_unset=True)
+        to_set = update.model_dump(exclude_unset=True)
         if "access_code" in to_set:
             to_set["access_code"] = {
                 **to_set["access_code"],
