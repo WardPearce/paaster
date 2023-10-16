@@ -1,6 +1,7 @@
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 
 
 class MongoDB(BaseModel):
