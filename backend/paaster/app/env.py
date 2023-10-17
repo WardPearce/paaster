@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     s3: S3
     open_api: OpenAPI = OpenAPI()
 
-    model_config: SettingsConfigDict = {"env_prefix": "paaster_"}
+    model_config = {"env_prefix": "paaster_"}
 
 
 SETTINGS = Settings()  # type: ignore
