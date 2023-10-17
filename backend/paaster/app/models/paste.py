@@ -1,20 +1,9 @@
 from datetime import datetime
 from typing import Optional, Union
 
-from env import SETTINGS
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer
 
-
-class DatetimeToUTC(datetime):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v: datetime) -> float:
-        if not isinstance(v, datetime):
-            raise ValueError("Not a valid datetime")
-        return v.timestamp()
+from app.env import SETTINGS
 
 
 class PasteLanguage(BaseModel):
@@ -41,9 +30,13 @@ class UpdatePasteModel(BaseModel):
 class PasteModel(UpdatePasteModel):
     id: str = Field(..., alias="_id")
     iv: str
-    created: DatetimeToUTC
+    created: datetime
     download_url: str
     language: Optional[PasteLanguage] = None
+
+    @field_serializer("created")
+    def serialize_created(self, created: datetime, _info) -> float:
+        return created.timestamp()
 
 
 class PasteCreatedModel(PasteModel):

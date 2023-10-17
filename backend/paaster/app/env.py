@@ -1,7 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class MongoDB(BaseModel):
@@ -39,8 +39,7 @@ class Settings(BaseSettings):
     s3: S3
     open_api: OpenAPI = OpenAPI()
 
-    class Config:
-        env_prefix = "paaster_"
+    model_config: SettingsConfigDict = {"env_prefix": "paaster_"}
 
 
 SETTINGS = Settings()  # type: ignore
