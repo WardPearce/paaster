@@ -4,6 +4,10 @@ from typing import Optional
 
 import bcrypt
 import nanoid  # type: ignore
+from litestar import Request, Router, delete, get, post
+from litestar.exceptions import HTTPException
+from litestar.middleware.rate_limit import RateLimitConfig
+
 from app.env import SETTINGS
 from app.helpers.paste import Paste
 from app.helpers.s3 import format_file_path, s3_create_client
@@ -14,9 +18,6 @@ from app.models.paste import (
     UpdatePasteModel,
 )
 from app.state import State
-from litestar import Request, Router, delete, get, post
-from litestar.exceptions import HTTPException
-from litestar.middleware.rate_limit import RateLimitConfig
 
 
 @post("/{iv:str}", middleware=[RateLimitConfig(rate_limit=("minute", 35)).middleware])
@@ -77,7 +78,7 @@ async def create_paste(state: State, request: Request, iv: str) -> PasteCreatedM
             Bucket=SETTINGS.s3.bucket,
             Key=file_key,
             UploadId=multipart["UploadId"],
-            MultipartUpload={"Parts": parts},
+            MultipartUpload={"Parts": parts},  # type: ignore
         )
 
     owner_secret = token_urlsafe(32)

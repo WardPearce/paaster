@@ -1,7 +1,5 @@
 from typing import cast
 
-from app.controllers import router
-from app.env import SETTINGS
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
 from litestar.datastructures import State
@@ -9,6 +7,9 @@ from litestar.openapi import OpenAPIConfig, OpenAPIController
 from litestar.openapi.spec import Contact, License, Server
 from motor import motor_asyncio
 from pydantic import BaseModel
+
+from app.controllers import router
+from app.env import SETTINGS
 
 
 class OpenAPIControllerRouteFix(OpenAPIController):
@@ -34,7 +35,7 @@ app = Litestar(
         }
     ),
     openapi_config=OpenAPIConfig(
-        **SETTINGS.open_api.dict(),
+        **SETTINGS.open_api.model_dump(),
         root_schema_site="elements",
         openapi_controller=OpenAPIControllerRouteFix,
         enabled_endpoints={"openapi.json", "openapi.yaml", "elements"},
@@ -58,5 +59,5 @@ app = Litestar(
         allow_origins=[SETTINGS.proxy_urls.backend, SETTINGS.proxy_urls.frontend],
         allow_credentials=True,
     ),
-    type_encoders={BaseModel: lambda m: m.dict(by_alias=False)},
+    type_encoders={BaseModel: lambda m: m.model_dump(by_alias=False)},
 )
