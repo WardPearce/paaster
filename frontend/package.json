@@ -16,7 +16,7 @@
     "@tadashi/svelte-loading": "^3.0.0",
     "@tsconfig/svelte": "^5.0.2",
     "@types/libsodium-wrappers-sumo": "^0.7.6",
-    "@types/mousetrap": "^1.6.12",
+    "@types/mousetrap": "^1.6.13",
     "dayjs": "^1.11.10",
     "filedrop-svelte": "^0.1.2",
     "fuse.js": "^6.6.2",
