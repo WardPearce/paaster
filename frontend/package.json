@@ -15,7 +15,7 @@
     "@sveltejs/vite-plugin-svelte": "^2.4.6",
     "@tadashi/svelte-loading": "^3.0.0",
     "@tsconfig/svelte": "^5.0.2",
-    "@types/libsodium-wrappers-sumo": "^0.7.6",
+    "@types/libsodium-wrappers-sumo": "^0.7.7",
     "@types/mousetrap": "^1.6.13",
     "dayjs": "^1.11.10",
     "filedrop-svelte": "^0.1.2",
