@@ -13,15 +13,15 @@ server = "run:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-motor = "^3.1.2"
+motor = "^3.3.2"
 bcrypt = "^4.0.1"
 aiobotocore = "^2.7.0"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
 litestar = {extras = ["full"], version = "^2.3.2"}
 types-aiobotocore-s3 = "^2.7.0"
-pydantic = "^2.4.2"
-pydantic-settings = "^2.0.3"
+pydantic = "^2.5.1"
+pydantic-settings = "^2.1.0"
 uvicorn = "^0.24.0"
 
 [tool.poetry.group.test.dependencies]
