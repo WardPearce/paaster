@@ -3015,13 +3015,13 @@ xray = ["types-aiobotocore-xray (>=2.11.0,<2.12.0)"]
 
 [[package]]
 name = "types-aiobotocore-s3"
-version = "2.11.0"
-description = "Type annotations for aiobotocore.S3 2.11.0 service generated with mypy-boto3-builder 7.23.1"
+version = "2.11.1"
+description = "Type annotations for aiobotocore.S3 2.11.1 service generated with mypy-boto3-builder 7.23.1"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types-aiobotocore-s3-2.11.0.tar.gz", hash = "sha256:dbced99db877ef75f6120162953bc58d031823ca25f841e6312d24accb02308a"},
-    {file = "types_aiobotocore_s3-2.11.0-py3-none-any.whl", hash = "sha256:6b8d4d50ca53d2022488f6f816d6bb1127f3441c343b0214f4fe94ef2f860d26"},
+    {file = "types-aiobotocore-s3-2.11.1.tar.gz", hash = "sha256:5e8199e84d6bcecbfe922b4874b7d33a4e272054c67dfe48f120a0dc97850332"},
+    {file = "types_aiobotocore_s3-2.11.1-py3-none-any.whl", hash = "sha256:31d9dcbfbd360a2040657c4f2e9155adbc797ed2f16cb55b749d3cb112750892"},
 ]
 
 [package.dependencies]
@@ -3437,4 +3437,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3f209f9064e5ef411c3729fbf7de69c808dede5aee9791af5b6b9113191ee047"
+content-hash = "e9bc721e440204c7a2bea686f16ce1b613cbd65e60e87dbe1358200bd0aa761a"
