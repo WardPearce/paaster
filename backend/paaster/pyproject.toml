@@ -15,12 +15,12 @@ server = "run:main"
 python = "^3.10"
 motor = "^3.3.2"
 bcrypt = "^4.1.2"
-aiobotocore = "^2.11.0"
+aiobotocore = "^2.11.2"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
 litestar = {extras = ["full"], version = "^2.5.1"}
 types-aiobotocore-s3 = "^2.11.2"
-pydantic = "^2.6.0"
+pydantic = "^2.6.1"
 pydantic-settings = "^2.1.0"
 uvicorn = "^0.27.0"
 
@@ -32,7 +32,7 @@ black = "^24.1.1"
 mypy = "^1.7.1"
 types-aiobotocore = "^2.11.2"
 motor-types = "^1.0.0b3"
-pytest-asyncio = "^0.23.4"
+pytest-asyncio = "^0.23.5"
 
 [build-system]
 requires = ["poetry-core"]
