@@ -18,7 +18,7 @@ bcrypt = "^4.1.2"
 aiobotocore = "^2.11.2"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
-litestar = {extras = ["full"], version = "^2.5.1"}
+litestar = {extras = ["full"], version = "^2.6.1"}
 types-aiobotocore-s3 = "^2.11.2"
 pydantic = "^2.6.1"
 pydantic-settings = "^2.1.0"

@@ -1276,13 +1276,13 @@ six = ">=1.13.0"
 
 [[package]]
 name = "litestar"
-version = "2.5.1"
+version = "2.6.1"
 description = "Litestar - A production-ready, highly performant, extensible ASGI API Framework"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "litestar-2.5.1-py3-none-any.whl", hash = "sha256:6423c8331add1ba52aca5a3769a3c41d3224b176ddd8778fb606f8db60b2e9cb"},
-    {file = "litestar-2.5.1.tar.gz", hash = "sha256:6307278ba4f796542b0cdbfeac82a5e71233da20cb7f744d16c8c7723da3a1cd"},
+    {file = "litestar-2.6.1-py3-none-any.whl", hash = "sha256:33451b705f04f1f1ee991c28502afc2ce1b5ca5df25f0ae6ae8cf11063397e42"},
+    {file = "litestar-2.6.1.tar.gz", hash = "sha256:3232190578d81180cce765840dfe72ef6b5d7ec2aead6fc37d664e61d8e2f647"},
 ]
 
 [package.dependencies]
@@ -1294,6 +1294,7 @@ brotli = {version = "*", optional = true, markers = "extra == \"brotli\""}
 click = "*"
 cryptography = {version = "*", optional = true, markers = "extra == \"cryptography\" or extra == \"jwt\""}
 email-validator = {version = "*", optional = true, markers = "extra == \"pydantic\""}
+exceptiongroup = {version = "*", markers = "python_version < \"3.11\""}
 fast-query-parsers = {version = ">=1.0.2", optional = true, markers = "extra == \"standard\""}
 httpx = ">=0.22"
 jinja2 = {version = ">=3.1.2", optional = true, markers = "extra == \"jinja\" and extra == \"standard\""}
@@ -3434,4 +3435,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "aa9e48108abbd3232613181bd173f68e2500a1dac962b9084111d27bcde7da1e"
+content-hash = "b5b22da4a5a5b480ce7dcbd7aa4fbafba3976aae61e7065eba304e4e6fc799d2"
