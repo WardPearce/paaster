@@ -28,7 +28,7 @@ uvicorn = "^0.27.1"
 pytest = "^7.4.4"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1.1"
+black = "^24.2.0"
 mypy = "^1.8.0"
 types-aiobotocore = "^2.11.2"
 motor-types = "^1.0.0b4"
