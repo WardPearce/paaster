@@ -25,7 +25,7 @@ pydantic-settings = "^2.2.1"
 uvicorn = "^0.27.1"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.0.2"
+pytest = "^8.1.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
