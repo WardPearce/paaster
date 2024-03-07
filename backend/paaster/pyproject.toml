@@ -30,7 +30,7 @@ pytest = "^8.0.2"
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
 mypy = "^1.8.0"
-types-aiobotocore = "^2.11.2"
+types-aiobotocore = "^2.12.1"
 motor-types = "^1.0.0b4"
 pytest-asyncio = "^0.23.5"
 
