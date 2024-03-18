@@ -18,7 +18,7 @@ bcrypt = "^4.1.2"
 aiobotocore = "^2.12.1"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
-litestar = {extras = ["full"], version = "^2.6.1"}
+litestar = {extras = ["full"], version = "^2.7.0"}
 types-aiobotocore-s3 = "^2.12.1"
 pydantic = "^2.6.3"
 pydantic-settings = "^2.2.1"
@@ -29,7 +29,7 @@ pytest = "^8.1.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2.0"
-mypy = "^1.8.0"
+mypy = "^1.9.0"
 types-aiobotocore = "^2.12.1"
 motor-types = "^1.0.0b4"
 pytest-asyncio = "^0.23.5"
