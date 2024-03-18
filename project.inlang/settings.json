@@ -25,6 +25,6 @@
         "https://cdn.jsdelivr.net/npm/@inlang/plugin-i18next@latest/dist/index.js"
     ],
     "plugin.inlang.i18next": {
-        "pathPattern": "./frontend/src/i18n/{language}.json"
+        "pathPattern": "./frontend/src/i18n/{languageTag}.json"
     }
 }
