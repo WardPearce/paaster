@@ -1,0 +1,30 @@
+{
+    "sourceLanguageTag": "en",
+    "languageTags": [
+        "en",
+        "de",
+        "fi",
+        "fr",
+        "hi",
+        "id",
+        "it",
+        "ja",
+        "ko",
+        "lt",
+        "lv",
+        "mi",
+        "ml",
+        "no",
+        "ru",
+        "sv",
+        "uk",
+        "vi",
+        "zh"
+    ],
+    "modules": [
+        "https://cdn.jsdelivr.net/npm/@inlang/plugin-i18next@latest/dist/index.js"
+    ],
+    "plugin.inlang.i18next": {
+        "pathPattern": "./frontend/src/i18n/{language}.json"
+    }
+}
