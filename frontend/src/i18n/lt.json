@@ -1,99 +1,99 @@
 {
-  "saved_pastes": "Išsaugotos pastos",
-  "create": {
-    "input": "įklijuoti arba vilkite & numesk savo kodą čia",
-    "errors": {
-      "private_window": "Nepavyko išsaugoti įklijavimo istorijos, greičiausiai dėl to, kad esate privačiame lange."
-    }
-  },
-  "view": {
-    "404": "Įklijuoti nebėra",
-    "no_key": "Įklijuoti slaptą raktą nepateikta",
-    "invalid_format": "Neteisingas slaptojo rakto formatas",
-    "cdn_down": "Nepavyko atsisiųsti įklijavimo iš CDN, bandykite dar kartą vėliau"
-  },
-  "search": "Ieškoti pastų...",
-  "paste_actions": {
-    "delete": {
-      "loading": "Pašalinama pasta",
-      "error": "Įklijavimas serveryje nerastas",
-      "success": "Įklijavimas ištrintas iš serverio",
-      "button": "Ištrinti"
+    "saved_pastes": "Išsaugotos pastos",
+    "create": {
+        "input": "įklijuoti arba vilkite & numesk savo kodą čia",
+        "errors": {
+            "private_window": "Nepavyko išsaugoti įklijavimo istorijos, greičiausiai dėl to, kad esate privačiame lange."
+        }
     },
-    "rename": {
-      "button": "pervadinti",
-      "success": "Pavadinimas atnaujintas",
-      "model": {
-        "header": "pervardyti pastą"
-      }
+    "view": {
+        "404": "Įklijuoti nebėra",
+        "no_key": "Įklijuoti slaptą raktą nepateikta",
+        "invalid_format": "Neteisingas slaptojo rakto formatas",
+        "cdn_down": "Nepavyko atsisiųsti įklijavimo iš CDN, bandykite dar kartą vėliau"
     },
-    "share": {
-      "success": "Bendrinimo nuoroda nukopijuota",
-      "button": "Dalintis"
+    "search": "Ieškoti pastų...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Pašalinama pasta",
+            "error": "Įklijavimas serveryje nerastas",
+            "success": "Įklijavimas ištrintas iš serverio",
+            "button": "Ištrinti"
+        },
+        "rename": {
+            "button": "pervadinti",
+            "success": "Pavadinimas atnaujintas",
+            "model": {
+                "header": "pervardyti pastą"
+            }
+        },
+        "share": {
+            "success": "Bendrinimo nuoroda nukopijuota",
+            "button": "Dalintis"
+        },
+        "access_code": {
+            "button": "nustatyti prieigos kodą",
+            "model": {
+                "header": "nustatyti įklijuoti prieigos kodą",
+                "input": "Įveskite prieigos kodą",
+                "tooltip": "Sukurti kodą",
+                "button": "Nustatykite prieigos kodą"
+            },
+            "access_code_len": "Prieigos kodą turi sudaryti {max_length} ar daugiau simbolių",
+            "loading": "Prieigos kodo nustatymas",
+            "success": "Prieigos kodas nustatytas",
+            "error": "Nepavyko nustatyti prieigos kodo",
+            "success_copied_to_clipboard": "Prieigos kodas nukopijuotas į mainų sritį"
+        },
+        "qr_code": {
+            "button": "generuoti QR kodą",
+            "model": {
+                "header": "nuskaitykite, kad pasiektumėte įklijavimą"
+            }
+        },
+        "clipboard": {
+            "success": "Įklijavimas nukopijuotas",
+            "button": "kopija"
+        },
+        "save": {
+            "success": "Įklijuoti išsaugoti",
+            "button": "sutaupyti"
+        },
+        "download": {
+            "button": "parsisiųsti"
+        },
+        "lang_updated": "Kalba atnaujinta",
+        "expire": {
+            "loading": "Atnaujinimas baigiasi po",
+            "error": "Neįmanoma nustatyti galiojimo pabaigos po",
+            "success": "Nustatyta, kad įklijavimas baigtųsi po {period}",
+            "button": "Galiojimo laikas baigiasi po",
+            "periods": {
+                "never": "niekada",
+                "being_viewed": "yra vaizdas",
+                "minute": "minutė",
+                "minutes": "minučių",
+                "hour": "valandą",
+                "hours": "valandų",
+                "day": "dieną",
+                "days": "dienų",
+                "week": "savaitę",
+                "weeks": "savaites",
+                "month": "mėnuo",
+                "months": "mėnesių"
+            }
+        }
     },
-    "access_code": {
-      "button": "nustatyti prieigos kodą",
-      "model": {
-        "header": "nustatyti įklijuoti prieigos kodą",
+    "require_access_code_model": {
         "input": "Įveskite prieigos kodą",
-        "tooltip": "Sukurti kodą",
-        "button": "Nustatykite prieigos kodą"
-      },
-      "access_code_len": "Prieigos kodą turi sudaryti {max_length} ar daugiau simbolių",
-      "loading": "Prieigos kodo nustatymas",
-      "success": "Prieigos kodas nustatytas",
-      "error": "Nepavyko nustatyti prieigos kodo",
-      "success_copied_to_clipboard": "Prieigos kodas nukopijuotas į mainų sritį"
+        "header": "reikalingas prieigos kodas",
+        "button": "Pateikti"
     },
-    "qr_code": {
-      "button": "generuoti QR kodą",
-      "model": {
-        "header": "nuskaitykite, kad pasiektumėte įklijavimą"
-      }
-    },
-    "clipboard": {
-      "success": "Įklijavimas nukopijuotas",
-      "button": "kopija"
-    },
-    "save": {
-      "success": "Įklijuoti išsaugoti",
-      "button": "sutaupyti"
-    },
-    "download": {
-      "button": "parsisiųsti"
-    },
-    "expire": {
-      "loading": "Atnaujinimas baigiasi po",
-      "error": "Neįmanoma nustatyti galiojimo pabaigos po",
-      "success": "Nustatyta, kad įklijavimas baigtųsi po {period}",
-      "button": "Galiojimo laikas baigiasi po",
-      "periods": {
-        "never": "niekada",
-        "being_viewed": "yra vaizdas",
-        "minute": "minutė",
-        "minutes": "minučių",
-        "hour": "valandą",
-        "hours": "valandų",
-        "day": "dieną",
-        "days": "dienų",
-        "week": "savaitę",
-        "weeks": "savaites",
-        "month": "mėnuo",
-        "months": "mėnesių"
-      }
+    "no_saved_pastes": "jokių išsaugotų pastų",
+    "shared_with": "Bendrinama su jumis",
+    "about": {
+        "title": "kaip mes saugome jūsų privatumą.",
+        "content": "„Paaster“ naudoja tiesioginį šifravimą įklijavimui ir dalinimuisi, o tai reiškia, kad net serveris negali peržiūrėti, ką čia išsaugojote.",
+        "source_code": "Mūsų šaltinio kodas yra visiškai atviro kodo ir jį galima peržiūrėti {github}"
     }
-  },
-  "require_access_code_model": {
-    "input": "Įveskite prieigos kodą",
-    "header": "reikalingas prieigos kodas",
-    "button": "Pateikti"
-  },
-  "no_saved_pastes": "jokių išsaugotų pastų",
-  "shared_with": "Bendrinama su jumis",
-  "about": {
-    "title": "kaip mes saugome jūsų privatumą.",
-    "content": "„Paaster“ naudoja tiesioginį šifravimą įklijavimui ir dalinimuisi, o tai reiškia, kad net serveris negali peržiūrėti, ką čia išsaugojote.",
-    "source_code": "Mūsų šaltinio kodas yra visiškai atviro kodo ir jį galima peržiūrėti {github}"
-  },
-  "paste_actions.lang_updated": "Kalba atnaujinta"
 }
