@@ -22,7 +22,7 @@ litestar = {extras = ["full"], version = "^2.7.0"}
 types-aiobotocore-s3 = "^2.12.1"
 pydantic = "^2.6.4"
 pydantic-settings = "^2.2.1"
-uvicorn = "^0.28.0"
+uvicorn = "^0.29.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.1.1"
