@@ -86,6 +86,9 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
 - Optional encryption.
   - Paaster will never have opt-in / opt-out encryption, encryption will always be present.
 
+# Have any questions?
+[Join our Matrix space](https://matrix.to/#/#ward:matrix.org)
+
 # Setup
 ## Production with Docker
 
