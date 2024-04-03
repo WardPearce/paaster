@@ -1,99 +1,99 @@
 {
-  "saved_pastes": "保存的粘贴",
-  "create": {
-    "input": "粘贴或拖动把你的代码放在这里",
-    "errors": {
-      "private_window": "无法保存粘贴历史记录，很可能是因为在私人窗口中。"
-    }
-  },
-  "view": {
-    "404": "粘贴不再存在",
-    "no_key": "未提供粘贴密钥",
-    "invalid_format": "密钥格式无效",
-    "cdn_down": "无法从 CDN 下载粘贴，请稍后重试"
-  },
-  "search": "搜索粘贴...",
-  "paste_actions": {
-    "delete": {
-      "loading": "删除粘贴",
-      "error": "在服务器上找不到粘贴",
-      "success": "粘贴从服务器删除",
-      "button": "删除"
+    "saved_pastes": "保存的粘贴",
+    "create": {
+        "input": "粘贴或拖动把你的代码放在这里",
+        "errors": {
+            "private_window": "无法保存粘贴历史记录，很可能是因为在私人窗口中。"
+        }
     },
-    "rename": {
-      "button": "改名",
-      "success": "姓名已更新",
-      "model": {
-        "header": "重命名粘贴"
-      }
+    "view": {
+        "404": "粘贴不再存在",
+        "no_key": "未提供粘贴密钥",
+        "invalid_format": "密钥格式无效",
+        "cdn_down": "无法从 CDN 下载粘贴，请稍后重试"
     },
-    "share": {
-      "success": "共享链接已复制",
-      "button": "分享"
+    "search": "搜索粘贴...",
+    "paste_actions": {
+        "delete": {
+            "loading": "删除粘贴",
+            "error": "在服务器上找不到粘贴",
+            "success": "粘贴从服务器删除",
+            "button": "删除"
+        },
+        "rename": {
+            "button": "改名",
+            "success": "姓名已更新",
+            "model": {
+                "header": "重命名粘贴"
+            }
+        },
+        "share": {
+            "success": "共享链接已复制",
+            "button": "分享"
+        },
+        "access_code": {
+            "button": "设置访问代码",
+            "model": {
+                "header": "设置粘贴访问代码",
+                "input": "输入访问代码",
+                "tooltip": "生成代码",
+                "button": "设置访问密码"
+            },
+            "access_code_len": "访问代码必须是 {max_length} 个字符或更多",
+            "loading": "设置访问密码",
+            "success": "接入密码集",
+            "error": "无法设置访问代码",
+            "success_copied_to_clipboard": "复制到剪贴板的访问代码"
+        },
+        "qr_code": {
+            "button": "生成二维码",
+            "model": {
+                "header": "扫描访问粘贴"
+            }
+        },
+        "clipboard": {
+            "success": "粘贴复制",
+            "button": "复制"
+        },
+        "save": {
+            "success": "粘贴已保存",
+            "button": "节省"
+        },
+        "download": {
+            "button": "下载"
+        },
+        "lang_updated": "语言已更新",
+        "expire": {
+            "loading": "更新过期后",
+            "error": "无法设置过期时间",
+            "success": "粘贴设置为在 {period} 后过期",
+            "button": "过期后",
+            "periods": {
+                "never": "绝不",
+                "being_viewed": "正在查看",
+                "minute": "分钟",
+                "minutes": "分钟",
+                "hour": "小时",
+                "hours": "小时",
+                "day": "天",
+                "days": "天",
+                "week": "星期",
+                "weeks": "周",
+                "month": "月",
+                "months": "几个月"
+            }
+        }
     },
-    "access_code": {
-      "button": "设置访问代码",
-      "model": {
-        "header": "设置粘贴访问代码",
+    "require_access_code_model": {
         "input": "输入访问代码",
-        "tooltip": "生成代码",
-        "button": "设置访问密码"
-      },
-      "access_code_len": "访问代码必须是 {max_length} 个字符或更多",
-      "loading": "设置访问密码",
-      "success": "接入密码集",
-      "error": "无法设置访问代码",
-      "success_copied_to_clipboard": "复制到剪贴板的访问代码"
+        "header": "需要访问代码",
+        "button": "提交"
     },
-    "qr_code": {
-      "button": "生成二维码",
-      "model": {
-        "header": "扫描访问粘贴"
-      }
-    },
-    "clipboard": {
-      "success": "粘贴复制",
-      "button": "复制"
-    },
-    "save": {
-      "success": "粘贴已保存",
-      "button": "节省"
-    },
-    "download": {
-      "button": "下载"
-    },
-    "expire": {
-      "loading": "更新过期后",
-      "error": "无法设置过期时间",
-      "success": "粘贴设置为在 {period} 后过期",
-      "button": "过期后",
-      "periods": {
-        "never": "绝不",
-        "being_viewed": "正在查看",
-        "minute": "分钟",
-        "minutes": "分钟",
-        "hour": "小时",
-        "hours": "小时",
-        "day": "天",
-        "days": "天",
-        "week": "星期",
-        "weeks": "周",
-        "month": "月",
-        "months": "几个月"
-      }
+    "no_saved_pastes": "没有保存的粘贴",
+    "shared_with": "与您共享",
+    "about": {
+        "title": "我们如何保护您的隐私。",
+        "content": "Paaster 使用端到端加密来存储和共享粘贴，这意味着即使服务器也无法查看您在此处保存的内容。",
+        "source_code": "我们的源代码是完全开源的，可以在 {github} 上查看"
     }
-  },
-  "require_access_code_model": {
-    "input": "输入访问代码",
-    "header": "需要访问代码",
-    "button": "提交"
-  },
-  "no_saved_pastes": "没有保存的粘贴",
-  "shared_with": "与您共享",
-  "about": {
-    "title": "我们如何保护您的隐私。",
-    "content": "Paaster 使用端到端加密来存储和共享粘贴，这意味着即使服务器也无法查看您在此处保存的内容。",
-    "source_code": "我们的源代码是完全开源的，可以在 {github} 上查看"
-  },
-  "paste_actions.lang_updated": "语言已更新"
 }

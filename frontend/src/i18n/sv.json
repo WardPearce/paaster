@@ -1,99 +1,99 @@
 {
-  "saved_pastes": "Sparade pastor",
-  "create": {
-    "input": "klistra in eller dra & släpp din kod här",
-    "errors": {
-      "private_window": "Det gick inte att spara inklistringshistoriken, troligen på grund av att den är i ett privat fönster."
-    }
-  },
-  "view": {
-    "404": "Klistra finns inte längre",
-    "no_key": "Klistra in hemlig nyckel har inte angetts",
-    "invalid_format": "Ogiltigt format för hemlig nyckel",
-    "cdn_down": "Det gick inte att ladda ned paste från CDN, försök igen senare"
-  },
-  "search": "Sök in klister...",
-  "paste_actions": {
-    "delete": {
-      "loading": "Raderar klistra in",
-      "error": "Det gick inte att klistra in på servern",
-      "success": "Klistra bort från servern",
-      "button": "radera"
+    "saved_pastes": "Sparade pastor",
+    "create": {
+        "input": "klistra in eller dra & släpp din kod här",
+        "errors": {
+            "private_window": "Det gick inte att spara inklistringshistoriken, troligen på grund av att den är i ett privat fönster."
+        }
     },
-    "rename": {
-      "button": "Döp om",
-      "success": "Namnet uppdaterat",
-      "model": {
-        "header": "byt namn på klistra"
-      }
+    "view": {
+        "404": "Klistra finns inte längre",
+        "no_key": "Klistra in hemlig nyckel har inte angetts",
+        "invalid_format": "Ogiltigt format för hemlig nyckel",
+        "cdn_down": "Det gick inte att ladda ned paste från CDN, försök igen senare"
     },
-    "share": {
-      "success": "Delningslänken har kopierats",
-      "button": "dela med sig"
+    "search": "Sök in klister...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Raderar klistra in",
+            "error": "Det gick inte att klistra in på servern",
+            "success": "Klistra bort från servern",
+            "button": "radera"
+        },
+        "rename": {
+            "button": "Döp om",
+            "success": "Namnet uppdaterat",
+            "model": {
+                "header": "byt namn på klistra"
+            }
+        },
+        "share": {
+            "success": "Delningslänken har kopierats",
+            "button": "dela med sig"
+        },
+        "access_code": {
+            "button": "ställ in åtkomstkod",
+            "model": {
+                "header": "ställ in klistra in åtkomstkod",
+                "input": "Ange åtkomstkod",
+                "tooltip": "Generera kod",
+                "button": "Ställ in åtkomstkod"
+            },
+            "access_code_len": "Åtkomstkoden måste vara {max_length} tecken eller mer",
+            "loading": "Ställa in åtkomstkod",
+            "success": "Åtkomstkod inställd",
+            "error": "Det gick inte att ställa in åtkomstkoden",
+            "success_copied_to_clipboard": "Åtkomstkoden har kopierats till urklipp"
+        },
+        "qr_code": {
+            "button": "generera QR-kod",
+            "model": {
+                "header": "skanna för att komma åt klistra in"
+            }
+        },
+        "clipboard": {
+            "success": "Klistra in kopieras",
+            "button": "kopiera"
+        },
+        "save": {
+            "success": "Klistra in har sparats",
+            "button": "spara"
+        },
+        "download": {
+            "button": "ladda ner"
+        },
+        "lang_updated": "Språket uppdaterat",
+        "expire": {
+            "loading": "Uppdatering löper ut efter",
+            "error": "Det går inte att ställa in löper ut efter",
+            "success": "Klistra in för att löpa ut om {period}",
+            "button": "Går ut efter",
+            "periods": {
+                "never": "aldrig",
+                "being_viewed": "vara syn",
+                "minute": "minut",
+                "minutes": "minuter",
+                "hour": "timme",
+                "hours": "timmar",
+                "day": "dag",
+                "days": "dagar",
+                "week": "vecka",
+                "weeks": "Veckor",
+                "month": "månad",
+                "months": "månader"
+            }
+        }
     },
-    "access_code": {
-      "button": "ställ in åtkomstkod",
-      "model": {
-        "header": "ställ in klistra in åtkomstkod",
+    "require_access_code_model": {
         "input": "Ange åtkomstkod",
-        "tooltip": "Generera kod",
-        "button": "Ställ in åtkomstkod"
-      },
-      "access_code_len": "Åtkomstkoden måste vara {max_length} tecken eller mer",
-      "loading": "Ställa in åtkomstkod",
-      "success": "Åtkomstkod inställd",
-      "error": "Det gick inte att ställa in åtkomstkoden",
-      "success_copied_to_clipboard": "Åtkomstkoden har kopierats till urklipp"
+        "header": "åtkomstkod krävs",
+        "button": "Skicka in"
     },
-    "qr_code": {
-      "button": "generera QR-kod",
-      "model": {
-        "header": "skanna för att komma åt klistra in"
-      }
-    },
-    "clipboard": {
-      "success": "Klistra in kopieras",
-      "button": "kopiera"
-    },
-    "save": {
-      "success": "Klistra in har sparats",
-      "button": "spara"
-    },
-    "download": {
-      "button": "ladda ner"
-    },
-    "expire": {
-      "loading": "Uppdatering löper ut efter",
-      "error": "Det går inte att ställa in löper ut efter",
-      "success": "Klistra in för att löpa ut om {period}",
-      "button": "Går ut efter",
-      "periods": {
-        "never": "aldrig",
-        "being_viewed": "vara syn",
-        "minute": "minut",
-        "minutes": "minuter",
-        "hour": "timme",
-        "hours": "timmar",
-        "day": "dag",
-        "days": "dagar",
-        "week": "vecka",
-        "weeks": "Veckor",
-        "month": "månad",
-        "months": "månader"
-      }
+    "no_saved_pastes": "inga sparade pastor",
+    "shared_with": "Delas med dig",
+    "about": {
+        "title": "hur vi skyddar din integritet.",
+        "content": "Paaster använder end-to-end-kryptering för att lagra och dela pastor, vilket innebär att inte ens servern kan se vad du sparar här.",
+        "source_code": "Vår källkod är helt öppen källkod och kan granskas på {github}"
     }
-  },
-  "require_access_code_model": {
-    "input": "Ange åtkomstkod",
-    "header": "åtkomstkod krävs",
-    "button": "Skicka in"
-  },
-  "no_saved_pastes": "inga sparade pastor",
-  "shared_with": "Delas med dig",
-  "about": {
-    "title": "hur vi skyddar din integritet.",
-    "content": "Paaster använder end-to-end-kryptering för att lagra och dela pastor, vilket innebär att inte ens servern kan se vad du sparar här.",
-    "source_code": "Vår källkod är helt öppen källkod och kan granskas på {github}"
-  },
-  "paste_actions.lang_updated": "Språket uppdaterat"
 }

@@ -1,99 +1,99 @@
 {
-  "saved_pastes": "Gespeicherte Pasten",
-  "create": {
-    "input": "Einfügen oder Drag & Geben Sie Ihren Code hier ein",
-    "errors": {
-      "private_window": "Der Einfügeverlauf konnte nicht gespeichert werden, höchstwahrscheinlich, weil Sie sich in einem privaten Fenster befinden."
-    }
-  },
-  "view": {
-    "404": "Einfügen existiert nicht mehr",
-    "no_key": "Nicht bereitgestellten geheimen Schlüssel einfügen",
-    "invalid_format": "Ungültiges Format des geheimen Schlüssels",
-    "cdn_down": "Paste kann nicht vom CDN heruntergeladen werden, versuchen Sie es später erneut"
-  },
-  "search": "Paste suchen...",
-  "paste_actions": {
-    "delete": {
-      "loading": "Einfügen löschen",
-      "error": "Paste auf dem Server nicht gefunden",
-      "success": "Einfügen vom Server gelöscht",
-      "button": "löschen"
+    "saved_pastes": "Gespeicherte Pasten",
+    "create": {
+        "input": "Einfügen oder Drag & Geben Sie Ihren Code hier ein",
+        "errors": {
+            "private_window": "Der Einfügeverlauf konnte nicht gespeichert werden, höchstwahrscheinlich, weil Sie sich in einem privaten Fenster befinden."
+        }
     },
-    "rename": {
-      "button": "umbenennen",
-      "success": "Namen aktualisiert",
-      "model": {
-        "header": "Paste umbenennen"
-      }
+    "view": {
+        "404": "Einfügen existiert nicht mehr",
+        "no_key": "Nicht bereitgestellten geheimen Schlüssel einfügen",
+        "invalid_format": "Ungültiges Format des geheimen Schlüssels",
+        "cdn_down": "Paste kann nicht vom CDN heruntergeladen werden, versuchen Sie es später erneut"
     },
-    "share": {
-      "success": "Link teilen kopiert",
-      "button": "Aktie"
+    "search": "Paste suchen...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Einfügen löschen",
+            "error": "Paste auf dem Server nicht gefunden",
+            "success": "Einfügen vom Server gelöscht",
+            "button": "löschen"
+        },
+        "rename": {
+            "button": "umbenennen",
+            "success": "Namen aktualisiert",
+            "model": {
+                "header": "Paste umbenennen"
+            }
+        },
+        "share": {
+            "success": "Link teilen kopiert",
+            "button": "Aktie"
+        },
+        "access_code": {
+            "button": "Zugangscode festlegen",
+            "model": {
+                "header": "Zugriffscode zum Einfügen festlegen",
+                "input": "Geben Sie den Zugangscode ein",
+                "tooltip": "Code generieren",
+                "button": "Zugangscode festlegen"
+            },
+            "access_code_len": "Der Zugangscode muss mindestens {max_length} Zeichen lang sein",
+            "loading": "Zugangscode einstellen",
+            "success": "Zugangscodesatz",
+            "error": "Zugriffscode kann nicht eingestellt werden",
+            "success_copied_to_clipboard": "Zugangscode in die Zwischenablage kopiert"
+        },
+        "qr_code": {
+            "button": "QR-Code generieren",
+            "model": {
+                "header": "scannen, um auf das Einfügen zuzugreifen"
+            }
+        },
+        "clipboard": {
+            "success": "Kopiert einfügen",
+            "button": "Kopieren"
+        },
+        "save": {
+            "success": "Einfügen gespeichert",
+            "button": "speichern"
+        },
+        "download": {
+            "button": "herunterladen"
+        },
+        "lang_updated": "Sprache aktualisiert",
+        "expire": {
+            "loading": "Aktualisierung verfällt nach",
+            "error": "Ablaufen nach kann nicht festgelegt werden",
+            "success": "Ablaufendes Einfügen in {period}",
+            "button": "Verfallen nach",
+            "periods": {
+                "never": "niemals",
+                "being_viewed": "Ansicht sein",
+                "minute": "Minute",
+                "minutes": "Protokoll",
+                "hour": "Stunde",
+                "hours": "Std.",
+                "day": "Tag",
+                "days": "Tage",
+                "week": "Woche",
+                "weeks": "Wochen",
+                "month": "Monat",
+                "months": "Monate"
+            }
+        }
     },
-    "access_code": {
-      "button": "Zugangscode festlegen",
-      "model": {
-        "header": "Zugriffscode zum Einfügen festlegen",
+    "require_access_code_model": {
         "input": "Geben Sie den Zugangscode ein",
-        "tooltip": "Code generieren",
-        "button": "Zugangscode festlegen"
-      },
-      "access_code_len": "Der Zugangscode muss mindestens {max_length} Zeichen lang sein",
-      "loading": "Zugangscode einstellen",
-      "success": "Zugangscodesatz",
-      "error": "Zugriffscode kann nicht eingestellt werden",
-      "success_copied_to_clipboard": "Zugangscode in die Zwischenablage kopiert"
+        "header": "Zugangscode erforderlich",
+        "button": "einreichen"
     },
-    "qr_code": {
-      "button": "QR-Code generieren",
-      "model": {
-        "header": "scannen, um auf das Einfügen zuzugreifen"
-      }
-    },
-    "clipboard": {
-      "success": "Kopiert einfügen",
-      "button": "Kopieren"
-    },
-    "save": {
-      "success": "Einfügen gespeichert",
-      "button": "speichern"
-    },
-    "download": {
-      "button": "herunterladen"
-    },
-    "expire": {
-      "loading": "Aktualisierung verfällt nach",
-      "error": "Ablaufen nach kann nicht festgelegt werden",
-      "success": "Ablaufendes Einfügen in {period}",
-      "button": "Verfallen nach",
-      "periods": {
-        "never": "niemals",
-        "being_viewed": "Ansicht sein",
-        "minute": "Minute",
-        "minutes": "Protokoll",
-        "hour": "Stunde",
-        "hours": "Std.",
-        "day": "Tag",
-        "days": "Tage",
-        "week": "Woche",
-        "weeks": "Wochen",
-        "month": "Monat",
-        "months": "Monate"
-      }
+    "no_saved_pastes": "keine gespeicherten Pasten",
+    "shared_with": "Mit dir geteilt",
+    "about": {
+        "title": "wie wir Ihre Privatsphäre schützen.",
+        "content": "Paaster verwendet End-to-End-Verschlüsselung zum Speichern und Teilen von Pasten, was bedeutet, dass selbst der Server nicht sehen kann, was Sie hier speichern.",
+        "source_code": "Unser Quellcode ist vollständig Open Source und kann auf {github} überprüft werden."
     }
-  },
-  "require_access_code_model": {
-    "input": "Geben Sie den Zugangscode ein",
-    "header": "Zugangscode erforderlich",
-    "button": "einreichen"
-  },
-  "no_saved_pastes": "keine gespeicherten Pasten",
-  "shared_with": "Mit dir geteilt",
-  "about": {
-    "title": "wie wir Ihre Privatsphäre schützen.",
-    "content": "Paaster verwendet End-to-End-Verschlüsselung zum Speichern und Teilen von Pasten, was bedeutet, dass selbst der Server nicht sehen kann, was Sie hier speichern.",
-    "source_code": "Unser Quellcode ist vollständig Open Source und kann auf {github} überprüft werden."
-  },
-  "paste_actions.lang_updated": "Sprache aktualisiert"
 }

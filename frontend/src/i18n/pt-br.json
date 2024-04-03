@@ -1,0 +1,99 @@
+{
+    "saved_pastes": "Anotações salvas",
+    "create": {
+        "input": "Cole ou arraste e solte seu código aqui",
+        "errors": {
+            "private_window": "Não foi possível salvar seu histórico de anotações, provavelmente por estar em navegação anônima."
+        }
+    },
+    "view": {
+        "404": "Esta anotação não existe mais",
+        "no_key": "Chave privada da anotação não fornecida",
+        "invalid_format": "Chave privada em formato inválido",
+        "cdn_down": "Não foi possivel baixar sua anotação da CDN, tente novamente mais tarde"
+    },
+    "search": "Procurando anotações",
+    "paste_actions": {
+        "delete": {
+            "loading": "Deletando anotação",
+            "error": "Anotação não encontrada no servidor",
+            "success": "Anotação deletada do servidor",
+            "button": "deletar"
+        },
+        "rename": {
+            "button": "renomear",
+            "success": "Nome atualizado",
+            "model": {
+                "header": "renomear anotação"
+            }
+        },
+        "share": {
+            "success": "Link de compartilhamento copiado",
+            "button": "compartilhar"
+        },
+        "access_code": {
+            "button": "configurar código de acesso",
+            "model": {
+                "header": "configurar código de acesso da anotação",
+                "input": "Digite o código de acesso",
+                "tooltip": "Gerar código",
+                "button": "Copiar código"
+            },
+            "access_code_len": "Código de acesso precisa conter {max_lenght} caracteres ou mais",
+            "loading": "Configurando código de acesso",
+            "success": "Código de acesso configurado",
+            "error": "Não foi possível configurar código de acesso",
+            "success_copied_to_clipboard": "Código de acesso copiado"
+        },
+        "qr_code": {
+            "button": "gerar QR code",
+            "model": {
+                "header": "scaneie para acessar a anotação"
+            }
+        },
+        "clipboard": {
+            "success": "Anotação copiada",
+            "button": "copiar"
+        },
+        "save": {
+            "success": "Anotação salva",
+            "button": "salvar"
+        },
+        "download": {
+            "button": "download"
+        },
+        "lang_updated": "Linguagem atualizada",
+        "expire": {
+            "loading": "Atualizando tempo de expiração",
+            "error": "Não foi possível configurar tempo de expiração",
+            "success": "Anotação configurada para expirar em {period}",
+            "button": "Expira",
+            "periods": {
+                "never": "nunca",
+                "being_viewed": "sendo visualizado",
+                "minute": "minuto",
+                "minutes": "minutos",
+                "hour": "hora",
+                "hours": "horas",
+                "day": "dia",
+                "days": "dias",
+                "week": "semana",
+                "weeks": "semanas",
+                "month": "mês",
+                "months": "meses"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "Digite o código de acesso",
+        "header": "código de aceso necessário",
+        "button": "enviar"
+    },
+    "no_saved_pastes": "sem anotações salvas",
+    "shared_with": "Compartilhadas com você",
+    "about": {
+        "title": "como nós protegemos sua privacidade.",
+        "content": "Paaster utiliza criptografia de ponta-a-ponta para compartilhar anotações, isso significa que nem mesmo o servidor consegue visualizar o que você salva aqui.",
+        "source_code": "Nosso código fonte é totalmente open source e pode ser revisado em {github}"
+    }
+}

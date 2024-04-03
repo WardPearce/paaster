@@ -14,7 +14,7 @@
 
 &nbsp;
 
-[![translation badge](https://inlang.com/badge?url=github.com/WardPearce/paaster)](https://inlang.com/editor/github.com/WardPearce/paaster?ref=badge)
+[Help translate paaster!](https://fink.inlang.com/github.com/WardPearce/paaster)
 
 # Preview
 
@@ -34,7 +34,7 @@
 - Rate limiting.
 - Share via QR code.
 - PWA support.
-- i18n support ([Contribute](https://inlang.com/editor/github.com/WardPearce/paaster)).
+- i18n support ([Contribute](https://fink.inlang.com/github.com/WardPearce/paaster)).
 - Automatic or manual language detection.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
 - Use of `package-lock.json`, `poetry.lock` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
@@ -85,6 +85,9 @@ Paaster uses XChaCha20-Poly1305 encryption, which is implemented using the [libs
   - Paaster isn't a text editor, when code is inputted it will always be automatically uploaded.
 - Optional encryption.
   - Paaster will never have opt-in / opt-out encryption, encryption will always be present.
+
+# Have any questions?
+[Join our Matrix space](https://matrix.to/#/#ward:matrix.org)
 
 # Setup
 ## Production with Docker
@@ -175,4 +178,4 @@ We use MongoDB for handling metadata information about each encrypted paste. It 
 paste will expire, storage of access codes, initialization vector (IV) storage, and owner's secrets.
 
 # Adding translations
-[Use inlang to contribute to translations](https://inlang.com/editor/github.com/WardPearce/paaster)
+[Use inlang to contribute to translations](https://fink.inlang.com/github.com/WardPearce/paaster)

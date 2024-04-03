@@ -1,99 +1,99 @@
 {
-  "saved_pastes": "Whakapiri kua tiakina",
-  "create": {
-    "input": "whakapiri, toia ranei & whakataka to waehere ki konei",
-    "errors": {
-      "private_window": "Kaore e taea te penapena hitori whakapiri, tera pea na te mea kei roto i te matapihi motuhake."
-    }
-  },
-  "view": {
-    "404": "Kua kore te whakapiri",
-    "no_key": "Whakapirihia te taviri ngaro kaore i hoatu",
-    "invalid_format": "Ko te whakatakotoranga matua ngaro muhu",
-    "cdn_down": "Kaore e taea te tango whakapiri mai i te CDN, ngana ano a muri ake"
-  },
-  "search": "Rapu whakapiri...",
-  "paste_actions": {
-    "delete": {
-      "loading": "Te whakakore i te whakapiri",
-      "error": "Kaore i kitea te whakapiri i runga i te tūmau",
-      "success": "Whakapiri kua mukua mai i te tūmau",
-      "button": "whakakore"
+    "saved_pastes": "Whakapiri kua tiakina",
+    "create": {
+        "input": "whakapiri, toia ranei & whakataka to waehere ki konei",
+        "errors": {
+            "private_window": "Kaore e taea te penapena hitori whakapiri, tera pea na te mea kei roto i te matapihi motuhake."
+        }
     },
-    "rename": {
-      "button": "whakaingoa anō",
-      "success": "Kua whakahoutia te ingoa",
-      "model": {
-        "header": "whakaingoatia te whakapiri"
-      }
+    "view": {
+        "404": "Kua kore te whakapiri",
+        "no_key": "Whakapirihia te taviri ngaro kaore i hoatu",
+        "invalid_format": "Ko te whakatakotoranga matua ngaro muhu",
+        "cdn_down": "Kaore e taea te tango whakapiri mai i te CDN, ngana ano a muri ake"
     },
-    "share": {
-      "success": "Tiri hono i tāruatia",
-      "button": "tohatoha"
+    "search": "Rapu whakapiri...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Te whakakore i te whakapiri",
+            "error": "Kaore i kitea te whakapiri i runga i te tūmau",
+            "success": "Whakapiri kua mukua mai i te tūmau",
+            "button": "whakakore"
+        },
+        "rename": {
+            "button": "whakaingoa anō",
+            "success": "Kua whakahoutia te ingoa",
+            "model": {
+                "header": "whakaingoatia te whakapiri"
+            }
+        },
+        "share": {
+            "success": "Tiri hono i tāruatia",
+            "button": "tohatoha"
+        },
+        "access_code": {
+            "button": "tautuhi waehere uru",
+            "model": {
+                "header": "whakaturia te whakapiri waehere uru",
+                "input": "Whakauruhia te waehere uru",
+                "tooltip": "Hanga waehere",
+                "button": "Tautuhi waehere uru"
+            },
+            "access_code_len": "Ko te waehere uru me {max_length} nga tohu, neke atu ranei",
+            "loading": "Te tautuhi i te waehere uru",
+            "success": "He huinga waehere uru",
+            "error": "Kāore e taea te tautuhi waehere uru",
+            "success_copied_to_clipboard": "Ko te waehere uru i kape ki te papatopenga"
+        },
+        "qr_code": {
+            "button": "hanga waehere QR",
+            "model": {
+                "header": "karapa ki te uru whakapiri"
+            }
+        },
+        "clipboard": {
+            "success": "Whakapiri kua kapea",
+            "button": "kape"
+        },
+        "save": {
+            "success": "Whakapiri kua tiakina",
+            "button": "whakaora"
+        },
+        "download": {
+            "button": "tango"
+        },
+        "lang_updated": "Kua whakahoutia te reo",
+        "expire": {
+            "loading": "Ka pau te whakahōu i muri",
+            "error": "Kaore e taea te tautuhi ka pau i muri",
+            "success": "Whakapiri kua whakaritea kia pau i roto i te {waa}",
+            "button": "Ka pau i muri",
+            "periods": {
+                "never": "kore rawa",
+                "being_viewed": "te tirohanga",
+                "minute": "meneti",
+                "minutes": "meneti",
+                "hour": "haora",
+                "hours": "haora",
+                "day": "rā",
+                "days": "nga ra",
+                "week": "wiki",
+                "weeks": "wiki",
+                "month": "marama",
+                "months": "marama"
+            }
+        }
     },
-    "access_code": {
-      "button": "tautuhi waehere uru",
-      "model": {
-        "header": "whakaturia te whakapiri waehere uru",
+    "require_access_code_model": {
         "input": "Whakauruhia te waehere uru",
-        "tooltip": "Hanga waehere",
-        "button": "Tautuhi waehere uru"
-      },
-      "access_code_len": "Ko te waehere uru me {max_length} nga tohu, neke atu ranei",
-      "loading": "Te tautuhi i te waehere uru",
-      "success": "He huinga waehere uru",
-      "error": "Kāore e taea te tautuhi waehere uru",
-      "success_copied_to_clipboard": "Ko te waehere uru i kape ki te papatopenga"
+        "header": "e hiahiatia ana te waehere uru",
+        "button": "tuku"
     },
-    "qr_code": {
-      "button": "hanga waehere QR",
-      "model": {
-        "header": "karapa ki te uru whakapiri"
-      }
-    },
-    "clipboard": {
-      "success": "Whakapiri kua kapea",
-      "button": "kape"
-    },
-    "save": {
-      "success": "Whakapiri kua tiakina",
-      "button": "whakaora"
-    },
-    "download": {
-      "button": "tango"
-    },
-    "expire": {
-      "loading": "Ka pau te whakahōu i muri",
-      "error": "Kaore e taea te tautuhi ka pau i muri",
-      "success": "Whakapiri kua whakaritea kia pau i roto i te {waa}",
-      "button": "Ka pau i muri",
-      "periods": {
-        "never": "kore rawa",
-        "being_viewed": "te tirohanga",
-        "minute": "meneti",
-        "minutes": "meneti",
-        "hour": "haora",
-        "hours": "haora",
-        "day": "rā",
-        "days": "nga ra",
-        "week": "wiki",
-        "weeks": "wiki",
-        "month": "marama",
-        "months": "marama"
-      }
+    "no_saved_pastes": "kahore he whakapiri kua tiakina",
+    "shared_with": "Kua tohaina ki a koe",
+    "about": {
+        "title": "me pehea e tiakina ai e matou to noho muna.",
+        "content": "Ka whakamahia e Paaster te whakamunatanga mutunga-ki-te-mutunga mo te penapena me te tiri i nga whakapiri, ko te tikanga karekau e taea e te kaimau te tiro ki nga mea ka tiakina e koe ki konei.",
+        "source_code": "Ko ta matou waehere puna he puna tuwhera katoa ka taea te arotake i runga i {github}"
     }
-  },
-  "require_access_code_model": {
-    "input": "Whakauruhia te waehere uru",
-    "header": "e hiahiatia ana te waehere uru",
-    "button": "tuku"
-  },
-  "no_saved_pastes": "kahore he whakapiri kua tiakina",
-  "shared_with": "Kua tohaina ki a koe",
-  "about": {
-    "title": "me pehea e tiakina ai e matou to noho muna.",
-    "content": "Ka whakamahia e Paaster te whakamunatanga mutunga-ki-te-mutunga mo te penapena me te tiri i nga whakapiri, ko te tikanga karekau e taea e te kaimau te tiro ki nga mea ka tiakina e koe ki konei.",
-    "source_code": "Ko ta matou waehere puna he puna tuwhera katoa ka taea te arotake i runga i {github}"
-  },
-  "paste_actions.lang_updated": "Kua whakahoutia te reo"
 }

@@ -13,26 +13,26 @@ server = "run:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-motor = "^3.3.2"
+motor = "^3.4.0"
 bcrypt = "^4.1.2"
-aiobotocore = "^2.11.2"
+aiobotocore = "^2.12.1"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
-litestar = {extras = ["full"], version = "^2.6.1"}
-types-aiobotocore-s3 = "^2.11.2"
-pydantic = "^2.6.2"
+litestar = {extras = ["full"], version = "^2.7.1"}
+types-aiobotocore-s3 = "^2.12.1"
+pydantic = "^2.6.4"
 pydantic-settings = "^2.2.1"
-uvicorn = "^0.27.1"
+uvicorn = "^0.29.0"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.0.2"
+pytest = "^8.1.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.2.0"
-mypy = "^1.8.0"
-types-aiobotocore = "^2.11.2"
+black = "^24.3.0"
+mypy = "^1.9.0"
+types-aiobotocore = "^2.12.1"
 motor-types = "^1.0.0b4"
-pytest-asyncio = "^0.23.5"
+pytest-asyncio = "^0.23.6"
 
 [build-system]
 requires = ["poetry-core"]

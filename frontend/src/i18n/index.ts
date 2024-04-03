@@ -20,6 +20,7 @@ register("sv", () => import("./sv.json"));
 register("vi", () => import("./vi.json"));
 register("zh", () => import("./zh.json"));
 register("uk", () => import("./uk.json"));
+register("pt-br", () => import("./pt-br.json"));
 
 
 init({
