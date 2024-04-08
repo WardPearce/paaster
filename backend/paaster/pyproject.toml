@@ -15,7 +15,7 @@ server = "run:main"
 python = "^3.10"
 motor = "^3.4.0"
 bcrypt = "^4.1.2"
-aiobotocore = "^2.12.1"
+aiobotocore = "^2.12.2"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
 litestar = {extras = ["full"], version = "^2.8.0"}
