@@ -1,5 +1,8 @@
 {
     "saved_pastes": "Saved pastes",
+    "account": {
+        "loginOrRegister": "Login/Register"
+    },
     "create": {
         "input": "paste or drag & drop your code here",
         "errors": {

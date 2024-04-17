@@ -14,7 +14,6 @@
     --border-color: var(--lighterBg);
     --border: solid 2px var(--lighterBg);
     --placeholder-color: var(--textWhite);
-    --tooltip-background-color: var(--lighterBg) !important;
 }
 
 body {
@@ -23,9 +22,15 @@ body {
     font-family: FiraCode, monospace;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: MajorMonoDisplay;
     color: #ffffff;
+    text-transform: lowercase;
 }
 
 @font-face {
@@ -125,7 +130,8 @@ a:hover {
     background: var(--lighterBg) !important;
 }
 
-button, .button {
+button,
+.button {
     text-transform: capitalize;
     background-color: var(--lightBg);
     padding: .6em 1em;
@@ -144,14 +150,16 @@ button i,
     font-size: 1.3em;
 }
 
-button:hover, .button:hover {
+button:hover,
+.button:hover {
     text-decoration: none;
     background-color: var(--darkBg);
     cursor: pointer;
     color: var(--lighterBg);
 }
 
-button.danger, .button.danger {
+button.danger,
+.button.danger {
     background-color: var(--lighterBg);
     color: var(--darkerBg);
 }
@@ -208,15 +216,15 @@ footer {
     z-index: 1010;
 }
 
-.hljs {
-    z-index: 1009;
-}
-
-.modal .contents > .header {
+.modal .contents>.header {
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin-bottom: 1.5em;
+}
+
+.hljs {
+    z-index: 1009;
 }
 
 .backdrop {
@@ -235,39 +243,7 @@ footer {
     column-gap: 1em;
 }
 
-.svelte-select {
-    background-color: var(--lightBg) !important;
-    color: var(--textWhite) !important;
-    object-fit: contain;
-    width: 200px !important;
-    border-radius: 3em !important;
-    border: none !important;
-}
-
-.svelte-select-list {
-    background-color: var(--lightBg) !important;
-}
-
-.svelte-select-list .active {
-    background-color: var(--lighterBg) !important;
-}
-
-.svelte-select-list .hover {
-    background-color: var(--lighterBg) !important;
-}
-
-.svelte-select.focused {
-    border: none !important;
-}
-
-[data-svelte-search] input {
-    width: 100%;
-    margin: 1em 0;
-    box-sizing: border-box;
-    height: 3em;
-}
-
-pre > code {
+pre>code {
     font-family: FiraCode, monospace;
     font-size: .8em;
 }
