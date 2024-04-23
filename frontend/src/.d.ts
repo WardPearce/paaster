@@ -2,6 +2,7 @@
 
 declare module '@svelte-plugins/tooltips';
 declare module "svelte-qrcode";
+declare module "virtual:pwa-info";
 
 declare type FileDropEvent = import("filedrop-svelte/event").FileDropEvent;
 declare type FileDropSelectEvent = import("filedrop-svelte/event").FileDropSelectEvent;

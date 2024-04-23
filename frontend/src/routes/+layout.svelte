@@ -3,10 +3,17 @@
 	import Spinner from '$lib/Spinner.svelte';
 	import '$lib/i18n';
 	import { _ } from 'svelte-i18n';
+	import { pwaInfo } from 'virtual:pwa-info';
 
 	import { Toaster } from 'svelte-french-toast';
 	import { Modals, closeModal } from 'svelte-modals';
+
+	$: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
 </script>
+
+<svelte:head>
+	{@html webManifestLink}
+</svelte:head>
 
 <nav>
 	<a href="/"
