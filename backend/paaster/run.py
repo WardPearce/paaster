@@ -1,6 +1,7 @@
 import uvicorn
+
 from app.main import app
 
 
-def main():
+def main() -> None:
     uvicorn.run(app)

@@ -3,6 +3,9 @@
 	import Spinner from '$lib/Spinner.svelte';
 	import '$lib/i18n';
 	import { _ } from 'svelte-i18n';
+
+	import { Toaster } from 'svelte-french-toast';
+	import { Modals, closeModal } from 'svelte-modals';
 </script>
 
 <nav>
@@ -20,12 +23,6 @@
 		<li>
 			<a href="/pastes" class="button"><i class="lab la-buffer" />{$_('saved_pastes')}</a>
 		</li>
-		<li>
-			<a href="/login" class="button">
-				<i class="las la-sign-in-alt" />
-				{$_('account.loginOrRegister')}
-			</a>
-		</li>
 	</ul>
 </nav>
 
@@ -34,3 +31,9 @@
 {:else}
 	<slot />
 {/if}
+
+<Toaster toastOptions={{ className: 'toast' }} />
+
+<Modals>
+	<div slot="backdrop" class="backdrop" on:click={closeModal} on:keydown={() => {}} />
+</Modals>

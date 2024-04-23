@@ -1,14 +1,19 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Spinner from '$lib/Spinner.svelte';
 	import type { PasteCreatedModel } from '$lib/client/models/PasteCreatedModel';
 	import { savePaste } from '$lib/savedPaste';
+	import Spinner from '$lib/Spinner.svelte';
 	import { pasteCache } from '$lib/stores';
 	import { error } from '@sveltejs/kit';
+	import { filedrop, type FileDropSelectEvent } from 'filedrop-svelte';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { _ } from 'svelte-i18n';
 
 	let loading = false;
+
+	async function onFileDrop(event: CustomEvent<FileDropSelectEvent>) {
+		await uploadPaste(await event.detail.files.accepted[0].text());
+	}
 
 	async function uploadPaste(rawCode: string) {
 		if (loading) return;
@@ -82,6 +87,11 @@
 {#if loading}
 	<Spinner />
 {:else}
+	<div
+		on:filedrop={onFileDrop}
+		use:filedrop={{ fileLimit: 1, clickToUpload: false, windowDrop: true }}
+	/>
+
 	<main>
 		<textarea
 			on:input={onInput}

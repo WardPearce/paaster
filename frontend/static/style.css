@@ -14,6 +14,7 @@
     --border-color: var(--lighterBg);
     --border: solid 2px var(--lighterBg);
     --placeholder-color: var(--textWhite);
+    --tooltip-background-color: var(--lighterBg) !important;
 }
 
 body {
@@ -30,7 +31,6 @@ h5,
 h6 {
     font-family: MajorMonoDisplay;
     color: #ffffff;
-    text-transform: lowercase;
 }
 
 @font-face {
@@ -216,15 +216,15 @@ footer {
     z-index: 1010;
 }
 
+.hljs {
+    z-index: 1009;
+}
+
 .modal .contents>.header {
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin-bottom: 1.5em;
-}
-
-.hljs {
-    z-index: 1009;
 }
 
 .backdrop {
@@ -241,6 +241,38 @@ footer {
     display: flex;
     justify-content: center;
     column-gap: 1em;
+}
+
+.svelte-select {
+    background-color: var(--lightBg) !important;
+    color: var(--textWhite) !important;
+    object-fit: contain;
+    width: 200px !important;
+    border-radius: 3em !important;
+    border: none !important;
+}
+
+.svelte-select-list {
+    background-color: var(--lightBg) !important;
+}
+
+.svelte-select-list .active {
+    background-color: var(--lighterBg) !important;
+}
+
+.svelte-select-list .hover {
+    background-color: var(--lighterBg) !important;
+}
+
+.svelte-select.focused {
+    border: none !important;
+}
+
+[data-svelte-search] input {
+    width: 100%;
+    margin: 1em 0;
+    box-sizing: border-box;
+    height: 3em;
 }
 
 pre>code {
