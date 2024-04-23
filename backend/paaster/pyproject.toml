@@ -15,12 +15,12 @@ server = "run:main"
 python = "^3.10"
 motor = "^3.4.0"
 bcrypt = "^4.1.2"
-aiobotocore = "^2.12.2"
+aiobotocore = "^2.12.3"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
-litestar = {extras = ["full"], version = "^2.8.0"}
-types-aiobotocore-s3 = "^2.12.2"
-pydantic = "^2.6.4"
+litestar = {extras = ["full"], version = "^2.8.2"}
+types-aiobotocore-s3 = "^2.12.3"
+pydantic = "^2.7.0"
 pydantic-settings = "^2.2.1"
 uvicorn = "^0.29.0"
 
@@ -28,9 +28,9 @@ uvicorn = "^0.29.0"
 pytest = "^8.1.1"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.3.0"
+black = "^24.4.0"
 mypy = "^1.9.0"
-types-aiobotocore = "^2.12.2"
+types-aiobotocore = "^2.12.3"
 motor-types = "^1.0.0b4"
 pytest-asyncio = "^0.23.6"
 
