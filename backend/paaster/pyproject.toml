@@ -20,7 +20,7 @@ nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
 litestar = {extras = ["full"], version = "^2.8.2"}
 types-aiobotocore-s3 = "^2.12.3"
-pydantic = "^2.7.0"
+pydantic = "^2.7.1"
 pydantic-settings = "^2.2.1"
 uvicorn = "^0.29.0"
 
