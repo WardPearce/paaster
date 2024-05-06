@@ -1,9 +1,8 @@
-from typing import cast
-
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
 from litestar.datastructures import State
-from litestar.openapi import OpenAPIConfig, OpenAPIController
+from litestar.openapi import OpenAPIConfig
+from litestar.openapi.plugins import ScalarRenderPlugin
 from litestar.openapi.spec import Contact, License, Server
 from motor import motor_asyncio
 from pydantic import BaseModel
@@ -12,17 +11,10 @@ from app.controllers import router
 from app.env import SETTINGS
 
 
-class OpenAPIControllerRouteFix(OpenAPIController):
-    def render_stoplight_elements(self, request: Request) -> bytes:
-        # Gross hack to overwrite the path for the openapi schema file.
-        # due to reverse proxying.
-        path_copy = str(self.path)
-        self.path = SETTINGS.proxy_urls.backend + self.path
-
-        spotlight_elements = cast(bytes, super().render_stoplight_elements(request))
-
-        self.path = path_copy
-        return spotlight_elements
+class ScalarRenderPluginRouteFix(ScalarRenderPlugin):
+    @staticmethod
+    def get_openapi_json_route(request: Request) -> str:
+        return f"{SETTINGS.proxy_urls.backend}/schema/openapi.json"
 
 
 app = Litestar(
@@ -36,9 +28,7 @@ app = Litestar(
     ),
     openapi_config=OpenAPIConfig(
         **SETTINGS.open_api.model_dump(),
-        root_schema_site="elements",
-        openapi_controller=OpenAPIControllerRouteFix,
-        enabled_endpoints={"openapi.json", "openapi.yaml", "elements"},
+        render_plugins=[ScalarRenderPluginRouteFix()],
         description="OpenAPI specification for paaster.io, you are expected to read our encryption implementation to implement it yourself.",
         servers=[
             Server(url=SETTINGS.proxy_urls.backend, description="Production server.")
