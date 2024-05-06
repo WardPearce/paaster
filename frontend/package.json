@@ -34,7 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@svelte-plugins/tooltips": "^3.0.0",
+		"@svelte-plugins/tooltips": "^3.0.1",
 		"@sveltejs/adapter-static": "^3.0.1",
 		"@types/mousetrap": "^1.6.15",
 		"dayjs": "^1.11.10",
