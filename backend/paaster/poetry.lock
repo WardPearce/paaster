@@ -1277,49 +1277,49 @@ six = ">=1.13.0"
 
 [[package]]
 name = "litestar"
-version = "2.8.2"
+version = "2.8.3"
 description = "Litestar - A production-ready, highly performant, extensible ASGI API Framework"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "litestar-2.8.2-py3-none-any.whl", hash = "sha256:c891baf8a17d66cfed5c40bef7b5bf4c02c2831babf5fca0af404f441610557a"},
-    {file = "litestar-2.8.2.tar.gz", hash = "sha256:18353cb7246ba2e7f8d4aac4fe2d8772b503c931cf5ee16efc759cbbc3a2344b"},
+    {file = "litestar-2.8.3-py3-none-any.whl", hash = "sha256:bef5e8592b1afba24306f9a5834d84cef89826b12f58a97d3099cf49e2f3767d"},
+    {file = "litestar-2.8.3.tar.gz", hash = "sha256:3764eef3885b331bfb15c478a2b9e2bc1980741ff58bd5512d599436f669549c"},
 ]
 
 [package.dependencies]
-advanced-alchemy = {version = ">=0.2.2,<0.9.0", optional = true, markers = "extra == \"sqlalchemy\""}
-annotated-types = {version = "*", optional = true, markers = "extra == \"annotated-types\""}
+advanced-alchemy = {version = ">=0.2.2,<0.9.0", optional = true, markers = "extra == \"full\""}
+annotated-types = {version = "*", optional = true, markers = "extra == \"full\""}
 anyio = ">=3"
-attrs = {version = "*", optional = true, markers = "extra == \"attrs\""}
-brotli = {version = "*", optional = true, markers = "extra == \"brotli\""}
+attrs = {version = "*", optional = true, markers = "extra == \"full\""}
+brotli = {version = "*", optional = true, markers = "extra == \"full\""}
 click = "*"
-cryptography = {version = "*", optional = true, markers = "extra == \"cryptography\" or extra == \"jwt\""}
-email-validator = {version = "*", optional = true, markers = "extra == \"pydantic\""}
+cryptography = {version = "*", optional = true, markers = "extra == \"full\""}
+email-validator = {version = "*", optional = true, markers = "extra == \"full\""}
 exceptiongroup = {version = "*", markers = "python_version < \"3.11\""}
-fast-query-parsers = {version = ">=1.0.2", optional = true, markers = "extra == \"standard\""}
+fast-query-parsers = {version = ">=1.0.2", optional = true, markers = "extra == \"full\""}
 httpx = ">=0.22"
-jinja2 = {version = ">=3.1.2", optional = true, markers = "extra == \"jinja\" and extra == \"standard\""}
-jsbeautifier = {version = "*", optional = true, markers = "extra == \"cli\" or extra == \"standard\""}
-mako = {version = ">=1.2.4", optional = true, markers = "extra == \"mako\""}
-minijinja = {version = ">=1.0.0", optional = true, markers = "extra == \"minijinja\""}
+jinja2 = {version = ">=3.1.2", optional = true, markers = "extra == \"full\""}
+jsbeautifier = {version = "*", optional = true, markers = "extra == \"full\""}
+mako = {version = ">=1.2.4", optional = true, markers = "extra == \"full\""}
+minijinja = {version = ">=1.0.0", optional = true, markers = "extra == \"full\""}
 msgspec = ">=0.18.2"
 multidict = ">=6.0.2"
-opentelemetry-instrumentation-asgi = {version = "*", optional = true, markers = "extra == \"opentelemetry\""}
-piccolo = {version = "*", optional = true, markers = "extra == \"piccolo\""}
-picologging = {version = "*", optional = true, markers = "extra == \"picologging\""}
+opentelemetry-instrumentation-asgi = {version = "*", optional = true, markers = "extra == \"full\""}
+piccolo = {version = "*", optional = true, markers = "extra == \"full\""}
+picologging = {version = "*", optional = true, markers = "extra == \"full\""}
 polyfactory = ">=2.6.3"
-prometheus-client = {version = "*", optional = true, markers = "extra == \"prometheus\""}
-pydantic = {version = "*", optional = true, markers = "extra == \"pydantic\""}
-pydantic-extra-types = {version = "*", optional = true, markers = "extra == \"pydantic\""}
-python-jose = {version = "*", optional = true, markers = "extra == \"jwt\""}
+prometheus-client = {version = "*", optional = true, markers = "extra == \"full\""}
+pydantic = {version = "*", optional = true, markers = "extra == \"full\""}
+pydantic-extra-types = {version = "*", optional = true, markers = "extra == \"full\""}
+python-jose = {version = "*", optional = true, markers = "extra == \"full\""}
 pyyaml = "*"
-redis = {version = ">=4.4.4", extras = ["hiredis"], optional = true, markers = "extra == \"redis\""}
+redis = {version = ">=4.4.4", extras = ["hiredis"], optional = true, markers = "extra == \"full\""}
 rich = ">=13.0.0"
 rich-click = "*"
-structlog = {version = "*", optional = true, markers = "extra == \"structlog\""}
+structlog = {version = "*", optional = true, markers = "extra == \"full\""}
 typing-extensions = "*"
-uvicorn = {version = "*", extras = ["standard"], optional = true, markers = "extra == \"cli\" or extra == \"standard\""}
-uvloop = {version = ">=0.18.0", optional = true, markers = "sys_platform != \"win32\" and (extra == \"cli\" or extra == \"standard\")"}
+uvicorn = {version = "*", extras = ["standard"], optional = true, markers = "extra == \"full\""}
+uvloop = {version = ">=0.18.0", optional = true, markers = "sys_platform != \"win32\" and extra == \"full\""}
 
 [package.extras]
 annotated-types = ["annotated-types"]
@@ -1327,7 +1327,7 @@ attrs = ["attrs"]
 brotli = ["brotli"]
 cli = ["jsbeautifier", "uvicorn[standard]", "uvloop (>=0.18.0)"]
 cryptography = ["cryptography"]
-full = ["litestar[annotated-types,attrs,brotli,cli,cryptography,jinja,jwt,mako,minijinja,opentelemetry,piccolo,picologging,prometheus,pydantic,redis,sqlalchemy,standard,structlog]"]
+full = ["advanced-alchemy (>=0.2.2,<0.9.0)", "annotated-types", "attrs", "brotli", "cryptography", "email-validator", "fast-query-parsers (>=1.0.2)", "jinja2", "jinja2 (>=3.1.2)", "jsbeautifier", "mako (>=1.2.4)", "minijinja (>=1.0.0)", "opentelemetry-instrumentation-asgi", "piccolo", "picologging", "prometheus-client", "pydantic", "pydantic-extra-types", "python-jose", "redis[hiredis] (>=4.4.4)", "structlog", "uvicorn[standard]", "uvloop (>=0.18.0)"]
 jinja = ["jinja2 (>=3.1.2)"]
 jwt = ["cryptography", "python-jose"]
 mako = ["mako (>=1.2.4)"]
@@ -3443,4 +3443,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "af84e0cae283ee30763e2779ccf706c4e49e2af877adcec30fa522beb1eb77fe"
+content-hash = "0a62874775a0944947553e7b8d78f1deaa84559eb2b98b80c4e42504b96138e2"
