@@ -14,7 +14,7 @@ server = "run:main"
 [tool.poetry.dependencies]
 python = "^3.10"
 motor = "^3.4.0"
-bcrypt = "^4.1.2"
+bcrypt = "^4.1.3"
 aiobotocore = "^2.12.3"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
