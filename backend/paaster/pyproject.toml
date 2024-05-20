@@ -32,7 +32,7 @@ black = "^24.4.2"
 mypy = "^1.10.0"
 types-aiobotocore = "^2.13.0"
 motor-types = "^1.0.0b4"
-pytest-asyncio = "^0.23.6"
+pytest-asyncio = "^0.23.7"
 
 [build-system]
 requires = ["poetry-core"]
