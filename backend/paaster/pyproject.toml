@@ -25,7 +25,7 @@ uvicorn = "^0.29.0"
 litestar = "^2.8.3"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.2.0"
+pytest = "^8.2.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.4.2"
