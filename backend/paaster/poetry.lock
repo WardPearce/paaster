@@ -1964,13 +1964,13 @@ xray = ["types-aiobotocore-xray (>=2.13.0,<2.14.0)"]
 
 [[package]]
 name = "types-aiobotocore-s3"
-version = "2.13.0"
-description = "Type annotations for aiobotocore.S3 2.13.0 service generated with mypy-boto3-builder 7.24.0"
+version = "2.13.1"
+description = "Type annotations for aiobotocore.S3 2.13.1 service generated with mypy-boto3-builder 7.24.0"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types_aiobotocore_s3-2.13.0-py3-none-any.whl", hash = "sha256:97e6e61b68684bf994faca3c29536255d68c41bdc979c2d6b3fb4cbf26e6aa21"},
-    {file = "types_aiobotocore_s3-2.13.0.tar.gz", hash = "sha256:10d52f670e270857df907d9509f4ca836833bc04cb5ea87e49b5dd3dda3025b2"},
+    {file = "types_aiobotocore_s3-2.13.1-py3-none-any.whl", hash = "sha256:6279d426d37c0c173ceb17eb9df52000335dd7d59f7a8b0de0294cb6823cac51"},
+    {file = "types_aiobotocore_s3-2.13.1.tar.gz", hash = "sha256:6149d412efa5476dfa246f7c26c70856374711a4a2211903a5b8826e1ffa5d46"},
 ]
 
 [package.dependencies]
@@ -2207,4 +2207,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "12e30181d75be2ead757a6a116a854d0b897d5f8c442457fc3d4204bbb1a86e1"
+content-hash = "b40882a58352b8ff6fb9225f44b020bc0ddbb94b2e4346e58331ac363e36a2f0"
