@@ -701,13 +701,13 @@ files = [
 
 [[package]]
 name = "litestar"
-version = "2.9.1"
+version = "2.10.0"
 description = "Litestar - A production-ready, highly performant, extensible ASGI API Framework"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "litestar-2.9.1-py3-none-any.whl", hash = "sha256:fe3e4ec91a9c24af652775fed5fa4d789902f165cabbd7d2e62821fec1f69462"},
-    {file = "litestar-2.9.1.tar.gz", hash = "sha256:7c13bb4dd7b1c77f6c462262cfe401ca6429eab3e4d98f38586b68268bd5ac97"},
+    {file = "litestar-2.10.0-py3-none-any.whl", hash = "sha256:a4fbdb108bfb41e07b56aee6dbdd70f94328f4d4265ebfde1662aef320224375"},
+    {file = "litestar-2.10.0.tar.gz", hash = "sha256:c25d5134c6848dfa752494948a644af1fb085143a0bce6d0840fe957b0738432"},
 ]
 
 [package.dependencies]
@@ -2220,4 +2220,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b1cef76551859158bc7d26b892792523ac76af5036521a51eafbcdc6a593a55b"
+content-hash = "dcf8e909684ae6f9c0cd8057a1ef0eac42956d902cae622026626f9995197c83"
