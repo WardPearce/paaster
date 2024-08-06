@@ -21,7 +21,7 @@ argon2-cffi = "^23.1.0"
 types-aiobotocore-s3 = "^2.13.1"
 pydantic = "^2.8.2"
 pydantic-settings = "^2.3.4"
-uvicorn = "^0.30.3"
+uvicorn = "^0.30.5"
 litestar = "^2.10.0"
 
 [tool.poetry.group.test.dependencies]
