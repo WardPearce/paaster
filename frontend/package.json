@@ -41,7 +41,7 @@
 		"filedrop-svelte": "^0.1.2",
 		"fuse.js": "^7.0.0",
 		"idb-keyval": "^6.2.1",
-		"libsodium-wrappers-sumo": "^0.7.14",
+		"libsodium-wrappers-sumo": "^0.7.15",
 		"mousetrap": "^1.6.5",
 		"niceware": "^4.0.0",
 		"openapi-typescript-codegen": "^0.29.0",
