@@ -1,15 +1,18 @@
 {
-    "saved_pastes": "Gespeicherte Pasten",
+    "saved_pastes": "Gespeicherte Pastes",
+    "account": {
+        "loginOrRegister": "Einloggen/Registrieren"
+    },
     "create": {
-        "input": "Einfügen oder Drag & Geben Sie Ihren Code hier ein",
+        "input": "Code einfügen oder hier hin ziehen",
         "errors": {
-            "private_window": "Der Einfügeverlauf konnte nicht gespeichert werden, höchstwahrscheinlich, weil Sie sich in einem privaten Fenster befinden."
+            "private_window": "Paste verlauf kann nicht gespeichert werden. Wahrscheinlich weil es ein privat Fenster ist."
         }
     },
     "view": {
-        "404": "Einfügen existiert nicht mehr",
+        "404": "Paste existiert nicht mehr.",
         "no_key": "Nicht bereitgestellten geheimen Schlüssel einfügen",
-        "invalid_format": "Ungültiges Format des geheimen Schlüssels",
+        "invalid_format": "Ungültiges Format des geheim Schlüssels",
         "cdn_down": "Paste kann nicht vom CDN heruntergeladen werden, versuchen Sie es später erneut"
     },
     "search": "Paste suchen...",
