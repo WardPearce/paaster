@@ -1,35 +1,38 @@
 {
-    "saved_pastes": "Gespeicherte Pasten",
+    "saved_pastes": "Gespeicherte Pastes",
+    "account": {
+        "loginOrRegister": "Einloggen/Registrieren"
+    },
     "create": {
-        "input": "Einfügen oder Drag & Geben Sie Ihren Code hier ein",
+        "input": "Code einfügen oder hier hin ziehen",
         "errors": {
-            "private_window": "Der Einfügeverlauf konnte nicht gespeichert werden, höchstwahrscheinlich, weil Sie sich in einem privaten Fenster befinden."
+            "private_window": "Paste verlauf kann nicht gespeichert werden. Wahrscheinlich weil es ein privat Fenster ist."
         }
     },
     "view": {
-        "404": "Einfügen existiert nicht mehr",
-        "no_key": "Nicht bereitgestellten geheimen Schlüssel einfügen",
-        "invalid_format": "Ungültiges Format des geheimen Schlüssels",
+        "404": "Paste existiert nicht mehr.",
+        "no_key": "Geheim schlüssel nicht angegeben",
+        "invalid_format": "Ungültiges Format des geheim Schlüssels",
         "cdn_down": "Paste kann nicht vom CDN heruntergeladen werden, versuchen Sie es später erneut"
     },
     "search": "Paste suchen...",
     "paste_actions": {
         "delete": {
-            "loading": "Einfügen löschen",
+            "loading": "Paste löschen",
             "error": "Paste auf dem Server nicht gefunden",
-            "success": "Einfügen vom Server gelöscht",
+            "success": "Paste wurde vom Server gelöscht",
             "button": "löschen"
         },
         "rename": {
             "button": "umbenennen",
-            "success": "Namen aktualisiert",
+            "success": "Name aktualisiert",
             "model": {
                 "header": "Paste umbenennen"
             }
         },
         "share": {
-            "success": "Link teilen kopiert",
-            "button": "Aktie"
+            "success": "Link zum teilen kopiert",
+            "button": "Teilen"
         },
         "access_code": {
             "button": "Zugangscode festlegen",
@@ -37,26 +40,26 @@
                 "header": "Zugriffscode zum Einfügen festlegen",
                 "input": "Geben Sie den Zugangscode ein",
                 "tooltip": "Code generieren",
-                "button": "Zugangscode festlegen"
+                "button": "Code kopieren"
             },
             "access_code_len": "Der Zugangscode muss mindestens {max_length} Zeichen lang sein",
-            "loading": "Zugangscode einstellen",
-            "success": "Zugangscodesatz",
+            "loading": "Zugangscode wird eingestellt",
+            "success": "Zugangscode wurde eingestellt",
             "error": "Zugriffscode kann nicht eingestellt werden",
             "success_copied_to_clipboard": "Zugangscode in die Zwischenablage kopiert"
         },
         "qr_code": {
             "button": "QR-Code generieren",
             "model": {
-                "header": "scannen, um auf das Einfügen zuzugreifen"
+                "header": "scannen, um auf den Paste zuzugreifen"
             }
         },
         "clipboard": {
-            "success": "Kopiert einfügen",
+            "success": "Paste kopiert",
             "button": "Kopieren"
         },
         "save": {
-            "success": "Einfügen gespeichert",
+            "success": "Paste gespeichert",
             "button": "speichern"
         },
         "download": {
@@ -64,17 +67,17 @@
         },
         "lang_updated": "Sprache aktualisiert",
         "expire": {
-            "loading": "Aktualisierung verfällt nach",
-            "error": "Ablaufen nach kann nicht festgelegt werden",
-            "success": "Ablaufendes Einfügen in {period}",
+            "loading": "Aktualisiere Verfallszeitpunkt",
+            "error": "Verfallszeitpunkt kann nicht festgelegt werden",
+            "success": "Paste verfällt in {period}",
             "button": "Verfallen nach",
             "periods": {
                 "never": "niemals",
-                "being_viewed": "Ansicht sein",
+                "being_viewed": "Angeschaut",
                 "minute": "Minute",
-                "minutes": "Protokoll",
+                "minutes": "Minuten",
                 "hour": "Stunde",
-                "hours": "Std.",
+                "hours": "Stunden",
                 "day": "Tag",
                 "days": "Tage",
                 "week": "Woche",
@@ -89,7 +92,7 @@
         "header": "Zugangscode erforderlich",
         "button": "einreichen"
     },
-    "no_saved_pastes": "keine gespeicherten Pasten",
+    "no_saved_pastes": "keine gespeicherten Pastes",
     "shared_with": "Mit dir geteilt",
     "about": {
         "title": "wie wir Ihre Privatsphäre schützen.",
