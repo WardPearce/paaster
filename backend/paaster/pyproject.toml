@@ -13,19 +13,19 @@ server = "run:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-motor = "^3.5.1"
+motor = "^3.6.0"
 bcrypt = "^4.2.0"
-aiobotocore = "^2.15.1"
+aiobotocore = "^2.15.2"
 nanoid = "^2.0.0"
 argon2-cffi = "^23.1.0"
-types-aiobotocore-s3 = "^2.15.1"
+types-aiobotocore-s3 = "^2.15.2"
 pydantic = "^2.9.2"
 pydantic-settings = "^2.5.2"
-uvicorn = "^0.30.6"
-litestar = "^2.11.0"
+uvicorn = "^0.31.0"
+litestar = "^2.12.1"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.3.2"
+pytest = "^8.3.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
