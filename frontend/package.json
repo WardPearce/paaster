@@ -14,7 +14,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.5",
-		"@sveltejs/kit": "^2.7.0",
+		"@sveltejs/kit": "^2.8.0",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
 		"@types/eslint": "^8.56.0",
 		"@types/libsodium-wrappers-sumo": "^0.7.8",
