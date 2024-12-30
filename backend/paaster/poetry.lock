@@ -2124,17 +2124,17 @@ xray = ["types-aiobotocore-xray (>=2.15.0,<2.16.0)"]
 
 [[package]]
 name = "types-aiobotocore-s3"
-version = "2.16.0"
-description = "Type annotations for aiobotocore S3 2.16.0 service generated with mypy-boto3-builder 8.6.4"
+version = "2.16.1.post1"
+description = "Type annotations for aiobotocore S3 2.16.1 service generated with mypy-boto3-builder 8.7.1"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types_aiobotocore_s3-2.16.0-py3-none-any.whl", hash = "sha256:28c9eed4d4dd8106a0135d27970f4e5085d59644d4a19bc4b646c9e4888364d9"},
-    {file = "types_aiobotocore_s3-2.16.0.tar.gz", hash = "sha256:b98aaed74d18a72f0a9708642c31fc80882a312ef0a4012d85e3e2d4e7da8b9a"},
+    {file = "types_aiobotocore_s3-2.16.1.post1-py3-none-any.whl", hash = "sha256:20bf7524358cfd88cb327b43c0c247196ec7f9df8c1c016f7869ad2ac8a7ce33"},
+    {file = "types_aiobotocore_s3-2.16.1.post1.tar.gz", hash = "sha256:4373c33fc44c70da600283429e2f5de662778b6265ee446e285e8b43b9acc5a5"},
 ]
 
 [package.dependencies]
-typing-extensions = {version = ">=4.1.0", markers = "python_version < \"3.12\""}
+typing-extensions = {version = "*", markers = "python_version < \"3.12\""}
 
 [[package]]
 name = "types-awscrt"
@@ -2376,4 +2376,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "8127a9ce121b252432b2d80c16c34b57e87d5dc64746465cc48f0699cb66c257"
+content-hash = "1e684851cd25963c1651ecabba49e66b5a8534c36c1ad45b7ae584c9329fd9d1"
