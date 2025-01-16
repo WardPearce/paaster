@@ -22,7 +22,7 @@ types-aiobotocore-s3 = "^2.16.1"
 pydantic = "^2.10.5"
 pydantic-settings = "^2.7.1"
 uvicorn = "^0.34.0"
-litestar = "^2.13.0"
+litestar = "^2.14.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.4"
