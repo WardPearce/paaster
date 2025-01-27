@@ -13,7 +13,7 @@
 		"generate": "openapi --input http://localhost/api/schema/openapi.json --output ./src/lib/client --name PaasterClient"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.2.5",
+		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.16.1",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
 		"@types/eslint": "^8.56.0",
