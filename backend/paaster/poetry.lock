@@ -2161,13 +2161,13 @@ xray = ["types-aiobotocore-xray (>=2.19.0,<2.20.0)"]
 
 [[package]]
 name = "types-aiobotocore-s3"
-version = "2.19.0"
-description = "Type annotations for aiobotocore S3 2.19.0 service generated with mypy-boto3-builder 8.8.0"
+version = "2.19.0.post1"
+description = "Type annotations for aiobotocore S3 2.19.0 service generated with mypy-boto3-builder 8.9.0"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types_aiobotocore_s3-2.19.0-py3-none-any.whl", hash = "sha256:74f5f933e47523ab6bf12d7efe0f7dfbbcd48f1f2176efae37b121925fff1251"},
-    {file = "types_aiobotocore_s3-2.19.0.tar.gz", hash = "sha256:a4d8e2a3053ca5f97f7b46a4670e6217e7fb5b3ede3fd4431fc60916b580f91f"},
+    {file = "types_aiobotocore_s3-2.19.0.post1-py3-none-any.whl", hash = "sha256:7c22957716d5349df75537c8f46e926f867880e7901281bce1bd59c1f6f10ddb"},
+    {file = "types_aiobotocore_s3-2.19.0.post1.tar.gz", hash = "sha256:0e9954b5f69f6bf61baa223ba7038f41d4fe970cc8ef06fd23233a2046bcc2fd"},
 ]
 
 [package.dependencies]
