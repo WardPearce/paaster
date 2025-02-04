@@ -22,7 +22,7 @@
 
 	let pasteId: string = $page.params.slug;
 
-	let ownerSecret = '';
+	let ownerSecret = $state('');
 	const [b64EncodedRawKey, givenOwnerSecret]: string[] = location.hash
 		.substring(1)
 		.split('&ownerSecret=');
@@ -33,8 +33,8 @@
 	}
 
 	let rawSecretKey: Uint8Array;
-	let isSaved = false;
-	let rawCode = '';
+	let isSaved = $state(false);
+	let rawCode = $state('');
 	let pasteCreated: number;
 	let timePeriods = [
 		{ value: null, label: $_('paste_actions.expire.periods.never') },
@@ -73,13 +73,13 @@
 	let selectedTime: {
 		value: number | null;
 		label: string;
-	} | null = null;
+	} | null = $state(null);
 
-	let selectedLang: { label: string; value: string };
+	let selectedLang: { label: string; value: string } = $state();
 	let supportedLangs: {
 		[key: string]: LanguageType<string>;
-	} = {};
-	let langImport: LanguageType<string> | null = null;
+	} = $state({});
+	let langImport: LanguageType<string> | null = $state(null);
 
 	function renamePaste() {
 		openModal(() => import('$lib/RenamePaste.svelte'), {
@@ -351,17 +351,17 @@
 		<section>
 			<h3>owner panel</h3>
 			<div class="owner-panel">
-				<button on:click={renamePaste}
-					><i class="las la-pencil-alt" />{$_('paste_actions.rename.button')}</button
+				<button onclick={renamePaste}
+					><i class="las la-pencil-alt"></i>{$_('paste_actions.rename.button')}</button
 				>
-				<button on:click={shareLinkToClipboard}
-					><i class="las la-share" />{$_('paste_actions.share.button')}</button
+				<button onclick={shareLinkToClipboard}
+					><i class="las la-share"></i>{$_('paste_actions.share.button')}</button
 				>
-				<button on:click={generateQRCode}
-					><i class="las la-qrcode" />{$_('paste_actions.qr_code.button')}</button
+				<button onclick={generateQRCode}
+					><i class="las la-qrcode"></i>{$_('paste_actions.qr_code.button')}</button
 				>
-				<button on:click={setAccessCode}
-					><i class="las la-key" />{$_('paste_actions.access_code.button')}</button
+				<button onclick={setAccessCode}
+					><i class="las la-key"></i>{$_('paste_actions.access_code.button')}</button
 				>
 				<Select
 					items={timePeriods}
@@ -377,8 +377,8 @@
 					on:change={setLang}
 					placeholder="Auto-detect language"
 				/>
-				<button class="danger" on:click={deletePasteCall}
-					><i class="las la-trash" />{$_('paste_actions.delete.button')}</button
+				<button class="danger" onclick={deletePasteCall}
+					><i class="las la-trash"></i>{$_('paste_actions.delete.button')}</button
 				>
 			</div>
 		</section>
@@ -386,16 +386,16 @@
 {/if}
 
 <footer>
-	<button on:click={download}
-		><i class="las la-download" />{$_('paste_actions.download.button')}</button
+	<button onclick={download}
+		><i class="las la-download"></i>{$_('paste_actions.download.button')}</button
 	>
-	<button on:click={copyToClipboard}
-		><i class="las la-copy" />{$_('paste_actions.clipboard.button')}</button
+	<button onclick={copyToClipboard}
+		><i class="las la-copy"></i>{$_('paste_actions.clipboard.button')}</button
 	>
 
 	{#if !isSaved}
-		<button on:click={savePasteLocal}
-			><i class="las la-save" />{$_('paste_actions.save.button')}</button
+		<button onclick={savePasteLocal}
+			><i class="las la-save"></i>{$_('paste_actions.save.button')}</button
 		>
 	{/if}
 </footer>
@@ -403,13 +403,17 @@
 {#if rawCode !== ''}
 	<div class="content">
 		{#if langImport}
-			<Highlight language={langImport} code={rawCode} let:highlighted>
-				<LineNumbers {highlighted} />
-			</Highlight>
+			<Highlight language={langImport} code={rawCode} >
+				{#snippet children({ highlighted })}
+								<LineNumbers {highlighted} />
+											{/snippet}
+						</Highlight>
 		{:else}
-			<HighlightAuto code={rawCode} let:highlighted>
-				<LineNumbers {highlighted} />
-			</HighlightAuto>
+			<HighlightAuto code={rawCode} >
+				{#snippet children({ highlighted })}
+								<LineNumbers {highlighted} />
+											{/snippet}
+						</HighlightAuto>
 		{/if}
 	</div>
 {:else}

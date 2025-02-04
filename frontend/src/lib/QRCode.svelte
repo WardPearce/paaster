@@ -2,9 +2,13 @@
 	import { _ } from 'svelte-i18n';
 	import QrCode from 'svelte-qrcode';
 
-	export let pasteId: string;
-	export let b64EncodedRawKey: string;
-	export let isOpen: boolean;
+	interface Props {
+		pasteId: string;
+		b64EncodedRawKey: string;
+		isOpen: boolean;
+	}
+
+	let { pasteId, b64EncodedRawKey, isOpen }: Props = $props();
 </script>
 
 {#if isOpen}

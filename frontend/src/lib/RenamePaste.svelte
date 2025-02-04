@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import toast from 'svelte-french-toast';
 	import { _ } from 'svelte-i18n';
 	import { closeModal } from 'svelte-modals';
@@ -6,11 +8,15 @@
 	import { onMount } from 'svelte';
 	import { getPaste, updatePaste } from '../lib/savedPaste';
 
-	export let isOpen: boolean;
-	export let pasteId: string;
-	export let completedEvent: Function | null = null;
+	interface Props {
+		isOpen: boolean;
+		pasteId: string;
+		completedEvent?: Function | null;
+	}
 
-	let newName: string = '';
+	let { isOpen, pasteId, completedEvent = null }: Props = $props();
+
+	let newName: string = $state('');
 
 	onMount(async () => {
 		const paste = await getPaste(pasteId);
@@ -31,7 +37,7 @@
 			<div class="header">
 				<h2>{$_('paste_actions.rename.model.header')}</h2>
 			</div>
-			<form on:submit|preventDefault={nameUpdated} class="inline-form">
+			<form onsubmit={preventDefault(nameUpdated)} class="inline-form">
 				<input bind:value={newName} type="text" placeholder="..." autofocus={true} />
 				<button>{$_('paste_actions.rename.button')}</button>
 			</form>

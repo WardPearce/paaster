@@ -3,6 +3,11 @@ import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	resolve: {
+		alias: {
+			$lib: './src/lib'
+		}
+	},
 	plugins: [
 		SvelteKitPWA({
 			injectRegister: 'inline',

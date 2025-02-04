@@ -5,14 +5,14 @@
 	import Spinner from '$lib/Spinner.svelte';
 	import { pasteCache } from '$lib/stores';
 	import { error } from '@sveltejs/kit';
-	import { filedrop, type FileDropSelectEvent } from 'filedrop-svelte';
 	import sodium from 'libsodium-wrappers-sumo';
+	import Dropzone from 'svelte-file-dropzone';
 	import { _ } from 'svelte-i18n';
 
-	let loading = false;
+	let loading = $state(false);
 
-	async function onFileDrop(event: CustomEvent<FileDropSelectEvent>) {
-		await uploadPaste(await event.detail.files.accepted[0].text());
+	async function onFileDrop(event: { detail: { acceptedFiles: File[]; fileRejections: File[] } }) {
+		await uploadPaste(await event.detail.acceptedFiles[0].text());
 	}
 
 	async function uploadPaste(rawCode: string) {
@@ -41,7 +41,7 @@
 		let response;
 		response = await fetch(`${import.meta.env.VITE_API_URL}/controller/paste/${rawUrlSafeIv}`, {
 			method: 'POST',
-			body: new Blob([cipherArray.buffer])
+			body: new Blob([cipherArray])
 		});
 
 		if (!response.ok) {
@@ -87,33 +87,30 @@
 {#if loading}
 	<Spinner />
 {:else}
-	<div
-		on:filedrop={onFileDrop}
-		use:filedrop={{ fileLimit: 1, clickToUpload: false, windowDrop: true }}
-	/>
-
-	<main>
-		<textarea
-			on:input={onInput}
-			placeholder={$_('create.input')}
-			name="create-paste"
-			id="pasted-code"
-		/>
-		<section>
-			<h3>{$_('about.title')}</h3>
-			<p>
-				{$_('about.content')}
-			</p>
-			<p>
-				{@html $_('about.source_code', {
-					values: {
-						github:
-							'<a href="https://github.com/WardPearce/paaster"referrerpolicy="no-referrer">Github</a>'
-					}
-				})}
-			</p>
-			<a href="/privacy-policy" style="margin-top: 1em;display: block;">Privacy policy</a>
-			<a href="/terms-of-service" style="display: block;">Terms of service</a>
-		</section>
-	</main>
+	<Dropzone disableDefaultStyles={true} multiple={false} onClick={false} on:drop={onFileDrop}>
+		<main>
+			<textarea
+				oninput={onInput}
+				placeholder={$_('create.input')}
+				name="create-paste"
+				id="pasted-code"
+			></textarea>
+			<section>
+				<h3>{$_('about.title')}</h3>
+				<p>
+					{$_('about.content')}
+				</p>
+				<p>
+					{@html $_('about.source_code', {
+						values: {
+							github:
+								'<a href="https://github.com/WardPearce/paaster"referrerpolicy="no-referrer">Github</a>'
+						}
+					})}
+				</p>
+				<a href="/privacy-policy" style="margin-top: 1em;display: block;">Privacy policy</a>
+				<a href="/terms-of-service" style="display: block;">Terms of service</a>
+			</section>
+		</main>
+	</Dropzone>
 {/if}

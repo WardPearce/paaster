@@ -11,8 +11,8 @@
 	import { relativeDate } from '$lib/date';
 	import { deletePaste, listPastes, type SavedPaste } from '$lib/savedPaste';
 
-	let savedPastes: SavedPaste[] = [];
-	let showPastes: SavedPaste[] = [];
+	let savedPastes: SavedPaste[] = $state([]);
+	let showPastes: SavedPaste[] = $state([]);
 	let fuse: Fuse<SavedPaste>;
 	onMount(async () => {
 		await getPastes();
@@ -69,7 +69,7 @@
 
 <main>
 	{#if savedPastes.length === 0}
-		<h3>{$_('no_saved_pastes')} <i class="las la-heart-broken" /></h3>
+		<h3>{$_('no_saved_pastes')} <i class="las la-heart-broken"></i></h3>
 	{:else}
 		<section>
 			<Search hideLabel placeholder={$_('search')} on:type={onSearch} on:clear={onClear} />
@@ -83,7 +83,7 @@
 								<p class="name">
 									{paste.name ? paste.name : paste.pasteId}
 									{#if !paste.ownerSecret}
-										<i class="las la-share-alt" use:tooltip={{ content: $_('shared_with') }} />
+										<i class="las la-share-alt" use:tooltip={{ content: $_('shared_with') }}></i>
 									{/if}
 								</p>
 								<p class="info">
@@ -92,18 +92,18 @@
 							</div>
 						</a>
 						<div class="actions">
-							<button on:click={() => renamePaste(paste.pasteId)}
-								><i class="las la-pencil-alt" />{$_('paste_actions.rename.button')}</button
+							<button onclick={() => renamePaste(paste.pasteId)}
+								><i class="las la-pencil-alt"></i>{$_('paste_actions.rename.button')}</button
 							>
 							<button
-								on:click={async () =>
+								onclick={async () =>
 									await shareLinkToClipboard(paste.pasteId, paste.b64EncodedRawKey)}
-								><i class="las la-share" />{$_('paste_actions.share.button')}</button
+								><i class="las la-share"></i>{$_('paste_actions.share.button')}</button
 							>
 							<button
 								class="danger"
-								on:click={async () => await deletePasteCall(paste.pasteId, paste.ownerSecret)}
-								><i class="las la-trash" />{$_('paste_actions.delete.button')}</button
+								onclick={async () => await deletePasteCall(paste.pasteId, paste.ownerSecret)}
+								><i class="las la-trash"></i>{$_('paste_actions.delete.button')}</button
 							>
 						</div>
 					</li>

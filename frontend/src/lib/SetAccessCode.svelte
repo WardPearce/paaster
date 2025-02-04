@@ -1,4 +1,8 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot reassign or bind to each block argument in runes mode. Use the array and index variables instead (e.g. `array[i] = value` instead of `entry = value`, or `bind:value={array[i]}` instead of `bind:value={entry}`)
+https://svelte.dev/e/each_item_invalid_assignment -->
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import sodium from 'libsodium-wrappers-sumo';
 	import toast from 'svelte-french-toast';
 	import { _ } from 'svelte-i18n';
@@ -7,12 +11,16 @@
 	import { paasterClient } from '../lib/client';
 	import { generatePassphrase } from '../lib/niceware';
 
-	export let pasteId: string;
-	export let ownerSecret: string;
-	export let isOpen: boolean;
+	interface Props {
+		pasteId: string;
+		ownerSecret: string;
+		isOpen: boolean;
+	}
 
-	let accessCode = ['', '', '', ''];
-	let codeString = '';
+	let { pasteId, ownerSecret, isOpen }: Props = $props();
+
+	let accessCode = $state(['', '', '', '']);
+	let codeString = $state('');
 
 	async function generateAccessCode() {
 		accessCode = generatePassphrase(8);
@@ -64,7 +72,7 @@
 			<div class="header">
 				<h2>{$_('paste_actions.access_code.model.header')}</h2>
 			</div>
-			<form on:submit|preventDefault={generateAccessCode} class="generate-pass-form">
+			<form onsubmit={preventDefault(generateAccessCode)} class="generate-pass-form">
 				<div class="generate-pass">
 					<ul>
 						{#each accessCode as code}
@@ -77,12 +85,12 @@
 				</div>
 				{#if !codeString}
 					<button type="submit"
-						><i class="las la-redo-alt" />
+						><i class="las la-redo-alt"></i>
 						{$_('paste_actions.access_code.model.tooltip')}</button
 					>
 				{:else}
-					<button type="button" on:click={copyCodeToClipboard}
-						><i class="las la-copy" />{$_('paste_actions.access_code.model.button')}</button
+					<button type="button" onclick={copyCodeToClipboard}
+						><i class="las la-copy"></i>{$_('paste_actions.access_code.model.button')}</button
 					>
 				{/if}
 			</form>

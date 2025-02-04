@@ -1,15 +1,26 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import sodium from 'libsodium-wrappers-sumo';
 	import { _ } from 'svelte-i18n';
 	import { closeModal } from 'svelte-modals';
 	import { paasterClient } from '../lib/client';
 
-	export let isOpen: boolean;
-	export let b64EncodedRawKey: string;
-	export let loadPasteFunc: Function;
-	export let pasteId: string;
+	interface Props {
+		isOpen: boolean;
+		b64EncodedRawKey: string;
+		loadPasteFunc: Function;
+		pasteId: string;
+	}
 
-	let accessCode = ['', '', '', ''];
+	let {
+		isOpen,
+		b64EncodedRawKey,
+		loadPasteFunc,
+		pasteId
+	}: Props = $props();
+
+	let accessCode = $state(['', '', '', '']);
 
 	async function onCodeInputted() {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -57,7 +68,7 @@
 			<div class="header">
 				<h2>{$_('require_access_code_model.header')}</h2>
 			</div>
-			<form on:submit|preventDefault={attemptAccessCode} class="generate-pass-form">
+			<form onsubmit={preventDefault(attemptAccessCode)} class="generate-pass-form">
 				<div class="generate-pass">
 					<ul>
 						{#each Array(accessCode.length) as _, index}
@@ -67,14 +78,14 @@
 									bind:value={accessCode[index]}
 									autofocus={index === 0}
 									id="inputtedCode"
-									on:input={onCodeInputted}
+									oninput={onCodeInputted}
 								/>
 								<p>-</p>
 							</li>
 						{/each}
 					</ul>
 				</div>
-				<button type="submit" on:click={attemptAccessCode}
+				<button type="submit" onclick={attemptAccessCode}
 					>{$_('require_access_code_model.button')}</button
 				>
 			</form>
