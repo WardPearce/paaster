@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '$lib/i18n';
+	import '$lib/styles/globals.css';
 	import { _ } from 'svelte-i18n';
 	import { pwaInfo } from 'virtual:pwa-info';
 
@@ -24,7 +25,12 @@
 	>
 	<ul>
 		<li>
-			<a href="https://github.com/WardPearce/paaster" target="_blank" rel="noopener noreferrer">
+			<a
+				class="git"
+				href="https://github.com/WardPearce/paaster"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
 				<i class="lab la-github"></i></a
 			>
 		</li>

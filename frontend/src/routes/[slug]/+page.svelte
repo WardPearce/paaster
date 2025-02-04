@@ -10,7 +10,7 @@
 	import { get } from 'svelte/store';
 
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { paasterClient } from '$lib/client';
 	import { ApiError } from '$lib/client/core/ApiError';
 	import type { PasteModel } from '$lib/client/models/PasteModel';
@@ -18,7 +18,7 @@
 	import { pasteCache } from '$lib/stores';
 	import type { LanguageType } from 'svelte-highlight/languages';
 
-	let pasteId: string = $page.params.slug;
+	let pasteId: string = page.params.slug;
 
 	let ownerSecret = $state('');
 	const [b64EncodedRawKey, givenOwnerSecret]: string[] = location.hash

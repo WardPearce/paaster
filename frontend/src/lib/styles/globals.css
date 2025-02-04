@@ -4,7 +4,7 @@
 }
 
 :root {
-    --darkBg: #191724;
+    --darkBg: #181620;
     --darkerBg: #0c0b10;
     --darkBgTrans: #0c0b10b7;
     --lightBg: #1c1735;
@@ -35,12 +35,12 @@ h6 {
 
 @font-face {
     font-family: MajorMonoDisplay;
-    src: url(./fonts/MajorMonoDisplay-Regular.ttf) format('truetype');
+    src: url(/fonts/MajorMonoDisplay-Regular.ttf) format('truetype');
 }
 
 @font-face {
     font-family: FiraCode;
-    src: url(./fonts/FiraCode-Regular.ttf) format('truetype');
+    src: url(/fonts/FiraCode-Regular.ttf) format('truetype');
 }
 
 input {
@@ -378,5 +378,11 @@ pre>code {
 @media screen and (max-width: 600px) {
     main {
         padding: 1em 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    nav .git {
+        display: none;
     }
 }
