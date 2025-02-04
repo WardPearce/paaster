@@ -1,5 +1,5 @@
-<script src="ts">
-	import { page } from '$app/stores';
+<script>
+	import { page } from '$app/state';
 </script>
 
 <div style="display: flex;align-items: center;flex-direction: column;">
@@ -15,9 +15,9 @@
 	>
 	<h2>Oh no! You've encountered a error.</h2>
 
-	{#if $page.error}
+	{#if page.error}
 		<article>
-			<code style="white-space: pre-line;word-wrap: break-word;">{$page.error.message}</code>
+			<code style="white-space: pre-line;word-wrap: break-word;">{page.error.message}</code>
 		</article>
 	{/if}
 </div>

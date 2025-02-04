@@ -2,9 +2,7 @@
 	import { tooltip } from '@svelte-plugins/tooltips';
 	import Fuse from 'fuse.js';
 	import { onMount } from 'svelte';
-	import toast from 'svelte-french-toast';
 	import { _ } from 'svelte-i18n';
-	import { openModal } from 'svelte-modals';
 	import Search from 'svelte-search';
 
 	import { paasterClient } from '$lib/client';
@@ -14,16 +12,12 @@
 	let savedPastes: SavedPaste[] = $state([]);
 	let showPastes: SavedPaste[] = $state([]);
 	let fuse: Fuse<SavedPaste>;
+
 	onMount(async () => {
 		await getPastes();
 	});
 
-	function renamePaste(pasteId: string) {
-		openModal(() => import('$lib/RenamePaste.svelte'), {
-			pasteId: pasteId,
-			completedEvent: () => getPastes()
-		});
-	}
+	function renamePaste(pasteId: string) {}
 
 	async function getPastes() {
 		savedPastes = (await listPastes()).sort((a, b) => b.created - a.created);
@@ -46,13 +40,9 @@
 
 	async function deletePasteCall(pasteId: string, ownerSecret?: string) {
 		if (ownerSecret) {
-			await toast.promise(
-				paasterClient.default.controllerPastePasteIdOwnerSecretDeletePaste(pasteId, ownerSecret),
-				{
-					loading: $_('paste_actions.delete.loading'),
-					error: $_('paste_actions.delete.error'),
-					success: $_('paste_actions.delete.success')
-				}
+			await paasterClient.default.controllerPastePasteIdOwnerSecretDeletePaste(
+				pasteId,
+				ownerSecret
 			);
 		}
 
@@ -63,7 +53,6 @@
 
 	async function shareLinkToClipboard(pasteId: string, secretKey: string) {
 		await navigator.clipboard.writeText(`${window.location.origin}/${pasteId}#${secretKey}`);
-		toast.success($_('paste_actions.share.success'));
 	}
 </script>
 

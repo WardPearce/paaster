@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-
 	import sodium from 'libsodium-wrappers-sumo';
 	import { _ } from 'svelte-i18n';
-	import { closeModal } from 'svelte-modals';
 	import { paasterClient } from '../lib/client';
 
 	interface Props {
@@ -13,12 +10,7 @@
 		pasteId: string;
 	}
 
-	let {
-		isOpen,
-		b64EncodedRawKey,
-		loadPasteFunc,
-		pasteId
-	}: Props = $props();
+	let { isOpen, b64EncodedRawKey, loadPasteFunc, pasteId }: Props = $props();
 
 	let accessCode = $state(['', '', '', '']);
 
@@ -33,7 +25,9 @@
 		}
 	}
 
-	async function attemptAccessCode() {
+	async function attemptAccessCode(event?: SubmitEvent | undefined) {
+		if (event) event.preventDefault();
+
 		const codeString = accessCode.join('-').toLowerCase();
 
 		let attemptedCode: string;
@@ -58,7 +52,6 @@
 		}
 
 		await loadPasteFunc(attemptedCode);
-		closeModal();
 	}
 </script>
 
@@ -68,7 +61,7 @@
 			<div class="header">
 				<h2>{$_('require_access_code_model.header')}</h2>
 			</div>
-			<form onsubmit={preventDefault(attemptAccessCode)} class="generate-pass-form">
+			<form onsubmit={attemptAccessCode} class="generate-pass-form">
 				<div class="generate-pass">
 					<ul>
 						{#each Array(accessCode.length) as _, index}
@@ -85,7 +78,7 @@
 						{/each}
 					</ul>
 				</div>
-				<button type="submit" onclick={attemptAccessCode}
+				<button type="submit" onclick={async () => await attemptAccessCode()}
 					>{$_('require_access_code_model.button')}</button
 				>
 			</form>

@@ -47,7 +47,7 @@
 		"svelte-file-dropzone": "^2.0.9",
 		"svelte-highlight": "^7.7.0",
 		"svelte-i18n": "^4.0.0",
-		"svelte-qrcode": "^1.0.0",
+		"svelte-qrcode": "^1.0.1",
 		"svelte-search": "^2.1.0",
 		"svelte-select": "^5.8.3"
 	}

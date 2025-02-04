@@ -3,11 +3,9 @@
 	import sodium from 'libsodium-wrappers-sumo';
 	import Mousetrap from 'mousetrap';
 	import { onMount } from 'svelte';
-	import toast from 'svelte-french-toast';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import rosPine from 'svelte-highlight/styles/ros-pine';
 	import { _ } from 'svelte-i18n';
-	import { openModal } from 'svelte-modals';
 	import Select from 'svelte-select';
 	import { get } from 'svelte/store';
 
@@ -75,33 +73,21 @@
 		label: string;
 	} | null = $state(null);
 
-	let selectedLang: { label: string; value: string } = $state();
+	let selectedLang: { label: string; value: string } | undefined = $state();
 	let supportedLangs: {
 		[key: string]: LanguageType<string>;
 	} = $state({});
 	let langImport: LanguageType<string> | null = $state(null);
 
-	function renamePaste() {
-		openModal(() => import('$lib/RenamePaste.svelte'), {
-			pasteId: pasteId
-		});
-	}
+	function renamePaste() {}
 
-	function setAccessCode() {
-		openModal(() => import('$lib/SetAccessCode.svelte'), {
-			pasteId: pasteId,
-			ownerSecret: ownerSecret
-		});
-	}
+	function setAccessCode() {}
 
-	function generateQRCode() {
-		openModal(() => import('$lib/QRCode.svelte'), {
-			pasteId: pasteId,
-			b64EncodedRawKey: b64EncodedRawKey
-		});
-	}
+	function generateQRCode() {}
 
 	async function setLang() {
+		if (!selectedLang) return;
+
 		langImport = supportedLangs[selectedLang.value];
 
 		const langIv = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
@@ -119,45 +105,27 @@
 				iv: sodium.to_base64(langIv, sodium.base64_variants.URLSAFE_NO_PADDING)
 			}
 		});
-
-		toast.success($_('paste_actions.lang_updated'));
 	}
 
 	async function shareLinkToClipboard() {
 		await navigator.clipboard.writeText(window.location.href);
-		toast.success($_('paste_actions.share.success'));
 	}
 
 	async function expireAfter(event: { detail: { value: number; label: string } }) {
-		await toast.promise(
-			paasterClient.default.controllerPastePasteIdOwnerSecretUpdatePaste(pasteId, ownerSecret, {
-				expires_in_hours: event.detail.value
-			}),
-			{
-				loading: $_('paste_actions.expire.loading'),
-				success: $_('paste_actions.expire.success', {
-					values: { period: event.detail.label }
-				}),
-				error: $_('paste_actions.expire.error')
-			}
-		);
+		await paasterClient.default.controllerPastePasteIdOwnerSecretUpdatePaste(pasteId, ownerSecret, {
+			expires_in_hours: event.detail.value
+		});
 	}
 
 	async function deletePasteCall() {
 		try {
-			await toast.promise(
-				paasterClient.default.controllerPastePasteIdOwnerSecretDeletePaste(pasteId, ownerSecret),
-				{
-					loading: $_('paste_actions.delete.loading'),
-					error: $_('paste_actions.delete.error'),
-					success: $_('paste_actions.delete.success')
-				}
+			await paasterClient.default.controllerPastePasteIdOwnerSecretDeletePaste(
+				pasteId,
+				ownerSecret
 			);
 			await deletePaste(pasteId);
 			goto('');
-		} catch {
-			toast.error('Unable to delete paste');
-		}
+		} catch {}
 	}
 
 	async function download() {
@@ -170,13 +138,11 @@
 
 	async function savePasteLocal() {
 		await savePaste(pasteId, b64EncodedRawKey, pasteCreated);
-		toast.success($_('paste_actions.save.success'));
 		isSaved = true;
 	}
 
 	async function copyToClipboard() {
 		await navigator.clipboard.writeText(rawCode);
-		toast.success($_('paste_actions.clipboard.success'));
 	}
 
 	async function loadPaste(accessCode?: string) {
@@ -188,7 +154,6 @@
 				sodium.base64_variants.URLSAFE_NO_PADDING
 			);
 		} catch (error) {
-			toast.error($_('view.invalid_format'));
 			goto('/');
 			return;
 		}
@@ -210,8 +175,6 @@
 		}
 
 		if (b64EncodedRawKey === '') {
-			toast.error($_('view.no_key'));
-
 			goto('/');
 			return;
 		}
@@ -224,20 +187,13 @@
 				// Delete paste from local storage if no longer exists on server.
 				if ((error as ApiError).status === 404) {
 					await deletePaste(pasteId);
-					toast.error($_('view.404'));
 				} else if ((error as ApiError).status == 401) {
-					toast.error((error as ApiError).body.detail);
-					openModal(() => import('$lib/ProvideAccessCode.svelte'), {
-						loadPasteFunc: loadPaste,
-						b64EncodedRawKey: b64EncodedRawKey,
-						pasteId: pasteId
-					});
+					// Handle auth
 
 					return;
 				} else {
-					toast.error(error.toString());
 				}
-			} else if (error instanceof Error) toast.error(error.toString());
+			}
 
 			goto('/');
 			return;
@@ -284,8 +240,6 @@
 		try {
 			response = await fetch(paste.download_url);
 		} catch {
-			toast.error($_('view.cdn_down'));
-
 			goto('/');
 			return;
 		}
@@ -301,8 +255,6 @@
 				)
 			);
 		} catch (error) {
-			if (error instanceof Error) toast.error(error.toString());
-
 			goto('/');
 			return;
 		}
@@ -403,17 +355,13 @@
 {#if rawCode !== ''}
 	<div class="content">
 		{#if langImport}
-			<Highlight language={langImport} code={rawCode} >
-				{#snippet children({ highlighted })}
-								<LineNumbers {highlighted} />
-											{/snippet}
-						</Highlight>
+			<Highlight language={langImport} code={rawCode} let:highlighted>
+				<LineNumbers {highlighted} />
+			</Highlight>
 		{:else}
-			<HighlightAuto code={rawCode} >
-				{#snippet children({ highlighted })}
-								<LineNumbers {highlighted} />
-											{/snippet}
-						</HighlightAuto>
+			<HighlightAuto code={rawCode} let:highlighted>
+				<LineNumbers {highlighted} />
+			</HighlightAuto>
 		{/if}
 	</div>
 {:else}
