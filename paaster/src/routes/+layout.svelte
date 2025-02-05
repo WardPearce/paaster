@@ -20,13 +20,13 @@ top-0 z-50 w-full border-b"
 				<div class="md:hidden">
 					<button
 						type="button"
-						class="collapse-toggle btn btn-outline btn-secondary btn-sm btn-square"
+						class="collapse-toggle btn btn-outline btn-primary btn-sm btn-square"
 						data-collapse="#default-navbar-collapse"
 						aria-controls="default-navbar-collapse"
 						aria-label="Toggle navigation"
 					>
-						<span class="icon-[tabler--menu-2] collapse-open:hidden size-4"></span>
-						<span class="icon-[tabler--x] collapse-open:block hidden size-4"></span>
+						<span class="icon-[tabler--menu-2] collapse-open:hidden size-6"></span>
+						<span class="icon-[tabler--x] collapse-open:block hidden size-6"></span>
 					</button>
 				</div>
 			</div>

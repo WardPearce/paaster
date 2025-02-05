@@ -25,7 +25,7 @@
             "loading": "Deleting paste",
             "error": "Paste not found on server",
             "success": "Paste deleted from server",
-            "button": "delete"
+            "button": "Delete"
         },
         "rename": {
             "button": "rename",
@@ -53,9 +53,9 @@
             "success_copied_to_clipboard": "Access code copied to clipboard"
         },
         "qr_code": {
-            "button": "generate QR code",
+            "button": "Generate QR code",
             "model": {
-                "header": "scan to access paste"
+                "header": "Scan to access paste"
             }
         },
         "clipboard": {

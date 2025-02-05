@@ -1,9 +1,9 @@
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 
-interface Paste {
+export interface Paste {
   id: string;
-  accessKey: string;
+  accessKey: string | undefined;
   masterKey: string;
 }
 
