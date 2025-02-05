@@ -1,9 +1,11 @@
 {
     "saved_pastes": "Pastes",
     "empty_paste": "Paste contains no characters",
+    "paste_size_too_large": "Paste size surpasses max size",
     "account": {
         "loginOrRegister": "Login"
     },
+    "upload_failed": "Paste upload failed",
     "create": {
         "input": "paste or drag & drop your code here",
         "errors": {

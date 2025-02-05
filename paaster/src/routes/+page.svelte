@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
 	import Loading from '$lib/components/Loading.svelte';
-	import { CHUNK_SIZE } from '$lib/consts';
+	import { CHUNK_SIZE, MAX_UPLOAD_SIZE } from '$lib/consts';
 	import { getToast } from '$lib/toasts';
 	import sodium from 'libsodium-wrappers-sumo';
 	import Dropzone from 'svelte-file-dropzone';
@@ -30,6 +31,11 @@
 	async function uploadPaste(rawCode: string, codeName?: string) {
 		if (rawCode.length === 0) {
 			getToast().error(get(_)('empty_paste'));
+			return;
+		}
+
+		if (rawCode.length > MAX_UPLOAD_SIZE) {
+			getToast().error(get(_)('paste_size_too_large'));
 			return;
 		}
 
@@ -78,7 +84,6 @@
 		}
 
 		const formData = new FormData();
-		formData.append('code', new Blob(encryptedBuffer));
 		formData.append('codeHeader', sodium.to_base64(header));
 
 		if (codeName && codeName.length > 0) {
@@ -91,6 +96,41 @@
 			formData.append('codeNonce', sodium.to_base64(codeNameEncrypted.data.nonce));
 			formData.append('codeKeySalt', sodium.to_base64(codeNameEncrypted.key.salt));
 		}
+
+		const createPasteResp = await fetch('/api/createPaste', { method: 'POST', body: formData });
+		if (!createPasteResp.ok) {
+			pasteUploading = false;
+			try {
+				getToast().error(await createPasteResp.json());
+			} catch {
+				getToast().error(get(_)('upload_failed'));
+			}
+			return;
+		}
+		const createPasteJson = await createPasteResp.json();
+
+		const s3Payload = new FormData();
+		for (const [key, value] of Object.entries(createPasteJson.signedUrl.fields)) {
+			s3Payload.append(key, value as string);
+		}
+
+		const blob = new Blob(encryptedBuffer, { type: 'application/octet-stream' });
+		s3Payload.append('file', blob);
+
+		const s3Response = await fetch(createPasteJson.signedUrl.url, {
+			method: 'POST',
+			body: s3Payload
+		});
+		if (!s3Response.ok) {
+			try {
+				getToast().error(await s3Response.json());
+			} catch {
+				getToast().error(get(_)('upload_failed'));
+			}
+			return;
+		}
+
+		goto(`${createPasteJson.pasteId}#${sodium.to_base64(rawMasterKey)}`);
 	}
 </script>
 
