@@ -1,0 +1,99 @@
+{
+    "saved_pastes": "Notes enregistrées",
+    "create": {
+        "input": "collez ou glissez & déposez votre code ici",
+        "errors": {
+            "private_window": "Impossible d'enregistrer l'historique des notes, probablement parce qu'il s'agit d'une fenêtre privée."
+        }
+    },
+    "view": {
+        "404": "La note n'existe plus",
+        "no_key": "Clé secrète de la note manquante",
+        "invalid_format": "Format de clé secrète invalide",
+        "cdn_down": "Impossible de télécharger la note à partir du CDN, réessayez plus tard"
+    },
+    "search": "Rechercher...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Suppression de la note",
+            "error": "Note introuvable sur le serveur",
+            "success": "Note supprimée du serveur",
+            "button": "supprimer"
+        },
+        "rename": {
+            "button": "Renommer",
+            "success": "Nom mis à jour",
+            "model": {
+                "header": "renommer note"
+            }
+        },
+        "share": {
+            "success": "Lien de partage copié",
+            "button": "partager"
+        },
+        "access_code": {
+            "button": "définir le code d'accès",
+            "model": {
+                "header": "définir le code d'accès de la note",
+                "input": "Entrez le code d'accès",
+                "tooltip": "Générer un code",
+                "button": "Définir le code d'accès"
+            },
+            "access_code_len": "Le code d'accès doit comporter {max_length} caractères ou plus",
+            "loading": "Réglage du code d'accès",
+            "success": "Code d'accès défini",
+            "error": "Impossible de définir le code d'accès",
+            "success_copied_to_clipboard": "Code d'accès copié dans le presse-papiers"
+        },
+        "qr_code": {
+            "button": "générer un code QR",
+            "model": {
+                "header": "scannez pour accéder à la note"
+            }
+        },
+        "clipboard": {
+            "success": "Note copiée",
+            "button": "copier"
+        },
+        "save": {
+            "success": "Note sauvegardée",
+            "button": "sauvegarder"
+        },
+        "download": {
+            "button": "télécharger"
+        },
+        "lang_updated": "Langue mise à jour",
+        "expire": {
+            "loading": "Mise à jour de l'expiration",
+            "error": "Impossible de mettre à jour l'expiration",
+            "success": "Note mise à jour pour expirer dans {période}",
+            "button": "Expire après",
+            "periods": {
+                "never": "jamais",
+                "being_viewed": "être vue",
+                "minute": "minute",
+                "minutes": "minutes",
+                "hour": "heure",
+                "hours": "heures",
+                "day": "jour",
+                "days": "jours",
+                "week": "semaine",
+                "weeks": "semaines",
+                "month": "mois",
+                "months": "mois"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "Entrez le code d'accès",
+        "header": "code d'accès requis",
+        "button": "valider"
+    },
+    "no_saved_pastes": "pas de notes enregistrées",
+    "shared_with": "Partagé avec vous",
+    "about": {
+        "title": "comment nous protégeons votre vie privée.",
+        "content": "Paaster utilise un chiffrement de bout en bout pour stocker et partager les notes, ce qui signifie que même le serveur ne peut pas voir ce que vous enregistrez ici.",
+        "source_code": "Notre code est entièrement open source et peut être consulté sur {github}"
+    }
+}

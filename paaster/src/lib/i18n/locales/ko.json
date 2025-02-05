@@ -1,0 +1,99 @@
+{
+    "saved_pastes": "저장된 붙여넣기",
+    "create": {
+        "input": "붙여넣기 또는 드래그 & 여기에 코드를 드롭",
+        "errors": {
+            "private_window": "비공개 창에 있기 때문에 붙여넣기 기록을 저장할 수 없습니다."
+        }
+    },
+    "view": {
+        "404": "더 이상 존재하지 않는 붙여넣기",
+        "no_key": "제공되지 않은 비밀 키 붙여넣기",
+        "invalid_format": "잘못된 비밀 키 형식",
+        "cdn_down": "CDN에서 붙여넣기를 다운로드할 수 없습니다. 나중에 다시 시도하세요."
+    },
+    "search": "붙여넣기 검색...",
+    "paste_actions": {
+        "delete": {
+            "loading": "붙여넣기 삭제",
+            "error": "서버에서 붙여넣기를 찾을 수 없습니다.",
+            "success": "서버에서 삭제된 붙여넣기",
+            "button": "삭제"
+        },
+        "rename": {
+            "button": "이름 바꾸기",
+            "success": "이름 업데이트됨",
+            "model": {
+                "header": "붙여넣기 이름 바꾸기"
+            }
+        },
+        "share": {
+            "success": "공유 링크 복사됨",
+            "button": "공유하다"
+        },
+        "access_code": {
+            "button": "액세스 코드 설정",
+            "model": {
+                "header": "붙여넣기 액세스 코드 설정",
+                "input": "액세스 코드 입력",
+                "tooltip": "코드 생성",
+                "button": "액세스 코드 설정"
+            },
+            "access_code_len": "액세스 코드는 {max_length}자 이상이어야 합니다.",
+            "loading": "액세스 코드 설정",
+            "success": "액세스 코드 세트",
+            "error": "액세스 코드를 설정할 수 없습니다.",
+            "success_copied_to_clipboard": "클립보드에 복사된 액세스 코드"
+        },
+        "qr_code": {
+            "button": "QR 코드 생성",
+            "model": {
+                "header": "붙여넣기에 액세스하려면 스캔"
+            }
+        },
+        "clipboard": {
+            "success": "붙여넣기 복사",
+            "button": "복사"
+        },
+        "save": {
+            "success": "붙여넣기가 저장되었습니다.",
+            "button": "구하다"
+        },
+        "download": {
+            "button": "다운로드"
+        },
+        "lang_updated": "언어 업데이트됨",
+        "expire": {
+            "loading": "다음 날짜 이후 업데이트 만료",
+            "error": "만료 시간을 설정할 수 없습니다.",
+            "success": "{period}에 만료되도록 설정된 붙여넣기",
+            "button": "만료일",
+            "periods": {
+                "never": "절대",
+                "being_viewed": "보기",
+                "minute": "분",
+                "minutes": "분",
+                "hour": "시간",
+                "hours": "시간",
+                "day": "낮",
+                "days": "날",
+                "week": "주",
+                "weeks": "주",
+                "month": "월",
+                "months": "개월"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "액세스 코드 입력",
+        "header": "액세스 코드 필요",
+        "button": "제출하다"
+    },
+    "no_saved_pastes": "저장된 페이스트 없음",
+    "shared_with": "나와 공유됨",
+    "about": {
+        "title": "귀하의 개인 정보를 보호하는 방법.",
+        "content": "Paaster는 붙여넣기를 저장하고 공유하기 위해 종단 간 암호화를 사용하므로 여기에 저장한 내용을 서버에서도 볼 수 없습니다.",
+        "source_code": "우리의 소스 코드는 완전히 오픈 소스이며 {github}에서 검토할 수 있습니다."
+    }
+}

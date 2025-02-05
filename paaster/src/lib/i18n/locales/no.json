@@ -1,0 +1,99 @@
+{
+    "saved_pastes": "Lagrede pastaer",
+    "create": {
+        "input": "lim inn eller dra & slipp koden din her",
+        "errors": {
+            "private_window": "Kan ikke lagre innlimingsloggen, mest sannsynlig på grunn av å være i et privat vindu."
+        }
+    },
+    "view": {
+        "404": "Lim eksisterer ikke lenger",
+        "no_key": "Lim inn hemmelig nøkkel ikke oppgitt",
+        "invalid_format": "Ugyldig hemmelig nøkkelformat",
+        "cdn_down": "Kan ikke laste ned lim fra CDN, prøv igjen senere"
+    },
+    "search": "Søk etter lim...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Sletter lim",
+            "error": "Finner ikke lim inn på serveren",
+            "success": "Lim inn slettet fra server",
+            "button": "slette"
+        },
+        "rename": {
+            "button": "endre navn",
+            "success": "Navnet er oppdatert",
+            "model": {
+                "header": "gi nytt navn til lim"
+            }
+        },
+        "share": {
+            "success": "Delingslenken er kopiert",
+            "button": "dele"
+        },
+        "access_code": {
+            "button": "angi tilgangskode",
+            "model": {
+                "header": "angi lim inn tilgangskode",
+                "input": "Skriv inn tilgangskode",
+                "tooltip": "Generer kode",
+                "button": "Angi tilgangskode"
+            },
+            "access_code_len": "Tilgangskoden må være på {max_length} tegn eller mer",
+            "loading": "Stille inn tilgangskode",
+            "success": "Tilgangskode satt",
+            "error": "Kan ikke angi tilgangskode",
+            "success_copied_to_clipboard": "Tilgangskode kopiert til utklippstavlen"
+        },
+        "qr_code": {
+            "button": "generere QR-kode",
+            "model": {
+                "header": "skann for å få tilgang til lim"
+            }
+        },
+        "clipboard": {
+            "success": "Lim inn kopiert",
+            "button": "kopiere"
+        },
+        "save": {
+            "success": "Lim inn lagret",
+            "button": "lagre"
+        },
+        "download": {
+            "button": "nedlasting"
+        },
+        "lang_updated": "Språket er oppdatert",
+        "expire": {
+            "loading": "Oppdatering utløper etter",
+            "error": "Kan ikke angi utløper etter",
+            "success": "Lim inn satt til å utløpe om {period}",
+            "button": "Utløper etter",
+            "periods": {
+                "never": "aldri",
+                "being_viewed": "å være utsikt",
+                "minute": "minutt",
+                "minutes": "minutter",
+                "hour": "time",
+                "hours": "timer",
+                "day": "dag",
+                "days": "dager",
+                "week": "uke",
+                "weeks": "uker",
+                "month": "måned",
+                "months": "måneder"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "Skriv inn tilgangskode",
+        "header": "tilgangskode kreves",
+        "button": "sende inn"
+    },
+    "no_saved_pastes": "ingen lagrede pastaer",
+    "shared_with": "Delt med deg",
+    "about": {
+        "title": "hvordan vi beskytter personvernet ditt.",
+        "content": "Paaster bruker ende-til-ende-kryptering for lagring og deling av pastaer, noe som betyr at selv serveren ikke kan se det du lagrer her.",
+        "source_code": "Kildekoden vår er fullstendig åpen kildekode og kan gjennomgås på {github}"
+    }
+}

@@ -1,0 +1,99 @@
+{
+    "saved_pastes": "Tallennetut tahnat",
+    "create": {
+        "input": "liitä tai vedä & pudota koodisi tähän",
+        "errors": {
+            "private_window": "Liitä historiaa ei voi tallentaa, mikä johtuu todennäköisesti yksityisestä ikkunasta."
+        }
+    },
+    "view": {
+        "404": "Liitä ei ole enää olemassa",
+        "no_key": "Liitä salaista avainta ei ole annettu",
+        "invalid_format": "Virheellinen salaisen avaimen muoto",
+        "cdn_down": "Liitännän lataaminen CDN:stä ei onnistu. Yritä myöhemmin uudelleen"
+    },
+    "search": "Hae tahnoja...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Listan poistaminen",
+            "error": "Liitä ei löydy palvelimelta",
+            "success": "Liitä poistettu palvelimelta",
+            "button": "poistaa"
+        },
+        "rename": {
+            "button": "nimeä uudelleen",
+            "success": "Nimi päivitetty",
+            "model": {
+                "header": "nimeä liitä uudelleen"
+            }
+        },
+        "share": {
+            "success": "Jaa linkki kopioitu",
+            "button": "Jaa"
+        },
+        "access_code": {
+            "button": "aseta pääsykoodi",
+            "model": {
+                "header": "aseta liitä pääsykoodi",
+                "input": "Anna pääsykoodi",
+                "tooltip": "Luo koodi",
+                "button": "Aseta pääsykoodi"
+            },
+            "access_code_len": "Pääsykoodissa on oltava vähintään {max_length} merkkiä",
+            "loading": "Pääsykoodin asettaminen",
+            "success": "Pääsykoodi asetettu",
+            "error": "Pääsykoodin asettaminen epäonnistui",
+            "success_copied_to_clipboard": "Käyttökoodi kopioitu leikepöydälle"
+        },
+        "qr_code": {
+            "button": "luo QR-koodi",
+            "model": {
+                "header": "skannaa päästäksesi liittämään"
+            }
+        },
+        "clipboard": {
+            "success": "Liitä kopioitu",
+            "button": "kopio"
+        },
+        "save": {
+            "success": "Liitä tallennettu",
+            "button": "Tallentaa"
+        },
+        "download": {
+            "button": "ladata"
+        },
+        "lang_updated": "Kieli päivitetty",
+        "expire": {
+            "loading": "Päivitys vanhenee sen jälkeen",
+            "error": "Ei voida asettaa voimassaolon jälkeen",
+            "success": "Liitä vanhentumaan {period}",
+            "button": "Vanhenee jälkeen",
+            "periods": {
+                "never": "ei koskaan",
+                "being_viewed": "olevan näkymä",
+                "minute": "minuutti",
+                "minutes": "pöytäkirja",
+                "hour": "tunnin",
+                "hours": "tuntia",
+                "day": "päivä",
+                "days": "päivää",
+                "week": "viikko",
+                "weeks": "viikkoa",
+                "month": "kuukausi",
+                "months": "kuukaudet"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "Anna pääsykoodi",
+        "header": "pääsykoodi vaaditaan",
+        "button": "Lähetä"
+    },
+    "no_saved_pastes": "ei tallennettuja tahnoja",
+    "shared_with": "Jaettu kanssasi",
+    "about": {
+        "title": "kuinka suojaamme yksityisyyttäsi.",
+        "content": "Paaster käyttää päästä päähän -salausta tahojen tallentamiseen ja jakamiseen, mikä tarkoittaa, että edes palvelin ei voi nähdä, mitä tallennat tänne.",
+        "source_code": "Lähdekoodimme on täysin avoimen lähdekoodin, ja sen voi tarkistaa osoitteessa {github}"
+    }
+}

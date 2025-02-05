@@ -1,0 +1,99 @@
+{
+    "saved_pastes": "保存されたペースト",
+    "create": {
+        "input": "ペーストまたはドラッグ &ここにコードをドロップしてください",
+        "errors": {
+            "private_window": "プライベート ウィンドウにいる可能性が高いため、貼り付け履歴を保存できません。"
+        }
+    },
+    "view": {
+        "404": "貼り付けはもうありません",
+        "no_key": "提供されていない秘密鍵を貼り付けます",
+        "invalid_format": "秘密鍵の形式が無効です",
+        "cdn_down": "CDN からペーストをダウンロードできません。後でもう一度お試しください"
+    },
+    "search": "貼り付けを検索...",
+    "paste_actions": {
+        "delete": {
+            "loading": "ペーストの削除",
+            "error": "サーバー上に貼り付けが見つかりません",
+            "success": "サーバーから削除された貼り付け",
+            "button": "消去"
+        },
+        "rename": {
+            "button": "名前を変更",
+            "success": "名前が更新されました",
+            "model": {
+                "header": "リネームペースト"
+            }
+        },
+        "share": {
+            "success": "共有リンクをコピーしました",
+            "button": "共有"
+        },
+        "access_code": {
+            "button": "アクセスコードを設定する",
+            "model": {
+                "header": "貼り付けアクセスコードを設定する",
+                "input": "アクセスコードを入力",
+                "tooltip": "コードを生成する",
+                "button": "アクセスコードを設定"
+            },
+            "access_code_len": "アクセス コードは {max_length} 文字以上にする必要があります",
+            "loading": "アクセスコードの設定",
+            "success": "アクセスコードセット",
+            "error": "アクセスコードを設定できません",
+            "success_copied_to_clipboard": "クリップボードにコピーされたアクセス コード"
+        },
+        "qr_code": {
+            "button": "QRコードを生成",
+            "model": {
+                "header": "スキャンしてペーストにアクセス"
+            }
+        },
+        "clipboard": {
+            "success": "貼り付けコピー",
+            "button": "コピー"
+        },
+        "save": {
+            "success": "貼り付けを保存しました",
+            "button": "保存"
+        },
+        "download": {
+            "button": "ダウンロード"
+        },
+        "lang_updated": "言語が更新されました",
+        "expire": {
+            "loading": "更新の有効期限:",
+            "error": "次の後に有効期限を設定できません",
+            "success": "{期間} で有効期限が切れる設定を貼り付け",
+            "button": "期限切れ",
+            "periods": {
+                "never": "一度もない",
+                "being_viewed": "ビュー",
+                "minute": "分",
+                "minutes": "分",
+                "hour": "時間",
+                "hours": "時間",
+                "day": "日",
+                "days": "日々",
+                "week": "週",
+                "weeks": "週間",
+                "month": "月",
+                "months": "月"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "アクセスコードを入力",
+        "header": "アクセスコードが必要です",
+        "button": "送信"
+    },
+    "no_saved_pastes": "保存されたペーストはありません",
+    "shared_with": "あなたと共有",
+    "about": {
+        "title": "あなたのプライバシーを保護する方法。",
+        "content": "Paaster は、ペーストの保存と共有にエンド ツー エンドの暗号化を利用します。つまり、ここに保存したものをサーバーでさえ見ることができません。",
+        "source_code": "ソース コードは完全にオープン ソースであり、{github} でレビューできます。"
+    }
+}
