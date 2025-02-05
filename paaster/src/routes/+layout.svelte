@@ -1,6 +1,5 @@
 <script lang="ts">
 	import BookMarkedIcon from 'lucide-svelte/icons/book-marked';
-	import GithubIcon from 'lucide-svelte/icons/github';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import { _ } from 'svelte-i18n';
 
@@ -39,15 +38,6 @@ top-0 z-50 w-full border-b"
 			class="md:navbar-end collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 max-md:w-full"
 		>
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
-				<li>
-					<a
-						class="btn btn-text"
-						href="https://github.com/WardPearce/paaster"
-						target="_blank"
-						rel="noopener noreferrer"
-						><GithubIcon />
-					</a>
-				</li>
 				<li><a href="/pastes" class="btn btn-text"><BookMarkedIcon /> {$_('saved_pastes')}</a></li>
 				<li>
 					<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.loginOrRegister')}</a>

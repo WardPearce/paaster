@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { deriveExistingKeyFromMaster } from '$lib/client/sodiumWrapped.js';
+	import Loading from '$lib/components/Loading.svelte';
 	import { error } from '@sveltejs/kit';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
@@ -13,6 +14,8 @@
 
 	let rawMasterKey: Uint8Array;
 	let rawPaste: string = $state('');
+
+	let pasteDownloading = $state(true);
 
 	onMount(async () => {
 		await sodium.ready;
@@ -61,6 +64,8 @@
 
 			chunkStart = chunkEnd; // Move to the next chunk
 		}
+
+		pasteDownloading = false;
 	});
 </script>
 
@@ -68,7 +73,9 @@
 	{@html rosPine}
 </svelte:head>
 
-{#if false}
+{#if pasteDownloading}
+	<Loading />
+{:else if false}
 	<Highlight language={typescript} code={rawPaste} let:highlighted>
 		<LineNumbers {highlighted} />
 	</Highlight>
