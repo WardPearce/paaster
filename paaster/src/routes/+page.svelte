@@ -85,6 +85,7 @@
 
 		const formData = new FormData();
 		formData.append('codeHeader', sodium.to_base64(header));
+		formData.append('codeKeySalt', sodium.to_base64(pasteKey.salt));
 
 		if (codeName && codeName.length > 0) {
 			const codeNameEncrypted = secretBoxEncryptFromMaster(
@@ -93,8 +94,8 @@
 			);
 
 			formData.append('codeName', sodium.to_base64(codeNameEncrypted.data.value));
-			formData.append('codeNonce', sodium.to_base64(codeNameEncrypted.data.nonce));
-			formData.append('codeKeySalt', sodium.to_base64(codeNameEncrypted.key.salt));
+			formData.append('codeNameNonce', sodium.to_base64(codeNameEncrypted.data.nonce));
+			formData.append('codeNameKeySalt', sodium.to_base64(codeNameEncrypted.key.salt));
 		}
 
 		const createPasteResp = await fetch('/api/createPaste', { method: 'POST', body: formData });

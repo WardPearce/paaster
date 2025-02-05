@@ -11,23 +11,25 @@ export async function POST({ locals, request }) {
   const formData = await request.formData();
 
   const codeHeader = formData.get('codeHeader')?.toString();
+  const codeKeySalt = formData.get('codeKeySalt')?.toString();
 
   if (!codeHeader) {
-    throw error(400, 'code & codeHeader must be included');
+    throw error(400, 'codeKeySalt & codeHeader must be included');
   }
 
   const codeName = formData.get('codeName')?.toString();
-  const codeNonce = formData.get('codeNonce')?.toString();
-  const codeKeySalt = formData.get('codeKeySalt')?.toString();
+  const codeNameNonce = formData.get('codeNameNonce')?.toString();
+  const codeNameKeySalt = formData.get('codeNameKeySalt')?.toString();
 
   const accessKey = sodium.to_base64(sodium.randombytes_buf(32));
 
   const createdPaste = await locals.mongoDb.collection('pastes').insertOne({
     header: codeHeader,
+    keySalt: codeKeySalt,
     name: {
       value: codeName,
-      nonce: codeNonce,
-      keySalt: codeKeySalt
+      nonce: codeNameNonce,
+      keySalt: codeNameKeySalt
     },
     accessKey: await argon2.hash(accessKey)
   });

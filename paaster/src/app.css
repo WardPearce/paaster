@@ -5,3 +5,8 @@
 textarea::placeholder {
     font-size: 1.3em;
 }
+
+.hljs,
+.hljs * {
+    background: transparent !important;
+}
