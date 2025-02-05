@@ -130,7 +130,8 @@
 			await localDb.pastes.add({
 				id: page.params.slug,
 				masterKey: sodium.to_base64(rawMasterKey),
-				accessKey: undefined
+				accessKey: undefined,
+				date: new Date()
 			});
 		}
 

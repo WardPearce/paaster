@@ -137,7 +137,8 @@
 		await localDb.pastes.add({
 			id: createPasteJson.pasteId,
 			accessKey: createPasteJson.accessKey,
-			masterKey: rawMasterKeyB64
+			masterKey: rawMasterKeyB64,
+			date: new Date()
 		});
 
 		goto(`${createPasteJson.pasteId}#${rawMasterKeyB64}`);
