@@ -3,12 +3,17 @@
 	import GithubIcon from 'lucide-svelte/icons/github';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import { _ } from 'svelte-i18n';
+
+	import 'notyf/notyf.min.css';
 	import '../app.css';
 
 	let { children } = $props();
 </script>
 
-<nav class="navbar rounded-box shadow">
+<nav
+	class="navbar rounded-box bg-base-100 border-base-content/10 sticky
+top-0 z-50 w-full border-b"
+>
 	<div class="w-full md:flex md:items-center md:gap-2">
 		<div class="flex items-center justify-between">
 			<div class="navbar-start items-center justify-between max-md:w-full">
