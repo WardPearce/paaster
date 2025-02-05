@@ -5,6 +5,7 @@
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
+	import type { LanguageType } from 'svelte-highlight/languages';
 	import typescript from 'svelte-highlight/languages/typescript';
 	import rosPine from 'svelte-highlight/styles/ros-pine';
 	import { _ } from 'svelte-i18n';
@@ -17,8 +18,30 @@
 
 	let pasteDownloading = $state(true);
 
+	let selectedLang: { label: string; value: string };
+	let supportedLangs: {
+		[key: string]: LanguageType<string>;
+	} = {};
+	let langImport: LanguageType<string> | null = null;
+
+	async function loadSupportedLangs() {
+		const rawSupportedLangs: { [key: string]: any } = await import('svelte-highlight/languages');
+
+		supportedLangs = Object.keys(rawSupportedLangs).reduce(
+			(result: { [key: string]: any }, key) => {
+				if (key !== 'default') {
+					result[key] = rawSupportedLangs[key];
+				}
+				return result;
+			},
+			{}
+		);
+	}
+
 	onMount(async () => {
 		await sodium.ready;
+
+		await loadSupportedLangs();
 
 		try {
 			rawMasterKey = sodium.from_base64(window.location.hash.replace('#', ''));

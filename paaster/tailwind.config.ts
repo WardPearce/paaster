@@ -10,7 +10,6 @@ export default {
 		'./node_modules/flyonui/dist/js/*.js',
 		'./node_modules/notyf/**/*.js'
 	],
-
 	flyonui: {
 		themes: [
 			{

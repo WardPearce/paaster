@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { localDb } from '$lib/client/dexie';
 	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
 	import Loading from '$lib/components/Loading.svelte';
 	import { CHUNK_SIZE, MAX_UPLOAD_SIZE } from '$lib/consts';
@@ -131,7 +132,15 @@
 			return;
 		}
 
-		goto(`${createPasteJson.pasteId}#${sodium.to_base64(rawMasterKey)}`);
+		const rawMasterKeyB64 = sodium.to_base64(rawMasterKey);
+
+		await localDb.pastes.add({
+			id: createPasteJson.pasteId,
+			accessKey: createPasteJson.accessKey,
+			masterKey: rawMasterKeyB64
+		});
+
+		goto(`${createPasteJson.pasteId}#${rawMasterKeyB64}`);
 	}
 </script>
 
