@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { MAX_UPLOAD_SIZE } from '$lib/consts.js';
+import { maxLength } from '$lib/server/misc.js';
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
@@ -10,16 +11,16 @@ export async function POST({ locals, request }) {
 
   const formData = await request.formData();
 
-  const codeHeader = formData.get('codeHeader')?.toString();
-  const codeKeySalt = formData.get('codeKeySalt')?.toString();
+  const codeHeader = maxLength(formData.get('codeHeader')?.toString(), 128);
+  const codeKeySalt = maxLength(formData.get('codeKeySalt')?.toString());
 
   if (!codeHeader) {
     throw error(400, 'codeKeySalt & codeHeader must be included');
   }
 
-  const codeName = formData.get('codeName')?.toString();
-  const codeNameNonce = formData.get('codeNameNonce')?.toString();
-  const codeNameKeySalt = formData.get('codeNameKeySalt')?.toString();
+  const codeName = maxLength(formData.get('codeName')?.toString());
+  const codeNameNonce = maxLength(formData.get('codeNameNonce')?.toString());
+  const codeNameKeySalt = maxLength(formData.get('codeNameKeySalt')?.toString());
 
   const accessKey = sodium.to_base64(sodium.randombytes_buf(32));
 
@@ -31,6 +32,9 @@ export async function POST({ locals, request }) {
       nonce: codeNameNonce,
       keySalt: codeNameKeySalt
     },
+    language: null,
+    expireAfter: -2,
+    accessCode: null,
     accessKey: await argon2.hash(accessKey)
   });
 

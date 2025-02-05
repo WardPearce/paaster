@@ -14,7 +14,7 @@
 </script>
 
 {#if bookmarkedPastes}
-	<div class="grid grid-cols-4 gap-4 p-5">
+	<div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-4">
 		{#each bookmarkedPastes as paste}
 			<div class="bg-neutral-content rounded-lg p-4">
 				<div class="mb-5">

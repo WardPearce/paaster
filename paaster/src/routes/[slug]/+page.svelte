@@ -39,7 +39,7 @@
 	let langImport: LanguageType<string> | null = null;
 
 	const timePeriods = [
-		{ value: null, label: $_('paste_actions.expire.periods.never') },
+		{ value: -2, label: $_('paste_actions.expire.periods.never') },
 		{ value: -1, label: $_('paste_actions.expire.periods.being_viewed') },
 		{
 			value: 0.08333,
@@ -101,7 +101,7 @@
 	}
 
 	async function copyCode() {
-		await navigator.clipboard.writeText(page.url.href);
+		await navigator.clipboard.writeText(rawPaste);
 		getToast().success(get(_)('paste_actions.clipboard.success'));
 	}
 
