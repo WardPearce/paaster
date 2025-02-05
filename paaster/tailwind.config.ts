@@ -15,10 +15,10 @@ export default {
 		themes: [
 			{
 				paasterDark: {
-					"primary": "#241f31",
-					"primary-content": "#cecdd2",
-					"secondary": "#e74c3c",
-					"secondary-content": "#130201",
+					"primary": "#8478c9",
+					"primary-content": "#06050f",
+					"secondary": "#4834b8",
+					"secondary-content": "#d5d7f4",
 					"accent": "#9b59b6",
 					"accent-content": "#ebddf1",
 					"neutral": "#95a5a6",

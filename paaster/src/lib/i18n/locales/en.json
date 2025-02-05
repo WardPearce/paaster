@@ -5,6 +5,7 @@
     "account": {
         "loginOrRegister": "Login"
     },
+    "paste_owner": "Owner Panel",
     "upload_failed": "Paste upload failed",
     "create": {
         "input": "paste or drag & drop your code here",

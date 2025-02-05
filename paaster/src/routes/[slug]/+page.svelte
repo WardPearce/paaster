@@ -73,14 +73,22 @@
 	{@html rosPine}
 </svelte:head>
 
-{#if pasteDownloading}
-	<Loading />
-{:else if false}
-	<Highlight language={typescript} code={rawPaste} let:highlighted>
-		<LineNumbers {highlighted} />
-	</Highlight>
-{:else}
-	<HighlightAuto code={rawPaste} let:highlighted>
-		<LineNumbers {highlighted} />
-	</HighlightAuto>
-{/if}
+<div class="flex flex-col gap-4 p-4 md:flex-row">
+	<div class="w-full rounded-lg p-4 md:w-5/6">
+		{#if pasteDownloading}
+			<Loading />
+		{:else if false}
+			<Highlight language={typescript} code={rawPaste} let:highlighted>
+				<LineNumbers {highlighted} />
+			</Highlight>
+		{:else}
+			<HighlightAuto code={rawPaste} let:highlighted>
+				<LineNumbers {highlighted} />
+			</HighlightAuto>
+		{/if}
+	</div>
+
+	<div class="bg-neutral-content order-first w-full rounded-lg p-4 md:order-last md:ml-4 md:w-1/6">
+		<h1 class="text-base-content text-2xl">{$_('paste_owner')}</h1>
+	</div>
+</div>
