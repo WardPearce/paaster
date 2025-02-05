@@ -33,10 +33,11 @@ export async function load({ params, locals }) {
         );
       }
     } else {
-      const whenDeleted = new Date();
-      whenDeleted.setHours(whenDeleted.getHours() + paste.expireAfter);
+      const now = new Date();
 
-      if (whenDeleted > paste.created) {
+      const expireTime = paste.created.getTime() + (paste.expireAfter * 60 * 60 * 1000);
+
+      if (now > expireTime) {
         await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
         await locals.s3Client.send(new DeleteObjectCommand(s3Location));
         throw error(404, 'Unable to find paste');
