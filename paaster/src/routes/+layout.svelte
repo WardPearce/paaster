@@ -10,15 +10,13 @@
 </script>
 
 <nav
-	class="navbar rounded-box bg-base-100 border-base-content/10 sticky
+	class="navbar bg-neutral-content border-base-content/10 sticky
 top-0 z-50 w-full border-b"
 >
 	<div class="w-full md:flex md:items-center md:gap-2">
 		<div class="flex items-center justify-between">
 			<div class="navbar-start items-center justify-between max-md:w-full">
-				<a class="link text-base-content link-neutral text-xl font-semibold no-underline" href="/"
-					>paaster</a
-				>
+				<a class="link text-xl font-semibold text-white no-underline" href="/">paaster.io</a>
 				<div class="md:hidden">
 					<button
 						type="button"

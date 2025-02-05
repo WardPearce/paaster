@@ -12,9 +12,35 @@ export default {
 	],
 
 	flyonui: {
-		themes: ["light", "dark"],
+		themes: [
+			{
+				paasterDark: {
+					"primary": "#241f31",
+					"primary-content": "#cecdd2",
+					"secondary": "#e74c3c",
+					"secondary-content": "#130201",
+					"accent": "#9b59b6",
+					"accent-content": "#ebddf1",
+					"neutral": "#95a5a6",
+					"neutral-content": "#080a0a",
+					"base-100": "#191724",
+					"base-200": "#14121e",
+					"base-300": "#100e18",
+					"base-content": "#cbcbce",
+					"info": "#1abc9c",
+					"info-content": "#000d09",
+					"success": "#2ecc71",
+					"success-content": "#010f04",
+					"warning": "#f1c40f",
+					"warning-content": "#140e00",
+					"error": "#e74c3c",
+					"error-content": "#130201"
+				}
+			},
+		],
 		vendors: true
 	},
 	plugins: [typography, forms, flyonui, flyonuiPlugin],
 
 } satisfies Config;
+
