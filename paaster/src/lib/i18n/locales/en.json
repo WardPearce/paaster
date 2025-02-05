@@ -5,6 +5,7 @@
     "account": {
         "loginOrRegister": "Login"
     },
+    "shortcuts": "Shortcuts",
     "paste_owner": "Owner Panel",
     "upload_failed": "Paste upload failed",
     "create": {
@@ -28,24 +29,15 @@
             "button": "Delete"
         },
         "rename": {
-            "button": "rename",
-            "success": "Name updated",
-            "model": {
-                "header": "rename paste"
-            }
+            "button": "Rename",
+            "success": "Name updated"
         },
         "share": {
-            "success": "Share link copied",
-            "button": "share"
+            "success": "Link copied to clipboard",
+            "button": "Share link"
         },
         "access_code": {
-            "button": "set access code",
-            "model": {
-                "header": "set paste access code",
-                "input": "Enter access code",
-                "tooltip": "Generate code",
-                "button": "Copy code"
-            },
+            "button": "Access code",
             "access_code_len": "Access code must be {max_length} characters or more",
             "loading": "Setting access code",
             "success": "Access code set",
@@ -60,14 +52,14 @@
         },
         "clipboard": {
             "success": "Paste copied",
-            "button": "copy"
+            "button": "Copy code to clipboard"
         },
         "save": {
             "success": "Paste saved",
             "button": "save"
         },
         "download": {
-            "button": "download"
+            "button": "Download"
         },
         "lang_updated": "Language updated",
         "expire": {
@@ -76,8 +68,8 @@
             "success": "Paste set to expire in {period}",
             "button": "Expire after",
             "periods": {
-                "never": "never",
-                "being_viewed": "being viewed",
+                "never": "Never",
+                "being_viewed": "Being viewed",
                 "minute": "minute",
                 "minutes": "minutes",
                 "hour": "hour",
