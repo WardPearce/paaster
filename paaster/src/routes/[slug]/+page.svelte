@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { localDb, type Paste } from '$lib/client/dexie';
 	import {
@@ -12,7 +13,6 @@
 	import sodium from 'libsodium-wrappers-sumo';
 	import CommandIcon from 'lucide-svelte/icons/command';
 	import QrCodeIcon from 'lucide-svelte/icons/qr-code';
-	import RotateCwIcon from 'lucide-svelte/icons/rotate-cw';
 	import SendIcon from 'lucide-svelte/icons/send-horizontal';
 	import ShareIcon from 'lucide-svelte/icons/share-2';
 	import TrashIcon from 'lucide-svelte/icons/trash';
@@ -90,28 +90,19 @@
 		);
 	}
 
-	async function deletePaste() {}
-
-	let accessCode: string | undefined = $state();
-	async function setAccessCode() {
+	async function deletePaste() {
 		if (!localStored || !localStored.accessKey) return;
 
-		const newAccessCode = sodium.to_base64(sodium.randombytes_buf(16));
-
-		const updatePayload = new FormData();
-		updatePayload.append('accessCode', newAccessCode);
-
-		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
-			method: 'POST',
-			body: updatePayload,
+		const deletePasteResponse = await fetch(`/api/${page.params.slug}`, {
+			method: 'DELETE',
 			headers: {
 				Authorization: `Bearer ${localStored.accessKey}`
 			}
 		});
-		if (updatePayloadResponse.ok) {
-			accessCode = newAccessCode;
-			await navigator.clipboard.writeText(newAccessCode);
-			getToast().success(get(_)('paste_actions.access_code.success'));
+
+		if (deletePasteResponse.ok) {
+			getToast().success(get(_)('paste_actions.delete.success'));
+			goto('/');
 		}
 	}
 
@@ -413,22 +404,6 @@
 					<button type="submit" class="btn btn-outline h-full"><SendIcon /></button>
 				</div>
 			</form>
-
-			<div class="flex flex-col">
-				<label class="label label-text" for="password-paste">
-					{$_('paste_actions.access_code.button')}
-				</label>
-				<div class="flex items-center">
-					<input
-						type="input"
-						readonly
-						value={accessCode ? accessCode : 'None'}
-						class="input h-full"
-						id="password-paste"
-					/>
-					<button onclick={setAccessCode} class="btn btn-outline h-full"><RotateCwIcon /></button>
-				</div>
-			</div>
 
 			<label class="label label-text" for="delete-after">{$_('paste_actions.expire.button')}</label>
 			<Select items={timePeriods} clearable={false} bind:value={expireTime} on:change={setExpire} />
