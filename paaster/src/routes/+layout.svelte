@@ -3,10 +3,16 @@
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import { _ } from 'svelte-i18n';
 
+	import { afterNavigate } from '$app/navigation';
 	import 'notyf/notyf.min.css';
 	import '../app.css';
 
 	let { children } = $props();
+
+	afterNavigate(() => {
+		// @ts-ignore
+		HSStaticMethods.autoInit();
+	});
 </script>
 
 <nav

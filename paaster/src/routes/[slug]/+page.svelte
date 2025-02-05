@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { localDb, type Paste } from '$lib/client/dexie';
-	import { deriveExistingKeyFromMaster } from '$lib/client/sodiumWrapped';
+	import {
+		deriveExistingKeyFromMaster,
+		secretBoxDecryptFromMaster,
+		secretBoxEncryptFromMaster
+	} from '$lib/client/sodiumWrapped';
 	import Loading from '$lib/components/Loading.svelte';
 	import { getToast } from '$lib/toasts';
 	import { error } from '@sveltejs/kit';
@@ -16,9 +20,9 @@
 	import { onMount } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import type { LanguageType } from 'svelte-highlight/languages';
-	import typescript from 'svelte-highlight/languages/typescript';
 	import rosPine from 'svelte-highlight/styles/ros-pine';
 	import { _ } from 'svelte-i18n';
+	import Select from 'svelte-select';
 	// @ts-ignore
 	import QrCode from 'svelte-qrcode';
 	import { get } from 'svelte/store';
@@ -32,11 +36,10 @@
 
 	let pasteDownloading = $state(true);
 
-	let selectedLang: { label: string; value: string };
 	let supportedLangs: {
 		[key: string]: LanguageType<string>;
-	} = {};
-	let langImport: LanguageType<string> | null = null;
+	} = $state({});
+	let langImport: LanguageType<string> | null = $state(null);
 
 	const timePeriods = [
 		{ value: -2, label: $_('paste_actions.expire.periods.never') },
@@ -89,10 +92,57 @@
 
 	async function deletePaste() {}
 
-	let expireTime = $state();
-	async function setExpire(event: Event & { currentTarget: EventTarget & HTMLSelectElement }) {
-		event.preventDefault();
-		console.log(expireTime);
+	let expireTime:
+		| {
+				value: number | null;
+				label: string;
+		  }
+		| undefined = $state();
+	async function setExpire() {
+		if (!expireTime || !expireTime.value || !localStored || !localStored.accessKey) return;
+
+		const updatePayload = new FormData();
+		updatePayload.append('expireAfter', expireTime.value.toString());
+
+		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			getToast().success(
+				get(_)('paste_actions.expire.success').replace('{period}', expireTime.label)
+			);
+		}
+	}
+
+	let selectedLang: { label: string; value: string } | undefined = $state();
+	async function setLang() {
+		if (!selectedLang || !localStored || !localStored.accessKey) return;
+
+		const langEncrypted = secretBoxEncryptFromMaster(
+			new TextEncoder().encode(selectedLang.value),
+			rawMasterKey
+		);
+
+		const updatePayload = new FormData();
+		updatePayload.append('langName', sodium.to_base64(langEncrypted.data.value));
+		updatePayload.append('langNonce', sodium.to_base64(langEncrypted.data.nonce));
+		updatePayload.append('langKeySalt', sodium.to_base64(langEncrypted.key.salt));
+
+		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			getToast().success(get(_)('paste_actions.lang_updated'));
+			langImport = supportedLangs[selectedLang.value];
+		}
 	}
 
 	async function sharePaste() {
@@ -175,6 +225,33 @@
 			chunkStart = chunkEnd; // Move to the next chunk
 		}
 
+		if (data.language) {
+			const rawLang = new TextDecoder().decode(
+				secretBoxDecryptFromMaster(
+					{
+						value: sodium.from_base64(data.language.value),
+						nonce: sodium.from_base64(data.language.nonce)
+					},
+					{ value: rawMasterKey, salt: sodium.from_base64(data.language.keySalt) }
+				).rawData
+			);
+
+			if (rawLang in supportedLangs) {
+				selectedLang = { value: rawLang, label: rawLang };
+				langImport = supportedLangs[rawLang];
+			}
+		}
+
+		if (data.expireAfter !== null) {
+			// Allows us to change the period label in the future.
+			timePeriods.forEach((time) => {
+				if (time.value === data.expireAfter) {
+					expireTime = time;
+					return true;
+				}
+			});
+		}
+
 		pasteDownloading = false;
 
 		Mousetrap.bind(['command+a', 'ctrl+a'], () => {
@@ -249,8 +326,8 @@
 	<div class="w-full rounded-lg p-4 md:w-5/6">
 		{#if pasteDownloading}
 			<Loading />
-		{:else if false}
-			<Highlight language={typescript} code={rawPaste} let:highlighted>
+		{:else if langImport}
+			<Highlight language={langImport} code={rawPaste} let:highlighted>
 				<LineNumbers {highlighted} />
 			</Highlight>
 		{:else}
@@ -284,16 +361,17 @@
 				</div>
 			</div>
 
-			<div>
-				<label class="label label-text" for="delete-after"
-					>{$_('paste_actions.expire.button')}</label
-				>
-				<select bind:value={expireTime} class="select" id="delete-after" onchange={setExpire}>
-					{#each timePeriods as timePeriod}
-						<option value={timePeriod.value}>{timePeriod.label}</option>
-					{/each}
-				</select>
-			</div>
+			<label class="label label-text" for="delete-after">{$_('paste_actions.expire.button')}</label>
+			<Select items={timePeriods} clearable={false} bind:value={expireTime} on:change={setExpire} />
+
+			<label class="label label-text" for="lang">{$_('paste_actions.language')}</label>
+			<Select
+				items={Object.keys(supportedLangs)}
+				clearable={false}
+				bind:value={selectedLang}
+				on:change={setLang}
+				placeholder="Auto-detect language"
+			/>
 
 			<div class="mt-5"></div>
 

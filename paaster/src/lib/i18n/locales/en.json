@@ -62,6 +62,7 @@
             "button": "Download"
         },
         "lang_updated": "Language updated",
+        "language": "Language",
         "expire": {
             "loading": "Updating expire after",
             "error": "Unable to set expire after",

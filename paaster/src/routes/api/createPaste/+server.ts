@@ -35,7 +35,9 @@ export async function POST({ locals, request }) {
     language: null,
     expireAfter: -2,
     accessCode: null,
-    accessKey: await argon2.hash(accessKey)
+    accessKey: await argon2.hash(accessKey),
+    created: new Date(),
+    deleteNextRequest: false
   });
 
   const signedUrl = await createPresignedPost(locals.s3Client, {

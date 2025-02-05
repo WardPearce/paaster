@@ -18,7 +18,7 @@ export async function POST({ locals, request, params }) {
     throw error(404, 'Paste not found');
   }
 
-  const withoutPrefixAuthorization = authorization.replace('Bearer', '').replace('bearer', '');
+  const withoutPrefixAuthorization = authorization.replace('Bearer ', '').replace('bearer ', '');
 
   if (!await argon2.verify(paste.accessKey, withoutPrefixAuthorization)) {
     throw error(401, 'Authorization invalid');
@@ -66,6 +66,11 @@ export async function POST({ locals, request, params }) {
   if (accessCode) {
     toUpdate.accessCode = await argon2.hash(accessCode);
   }
+
+  await locals.mongoDb.collection('pastes').updateOne(
+    { _id: pasteId },
+    { $set: toUpdate }
+  );
 
   return json({});
 }
