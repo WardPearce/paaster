@@ -92,6 +92,29 @@
 
 	async function deletePaste() {}
 
+	let accessCode: string | undefined = $state();
+	async function setAccessCode() {
+		if (!localStored || !localStored.accessKey) return;
+
+		const newAccessCode = sodium.to_base64(sodium.randombytes_buf(16));
+
+		const updatePayload = new FormData();
+		updatePayload.append('accessCode', newAccessCode);
+
+		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			accessCode = newAccessCode;
+			await navigator.clipboard.writeText(newAccessCode);
+			getToast().success(get(_)('paste_actions.access_code.success'));
+		}
+	}
+
 	let pasteName: string | undefined = $state();
 	async function setName(event: SubmitEvent) {
 		event.preventDefault();
@@ -396,8 +419,14 @@
 					{$_('paste_actions.access_code.button')}
 				</label>
 				<div class="flex items-center">
-					<input type="input" readonly value="None" class="input h-full" id="password-paste" />
-					<button class="btn btn-outline h-full"><RotateCwIcon /></button>
+					<input
+						type="input"
+						readonly
+						value={accessCode ? accessCode : 'None'}
+						class="input h-full"
+						id="password-paste"
+					/>
+					<button onclick={setAccessCode} class="btn btn-outline h-full"><RotateCwIcon /></button>
 				</div>
 			</div>
 
