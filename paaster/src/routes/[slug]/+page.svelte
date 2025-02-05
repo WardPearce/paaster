@@ -92,6 +92,34 @@
 
 	async function deletePaste() {}
 
+	let pasteName: string | undefined = $state();
+	async function setName(event: SubmitEvent) {
+		event.preventDefault();
+
+		if (!pasteName || !localStored || !localStored.accessKey) return;
+
+		const nameEncrypted = secretBoxEncryptFromMaster(
+			new TextEncoder().encode(pasteName),
+			rawMasterKey
+		);
+
+		const updatePayload = new FormData();
+		updatePayload.append('codeName', sodium.to_base64(nameEncrypted.data.value));
+		updatePayload.append('codeNameNonce', sodium.to_base64(nameEncrypted.data.nonce));
+		updatePayload.append('codeNameKeySalt', sodium.to_base64(nameEncrypted.key.salt));
+
+		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			getToast().success(get(_)('paste_actions.rename.success'));
+		}
+	}
+
 	let expireTime:
 		| {
 				value: number | null;
@@ -242,6 +270,18 @@
 			}
 		}
 
+		if (data.name.value) {
+			pasteName = new TextDecoder().decode(
+				secretBoxDecryptFromMaster(
+					{
+						value: sodium.from_base64(data.name.value),
+						nonce: sodium.from_base64(data.name.nonce)
+					},
+					{ value: rawMasterKey, salt: sodium.from_base64(data.name.keySalt) }
+				).rawData
+			);
+		}
+
 		if (data.expireAfter !== null) {
 			// Allows us to change the period label in the future.
 			timePeriods.forEach((time) => {
@@ -343,13 +383,13 @@
 		>
 			<h1 class="text-base-content text-2xl">{$_('paste_owner')}</h1>
 
-			<div class="flex flex-col">
+			<form onsubmit={setName}>
 				<label class="label label-text" for="name-paste">{$_('paste_actions.rename.button')}</label>
 				<div class="flex items-center">
-					<input type="text" class="input" id="name-paste" />
-					<button class="btn btn-outline h-full"><SendIcon /></button>
+					<input bind:value={pasteName} type="text" class="input" id="name-paste" />
+					<button type="submit" class="btn btn-outline h-full"><SendIcon /></button>
 				</div>
-			</div>
+			</form>
 
 			<div class="flex flex-col">
 				<label class="label label-text" for="password-paste">

@@ -141,6 +141,8 @@
 			date: new Date()
 		});
 
+		rawCode = '';
+
 		goto(`${createPasteJson.pasteId}#${rawMasterKeyB64}`);
 	}
 </script>
