@@ -138,7 +138,8 @@
 			id: createPasteJson.pasteId,
 			accessKey: createPasteJson.accessKey,
 			masterKey: rawMasterKeyB64,
-			date: new Date()
+			created: new Date(),
+			name: codeName
 		});
 
 		rawCode = '';

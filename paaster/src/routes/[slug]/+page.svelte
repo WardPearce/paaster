@@ -230,7 +230,8 @@
 				id: page.params.slug,
 				masterKey: sodium.to_base64(rawMasterKey),
 				accessKey: undefined,
-				date: new Date()
+				created: new Date(),
+				name: pasteName
 			});
 		}
 

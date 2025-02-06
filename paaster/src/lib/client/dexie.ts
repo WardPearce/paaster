@@ -5,7 +5,7 @@ export interface Paste {
   id: string;
   accessKey: string | undefined;
   masterKey: string;
-  date: Date;
+  created: Date;
   name: string | undefined;
 }
 
@@ -15,7 +15,7 @@ export class PaasterDb extends Dexie {
   constructor() {
     super('paasterv3');
     this.version(1).stores({
-      pastes: 'id, accessKey, masterKey, date, name',
+      pastes: 'id, accessKey, masterKey, created, name',
     });
   }
 }
