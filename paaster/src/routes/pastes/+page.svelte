@@ -4,6 +4,7 @@
 	import { relativeDate } from '$lib/date';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
+	import { _ } from 'svelte-i18n';
 
 	let { data } = $props();
 
@@ -47,7 +48,7 @@
 	});
 </script>
 
-{#if bookmarkedPastes}
+{#if bookmarkedPastes.length > 0}
 	<div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-4">
 		{#each bookmarkedPastes as paste}
 			<div class="bg-neutral-content rounded-lg p-4">
@@ -64,4 +65,6 @@
 			</div>
 		{/each}
 	</div>
+{:else}
+	<p class="p-3 text-xl">{$_('no_saved_pastes')}</p>
 {/if}

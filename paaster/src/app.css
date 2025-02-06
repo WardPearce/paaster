@@ -2,13 +2,12 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-textarea::placeholder {
-    font-size: 1.3em;
+:root {
+    --line-number-color: oklch(var(--sc)) !important;
 }
 
-.hljs,
-.hljs * {
-    background: transparent !important;
+textarea::placeholder {
+    font-size: 1.3em;
 }
 
 .svelte-select {
