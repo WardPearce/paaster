@@ -9,7 +9,6 @@
 	} from '$lib/client/sodiumWrapped';
 	import Loading from '$lib/components/Loading.svelte';
 	import { getToast } from '$lib/toasts';
-	import { error } from '@sveltejs/kit';
 	import sodium from 'libsodium-wrappers-sumo';
 	import CommandIcon from 'lucide-svelte/icons/command';
 	import QrCodeIcon from 'lucide-svelte/icons/qr-code';
@@ -88,6 +87,11 @@
 			},
 			{}
 		);
+	}
+
+	function handleError(error: string) {
+		getToast().error(error);
+		goto('/');
 	}
 
 	async function deletePaste() {
@@ -213,7 +217,8 @@
 			rawMasterKey = sodium.from_base64(window.location.hash.replace('#', ''));
 		} catch {}
 		if (!rawMasterKey) {
-			error(400, get(_)('view.invalid_format'));
+			handleError(get(_)('view.invalid_format'));
+			return;
 		}
 
 		const result = await localDb.pastes.get(page.params.slug);
@@ -232,7 +237,8 @@
 
 		const codeResponse = await fetch(data.signedUrl);
 		if (!codeResponse.ok) {
-			error(400, get(_)('view.cdn_down'));
+			handleError(get(_)('view.cdn_down'));
+			return;
 		}
 
 		const encryptedCode = new Uint8Array(await codeResponse.arrayBuffer());
@@ -262,7 +268,8 @@
 			if (decryptedChunk) {
 				rawPaste += new TextDecoder().decode(decryptedChunk.message);
 			} else {
-				error(400, get(_)('view.invalid_format'));
+				handleError(get(_)('view.invalid_format'));
+				return;
 			}
 
 			chunkStart = chunkEnd; // Move to the next chunk
@@ -377,79 +384,90 @@
 	</div>
 </div>
 
-<div class="flex flex-col gap-4 p-4 md:flex-row">
-	<div class="w-full rounded-lg p-4 md:w-5/6">
-		{#if pasteDownloading}
-			<Loading />
-		{:else if langImport}
-			<Highlight language={langImport} code={rawPaste} let:highlighted>
-				<LineNumbers {highlighted} />
-			</Highlight>
-		{:else}
-			<HighlightAuto code={rawPaste} let:highlighted>
-				<LineNumbers {highlighted} />
-			</HighlightAuto>
+{#if pasteDownloading}
+	<Loading />
+{:else}
+	<div class="flex flex-col gap-4 p-4 md:flex-row">
+		<div class="w-full rounded-lg p-4 md:w-5/6">
+			{#if langImport}
+				<Highlight language={langImport} code={rawPaste} let:highlighted>
+					<LineNumbers {highlighted} />
+				</Highlight>
+			{:else}
+				<HighlightAuto code={rawPaste} let:highlighted>
+					<LineNumbers {highlighted} />
+				</HighlightAuto>
+			{/if}
+		</div>
+
+		{#if localStored && localStored.accessKey}
+			<div
+				class="bg-neutral-content order-first flex w-full flex-col space-y-2 rounded-lg p-4 md:order-last md:ml-4 md:w-1/6"
+			>
+				<h1 class="text-base-content text-2xl">{$_('paste_owner')}</h1>
+
+				<form onsubmit={setName}>
+					<label class="label label-text" for="name-paste"
+						>{$_('paste_actions.rename.button')}</label
+					>
+					<div class="flex items-center">
+						<input bind:value={pasteName} type="text" class="input" id="name-paste" />
+						<button type="submit" class="btn btn-outline h-full"><SendIcon /></button>
+					</div>
+				</form>
+
+				<label class="label label-text" for="delete-after"
+					>{$_('paste_actions.expire.button')}</label
+				>
+				<Select
+					items={timePeriods}
+					clearable={false}
+					bind:value={expireTime}
+					on:change={setExpire}
+				/>
+
+				<label class="label label-text" for="lang">{$_('paste_actions.language')}</label>
+				<Select
+					items={Object.keys(supportedLangs)}
+					clearable={false}
+					bind:value={selectedLang}
+					on:change={setLang}
+					placeholder="Auto-detect language"
+				/>
+
+				<div class="mt-5"></div>
+
+				<button
+					class="btn btn-primary"
+					onclick={() => {
+						// @ts-ignore
+						new HSOverlay(document.querySelector('#qr-code')).open();
+					}}
+				>
+					<QrCodeIcon />
+					{$_('paste_actions.qr_code.button')}</button
+				>
+
+				<button class="btn btn-primary" onclick={sharePaste}>
+					<ShareIcon />
+					{$_('paste_actions.share.button')}
+				</button>
+
+				<button
+					class="btn btn-primary"
+					onclick={() => {
+						// @ts-ignore
+						new HSOverlay(document.querySelector('#shortcuts')).open();
+					}}
+				>
+					<CommandIcon /> {$_('shortcuts')}</button
+				>
+
+				<button class="btn btn-outline" onclick={deletePaste}>
+					<TrashIcon />
+					{$_('paste_actions.delete.button')}
+				</button>
+			</div>
 		{/if}
 	</div>
-
-	{#if localStored && localStored.accessKey}
-		<div
-			class="bg-neutral-content order-first flex w-full flex-col space-y-2 rounded-lg p-4 md:order-last md:ml-4 md:w-1/6"
-		>
-			<h1 class="text-base-content text-2xl">{$_('paste_owner')}</h1>
-
-			<form onsubmit={setName}>
-				<label class="label label-text" for="name-paste">{$_('paste_actions.rename.button')}</label>
-				<div class="flex items-center">
-					<input bind:value={pasteName} type="text" class="input" id="name-paste" />
-					<button type="submit" class="btn btn-outline h-full"><SendIcon /></button>
-				</div>
-			</form>
-
-			<label class="label label-text" for="delete-after">{$_('paste_actions.expire.button')}</label>
-			<Select items={timePeriods} clearable={false} bind:value={expireTime} on:change={setExpire} />
-
-			<label class="label label-text" for="lang">{$_('paste_actions.language')}</label>
-			<Select
-				items={Object.keys(supportedLangs)}
-				clearable={false}
-				bind:value={selectedLang}
-				on:change={setLang}
-				placeholder="Auto-detect language"
-			/>
-
-			<div class="mt-5"></div>
-
-			<button
-				class="btn btn-primary"
-				onclick={() => {
-					// @ts-ignore
-					new HSOverlay(document.querySelector('#qr-code')).open();
-				}}
-			>
-				<QrCodeIcon />
-				{$_('paste_actions.qr_code.button')}</button
-			>
-
-			<button class="btn btn-primary" onclick={sharePaste}>
-				<ShareIcon />
-				{$_('paste_actions.share.button')}
-			</button>
-
-			<button
-				class="btn btn-primary"
-				onclick={() => {
-					// @ts-ignore
-					new HSOverlay(document.querySelector('#shortcuts')).open();
-				}}
-			>
-				<CommandIcon /> {$_('shortcuts')}</button
-			>
-
-			<button class="btn btn-outline" onclick={deletePaste}>
-				<TrashIcon />
-				{$_('paste_actions.delete.button')}
-			</button>
-		</div>
-	{/if}
-</div>
+{/if}
