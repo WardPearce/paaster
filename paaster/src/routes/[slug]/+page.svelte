@@ -199,7 +199,8 @@
 
 	async function downloadPaste() {
 		const anchor = document.createElement('a');
-		const url = window.URL.createObjectURL(new Blob([rawPaste], { type: 'octet/stream' }));
+		const url = window.URL.createObjectURL(new Blob([rawPaste], { type: 'text/plain' }));
+		anchor.download = pasteName ?? 'Unknown';
 		anchor.href = url;
 		anchor.click();
 		window.URL.revokeObjectURL(url);
