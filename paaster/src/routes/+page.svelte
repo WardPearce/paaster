@@ -99,7 +99,7 @@
 			formData.append('codeNameKeySalt', sodium.to_base64(codeNameEncrypted.key.salt));
 		}
 
-		const createPasteResp = await fetch('/api/createPaste', { method: 'POST', body: formData });
+		const createPasteResp = await fetch('/api/paste', { method: 'POST', body: formData });
 		if (!createPasteResp.ok) {
 			pasteUploading = false;
 			try {

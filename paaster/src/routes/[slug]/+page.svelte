@@ -97,7 +97,7 @@
 	async function deletePaste() {
 		if (!localStored || !localStored.accessKey) return;
 
-		const deletePasteResponse = await fetch(`/api/${page.params.slug}`, {
+		const deletePasteResponse = await fetch(`/api/paste/${page.params.slug}`, {
 			method: 'DELETE',
 			headers: {
 				Authorization: `Bearer ${localStored.accessKey}`
@@ -126,7 +126,7 @@
 		updatePayload.append('codeNameNonce', sodium.to_base64(nameEncrypted.data.nonce));
 		updatePayload.append('codeNameKeySalt', sodium.to_base64(nameEncrypted.key.salt));
 
-		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.slug}`, {
 			method: 'POST',
 			body: updatePayload,
 			headers: {
@@ -151,7 +151,7 @@
 		const updatePayload = new FormData();
 		updatePayload.append('expireAfter', expireTime.value.toString());
 
-		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.slug}`, {
 			method: 'POST',
 			body: updatePayload,
 			headers: {
@@ -179,7 +179,7 @@
 		updatePayload.append('langNonce', sodium.to_base64(langEncrypted.data.nonce));
 		updatePayload.append('langKeySalt', sodium.to_base64(langEncrypted.key.salt));
 
-		const updatePayloadResponse = await fetch(`/api/${page.params.slug}`, {
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.slug}`, {
 			method: 'POST',
 			body: updatePayload,
 			headers: {

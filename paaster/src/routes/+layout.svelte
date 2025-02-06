@@ -44,7 +44,7 @@ top-0 z-50 w-full border-b"
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
 				<li><a href="/pastes" class="btn btn-text"><BookMarkedIcon /> {$_('saved_pastes')}</a></li>
 				<li>
-					<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.loginOrRegister')}</a>
+					<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.login')}</a>
 				</li>
 			</ul>
 		</div>
