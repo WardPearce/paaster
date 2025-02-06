@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
+	import { authStore } from '$lib/client/stores';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { _ } from 'svelte-i18n';
 
 	let loginMode = $state(true);
+	let rememberMe = $state(true);
 
 	let rawUsername: string | undefined = $state();
 	let rawPassword: string | undefined = $state();
@@ -15,6 +18,8 @@
 
 		await sodium.ready;
 
+		await localDb.accounts.clear();
+
 		if (!rawPassword || !rawUsername) return;
 
 		errorMsg = undefined;
@@ -22,7 +27,7 @@
 		const masterPasswordSalt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
 
 		const masterPassword = sodium.crypto_pwhash(
-			32,
+			sodium.crypto_secretbox_KEYBYTES,
 			rawPassword,
 			masterPasswordSalt,
 			sodium.crypto_pwhash_OPSLIMIT_SENSITIVE,
@@ -49,28 +54,69 @@
 
 		createAccountPayload.append('username', rawUsername);
 
-		const createAccountResp = await fetch('/login/create', {
+		const createAccountResp = await fetch('/api/account/create', {
 			method: 'POST',
 			body: createAccountPayload
 		});
 		if (createAccountResp.ok) {
 			const createAccountJson = await createAccountResp.json();
 
-			await localDb.accounts.add({
+			const toStore = {
 				id: createAccountJson.userId,
 				masterPassword: sodium.to_base64(masterPassword)
-			});
+			};
+
+			if (rememberMe) await localDb.accounts.add(toStore);
+
+			authStore.set(toStore);
+
+			goto('/', { replaceState: true });
 		} else {
-			errorMsg = await createAccountResp.text();
+			try {
+				errorMsg = (await createAccountResp.json()).message;
+			} catch {
+				errorMsg = await createAccountResp.text();
+			}
 		}
 	}
 
 	async function logIntoAccount(event: SubmitEvent) {
 		event.preventDefault();
 
+		await localDb.accounts.clear();
+
 		if (!rawPassword || !rawUsername) return;
 
 		errorMsg = undefined;
+
+		const getSaltResponse = await fetch(`/api/account/${rawUsername}`);
+		if (getSaltResponse.ok) {
+			const getSaltJson = await getSaltResponse.json();
+
+			const masterPassword = sodium.crypto_pwhash(
+				sodium.crypto_secretbox_KEYBYTES,
+				rawPassword,
+				sodium.from_base64(getSaltJson.masterPasswordSalt),
+				sodium.crypto_pwhash_OPSLIMIT_SENSITIVE,
+				sodium.crypto_pwhash_MEMLIMIT_SENSITIVE,
+				sodium.crypto_pwhash_ALG_DEFAULT
+			);
+
+			const serverSidePassword = sodium.crypto_pwhash(
+				32,
+				masterPassword,
+				sodium.from_base64(getSaltJson.serverSide.salt),
+				sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+				sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
+				sodium.crypto_pwhash_ALG_DEFAULT
+			);
+		} else {
+			try {
+				errorMsg = (await getSaltResponse.json()).message;
+			} catch {
+				errorMsg = await getSaltResponse.text();
+			}
+		}
 	}
 </script>
 
@@ -89,7 +135,18 @@
 			<label class="label label-text" for="password">{$_('account.password')}</label>
 			<input bind:value={rawPassword} type="password" class="input" id="password" />
 		</div>
-		<div class="pt-5">
+		<div class="pb-2 pt-2">
+			<div class="flex items-center gap-1">
+				<input
+					bind:checked={rememberMe}
+					type="checkbox"
+					class="switch switch-primary"
+					id="remember-me"
+				/>
+				<label class="label label-text text-base" for="remember-me">{$_('account.remember')}</label>
+			</div>
+		</div>
+		<div>
 			<button class="btn btn-primary">
 				{#if loginMode}
 					{$_('account.login')}
