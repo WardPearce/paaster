@@ -58,6 +58,7 @@ export async function load({ params, locals }) {
     name: paste.name,
     language: paste.language,
     expireAfter: paste.expireAfter,
+    created: paste.created,
     signedUrl: signedUrl
   };
 }
