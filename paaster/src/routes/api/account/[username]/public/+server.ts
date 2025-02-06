@@ -2,7 +2,7 @@ import { error, json } from '@sveltejs/kit';
 
 export async function GET({ locals, params }) {
   const user = await locals.mongoDb.collection('users').findOne({
-    username: params.slug
+    username: params.username
   });
 
   if (!user) {

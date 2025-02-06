@@ -17,7 +17,7 @@ async function validateAuth(bearer: string | null, hash: string) {
 }
 
 export async function DELETE({ locals, request, params }) {
-  const pasteId = stringToObjectId(params.slug);
+  const pasteId = stringToObjectId(params.pasteId);
 
   const paste = await locals.mongoDb.collection('pastes').findOne({
     _id: pasteId
@@ -38,7 +38,7 @@ export async function DELETE({ locals, request, params }) {
 }
 
 export async function POST({ locals, request, params }) {
-  const pasteId = stringToObjectId(params.slug);
+  const pasteId = stringToObjectId(params.pasteId);
 
   const paste = await locals.mongoDb.collection('pastes').findOne({
     _id: pasteId

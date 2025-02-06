@@ -5,7 +5,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params, locals }) {
-  const pasteId = stringToObjectId(params.slug);
+  const pasteId = stringToObjectId(params.pasteId);
 
   const paste = await locals.mongoDb.collection('pastes').findOne({
     _id: pasteId,

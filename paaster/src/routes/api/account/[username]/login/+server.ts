@@ -5,7 +5,7 @@ import { sign } from 'cookie-signature';
 
 export async function POST({ params, locals, request, cookies }) {
   const user = await locals.mongoDb.collection('users').findOne({
-    username: params.slug
+    username: params.username
   });
   if (!user) {
     throw error(404, 'User not found');
