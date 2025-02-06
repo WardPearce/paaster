@@ -4,6 +4,7 @@
     "paste_size_too_large": "Paste size surpasses max size",
     "account": {
         "login": "Login",
+        "my_account": "Account",
         "create": "Create account",
         "username": "Username",
         "password": "Password",

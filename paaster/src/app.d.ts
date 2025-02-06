@@ -7,6 +7,7 @@ declare global {
 		interface Locals {
 			mongoDb: Db,
 			s3Client: S3Client;
+			userId: string | undefined;
 		}
 		// interface PageData {}
 		// interface PageState {}

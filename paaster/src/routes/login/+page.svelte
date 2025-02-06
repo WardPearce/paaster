@@ -89,7 +89,7 @@
 
 		errorMsg = undefined;
 
-		const getSaltResponse = await fetch(`/api/account/${rawUsername}`);
+		const getSaltResponse = await fetch(`/api/account/${rawUsername}/public`);
 		if (getSaltResponse.ok) {
 			const getSaltJson = await getSaltResponse.json();
 
@@ -110,6 +110,28 @@
 				sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
 				sodium.crypto_pwhash_ALG_DEFAULT
 			);
+
+			const loginPayload = new FormData();
+			loginPayload.append('serverSidePassword', sodium.to_base64(serverSidePassword));
+
+			const loginResponse = await fetch(`/api/account/${rawUsername}/login`, {
+				method: 'POST',
+				body: loginPayload
+			});
+			if (loginResponse.ok) {
+				const loginResponseJson = await loginResponse.json();
+
+				const toStore = {
+					id: loginResponseJson.userId,
+					masterPassword: sodium.to_base64(masterPassword)
+				};
+
+				if (rememberMe) await localDb.accounts.add(toStore);
+
+				authStore.set(toStore);
+
+				goto('/', { replaceState: true });
+			}
 		} else {
 			try {
 				errorMsg = (await getSaltResponse.json()).message;

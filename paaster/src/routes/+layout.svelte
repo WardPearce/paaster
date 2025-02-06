@@ -1,13 +1,27 @@
 <script lang="ts">
 	import BookMarkedIcon from 'lucide-svelte/icons/book-marked';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
+	import SettingsIcon from 'lucide-svelte/icons/settings';
 	import { _ } from 'svelte-i18n';
 
 	import { afterNavigate } from '$app/navigation';
+	import { localDb } from '$lib/client/dexie';
+	import { authStore } from '$lib/client/stores';
 	import 'notyf/notyf.min.css';
+	import { onMount } from 'svelte';
 	import '../app.css';
 
 	let { children } = $props();
+
+	onMount(async () => {
+		const account = await localDb.accounts.toArray();
+		if (account) {
+			authStore.set({
+				id: account[0].id,
+				masterPassword: account[0].masterPassword
+			});
+		}
+	});
 
 	afterNavigate(() => {
 		// @ts-ignore
@@ -44,7 +58,12 @@ top-0 z-50 w-full border-b"
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
 				<li><a href="/pastes" class="btn btn-text"><BookMarkedIcon /> {$_('saved_pastes')}</a></li>
 				<li>
-					<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.login')}</a>
+					{#if $authStore}
+						<a href="/account" class="btn btn-primary"><SettingsIcon />{$_('account.my_account')}</a
+						>
+					{:else}
+						<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.login')}</a>
+					{/if}
 				</li>
 			</ul>
 		</div>

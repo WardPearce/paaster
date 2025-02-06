@@ -3,6 +3,7 @@ import { locale } from 'svelte-i18n';
 
 import { env } from '$env/dynamic/private';
 import { S3Client } from '@aws-sdk/client-s3';
+import { unsign } from 'cookie-signature';
 import { Db, MongoClient } from 'mongodb';
 
 
@@ -34,6 +35,14 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   event.locals.mongoDb = mongoDb;
+
+  const signedUserId = event.cookies.get('userId');
+  if (signedUserId) {
+    const unsignedUserId = unsign(signedUserId, env.COOKIE_SECRET);
+    if (unsignedUserId) {
+      event.locals.userId = unsignedUserId;
+    }
+  }
 
   return resolve(event);
 };
