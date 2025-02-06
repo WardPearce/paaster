@@ -135,6 +135,7 @@
 		});
 		if (updatePayloadResponse.ok) {
 			getToast().success(get(_)('paste_actions.rename.success'));
+			await localDb.pastes.update(page.params.slug, { name: pasteName });
 		}
 	}
 
