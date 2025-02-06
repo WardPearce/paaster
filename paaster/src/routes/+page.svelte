@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { localDb } from '$lib/client/dexie';
+	import { savePaste } from '$lib/client/paste';
 	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
 	import Loading from '$lib/components/Loading.svelte';
 	import { CHUNK_SIZE, MAX_UPLOAD_SIZE } from '$lib/consts';
@@ -134,13 +134,13 @@
 
 		const rawMasterKeyB64 = sodium.to_base64(rawMasterKey);
 
-		await localDb.pastes.add({
-			id: createPasteJson.pasteId,
-			accessKey: createPasteJson.accessKey,
-			masterKey: rawMasterKeyB64,
-			created: new Date(),
-			name: codeName
-		});
+		await savePaste(
+			createPasteJson.pasteId,
+			createPasteJson.accessKey,
+			rawMasterKeyB64,
+			new Date(),
+			codeName
+		);
 
 		rawCode = '';
 

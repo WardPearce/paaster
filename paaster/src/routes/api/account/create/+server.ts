@@ -10,6 +10,10 @@ export async function POST({ locals, request }) {
   const masterPasswordSalt = maxLength(formData.get('masterPasswordSalt')?.toString());
   const username = maxLength(formData.get('username')?.toString());
 
+  if (!username || !masterPasswordSalt || !serverSidePassword || !serverSideSalt) {
+    throw error(400);
+  }
+
   if (username.length < 4) {
     throw error(400, 'Username must be more then 5 characters');
   }

@@ -1,14 +1,48 @@
 <script lang="ts">
 	import { localDb, type Paste } from '$lib/client/dexie';
+	import { authStore } from '$lib/client/stores';
 	import { relativeDate } from '$lib/date';
+	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
 
-	let bookmarkedPastes: Paste[] | undefined = $state();
+	let { data } = $props();
+
+	let bookmarkedPastes: Paste[] = $state([]);
 
 	onMount(async () => {
 		const results = await localDb.pastes.orderBy('created').reverse().toArray();
 		if (results) {
 			bookmarkedPastes = results;
+		}
+
+		if (data.pastes) {
+			await sodium.ready;
+			authStore.subscribe((auth) => {
+				if (!auth || !data.pastes) return;
+
+				const rawAccountMasterKey = sodium.from_base64(auth.masterPassword);
+
+				data.pastes.forEach((paste) => {
+					const rawPasteKey = sodium.crypto_secretbox_open_easy(
+						sodium.from_base64(paste.paste.key),
+						sodium.from_base64(paste.paste.nonce),
+						rawAccountMasterKey
+					);
+					const rawAccessKey = sodium.crypto_secretbox_open_easy(
+						sodium.from_base64(paste.accessKey.key),
+						sodium.from_base64(paste.accessKey.nonce),
+						rawAccountMasterKey
+					);
+
+					bookmarkedPastes.unshift({
+						id: paste.paste.id,
+						accessKey: sodium.to_base64(rawAccessKey),
+						masterKey: sodium.to_base64(rawPasteKey),
+						created: paste.created,
+						name: undefined
+					});
+				});
+			});
 		}
 	});
 </script>

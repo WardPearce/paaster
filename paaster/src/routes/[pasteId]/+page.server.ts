@@ -51,6 +51,22 @@ export async function load({ params, locals }) {
     expiresIn: 82800,
   });
 
+  let account;
+  if (locals.userId) {
+    const paste = await locals.mongoDb.collection('userPastes').findOne({
+      userId: locals.userId,
+      'paste.id': params.pasteId
+    });
+
+    if (paste) {
+      account = {
+        paste: paste.paste,
+        accessKey: paste.accessKey,
+        created: paste.created
+      };
+    }
+  }
+
   return {
     pasteId: paste._id.toString(),
     header: paste.header,
@@ -59,6 +75,7 @@ export async function load({ params, locals }) {
     language: paste.language,
     expireAfter: paste.expireAfter,
     created: paste.created,
-    signedUrl: signedUrl
+    signedUrl: signedUrl,
+    account: account
   };
 }

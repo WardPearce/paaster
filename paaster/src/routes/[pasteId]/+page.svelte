@@ -7,6 +7,7 @@
 		secretBoxDecryptFromMaster,
 		secretBoxEncryptFromMaster
 	} from '$lib/client/sodiumWrapped';
+	import { authStore } from '$lib/client/stores.js';
 	import Loading from '$lib/components/Loading.svelte';
 	import { getToast } from '$lib/toasts';
 	import sodium from 'libsodium-wrappers-sumo';
@@ -222,17 +223,45 @@
 			return;
 		}
 
-		const result = await localDb.pastes.get(page.params.pasteId);
-		if (result) {
-			localStored = result;
-		} else {
-			await localDb.pastes.add({
-				id: page.params.pasteId,
-				masterKey: sodium.to_base64(rawMasterKey),
-				accessKey: undefined,
-				created: data.created,
-				name: pasteName
+		if (data.account) {
+			authStore.subscribe((auth) => {
+				if (!auth || !data.account) return;
+
+				const rawAccountMasterKey = sodium.from_base64(auth.masterPassword);
+
+				const rawPasteKey = sodium.crypto_secretbox_open_easy(
+					sodium.from_base64(data.account.paste.key),
+					sodium.from_base64(data.account.paste.nonce),
+					rawAccountMasterKey
+				);
+
+				const rawAccessKey = sodium.crypto_secretbox_open_easy(
+					sodium.from_base64(data.account.accessKey.key),
+					sodium.from_base64(data.account.accessKey.nonce),
+					rawAccountMasterKey
+				);
+
+				localStored = {
+					id: page.params.pasteId,
+					accessKey: sodium.to_base64(rawAccessKey),
+					masterKey: sodium.to_base64(rawPasteKey),
+					created: data.account.created,
+					name: undefined
+				};
 			});
+		} else {
+			const result = await localDb.pastes.get(page.params.pasteId);
+			if (result) {
+				localStored = result;
+			} else {
+				await localDb.pastes.add({
+					id: page.params.pasteId,
+					masterKey: sodium.to_base64(rawMasterKey),
+					accessKey: undefined,
+					created: data.created,
+					name: pasteName
+				});
+			}
 		}
 
 		await loadSupportedLangs();

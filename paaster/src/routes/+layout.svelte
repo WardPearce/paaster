@@ -20,6 +20,16 @@
 				id: account[0].id,
 				masterPassword: account[0].masterPassword
 			});
+
+			// Check account auth hasn't expired
+			fetch('/api/account/alive').then(async (response) => {
+				const responseJson = await response.json();
+
+				if (!responseJson.loggedIn) {
+					authStore.set(undefined);
+					await localDb.accounts.clear();
+				}
+			});
 		}
 	});
 
