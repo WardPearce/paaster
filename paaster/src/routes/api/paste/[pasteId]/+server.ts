@@ -29,6 +29,12 @@ export async function DELETE({ locals, request, params }) {
   await validateAuth(request.headers.get('Authorization'), paste.accessKey);
 
   await locals.mongoDb.collection('pastes').deleteOne({ _id: paste._id });
+  if (locals.userId) {
+    await locals.mongoDb.collection('userPastes').deleteOne({
+      userId: locals.userId,
+      'paste.id': params.pasteId
+    });
+  }
   await locals.s3Client.send(new DeleteObjectCommand({
     Bucket: env.S3_BUCKET,
     Key: `${paste._id}.bin`
