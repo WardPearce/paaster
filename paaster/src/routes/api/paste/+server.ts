@@ -41,7 +41,7 @@ export async function POST({ locals, request }) {
   });
 
   const signedUrl = await createPresignedPost(locals.s3Client, {
-    Bucket: env.S3_BUCKET,
+    Bucket: env.S3_BUCKET ?? '',
     Key: `${createdPaste.insertedId}.bin`,
     Conditions: [
       ['content-length-range', 0, MAX_UPLOAD_SIZE],

@@ -38,7 +38,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const signedUserId = event.cookies.get('userId');
   if (signedUserId) {
-    const unsignedUserId = unsign(signedUserId, env.COOKIE_SECRET);
+    const unsignedUserId = unsign(signedUserId, env.COOKIE_SECRET ?? '');
     if (unsignedUserId) {
       event.locals.userId = unsignedUserId;
     }

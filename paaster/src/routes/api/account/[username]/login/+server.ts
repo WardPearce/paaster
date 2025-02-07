@@ -23,7 +23,7 @@ export async function POST({ params, locals, request, cookies }) {
   }
 
   // Set signed cookie of userId
-  cookies.set('userId', sign(user._id.toString(), env.COOKIE_SECRET), {
+  cookies.set('userId', sign(user._id.toString(), env.COOKIE_SECRET ?? ''), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
