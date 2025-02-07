@@ -1,0 +1,107 @@
+{
+    "saved_pastes": "Pastes",
+    "empty_paste": "Paste contains no characters",
+    "paste_size_too_large": "Paste size surpasses max size",
+    "account": {
+        "login": "Login",
+        "logout": "Logout",
+        "create": "Create account",
+        "username": "Username",
+        "password": "Password",
+        "already_have_account": "Log into existing",
+        "create_new_account": "Create new account",
+        "remember": "Remember me"
+    },
+    "shortcuts": "Shortcuts",
+    "paste_owner": "Owner Panel",
+    "upload_failed": "Paste upload failed",
+    "create": {
+        "input": "paste or drag & drop your code here",
+        "errors": {
+            "private_window": "Unable to save paste history, most likely due to being in a private window."
+        }
+    },
+    "view": {
+        "404": "Paste no longer exists",
+        "no_key": "Paste secret key not provided",
+        "invalid_format": "Invalid Secret key format",
+        "cdn_down": "Unable to download paste from CDN, try again later"
+    },
+    "search": "Search pastes...",
+    "paste_actions": {
+        "delete": {
+            "loading": "Deleting paste",
+            "error": "Paste not found on server",
+            "success": "Paste deleted from server",
+            "button": "Delete"
+        },
+        "rename": {
+            "button": "Rename",
+            "success": "Name updated"
+        },
+        "share": {
+            "success": "Link copied to clipboard",
+            "button": "Share link"
+        },
+        "access_code": {
+            "button": "Access code",
+            "access_code_len": "Access code must be {max_length} characters or more",
+            "loading": "Setting access code",
+            "success": "Access code set",
+            "error": "Unable to set access code",
+            "success_copied_to_clipboard": "Access code copied to clipboard"
+        },
+        "qr_code": {
+            "button": "Generate QR code",
+            "model": {
+                "header": "Scan to access paste"
+            }
+        },
+        "clipboard": {
+            "success": "Paste copied",
+            "button": "Copy code to clipboard"
+        },
+        "save": {
+            "success": "Paste saved",
+            "button": "save"
+        },
+        "download": {
+            "button": "Download"
+        },
+        "wrap_words": "Wrap words",
+        "lang_updated": "Language updated",
+        "language": "Language",
+        "expire": {
+            "loading": "Updating expire after",
+            "error": "Unable to set expire after",
+            "success": "Paste set to expire in {period}",
+            "button": "Expire after",
+            "periods": {
+                "never": "Never",
+                "being_viewed": "Being viewed",
+                "minute": "minute",
+                "minutes": "minutes",
+                "hour": "hour",
+                "hours": "hours",
+                "day": "day",
+                "days": "days",
+                "week": "week",
+                "weeks": "weeks",
+                "month": "month",
+                "months": "months"
+            }
+        }
+    },
+    "require_access_code_model": {
+        "input": "Enter access code",
+        "header": "access code required",
+        "button": "submit"
+    },
+    "no_saved_pastes": "No saved pastes",
+    "shared_with": "Shared with you",
+    "about": {
+        "title": "how we protect your privacy.",
+        "content": "Paaster utilizes end-to-end encryption for storing and sharing pastes, meaning even the server can't view what you save here.",
+        "source_code": "Our source code is completely open source and can be reviewed on {github}"
+    }
+}

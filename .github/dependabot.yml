@@ -1,11 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    directory: "/backend/paaster"
-    schedule:
-      interval: "weekly"
-
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directory: "/paaster"
     schedule:
       interval: "weekly"
