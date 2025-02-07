@@ -131,6 +131,12 @@
 				authStore.set(toStore);
 
 				goto('/', { replaceState: true });
+			} else {
+				try {
+					errorMsg = (await loginResponse.json()).message;
+				} catch {
+					errorMsg = await loginResponse.text();
+				}
 			}
 		} else {
 			try {

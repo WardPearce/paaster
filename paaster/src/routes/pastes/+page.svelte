@@ -46,6 +46,20 @@
 			});
 		}
 	});
+
+	async function deletePaste(pasteId: string, accessKey: string) {
+		const deletePasteResponse = await fetch(`/api/paste/${pasteId}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${accessKey}`
+			}
+		});
+		if (deletePasteResponse.ok) {
+			bookmarkedPastes = bookmarkedPastes.filter((value) => {
+				return value.id !== pasteId;
+			});
+		}
+	}
 </script>
 
 {#if bookmarkedPastes.length > 0}
@@ -59,7 +73,10 @@
 				<div class="flex space-x-2 sm:ml-auto sm:mt-0 sm:space-x-4">
 					<a href={`/${paste.id}#${paste.masterKey}`} class="btn btn-primary">Go to</a>
 					{#if paste.accessKey}
-						<button class="btn btn-outline">Delete</button>
+						<button
+							onclick={async () => await deletePaste(paste.id, paste.accessKey as string)}
+							class="btn btn-outline">{$_('paste_actions.delete.button')}</button
+						>
 					{/if}
 				</div>
 			</div>
