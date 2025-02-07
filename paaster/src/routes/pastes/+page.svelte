@@ -48,17 +48,16 @@
 	});
 
 	async function deletePaste(pasteId: string, accessKey: string) {
-		const deletePasteResponse = await fetch(`/api/paste/${pasteId}`, {
+		await fetch(`/api/paste/${pasteId}`, {
 			method: 'DELETE',
 			headers: {
 				Authorization: `Bearer ${accessKey}`
 			}
 		});
-		if (deletePasteResponse.ok) {
-			bookmarkedPastes = bookmarkedPastes.filter((value) => {
-				return value.id !== pasteId;
-			});
-		}
+		await localDb.pastes.delete(pasteId);
+		bookmarkedPastes = bookmarkedPastes.filter((value) => {
+			return value.id !== pasteId;
+		});
 	}
 </script>
 
