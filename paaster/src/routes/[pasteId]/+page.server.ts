@@ -53,16 +53,16 @@ export async function load({ params, locals }) {
 
   let account;
   if (locals.userId) {
-    const paste = await locals.mongoDb.collection('userPastes').findOne({
+    const userPaste = await locals.mongoDb.collection('userPastes').findOne({
       userId: locals.userId,
       'paste.id': params.pasteId
     });
 
-    if (paste) {
+    if (userPaste) {
       account = {
-        paste: paste.paste,
-        accessKey: paste.accessKey,
-        created: paste.created
+        paste: userPaste.paste,
+        accessKey: userPaste.accessKey,
+        created: userPaste.created
       };
     }
   }
