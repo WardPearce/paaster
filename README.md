@@ -63,6 +63,21 @@ services:
     environment:
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
+
+  # Not required if using a host s3 solution
+  # Must be reverse proxied so clients can access it
+  paaster_minio:
+    container_name: paaster_minio
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ""
+      MINIO_ROOT_PASSWORD: "" # A secure random value
+    volumes:
+      - ~/minio/data:/data
+    command: server /data --console-address ":9001"
 ```
 
 ### Object storage providers
