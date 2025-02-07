@@ -2,6 +2,7 @@ import { env } from '$env/dynamic/private';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { sign } from 'cookie-signature';
+import sodium from 'libsodium-wrappers-sumo';
 
 export async function POST({ params, locals, request, cookies }) {
   const user = await locals.mongoDb.collection('users').findOne({
@@ -20,6 +21,11 @@ export async function POST({ params, locals, request, cookies }) {
 
   if (!await argon2.verify(user.serverSide.password, givenServerSidePassword)) {
     throw error(401, 'Invalid password');
+  }
+
+  if (!env.COOKIE_SECRET) {
+    await sodium.ready;
+    env.COOKIE_SECRET = sodium.to_base64(sodium.randombytes_buf(32));
   }
 
   // Set signed cookie of userId
