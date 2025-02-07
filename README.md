@@ -52,6 +52,7 @@ services:
       S3_ACCESS_KEY_ID: ""
       S3_SECRET_ACCESS_KEY: ""
       S3_BUCKET: ""
+      s3_FORCE_PATH_STYLE: true # Required for minio
 
       MONGO_DB: "paasterv3"
       MONGO_URL: "mongodb://paaster_mongodb:27017"

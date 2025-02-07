@@ -18,6 +18,7 @@ const s3Client = new S3Client({
     accessKeyId: env.S3_ACCESS_KEY_ID as string,
     secretAccessKey: env.S3_SECRET_ACCESS_KEY as string,
   },
+  forcePathStyle: (env.s3_FORCE_PATH_STYLE ?? 'false') === 'true'
 });
 
 
