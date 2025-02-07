@@ -461,7 +461,7 @@
 			{/if}
 		</div>
 
-		{#if localStored && localStored.accessKey && $authStore}
+		{#if localStored && localStored.accessKey}
 			<div
 				class="bg-neutral-content order-first flex w-full flex-col space-y-2 rounded-lg p-4 md:order-last md:ml-4 md:w-1/6"
 			>

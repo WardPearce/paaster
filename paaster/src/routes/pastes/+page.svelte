@@ -12,7 +12,7 @@
 
 	onMount(async () => {
 		const results = await localDb.pastes.orderBy('created').reverse().toArray();
-		if (results) {
+		if (results.length > 0) {
 			bookmarkedPastes = results;
 		}
 
