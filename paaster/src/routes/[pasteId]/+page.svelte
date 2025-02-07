@@ -448,7 +448,7 @@
 	<Loading />
 {:else}
 	<div class="flex flex-col gap-4 p-4 md:flex-row">
-		<div class="w-full rounded-lg p-4 md:w-5/6">
+		<div class={`w-full rounded-lg p-4 ${localStored?.accessKey ? 'md:w-5/6' : ''}`}>
 			{#if langImport}
 				<Highlight language={langImport} code={rawPaste} let:highlighted>
 					<LineNumbers {highlighted} />
@@ -460,7 +460,7 @@
 			{/if}
 		</div>
 
-		{#if localStored && localStored.accessKey}
+		{#if localStored && localStored.accessKey && $authStore}
 			<div
 				class="bg-neutral-content order-first flex w-full flex-col space-y-2 rounded-lg p-4 md:order-last md:ml-4 md:w-1/6"
 			>

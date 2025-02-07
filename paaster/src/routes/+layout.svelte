@@ -1,7 +1,7 @@
 <script lang="ts">
 	import BookMarkedIcon from 'lucide-svelte/icons/book-marked';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
-	import SettingsIcon from 'lucide-svelte/icons/settings';
+	import LogoutIcon from 'lucide-svelte/icons/log-out';
 	import { _ } from 'svelte-i18n';
 
 	import { afterNavigate } from '$app/navigation';
@@ -12,6 +12,12 @@
 	import '../app.css';
 
 	let { children } = $props();
+
+	async function logout() {
+		await fetch('/api/account/logout', { method: 'DELETE' });
+		await localDb.accounts.clear();
+		authStore.set(undefined);
+	}
 
 	onMount(async () => {
 		const account = await localDb.accounts.toArray();
@@ -69,7 +75,8 @@ top-0 z-50 w-full border-b"
 				<li><a href="/pastes" class="btn btn-text"><BookMarkedIcon /> {$_('saved_pastes')}</a></li>
 				<li>
 					{#if $authStore}
-						<a href="/account" class="btn btn-primary"><SettingsIcon />{$_('account.my_account')}</a
+						<button onclick={logout} class="btn btn-primary"
+							><LogoutIcon />{$_('account.logout')}</button
 						>
 					{:else}
 						<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.login')}</a>
