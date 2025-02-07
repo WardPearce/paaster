@@ -4,7 +4,7 @@
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
 	import { _ } from 'svelte-i18n';
 
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
 	import { authStore } from '$lib/client/stores';
 	import 'notyf/notyf.min.css';
@@ -17,11 +17,12 @@
 		await fetch('/api/account/logout', { method: 'DELETE' });
 		await localDb.accounts.clear();
 		authStore.set(undefined);
+		goto('/');
 	}
 
 	onMount(async () => {
 		const account = await localDb.accounts.toArray();
-		if (account) {
+		if (account.length > 0) {
 			authStore.set({
 				id: account[0].id,
 				masterPassword: account[0].masterPassword
