@@ -448,7 +448,7 @@
 {#if pasteDownloading}
 	<Loading />
 {:else}
-	<div class="flex flex-col gap-4 p-4 md:flex-row">
+	<div class="flex flex-col gap-4 pt-4 pb-4 sm:p-4 px-0 md:flex-row">
 		<div class={`w-full rounded-lg p-4 ${localStored?.accessKey ? 'md:w-5/6' : ''}`}>
 			{#if langImport}
 				<Highlight language={langImport} code={rawPaste} let:highlighted>
