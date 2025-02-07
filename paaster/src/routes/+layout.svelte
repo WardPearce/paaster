@@ -41,8 +41,10 @@
 	});
 
 	afterNavigate(() => {
-		// @ts-ignore
-		HSStaticMethods.autoInit();
+		try {
+			// @ts-ignore
+			HSStaticMethods.autoInit();
+		} catch {}
 	});
 </script>
 
