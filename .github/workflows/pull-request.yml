@@ -1,18 +1,18 @@
-name: Development Vite workflow
+name: Pull request checks
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches:
+      - 'main'
+    paths-ignore:
+      - '**/README.md'
 
 jobs:
-  build:
+  pull-request-check:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend
+        working-directory: ./paaster
 
     steps:
       - uses: actions/checkout@v3
