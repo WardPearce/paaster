@@ -32,6 +32,8 @@
 	let rawMasterKey: Uint8Array;
 	let rawPaste: string = $state('');
 
+	let preWrap = $state(data.wrapWords);
+
 	let localStored: Paste | undefined = $state();
 
 	let pasteDownloading = $state(true);
@@ -193,6 +195,23 @@
 			getToast().success(get(_)('paste_actions.lang_updated'));
 			langImport = supportedLangs[selectedLang.value];
 		}
+	}
+
+	async function setPreWrap() {
+		preWrap = !preWrap;
+
+		if (!localStored || !localStored.accessKey) return;
+
+		const updatePayload = new FormData();
+		updatePayload.append('wrapWords', preWrap.toString());
+
+		await fetch(`/api/paste/${page.params.pasteId}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
 	}
 
 	async function sharePaste() {
@@ -368,6 +387,14 @@
 
 <svelte:head>
 	{@html rosPine}
+
+	{#if preWrap}
+		<style>
+			pre > code {
+				white-space: pre-wrap !important;
+			}
+		</style>
+	{/if}
 </svelte:head>
 
 <div
@@ -467,8 +494,20 @@
 					on:change={setLang}
 					placeholder="Auto-detect language"
 				/>
-
-				<div class="mt-5"></div>
+				<div class="mt-2"></div>
+				<div class="flex items-center gap-1">
+					<input
+						type="checkbox"
+						class="checkbox checkbox-primary"
+						id="wrap-words"
+						bind:checked={preWrap}
+						onclick={setPreWrap}
+					/>
+					<label class="label label-text text-base" for="wrap-words"
+						>{$_('paste_actions.wrap_words')}</label
+					>
+				</div>
+				<div class="mt-2"></div>
 
 				<button
 					class="btn btn-primary"

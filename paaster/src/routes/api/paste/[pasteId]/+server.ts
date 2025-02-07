@@ -55,7 +55,7 @@ export async function POST({ locals, request, params }) {
 
   await validateAuth(request.headers.get('Authorization'), paste.accessKey);
 
-  let toUpdate: Record<string, string | number | Record<string, string | number>> = {};
+  let toUpdate: Record<string, string | number | boolean | Record<string, string | number>> = {};
 
   const formData = await request.formData();
 
@@ -90,6 +90,11 @@ export async function POST({ locals, request, params }) {
     if (expireAfterNumber <= 2192 && expireAfterNumber >= -2) {
       toUpdate.expireAfter = expireAfterNumber;
     }
+  }
+
+  const wrapWords = formData.get('wrapWords');
+  if (wrapWords) {
+    toUpdate.wrapWords = wrapWords.toString() === 'true';
   }
 
   await locals.mongoDb.collection('pastes').updateOne(

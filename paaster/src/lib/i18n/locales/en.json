@@ -68,6 +68,7 @@
         "download": {
             "button": "Download"
         },
+        "wrap_words": "Wrap words",
         "lang_updated": "Language updated",
         "language": "Language",
         "expire": {

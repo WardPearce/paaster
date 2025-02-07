@@ -168,7 +168,7 @@
 				<input
 					bind:checked={rememberMe}
 					type="checkbox"
-					class="switch switch-primary"
+					class="checkbox checkbox-primary"
 					id="remember-me"
 				/>
 				<label class="label label-text text-base" for="remember-me">{$_('account.remember')}</label>
