@@ -108,6 +108,7 @@
 		});
 
 		if (deletePasteResponse.ok) {
+			await localDb.pastes.delete(page.params.pasteId);
 			getToast().success(get(_)('paste_actions.delete.success'));
 			goto('/');
 		}
