@@ -11,11 +11,6 @@
 	let bookmarkedPastes: Paste[] = $state([]);
 
 	onMount(async () => {
-		const results = await localDb.pastes.orderBy('created').reverse().toArray();
-		if (results.length > 0) {
-			bookmarkedPastes = results;
-		}
-
 		if (data.pastes) {
 			await sodium.ready;
 			authStore.subscribe((auth) => {
@@ -35,7 +30,7 @@
 						rawAccountMasterKey
 					);
 
-					bookmarkedPastes.unshift({
+					bookmarkedPastes.push({
 						id: paste.paste.id,
 						accessKey: sodium.to_base64(rawAccessKey),
 						masterKey: sodium.to_base64(rawPasteKey),
@@ -44,6 +39,11 @@
 					});
 				});
 			});
+		}
+
+		const results = await localDb.pastes.orderBy('created').reverse().toArray();
+		if (results.length > 0) {
+			bookmarkedPastes = [...bookmarkedPastes, ...results];
 		}
 	});
 
