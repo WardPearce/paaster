@@ -1,9 +1,9 @@
 import { env } from '$env/dynamic/private';
-import { maxLength } from '$lib/server/misc';
 import { stringToObjectId } from '$lib/server/objectId';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
+import { z } from 'zod';
 
 async function validateAuth(bearer: string | null, hash: string) {
   if (!bearer) {
@@ -43,6 +43,17 @@ export async function DELETE({ locals, request, params }) {
   return json({});
 }
 
+const updatePasteSchema = z.object({
+  codeName: z.string().trim().max(64).optional(),
+  codeNameNonce: z.string().trim().max(64).optional(),
+  codeNameKeySalt: z.string().trim().max(64).optional(),
+  langName: z.string().trim().max(64).optional(),
+  langNonce: z.string().trim().max(64).optional(),
+  langKeySalt: z.string().trim().max(64).optional(),
+  expireAfter: z.string().refine((val) => !isNaN(Number(val)), { message: "Must be a valid number" }).transform((val) => Number(val)).optional(),
+  wrapWords: z.string().toLowerCase().refine((val) => val == 'true' || val === 'false', { message: "Must be a boolean" }).transform((val) => val === 'true').optional()
+});
+
 export async function POST({ locals, request, params }) {
   const pasteId = stringToObjectId(params.pasteId);
 
@@ -57,44 +68,38 @@ export async function POST({ locals, request, params }) {
 
   let toUpdate: Record<string, string | number | boolean | Record<string, string | number>> = {};
 
-  const formData = await request.formData();
+  const formData = updatePasteSchema.safeParse(
+    Object.fromEntries(await request.formData())
+  );
 
-  const codeName = maxLength(formData.get('codeName')?.toString());
-  const codeNameNonce = maxLength(formData.get('codeNameNonce')?.toString());
-  const codeNameKeySalt = maxLength(formData.get('codeNameKeySalt')?.toString());
+  if (!formData.success) {
+    throw error(400, formData.error);
+  }
 
-  if (codeName && codeNameNonce && codeNameKeySalt) {
+  if (formData.data.codeName && formData.data.codeNameNonce && formData.data.codeNameKeySalt) {
     toUpdate.name = {
-      value: codeName,
-      nonce: codeNameNonce,
-      keySalt: codeNameKeySalt
+      value: formData.data.codeName,
+      nonce: formData.data.codeNameNonce,
+      keySalt: formData.data.codeNameKeySalt
     };
   }
 
-  const langName = maxLength(formData.get('langName')?.toString());
-  const langNonce = maxLength(formData.get('langNonce')?.toString());
-  const langKeySalt = maxLength(formData.get('langKeySalt')?.toString());
-
-  if (langName && langNonce && langKeySalt) {
+  if (formData.data.langName && formData.data.langNonce && formData.data.langKeySalt) {
     toUpdate.language = {
-      value: langName,
-      nonce: langNonce,
-      keySalt: langKeySalt
+      value: formData.data.langName,
+      nonce: formData.data.langNonce,
+      keySalt: formData.data.langKeySalt
     };
   }
 
-  const expireAfter = formData.get('expireAfter');
-
-  if (expireAfter) {
-    const expireAfterNumber = Number(expireAfter.toString());
-    if (expireAfterNumber <= 2192 && expireAfterNumber >= -2) {
-      toUpdate.expireAfter = expireAfterNumber;
+  if (typeof formData.data.expireAfter !== 'undefined') {
+    if (formData.data.expireAfter <= 2192 && formData.data.expireAfter >= -2) {
+      toUpdate.expireAfter = formData.data.expireAfter;
     }
   }
 
-  const wrapWords = formData.get('wrapWords');
-  if (wrapWords) {
-    toUpdate.wrapWords = wrapWords.toString() === 'true';
+  if (formData.data.wrapWords) {
+    toUpdate.wrapWords = formData.data.wrapWords;
   }
 
   await locals.mongoDb.collection('pastes').updateOne(

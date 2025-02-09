@@ -3,6 +3,11 @@ import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { sign } from 'cookie-signature';
 import sodium from 'libsodium-wrappers-sumo';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  serverSidePassword: z.string().trim().max(64).min(24)
+});
 
 export async function POST({ params, locals, request, cookies }) {
   const user = await locals.mongoDb.collection('users').findOne({
@@ -12,14 +17,15 @@ export async function POST({ params, locals, request, cookies }) {
     throw error(404, 'User not found');
   }
 
-  const formData = await request.formData();
+  const formData = loginSchema.safeParse(
+    Object.fromEntries(await request.formData())
+  );
 
-  const givenServerSidePassword = formData.get('serverSidePassword')?.toString();
-  if (!givenServerSidePassword) {
-    throw error(400, 'Password not provided');
+  if (!formData.success) {
+    throw error(400, formData.error);
   }
 
-  if (!await argon2.verify(user.serverSide.password, givenServerSidePassword)) {
+  if (!await argon2.verify(user.serverSide.password, formData.data.serverSidePassword)) {
     throw error(401, 'Invalid password');
   }
 

@@ -1,36 +1,39 @@
 import { env } from '$env/dynamic/private';
 import { MAX_UPLOAD_SIZE } from '$lib/consts.js';
-import { maxLength } from '$lib/server/misc.js';
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import sodium from 'libsodium-wrappers-sumo';
+import { z } from 'zod';
+
+const createPasteSchema = z.object({
+  codeHeader: z.string().trim().max(128),
+  codeKeySalt: z.string().trim().max(64),
+  codeName: z.string().trim().max(32).optional(),
+  codeNameNonce: z.string().trim().max(32).optional(),
+  codeNameKeySalt: z.string().trim().max(32).optional()
+});
 
 export async function POST({ locals, request }) {
   await sodium.ready;
 
-  const formData = await request.formData();
+  const formData = createPasteSchema.safeParse(
+    Object.fromEntries(await request.formData())
+  );
 
-  const codeHeader = maxLength(formData.get('codeHeader')?.toString(), 128);
-  const codeKeySalt = maxLength(formData.get('codeKeySalt')?.toString());
-
-  if (!codeHeader) {
-    throw error(400, 'codeKeySalt & codeHeader must be included');
+  if (!formData.success) {
+    throw error(400, formData.error);
   }
-
-  const codeName = maxLength(formData.get('codeName')?.toString());
-  const codeNameNonce = maxLength(formData.get('codeNameNonce')?.toString());
-  const codeNameKeySalt = maxLength(formData.get('codeNameKeySalt')?.toString());
 
   const accessKey = sodium.to_base64(sodium.randombytes_buf(32));
 
   const createdPaste = await locals.mongoDb.collection('pastes').insertOne({
-    header: codeHeader,
-    keySalt: codeKeySalt,
+    header: formData.data.codeHeader,
+    keySalt: formData.data.codeKeySalt,
     name: {
-      value: codeName,
-      nonce: codeNameNonce,
-      keySalt: codeNameKeySalt
+      value: formData.data.codeName,
+      nonce: formData.data.codeNameNonce,
+      keySalt: formData.data.codeNameKeySalt
     },
     language: null,
     expireAfter: -2,

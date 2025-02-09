@@ -1,34 +1,34 @@
-import { maxLength } from '$lib/server/misc.js';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
+import { z } from 'zod';
+
+const createSchema = z.object({
+  serverSideSalt: z.string().trim().max(64),
+  serverSidePassword: z.string().trim().max(64),
+  masterPasswordSalt: z.string().trim().max(64),
+  username: z.string().trim().max(16).min(4)
+});
 
 export async function POST({ locals, request }) {
-  const formData = await request.formData();
+  const formData = createSchema.safeParse(
+    Object.fromEntries(await request.formData())
+  );
 
-  const serverSideSalt = maxLength(formData.get('serverSideSalt')?.toString());
-  const serverSidePassword = maxLength(formData.get('serverSidePassword')?.toString());
-  const masterPasswordSalt = maxLength(formData.get('masterPasswordSalt')?.toString());
-  const username = maxLength(formData.get('username')?.toString());
-
-  if (!username || !masterPasswordSalt || !serverSidePassword || !serverSideSalt) {
-    throw error(400);
+  if (!formData.success) {
+    throw error(400, formData.error);
   }
 
-  if (username.length < 4) {
-    throw error(400, 'Username must be more then 5 characters');
-  }
-
-  if (await locals.mongoDb.collection('users').countDocuments({ username: username }) > 0) {
+  if (await locals.mongoDb.collection('users').countDocuments({ username: formData.data.username }) > 0) {
     throw error(400, 'Username taken');
   }
 
   const createdUser = await locals.mongoDb.collection('users').insertOne({
     serverSide: {
-      salt: serverSideSalt,
-      password: await argon2.hash(serverSidePassword)
+      salt: formData.data.serverSideSalt,
+      password: await argon2.hash(formData.data.serverSidePassword)
     },
-    masterPasswordSalt: masterPasswordSalt,
-    username: username
+    masterPasswordSalt: formData.data.masterPasswordSalt,
+    username: formData.data.username
   });
 
   return json({
