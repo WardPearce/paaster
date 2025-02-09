@@ -1,33 +1,36 @@
-import { maxLength } from '$lib/server/misc.js';
 import { error, json } from '@sveltejs/kit';
+import { z } from 'zod';
+
+const bookmarkPasteSchema = z.object({
+  encryptedPasteKey: z.string().trim().max(64),
+  encryptedPasteNonce: z.string().trim().max(64),
+  encryptedAccessKey: z.string().trim().max(64),
+  encryptedAccessNonce: z.string().trim().max(64)
+});
 
 export async function POST({ locals, params, request }) {
   if (!locals.userId) {
     throw error(401);
   }
 
-  const formData = await request.formData();
+  const formData = bookmarkPasteSchema.safeParse(
+    Object.fromEntries(await request.formData())
+  );
 
-  const encryptedPasteKey = maxLength(formData.get('encryptedPasteKey'));
-  const encryptedPasteNonce = maxLength(formData.get('encryptedPasteNonce'));
-
-  const encryptedAccessKey = maxLength(formData.get('encryptedAccessKey'));
-  const encryptedAccessNonce = maxLength(formData.get('encryptedAccessNonce'));
-
-  if (!encryptedPasteKey || !encryptedPasteNonce || !encryptedAccessKey || !encryptedAccessNonce) {
-    throw error(400);
+  if (!formData.success) {
+    throw error(400, formData.error);
   }
 
   await locals.mongoDb.collection('userPastes').insertOne({
     userId: locals.userId,
     paste: {
       id: params.pasteId,
-      key: encryptedPasteKey,
-      nonce: encryptedPasteNonce
+      key: formData.data.encryptedPasteKey,
+      nonce: formData.data.encryptedPasteNonce
     },
     accessKey: {
-      key: encryptedAccessKey,
-      nonce: encryptedAccessNonce
+      key: formData.data.encryptedAccessKey,
+      nonce: formData.data.encryptedAccessNonce
     },
     created: new Date()
   });
