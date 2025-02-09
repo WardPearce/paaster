@@ -10,7 +10,7 @@
 	import { _ } from 'svelte-i18n';
 	import { get } from 'svelte/store';
 
-	let codeTextArea: HTMLTextAreaElement;
+	let codeTextArea: HTMLTextAreaElement | undefined = $state();
 	let pasteUploading = $state(false);
 
 	async function onFileDropped(event: { detail: { acceptedFiles: File[] } }) {
@@ -25,8 +25,11 @@
 	}
 
 	async function onCodePasted() {
+		if (!codeTextArea) return;
 		// Binds textarea doesn't work otherwise on chrome.
 		await uploadPaste(codeTextArea.value);
+
+		codeTextArea.value = '';
 	}
 
 	async function uploadPaste(rawCode: string, codeName?: string) {
@@ -141,8 +144,6 @@
 			new Date(),
 			codeName
 		);
-
-		rawCode = '';
 
 		goto(`${createPasteJson.pasteId}#${rawMasterKeyB64}`);
 	}
