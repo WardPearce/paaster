@@ -20,12 +20,12 @@ export async function load({ params, locals }) {
     Key: `${paste._id}.bin`,
   };
 
+  let deletePaste = false;
+
   if (paste.expireAfter !== -2) {
     if (paste.expireAfter === -1) {
       if (paste.deleteNextRequest) {
-        await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
-        await locals.s3Client.send(new DeleteObjectCommand(s3Location));
-        throw error(404, 'Unable to find paste');
+        deletePaste = true;
       } else {
         await locals.mongoDb.collection('pastes').updateOne(
           { _id: pasteId },
@@ -38,11 +38,21 @@ export async function load({ params, locals }) {
       const expireTime = paste.created.getTime() + (paste.expireAfter * 60 * 60 * 1000);
 
       if (now > expireTime) {
-        await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
-        await locals.s3Client.send(new DeleteObjectCommand(s3Location));
-        throw error(404, 'Unable to find paste');
+        deletePaste = true;
       }
     }
+  }
+
+  if (deletePaste) {
+    await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
+    if (locals.userId) {
+      await locals.mongoDb.collection('userPastes').deleteOne({
+        userId: locals.userId,
+        'paste.id': params.pasteId
+      });
+    }
+    await locals.s3Client.send(new DeleteObjectCommand(s3Location));
+    throw error(404, 'Unable to find paste');
   }
 
   const command = new GetObjectCommand(s3Location);
