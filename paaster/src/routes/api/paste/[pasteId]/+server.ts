@@ -98,7 +98,7 @@ export async function POST({ locals, request, params }) {
     }
   }
 
-  if (formData.data.wrapWords) {
+  if (typeof formData.data.wrapWords !== 'undefined') {
     toUpdate.wrapWords = formData.data.wrapWords;
   }
 
