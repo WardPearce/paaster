@@ -1,99 +1,114 @@
 {
-    "saved_pastes": "bột nhão đã lưu",
-    "create": {
-        "input": "dán hoặc kéo & thả mã của bạn ở đây",
-        "errors": {
-            "private_window": "Không thể lưu lịch sử dán, rất có thể là do đang ở cửa sổ riêng tư."
-        }
-    },
-    "view": {
-        "404": "Dán không còn tồn tại",
-        "no_key": "Dán khóa bí mật không được cung cấp",
-        "invalid_format": "Định dạng khóa bí mật không hợp lệ",
-        "cdn_down": "Không thể tải xuống dán từ CDN, hãy thử lại sau"
-    },
-    "search": "Tìm bột nhão...",
-    "paste_actions": {
-        "delete": {
-            "loading": "Đang xóa dán",
-            "error": "Không tìm thấy dán trên máy chủ",
-            "success": "Dán đã xóa khỏi máy chủ",
-            "button": "xóa bỏ"
-        },
-        "rename": {
-            "button": "đổi tên",
-            "success": "Đã cập nhật tên",
-            "model": {
-                "header": "đổi tên dán"
-            }
-        },
-        "share": {
-            "success": "Chia sẻ liên kết đã sao chép",
-            "button": "chia sẻ"
-        },
-        "access_code": {
-            "button": "đặt mã truy cập",
-            "model": {
-                "header": "đặt dán mã truy cập",
-                "input": "Nhập mã truy cập",
-                "tooltip": "Tạo mã",
-                "button": "Đặt mã truy cập"
-            },
-            "access_code_len": "Mã truy cập phải có {max_length} ký tự trở lên",
-            "loading": "Đặt mã truy cập",
-            "success": "Bộ mã truy cập",
-            "error": "Không thể đặt mã truy cập",
-            "success_copied_to_clipboard": "Đã sao chép mã truy cập vào khay nhớ tạm"
-        },
-        "qr_code": {
-            "button": "tạo mã QR",
-            "model": {
-                "header": "quét để truy cập dán"
-            }
-        },
-        "clipboard": {
-            "success": "Dán đã sao chép",
-            "button": "sao chép"
-        },
-        "save": {
-            "success": "Dán đã lưu",
-            "button": "cứu"
-        },
-        "download": {
-            "button": "Tải xuống"
-        },
-        "lang_updated": "Ngôn ngữ được cập nhật",
-        "expire": {
-            "loading": "Cập nhật hết hạn sau",
-            "error": "Không thể đặt hết hạn sau",
-            "success": "Dán được đặt hết hạn sau {period}",
-            "button": "hết hạn sau",
-            "periods": {
-                "never": "không bao giờ",
-                "being_viewed": "được xem",
-                "minute": "phút",
-                "minutes": "phút",
-                "hour": "giờ",
-                "hours": "giờ",
-                "day": "ngày",
-                "days": "ngày",
-                "week": "tuần",
-                "weeks": "tuần",
-                "month": "tháng",
-                "months": "tháng"
-            }
-        }
-    },
-    "require_access_code_model": {
-        "input": "Nhập mã truy cập",
-        "header": "yêu cầu mã truy cập",
-        "button": "nộp"
-    },
-    "no_saved_pastes": "không có bột nhão đã lưu",
-    "shared_with": "Đã chia sẻ với bạn",
-    "about": {
-        "title": "cách chúng tôi bảo vệ quyền riêng tư của bạn.",
-        "content": "Paaster sử dụng mã hóa đầu cuối để lưu trữ và chia sẻ các bản ghi, nghĩa là ngay cả máy chủ cũng không thể xem những gì bạn lưu ở đây.",
-        "source_code": "Mã nguồn của chúng tôi là mã nguồn mở hoàn toàn và có thể được xem lại trên {github}"
-    }
+	"saved_pastes": "bột nhão đã lưu",
+	"empty_paste": "Dán không chứa ký tự",
+	"paste_size_too_large": "Kích thước dán vượt quá kích thước tối đa",
+	"account": {
+		"login": "Đăng nhập",
+		"logout": "Đăng xuất",
+		"create": "Tạo tài khoản",
+		"username": "Tên người dùng",
+		"password": "Mật khẩu",
+		"already_have_account": "Đăng nhập vào hiện tại",
+		"create_new_account": "Tạo tài khoản mới",
+		"remember": "Nhớ tôi nhé"
+	},
+	"shortcuts": "Phím tắt",
+	"paste_owner": "Bảng điều khiển chủ sở hữu",
+	"upload_failed": "Dán tải lên không thành công",
+	"create": {
+		"input": "dán hoặc kéo & thả mã của bạn ở đây",
+		"errors": {
+			"private_window": "Không thể lưu lịch sử dán, rất có thể là do đang ở cửa sổ riêng tư."
+		}
+	},
+	"view": {
+		"404": "Dán không còn tồn tại",
+		"no_key": "Dán khóa bí mật không được cung cấp",
+		"invalid_format": "Định dạng khóa bí mật không hợp lệ",
+		"cdn_down": "Không thể tải xuống dán từ CDN, hãy thử lại sau"
+	},
+	"search": "Tìm bột nhão...",
+	"paste_actions": {
+		"delete": {
+			"loading": "Đang xóa dán",
+			"error": "Không tìm thấy dán trên máy chủ",
+			"success": "Dán đã xóa khỏi máy chủ",
+			"button": "xóa bỏ"
+		},
+		"rename": {
+			"button": "đổi tên",
+			"success": "Đã cập nhật tên",
+			"model": {
+				"header": "đổi tên dán"
+			}
+		},
+		"share": {
+			"success": "Chia sẻ liên kết đã sao chép",
+			"button": "chia sẻ"
+		},
+		"access_code": {
+			"button": "đặt mã truy cập",
+			"access_code_len": "Mã truy cập phải có {max_length} ký tự trở lên",
+			"loading": "Đặt mã truy cập",
+			"success": "Bộ mã truy cập",
+			"error": "Không thể đặt mã truy cập",
+			"success_copied_to_clipboard": "Đã sao chép mã truy cập vào khay nhớ tạm",
+			"model": {
+				"header": "đặt dán mã truy cập",
+				"input": "Nhập mã truy cập",
+				"tooltip": "Tạo mã",
+				"button": "Đặt mã truy cập"
+			}
+		},
+		"qr_code": {
+			"button": "tạo mã QR",
+			"model": {
+				"header": "quét để truy cập dán"
+			}
+		},
+		"clipboard": {
+			"success": "Dán đã sao chép",
+			"button": "sao chép"
+		},
+		"save": {
+			"success": "Dán đã lưu",
+			"button": "cứu"
+		},
+		"download": {
+			"button": "Tải xuống"
+		},
+		"lang_updated": "Ngôn ngữ được cập nhật",
+		"expire": {
+			"loading": "Cập nhật hết hạn sau",
+			"error": "Không thể đặt hết hạn sau",
+			"success": "Dán được đặt hết hạn sau {period}",
+			"button": "hết hạn sau",
+			"periods": {
+				"never": "không bao giờ",
+				"being_viewed": "được xem",
+				"minute": "phút",
+				"minutes": "phút",
+				"hour": "giờ",
+				"hours": "giờ",
+				"day": "ngày",
+				"days": "ngày",
+				"week": "tuần",
+				"weeks": "tuần",
+				"month": "tháng",
+				"months": "tháng"
+			}
+		}
+	},
+	"require_access_code_model": {
+		"input": "Nhập mã truy cập",
+		"header": "yêu cầu mã truy cập",
+		"button": "nộp"
+	},
+	"no_saved_pastes": "không có bột nhão đã lưu",
+	"shared_with": "Đã chia sẻ với bạn",
+	"about": {
+		"title": "cách chúng tôi bảo vệ quyền riêng tư của bạn.",
+		"content": "Paaster sử dụng mã hóa đầu cuối để lưu trữ và chia sẻ các bản ghi, nghĩa là ngay cả máy chủ cũng không thể xem những gì bạn lưu ở đây.",
+		"source_code": "Mã nguồn của chúng tôi là mã nguồn mở hoàn toàn và có thể được xem lại trên {github}"
+	}
 }

@@ -1,99 +1,114 @@
 {
-    "saved_pastes": "Paste salvate",
-    "create": {
-        "input": "incolla o trascina & lascia il tuo codice qui",
-        "errors": {
-            "private_window": "Impossibile salvare la cronologia degli incollaggi, molto probabilmente perché si trova in una finestra privata."
-        }
-    },
-    "view": {
-        "404": "La pasta non esiste più",
-        "no_key": "Incolla chiave segreta non fornita",
-        "invalid_format": "Formato della chiave segreta non valido",
-        "cdn_down": "Impossibile scaricare l'incolla dal CDN, riprova più tardi"
-    },
-    "search": "Cerca paste...",
-    "paste_actions": {
-        "delete": {
-            "loading": "Cancellare incolla",
-            "error": "Incolla non trovata sul server",
-            "success": "Incolla eliminato dal server",
-            "button": "eliminare"
-        },
-        "rename": {
-            "button": "rinominare",
-            "success": "Nome aggiornato",
-            "model": {
-                "header": "rinomina incolla"
-            }
-        },
-        "share": {
-            "success": "Link di condivisione copiato",
-            "button": "condividere"
-        },
-        "access_code": {
-            "button": "impostare il codice di accesso",
-            "model": {
-                "header": "imposta incolla codice di accesso",
-                "input": "Inserisci il codice di accesso",
-                "tooltip": "Genera codice",
-                "button": "Imposta il codice di accesso"
-            },
-            "access_code_len": "Il codice di accesso deve contenere almeno {max_length} caratteri",
-            "loading": "Impostazione del codice di accesso",
-            "success": "Codice di accesso impostato",
-            "error": "Impossibile impostare il codice di accesso",
-            "success_copied_to_clipboard": "Codice di accesso copiato negli appunti"
-        },
-        "qr_code": {
-            "button": "generare codice QR",
-            "model": {
-                "header": "scansione per accedere incolla"
-            }
-        },
-        "clipboard": {
-            "success": "Incolla copiato",
-            "button": "copia"
-        },
-        "save": {
-            "success": "Incolla salvato",
-            "button": "salva"
-        },
-        "download": {
-            "button": "scaricamento"
-        },
-        "lang_updated": "Lingua aggiornata",
-        "expire": {
-            "loading": "L'aggiornamento scade dopo",
-            "error": "Impossibile impostare la scadenza dopo",
-            "success": "Incolla impostato per scadere tra {period}",
-            "button": "Scade dopo",
-            "periods": {
-                "never": "Mai",
-                "being_viewed": "essere vista",
-                "minute": "minuto",
-                "minutes": "minuti",
-                "hour": "ora",
-                "hours": "ore",
-                "day": "giorno",
-                "days": "giorni",
-                "week": "settimana",
-                "weeks": "settimane",
-                "month": "mese",
-                "months": "mesi"
-            }
-        }
-    },
-    "require_access_code_model": {
-        "input": "Inserisci il codice di accesso",
-        "header": "codice di accesso richiesto",
-        "button": "invia"
-    },
-    "no_saved_pastes": "nessuna pasta salvata",
-    "shared_with": "Condiviso con te",
-    "about": {
-        "title": "come proteggiamo la tua privacy.",
-        "content": "Paaster utilizza la crittografia end-to-end per l'archiviazione e la condivisione delle paste, il che significa che anche il server non può visualizzare ciò che salvi qui.",
-        "source_code": "Il nostro codice sorgente è completamente open source e può essere rivisto su {github}"
-    }
+	"saved_pastes": "Paste salvate",
+	"empty_paste": "La pasta non contiene caratteri",
+	"paste_size_too_large": "La dimensione della pasta supera la dimensione massima",
+	"account": {
+		"login": "Login",
+		"logout": "Esci",
+		"create": "Creare un account",
+		"username": "Nome utente",
+		"password": "Password",
+		"already_have_account": "Accedi a esistente",
+		"create_new_account": "Crea un nuovo account",
+		"remember": "Ricordati di me"
+	},
+	"shortcuts": "Scorciatoie",
+	"paste_owner": "Pannello proprietario",
+	"upload_failed": "Caricamento incolla non riuscito",
+	"create": {
+		"input": "incolla o trascina & lascia il tuo codice qui",
+		"errors": {
+			"private_window": "Impossibile salvare la cronologia degli incollaggi, molto probabilmente perché si trova in una finestra privata."
+		}
+	},
+	"view": {
+		"404": "La pasta non esiste più",
+		"no_key": "Incolla chiave segreta non fornita",
+		"invalid_format": "Formato della chiave segreta non valido",
+		"cdn_down": "Impossibile scaricare l'incolla dal CDN, riprova più tardi"
+	},
+	"search": "Cerca paste...",
+	"paste_actions": {
+		"delete": {
+			"loading": "Cancellare incolla",
+			"error": "Incolla non trovata sul server",
+			"success": "Incolla eliminato dal server",
+			"button": "eliminare"
+		},
+		"rename": {
+			"button": "rinominare",
+			"success": "Nome aggiornato",
+			"model": {
+				"header": "rinomina incolla"
+			}
+		},
+		"share": {
+			"success": "Link di condivisione copiato",
+			"button": "condividere"
+		},
+		"access_code": {
+			"button": "impostare il codice di accesso",
+			"access_code_len": "Il codice di accesso deve contenere almeno {max_length} caratteri",
+			"loading": "Impostazione del codice di accesso",
+			"success": "Codice di accesso impostato",
+			"error": "Impossibile impostare il codice di accesso",
+			"success_copied_to_clipboard": "Codice di accesso copiato negli appunti",
+			"model": {
+				"header": "imposta incolla codice di accesso",
+				"input": "Inserisci il codice di accesso",
+				"tooltip": "Genera codice",
+				"button": "Imposta il codice di accesso"
+			}
+		},
+		"qr_code": {
+			"button": "generare codice QR",
+			"model": {
+				"header": "scansione per accedere incolla"
+			}
+		},
+		"clipboard": {
+			"success": "Incolla copiato",
+			"button": "copia"
+		},
+		"save": {
+			"success": "Incolla salvato",
+			"button": "salva"
+		},
+		"download": {
+			"button": "scaricamento"
+		},
+		"lang_updated": "Lingua aggiornata",
+		"expire": {
+			"loading": "L'aggiornamento scade dopo",
+			"error": "Impossibile impostare la scadenza dopo",
+			"success": "Incolla impostato per scadere tra {period}",
+			"button": "Scade dopo",
+			"periods": {
+				"never": "Mai",
+				"being_viewed": "essere vista",
+				"minute": "minuto",
+				"minutes": "minuti",
+				"hour": "ora",
+				"hours": "ore",
+				"day": "giorno",
+				"days": "giorni",
+				"week": "settimana",
+				"weeks": "settimane",
+				"month": "mese",
+				"months": "mesi"
+			}
+		}
+	},
+	"require_access_code_model": {
+		"input": "Inserisci il codice di accesso",
+		"header": "codice di accesso richiesto",
+		"button": "invia"
+	},
+	"no_saved_pastes": "nessuna pasta salvata",
+	"shared_with": "Condiviso con te",
+	"about": {
+		"title": "come proteggiamo la tua privacy.",
+		"content": "Paaster utilizza la crittografia end-to-end per l'archiviazione e la condivisione delle paste, il che significa che anche il server non può visualizzare ciò che salvi qui.",
+		"source_code": "Il nostro codice sorgente è completamente open source e può essere rivisto su {github}"
+	}
 }

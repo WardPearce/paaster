@@ -1,99 +1,114 @@
 {
-    "saved_pastes": "Saglabātas pastas",
-    "create": {
-        "input": "ielīmēt vai vilkt & nometiet savu kodu šeit",
-        "errors": {
-            "private_window": "Nevar saglabāt ielīmēšanas vēsturi, visticamāk, tādēļ, ka atrodas privātā logā."
-        }
-    },
-    "view": {
-        "404": "Ielīmēšana vairs nepastāv",
-        "no_key": "Ielīmēšanas slepenā atslēga nav norādīta",
-        "invalid_format": "Nederīgs slepenās atslēgas formāts",
-        "cdn_down": "Nevar lejupielādēt ielīmēšanu no CDN. Vēlāk mēģiniet vēlreiz"
-    },
-    "search": "Meklēt pastas...",
-    "paste_actions": {
-        "delete": {
-            "loading": "Dzēš ielīmēt",
-            "error": "Ielīmēšana serverī nav atrasta",
-            "success": "Ielīmēts izdzēsts no servera",
-            "button": "dzēst"
-        },
-        "rename": {
-            "button": "pārdēvēt",
-            "success": "Nosaukums atjaunināts",
-            "model": {
-                "header": "pārdēvēt pastas"
-            }
-        },
-        "share": {
-            "success": "Kopīgošanas saite ir nokopēta",
-            "button": "dalīties"
-        },
-        "access_code": {
-            "button": "iestatīt piekļuves kodu",
-            "model": {
-                "header": "iestatīt ielīmēt piekļuves kodu",
-                "input": "Ievadiet piekļuves kodu",
-                "tooltip": "Ģenerēt kodu",
-                "button": "Iestatiet piekļuves kodu"
-            },
-            "access_code_len": "Piekļuves kodam ir jābūt vismaz {max_length} rakstzīmēm",
-            "loading": "Piekļuves koda iestatīšana",
-            "success": "Piekļuves koda komplekts",
-            "error": "Nevar iestatīt piekļuves kodu",
-            "success_copied_to_clipboard": "Piekļuves kods ir kopēts starpliktuvē"
-        },
-        "qr_code": {
-            "button": "ģenerēt QR kodu",
-            "model": {
-                "header": "skenēt, lai piekļūtu ielīmēšanai"
-            }
-        },
-        "clipboard": {
-            "success": "Ielīmēts nokopēts",
-            "button": "kopiju"
-        },
-        "save": {
-            "success": "Ielīmēšana saglabāta",
-            "button": "saglabāt"
-        },
-        "download": {
-            "button": "lejupielādēt"
-        },
-        "lang_updated": "Valoda ir atjaunināta",
-        "expire": {
-            "loading": "Atjaunināšanas derīguma termiņš beigsies pēc",
-            "error": "Nevar iestatīt derīguma termiņu pēc",
-            "success": "Ielīmēts derīguma termiņš beigsies pēc {period}",
-            "button": "Beigsies pēc",
-            "periods": {
-                "never": "nekad",
-                "being_viewed": "ir skats",
-                "minute": "minūte",
-                "minutes": "minūtes",
-                "hour": "stunda",
-                "hours": "stundas",
-                "day": "diena",
-                "days": "dienas",
-                "week": "nedēļa",
-                "weeks": "nedēļas",
-                "month": "mēnesis",
-                "months": "mēnešus"
-            }
-        }
-    },
-    "require_access_code_model": {
-        "input": "Ievadiet piekļuves kodu",
-        "header": "nepieciešams piekļuves kods",
-        "button": "Iesniegt"
-    },
-    "no_saved_pastes": "nav saglabātas pastas",
-    "shared_with": "Kopīgots ar jums",
-    "about": {
-        "title": "kā mēs aizsargājam jūsu privātumu.",
-        "content": "Paaster izmanto pilnīgu šifrēšanu pastas glabāšanai un kopīgošanai, kas nozīmē, ka pat serveris nevar skatīt šeit saglabāto saturu.",
-        "source_code": "Mūsu pirmkods ir pilnībā atvērts avots, un to var pārskatīt vietnē {github}"
-    }
+	"saved_pastes": "Saglabātas pastas",
+	"empty_paste": "Ielīmēt nesatur rakstzīmes",
+	"paste_size_too_large": "Ielīmēšanas izmērs pārsniedz maksimālo izmēru",
+	"account": {
+		"login": "Pieteikties",
+		"logout": "Atteikties",
+		"create": "Izveidot kontu",
+		"username": "Lietotājvārds",
+		"password": "Parole",
+		"already_have_account": "Piesakieties esošajā",
+		"create_new_account": "Izveidot jaunu kontu",
+		"remember": "Atcerieties mani"
+	},
+	"shortcuts": "Īsceļi",
+	"paste_owner": "Īpašnieku panelis",
+	"upload_failed": "Ielīmēšanas augšupielāde neizdevās",
+	"create": {
+		"input": "ielīmēt vai vilkt & nometiet savu kodu šeit",
+		"errors": {
+			"private_window": "Nevar saglabāt ielīmēšanas vēsturi, visticamāk, tādēļ, ka atrodas privātā logā."
+		}
+	},
+	"view": {
+		"404": "Ielīmēšana vairs nepastāv",
+		"no_key": "Ielīmēšanas slepenā atslēga nav norādīta",
+		"invalid_format": "Nederīgs slepenās atslēgas formāts",
+		"cdn_down": "Nevar lejupielādēt ielīmēšanu no CDN. Vēlāk mēģiniet vēlreiz"
+	},
+	"search": "Meklēt pastas...",
+	"paste_actions": {
+		"delete": {
+			"loading": "Dzēš ielīmēt",
+			"error": "Ielīmēšana serverī nav atrasta",
+			"success": "Ielīmēts izdzēsts no servera",
+			"button": "dzēst"
+		},
+		"rename": {
+			"button": "pārdēvēt",
+			"success": "Nosaukums atjaunināts",
+			"model": {
+				"header": "pārdēvēt pastas"
+			}
+		},
+		"share": {
+			"success": "Kopīgošanas saite ir nokopēta",
+			"button": "dalīties"
+		},
+		"access_code": {
+			"button": "iestatīt piekļuves kodu",
+			"access_code_len": "Piekļuves kodam ir jābūt vismaz {max_length} rakstzīmēm",
+			"loading": "Piekļuves koda iestatīšana",
+			"success": "Piekļuves koda komplekts",
+			"error": "Nevar iestatīt piekļuves kodu",
+			"success_copied_to_clipboard": "Piekļuves kods ir kopēts starpliktuvē",
+			"model": {
+				"header": "iestatīt ielīmēt piekļuves kodu",
+				"input": "Ievadiet piekļuves kodu",
+				"tooltip": "Ģenerēt kodu",
+				"button": "Iestatiet piekļuves kodu"
+			}
+		},
+		"qr_code": {
+			"button": "ģenerēt QR kodu",
+			"model": {
+				"header": "skenēt, lai piekļūtu ielīmēšanai"
+			}
+		},
+		"clipboard": {
+			"success": "Ielīmēts nokopēts",
+			"button": "kopiju"
+		},
+		"save": {
+			"success": "Ielīmēšana saglabāta",
+			"button": "saglabāt"
+		},
+		"download": {
+			"button": "lejupielādēt"
+		},
+		"lang_updated": "Valoda ir atjaunināta",
+		"expire": {
+			"loading": "Atjaunināšanas derīguma termiņš beigsies pēc",
+			"error": "Nevar iestatīt derīguma termiņu pēc",
+			"success": "Ielīmēts derīguma termiņš beigsies pēc {period}",
+			"button": "Beigsies pēc",
+			"periods": {
+				"never": "nekad",
+				"being_viewed": "ir skats",
+				"minute": "minūte",
+				"minutes": "minūtes",
+				"hour": "stunda",
+				"hours": "stundas",
+				"day": "diena",
+				"days": "dienas",
+				"week": "nedēļa",
+				"weeks": "nedēļas",
+				"month": "mēnesis",
+				"months": "mēnešus"
+			}
+		}
+	},
+	"require_access_code_model": {
+		"input": "Ievadiet piekļuves kodu",
+		"header": "nepieciešams piekļuves kods",
+		"button": "Iesniegt"
+	},
+	"no_saved_pastes": "nav saglabātas pastas",
+	"shared_with": "Kopīgots ar jums",
+	"about": {
+		"title": "kā mēs aizsargājam jūsu privātumu.",
+		"content": "Paaster izmanto pilnīgu šifrēšanu pastas glabāšanai un kopīgošanai, kas nozīmē, ka pat serveris nevar skatīt šeit saglabāto saturu.",
+		"source_code": "Mūsu pirmkods ir pilnībā atvērts avots, un to var pārskatīt vietnē {github}"
+	}
 }

@@ -1,102 +1,115 @@
 {
-    "saved_pastes": "Gespeicherte Pastes",
-    "account": {
-        "loginOrRegister": "Einloggen/Registrieren"
-    },
-    "create": {
-        "input": "Code einfügen oder hier hin ziehen",
-        "errors": {
-            "private_window": "Paste verlauf kann nicht gespeichert werden. Wahrscheinlich weil es ein privat Fenster ist."
-        }
-    },
-    "view": {
-        "404": "Paste existiert nicht mehr.",
-        "no_key": "Geheim schlüssel nicht angegeben",
-        "invalid_format": "Ungültiges Format des geheim Schlüssels",
-        "cdn_down": "Paste kann nicht vom CDN heruntergeladen werden, versuchen Sie es später erneut"
-    },
-    "search": "Paste suchen...",
-    "paste_actions": {
-        "delete": {
-            "loading": "Paste löschen",
-            "error": "Paste auf dem Server nicht gefunden",
-            "success": "Paste wurde vom Server gelöscht",
-            "button": "löschen"
-        },
-        "rename": {
-            "button": "umbenennen",
-            "success": "Name aktualisiert",
-            "model": {
-                "header": "Paste umbenennen"
-            }
-        },
-        "share": {
-            "success": "Link zum teilen kopiert",
-            "button": "Teilen"
-        },
-        "access_code": {
-            "button": "Zugangscode festlegen",
-            "model": {
-                "header": "Zugriffscode zum Einfügen festlegen",
-                "input": "Geben Sie den Zugangscode ein",
-                "tooltip": "Code generieren",
-                "button": "Code kopieren"
-            },
-            "access_code_len": "Der Zugangscode muss mindestens {max_length} Zeichen lang sein",
-            "loading": "Zugangscode wird eingestellt",
-            "success": "Zugangscode wurde eingestellt",
-            "error": "Zugriffscode kann nicht eingestellt werden",
-            "success_copied_to_clipboard": "Zugangscode in die Zwischenablage kopiert"
-        },
-        "qr_code": {
-            "button": "QR-Code generieren",
-            "model": {
-                "header": "scannen, um auf den Paste zuzugreifen"
-            }
-        },
-        "clipboard": {
-            "success": "Paste kopiert",
-            "button": "Kopieren"
-        },
-        "save": {
-            "success": "Paste gespeichert",
-            "button": "speichern"
-        },
-        "download": {
-            "button": "herunterladen"
-        },
-        "lang_updated": "Sprache aktualisiert",
-        "expire": {
-            "loading": "Aktualisiere Verfallszeitpunkt",
-            "error": "Verfallszeitpunkt kann nicht festgelegt werden",
-            "success": "Paste verfällt in {period}",
-            "button": "Verfallen nach",
-            "periods": {
-                "never": "niemals",
-                "being_viewed": "Angeschaut",
-                "minute": "Minute",
-                "minutes": "Minuten",
-                "hour": "Stunde",
-                "hours": "Stunden",
-                "day": "Tag",
-                "days": "Tage",
-                "week": "Woche",
-                "weeks": "Wochen",
-                "month": "Monat",
-                "months": "Monate"
-            }
-        }
-    },
-    "require_access_code_model": {
-        "input": "Geben Sie den Zugangscode ein",
-        "header": "Zugangscode erforderlich",
-        "button": "einreichen"
-    },
-    "no_saved_pastes": "keine gespeicherten Pastes",
-    "shared_with": "Mit dir geteilt",
-    "about": {
-        "title": "wie wir Ihre Privatsphäre schützen.",
-        "content": "Paaster verwendet End-to-End-Verschlüsselung zum Speichern und Teilen von Pasten, was bedeutet, dass selbst der Server nicht sehen kann, was Sie hier speichern.",
-        "source_code": "Unser Quellcode ist vollständig Open Source und kann auf {github} überprüft werden."
-    }
+	"saved_pastes": "Gespeicherte Pastes",
+	"empty_paste": "Einfügen enthält keine Zeichen",
+	"paste_size_too_large": "Die Pastengröße überschreitet die maximale Größe",
+	"account": {
+		"login": "Login",
+		"logout": "Ausloggen",
+		"create": "Benutzerkonto erstellen",
+		"username": "Benutzername",
+		"password": "Passwort",
+		"already_have_account": "Melden Sie sich bei bestehenden",
+		"create_new_account": "Neues Konto erstellen",
+		"remember": "Erinnere dich an mich",
+		"loginOrRegister": "Einloggen/Registrieren"
+	},
+	"shortcuts": "Verknüpfungen",
+	"paste_owner": "Eigentümer-Panel",
+	"upload_failed": "Einfügen-Upload fehlgeschlagen",
+	"create": {
+		"input": "Code einfügen oder hier hin ziehen",
+		"errors": {
+			"private_window": "Paste verlauf kann nicht gespeichert werden. Wahrscheinlich weil es ein privat Fenster ist."
+		}
+	},
+	"view": {
+		"404": "Paste existiert nicht mehr.",
+		"no_key": "Geheim schlüssel nicht angegeben",
+		"invalid_format": "Ungültiges Format des geheim Schlüssels",
+		"cdn_down": "Paste kann nicht vom CDN heruntergeladen werden, versuchen Sie es später erneut"
+	},
+	"search": "Paste suchen...",
+	"paste_actions": {
+		"delete": {
+			"loading": "Paste löschen",
+			"error": "Paste auf dem Server nicht gefunden",
+			"success": "Paste wurde vom Server gelöscht",
+			"button": "löschen"
+		},
+		"rename": {
+			"button": "umbenennen",
+			"success": "Name aktualisiert",
+			"model": {
+				"header": "Paste umbenennen"
+			}
+		},
+		"share": {
+			"success": "Link zum teilen kopiert",
+			"button": "Teilen"
+		},
+		"access_code": {
+			"button": "Zugangscode festlegen",
+			"access_code_len": "Der Zugangscode muss mindestens {max_length} Zeichen lang sein",
+			"loading": "Zugangscode wird eingestellt",
+			"success": "Zugangscode wurde eingestellt",
+			"error": "Zugriffscode kann nicht eingestellt werden",
+			"success_copied_to_clipboard": "Zugangscode in die Zwischenablage kopiert",
+			"model": {
+				"header": "Zugriffscode zum Einfügen festlegen",
+				"input": "Geben Sie den Zugangscode ein",
+				"tooltip": "Code generieren",
+				"button": "Code kopieren"
+			}
+		},
+		"qr_code": {
+			"button": "QR-Code generieren",
+			"model": {
+				"header": "scannen, um auf den Paste zuzugreifen"
+			}
+		},
+		"clipboard": {
+			"success": "Paste kopiert",
+			"button": "Kopieren"
+		},
+		"save": {
+			"success": "Paste gespeichert",
+			"button": "speichern"
+		},
+		"download": {
+			"button": "herunterladen"
+		},
+		"lang_updated": "Sprache aktualisiert",
+		"expire": {
+			"loading": "Aktualisiere Verfallszeitpunkt",
+			"error": "Verfallszeitpunkt kann nicht festgelegt werden",
+			"success": "Paste verfällt in {period}",
+			"button": "Verfallen nach",
+			"periods": {
+				"never": "niemals",
+				"being_viewed": "Angeschaut",
+				"minute": "Minute",
+				"minutes": "Minuten",
+				"hour": "Stunde",
+				"hours": "Stunden",
+				"day": "Tag",
+				"days": "Tage",
+				"week": "Woche",
+				"weeks": "Wochen",
+				"month": "Monat",
+				"months": "Monate"
+			}
+		}
+	},
+	"require_access_code_model": {
+		"input": "Geben Sie den Zugangscode ein",
+		"header": "Zugangscode erforderlich",
+		"button": "einreichen"
+	},
+	"no_saved_pastes": "keine gespeicherten Pastes",
+	"shared_with": "Mit dir geteilt",
+	"about": {
+		"title": "wie wir Ihre Privatsphäre schützen.",
+		"content": "Paaster verwendet End-to-End-Verschlüsselung zum Speichern und Teilen von Pasten, was bedeutet, dass selbst der Server nicht sehen kann, was Sie hier speichern.",
+		"source_code": "Unser Quellcode ist vollständig Open Source und kann auf {github} überprüft werden."
+	}
 }
