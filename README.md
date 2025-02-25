@@ -112,7 +112,7 @@ Paaster uses URI fragments to transport secrets, according to the [Mozilla found
 
 ## How are server secrets stored?
 
-Server secrets are stored with IndexedDB when the paste is created, allowing for modification or deletion of pastes later on. The server-sided secrets are generated using the Python secrets module and stored in the database using bcrypt hashing.
+Server secrets are stored with IndexedDB when the paste is created, allowing for modification or deletion of pastes later on.
 
 ## Cipher
 
