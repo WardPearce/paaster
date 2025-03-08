@@ -31,7 +31,7 @@
 - i18n support ([Contribute](https://fink.inlang.com/github.com/WardPearce/paaster)).
 - Automatic or manual language detection.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
-- Use of `package-lock.json`, `poetry.lock` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
+- Use of `package-lock.json` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
 
 # Deployment
 Paaster requires s3 for deployment, you can use a hosted solution or self-host using [MinIO](https://github.com/minio/minio).
