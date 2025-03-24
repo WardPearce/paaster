@@ -60,6 +60,6 @@
 		"svelte-i18n": "^4.0.1",
 		"svelte-qrcode": "^1.0.1",
 		"svelte-select": "^5.8.3",
-		"zod": "^3.24.1"
+		"zod": "^3.24.2"
 	}
 }
