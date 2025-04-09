@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { relativeDate } from '$lib/client/date.js';
 	import { localDb, type Paste } from '$lib/client/dexie';
+	import { deletePaste } from '$lib/client/paste.js';
 	import { authStore } from '$lib/client/stores';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
@@ -47,14 +48,9 @@
 		}
 	});
 
-	async function deletePaste(pasteId: string, accessKey: string) {
-		await fetch(`/api/paste/${pasteId}`, {
-			method: 'DELETE',
-			headers: {
-				Authorization: `Bearer ${accessKey}`
-			}
-		});
-		await localDb.pastes.delete(pasteId);
+	async function onPasteDelete(pasteId: string, accessKey?: string) {
+		await deletePaste(pasteId, accessKey);
+
 		bookmarkedPastes = bookmarkedPastes.filter((value) => {
 			return value.id !== pasteId;
 		});
@@ -72,7 +68,7 @@
 						<a href={`/${paste.id}#${paste.masterKey}`} class="btn btn-primary">Go to</a>
 						{#if paste.accessKey}
 							<button
-								onclick={async () => await deletePaste(paste.id, paste.accessKey as string)}
+								onclick={async () => await onPasteDelete(paste.id, paste.accessKey)}
 								class="btn btn-outline">{$_('paste_actions.delete.button')}</button
 							>
 						{/if}
