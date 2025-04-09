@@ -14,7 +14,9 @@
 		"settings": "Settings",
 		"passwordReset": "Password reset",
 		"newPassword": "New Password",
-		"changePassword": "Change password"
+		"changePassword": "Change password",
+		"deleteAccount": "Delete account",
+		"deleteConfirm": "Type \"Confirm account deletion\" to delete account"
 	},
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",

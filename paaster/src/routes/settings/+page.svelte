@@ -20,6 +20,9 @@
 
 	let rawPasswordReset: string | undefined = $state();
 
+	let accountDeleteConfirm: string | undefined = $state();
+	const accountDeletionConfirmText = 'Confirm account deletion';
+
 	onMount(() => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
 			type: 'module'
@@ -106,6 +109,23 @@
 
 		isLoading = false;
 	}
+
+	async function deleteAccount(event: Event) {
+		event.preventDefault();
+
+		if (accountDeleteConfirm !== accountDeletionConfirmText) return;
+
+		isLoading = true;
+
+		const deleteAccountResp = await fetch('/api/account/delete', { method: 'DELETE' });
+		if (deleteAccountResp.ok) {
+			await localDb.accounts.clear();
+			authStore.set(undefined);
+			goto('/', { replaceState: true });
+		}
+
+		isLoading = false;
+	}
 </script>
 
 {#if isLoading}
@@ -126,6 +146,22 @@
 					<input bind:value={rawPasswordReset} type="password" class="input w-full" id="password" />
 				</div>
 				<button class="btn btn-primary mt-2">{$_('account.changePassword')}</button>
+			</form>
+
+			<h1 class="text-base-content mt-5 text-3xl">{$_('account.deleteAccount')}</h1>
+			<form onsubmit={deleteAccount}>
+				<div>
+					<label class="label label-text" for="username">{$_('account.deleteConfirm')}</label>
+					<input
+						bind:value={accountDeleteConfirm}
+						type="text"
+						class="input w-full"
+						id="username"
+						class:border-warning={accountDeleteConfirm !== accountDeletionConfirmText}
+						class:border-success={accountDeleteConfirm === accountDeletionConfirmText}
+					/>
+				</div>
+				<button class="btn btn-warning mt-2">{$_('account.deleteAccount')}</button>
 			</form>
 		</div>
 	</main>
