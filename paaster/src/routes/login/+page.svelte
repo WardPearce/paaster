@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
+	import {
+		secretBoxDecryptFromMaster,
+		secretBoxEncryptFromMaster
+	} from '$lib/client/sodiumWrapped';
 	import { authStore } from '$lib/client/stores';
 	import Loading from '$lib/components/Loading.svelte';
 	import * as comlink from 'comlink';
@@ -76,6 +80,13 @@
 
 		createAccountPayload.append('username', rawUsername);
 
+		const rawEncryptionKey = sodium.randombytes_buf(sodium.crypto_secretbox_KEYBYTES);
+		const encryptionKey = secretBoxEncryptFromMaster(rawEncryptionKey, masterPassword);
+
+		createAccountPayload.append('encryptionKey', sodium.to_base64(encryptionKey.data.value));
+		createAccountPayload.append('encryptionKeyNonce', sodium.to_base64(encryptionKey.data.nonce));
+		createAccountPayload.append('encryptionKeyKeySalt', sodium.to_base64(encryptionKey.key.salt));
+
 		const createAccountResp = await fetch('/api/account/create', {
 			method: 'POST',
 			body: createAccountPayload
@@ -85,7 +96,7 @@
 
 			const toStore = {
 				id: createAccountJson.userId,
-				masterPassword: sodium.to_base64(masterPassword)
+				encryptionKey: rawEncryptionKey
 			};
 
 			if (rememberMe) await localDb.accounts.add(toStore);
@@ -145,9 +156,20 @@
 			if (loginResponse.ok) {
 				const loginResponseJson = await loginResponse.json();
 
+				const encryptionKey = secretBoxDecryptFromMaster(
+					{
+						value: sodium.from_base64(loginResponseJson.encryptionKey.value),
+						nonce: sodium.from_base64(loginResponseJson.encryptionKey.nonce)
+					},
+					{
+						value: masterPassword,
+						salt: sodium.from_base64(loginResponseJson.encryptionKey.keySalt)
+					}
+				).rawData;
+
 				const toStore = {
 					id: loginResponseJson.userId,
-					masterPassword: sodium.to_base64(masterPassword)
+					encryptionKey: encryptionKey
 				};
 
 				if (rememberMe) await localDb.accounts.add(toStore);
@@ -213,7 +235,7 @@
 						{$_('account.create')}
 					{/if}
 				</button>
-				<button class="btn btn-outline" onclick={() => (loginMode = !loginMode)}>
+				<button class="btn btn-outline" type="button" onclick={() => (loginMode = !loginMode)}>
 					{#if !loginMode}
 						{$_('account.already_have_account')}
 					{:else}

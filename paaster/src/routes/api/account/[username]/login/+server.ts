@@ -43,6 +43,7 @@ export async function POST({ params, locals, request, cookies }) {
   });
 
   return json({
-    userId: user._id.toString()
+    userId: user._id.toString(),
+    encryptionKey: { ...user.encryptionKey }
   });
 }

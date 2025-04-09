@@ -11,7 +11,7 @@ export interface Paste {
 
 export interface Account {
   id: string;
-  masterPassword: string;
+  encryptionKey: Uint8Array;
 }
 
 export class PaasterDb extends Dexie {
@@ -22,7 +22,7 @@ export class PaasterDb extends Dexie {
     super('paasterv3');
     this.version(1).stores({
       pastes: 'id, accessKey, masterKey, created, name',
-      accounts: 'id, masterPassword'
+      accounts: 'id, encryptionKey'
     });
   }
 }
