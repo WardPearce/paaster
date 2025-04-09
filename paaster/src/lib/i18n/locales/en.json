@@ -11,7 +11,10 @@
 		"already_have_account": "Log into existing",
 		"create_new_account": "Create new account",
 		"remember": "Remember me",
-		"settings": "Settings"
+		"settings": "Settings",
+		"passwordReset": "Password reset",
+		"newPassword": "New Password",
+		"changePassword": "Change password"
 	},
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",
