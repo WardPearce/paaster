@@ -17,7 +17,7 @@
 			authStore.subscribe((auth) => {
 				if (!auth || !data.pastes) return;
 
-				const rawEncryptionKey = auth.encryptionKey;
+				const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
 
 				data.pastes.forEach((paste) => {
 					const rawPasteKey = sodium.crypto_secretbox_open_easy(

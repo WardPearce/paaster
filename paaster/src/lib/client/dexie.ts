@@ -11,7 +11,7 @@ export interface Paste {
 
 export interface Account {
   id: string;
-  encryptionKey: Uint8Array;
+  encryptionKey: string;
 }
 
 export class PaasterDb extends Dexie {

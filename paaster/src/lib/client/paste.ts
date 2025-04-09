@@ -36,7 +36,7 @@ export async function savePaste(
   } else {
     await sodium.ready;
 
-    const rawEncryptionKey = auth.encryptionKey;
+    const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
 
     const encryptedPasteNonce = sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES);
     const encryptedPaste = sodium.crypto_secretbox_easy(

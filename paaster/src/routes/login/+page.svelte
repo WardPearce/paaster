@@ -96,7 +96,7 @@
 
 			const toStore = {
 				id: createAccountJson.userId,
-				encryptionKey: rawEncryptionKey
+				encryptionKey: sodium.to_base64(rawEncryptionKey)
 			};
 
 			if (rememberMe) await localDb.accounts.add(toStore);
@@ -165,11 +165,11 @@
 						value: masterPassword,
 						salt: sodium.from_base64(loginResponseJson.encryptionKey.keySalt)
 					}
-				).rawData;
+				);
 
 				const toStore = {
 					id: loginResponseJson.userId,
-					encryptionKey: encryptionKey
+					encryptionKey: sodium.to_base64(encryptionKey.rawData)
 				};
 
 				if (rememberMe) await localDb.accounts.add(toStore);

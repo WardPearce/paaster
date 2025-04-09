@@ -43,7 +43,7 @@
 		if (account.length > 0) {
 			authStore.set({
 				id: account[0].id,
-				masterPassword: account[0].masterPassword
+				encryptionKey: account[0].encryptionKey
 			});
 
 			// Check account auth hasn't expired
