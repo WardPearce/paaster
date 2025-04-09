@@ -19,8 +19,8 @@ export class PaasterDb extends Dexie {
   accounts!: Table<Account>;
 
   constructor() {
-    super('paasterv3');
-    this.version(2).stores({
+    super('paasterv3.1');
+    this.version(1).stores({
       pastes: 'id, accessKey, masterKey, created, name',
       accounts: 'id, encryptionKey'
     });
