@@ -17,18 +17,18 @@
 			authStore.subscribe((auth) => {
 				if (!auth || !data.pastes) return;
 
-				const rawAccountMasterKey = sodium.from_base64(auth.masterPassword);
+				const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
 
 				data.pastes.forEach((paste) => {
 					const rawPasteKey = sodium.crypto_secretbox_open_easy(
 						sodium.from_base64(paste.paste.key),
 						sodium.from_base64(paste.paste.nonce),
-						rawAccountMasterKey
+						rawEncryptionKey
 					);
 					const rawAccessKey = sodium.crypto_secretbox_open_easy(
 						sodium.from_base64(paste.accessKey.key),
 						sodium.from_base64(paste.accessKey.nonce),
-						rawAccountMasterKey
+						rawEncryptionKey
 					);
 
 					bookmarkedPastes.push({

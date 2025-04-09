@@ -4,6 +4,7 @@
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
 	import MenuIcon from 'lucide-svelte/icons/menu';
 	import MoonIcon from 'lucide-svelte/icons/moon';
+	import SettingsIcon from 'lucide-svelte/icons/settings';
 	import SunIcon from 'lucide-svelte/icons/sun';
 	import XIcon from 'lucide-svelte/icons/x';
 	import { _ } from 'svelte-i18n';
@@ -43,7 +44,7 @@
 		if (account.length > 0) {
 			authStore.set({
 				id: account[0].id,
-				masterPassword: account[0].masterPassword
+				encryptionKey: account[0].encryptionKey
 			});
 
 			// Check account auth hasn't expired
@@ -100,6 +101,13 @@
 						<span class="swap-on"><MoonIcon /></span>
 					</label>
 				</li>
+				{#if $authStore}
+					<li>
+						<a href="/settings" class="btn btn-text h-full p-3"
+							><SettingsIcon /> {$_('account.settings')}</a
+						>
+					</li>
+				{/if}
 				<li>
 					<a href="/pastes" class="btn btn-text h-full p-3"
 						><BookMarkedIcon /> {$_('saved_pastes')}</a

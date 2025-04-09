@@ -1,7 +1,7 @@
 &nbsp;
 
 <div align="center">
-  <img src="https://i.imgur.com/8S9SPyZ.png" width="100px" />
+  <img src="./assets/logo.png" width="300px" />
   <h1>Paaster.io</h1>
   <quote>
     Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and paste history, Paaster ensures that your pasted code remains confidential and accessible.

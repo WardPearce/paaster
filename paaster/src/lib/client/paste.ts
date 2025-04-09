@@ -36,20 +36,20 @@ export async function savePaste(
   } else {
     await sodium.ready;
 
-    const accountMasterKey = sodium.from_base64(auth.masterPassword);
+    const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
 
     const encryptedPasteNonce = sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES);
     const encryptedPaste = sodium.crypto_secretbox_easy(
       sodium.from_base64(masterKey),
       encryptedPasteNonce,
-      accountMasterKey
+      rawEncryptionKey
     );
 
     const encryptedAccessNonce = sodium.randombytes_buf(sodium.crypto_secretbox_NONCEBYTES);
     const encryptedAccessKey = sodium.crypto_secretbox_easy(
       sodium.from_base64(accessKey),
       encryptedAccessNonce,
-      accountMasterKey
+      rawEncryptionKey
     );
 
     const savePastePayload = new FormData();

@@ -250,18 +250,18 @@
 			authStore.subscribe((auth) => {
 				if (!auth || !data.account) return;
 
-				const rawAccountMasterKey = sodium.from_base64(auth.masterPassword);
+				const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
 
 				const rawPasteKey = sodium.crypto_secretbox_open_easy(
 					sodium.from_base64(data.account.paste.key),
 					sodium.from_base64(data.account.paste.nonce),
-					rawAccountMasterKey
+					rawEncryptionKey
 				);
 
 				const rawAccessKey = sodium.crypto_secretbox_open_easy(
 					sodium.from_base64(data.account.accessKey.key),
 					sodium.from_base64(data.account.accessKey.nonce),
-					rawAccountMasterKey
+					rawEncryptionKey
 				);
 
 				localStored = {
@@ -410,7 +410,7 @@
 	tabindex="-1"
 >
 	<div class="modal-dialog overlay-open:opacity-100">
-		<div class="modal-content p-4">
+		<div class="modal-content border-base-content/20 border p-4">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('paste_actions.qr_code.model.header')}</h1>
 			</div>
@@ -428,7 +428,7 @@
 	tabindex="-1"
 >
 	<div class="modal-dialog overlay-open:opacity-100">
-		<div class="modal-content p-4">
+		<div class="modal-content border-base-content/20 border p-4">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('shortcuts')}</h1>
 			</div>
