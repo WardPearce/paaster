@@ -1,6 +1,9 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui/index.js";
+@plugin "flyonui" {
+    themes: black, light;
+}
 
 :root {
     --line-number-color: oklch(var(--sc)) !important;

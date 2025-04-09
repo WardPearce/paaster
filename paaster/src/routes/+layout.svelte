@@ -2,7 +2,10 @@
 	import BookMarkedIcon from 'lucide-svelte/icons/book-marked';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
+	import MoonIcon from 'lucide-svelte/icons/moon';
+	import SunIcon from 'lucide-svelte/icons/sun';
 	import { _ } from 'svelte-i18n';
+	import { themeChange } from 'theme-change';
 
 	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
@@ -21,6 +24,11 @@
 	}
 
 	onMount(async () => {
+		// @ts-ignore
+		HSStaticMethods.autoInit();
+
+		themeChange();
+
 		const account = await localDb.accounts.toArray();
 		if (account.length > 0) {
 			authStore.set({
@@ -41,21 +49,16 @@
 	});
 
 	afterNavigate(() => {
-		try {
-			// @ts-ignore
-			HSStaticMethods.autoInit();
-		} catch {}
+		// @ts-ignore
+		HSStaticMethods.autoInit();
 	});
 </script>
 
-<nav
-	class="navbar bg-neutral-content border-base-content/10 sticky
-top-0 z-50 w-full border-b"
->
+<nav class="navbar bg-base-100 border-base-content/10 stickytop-0 z-50 w-full border-b">
 	<div class="w-full md:flex md:items-center md:gap-2">
 		<div class="flex items-center justify-between">
 			<div class="navbar-start items-center justify-between max-md:w-full">
-				<a class="link text-xl font-semibold text-white no-underline" href="/">paaster.io</a>
+				<a class="link text-base-content text-xl font-semibold no-underline" href="/">paaster.io</a>
 				<div class="md:hidden">
 					<button
 						type="button"
@@ -75,14 +78,23 @@ top-0 z-50 w-full border-b"
 			class="md:navbar-end collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 max-md:w-full"
 		>
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
-				<li><a href="/pastes" class="btn btn-text"><BookMarkedIcon /> {$_('saved_pastes')}</a></li>
+				<li>
+					<label class="swap swap-rotate m-0">
+						<input type="checkbox" value="light" class="theme-controller" />
+						<span class="swap-off"><SunIcon /></span>
+						<span class="swap-on"><MoonIcon /></span>
+					</label>
+				</li>
+				<li>
+					<a href="/pastes" class="btn btn-text h-full"><BookMarkedIcon /></a>
+				</li>
 				<li>
 					{#if $authStore}
-						<button onclick={logout} class="btn btn-primary"
+						<button onclick={logout} class="btn btn-primary h-full"
 							><LogoutIcon />{$_('account.logout')}</button
 						>
 					{:else}
-						<a href="/login" class="btn btn-primary"><LoginIcon />{$_('account.login')}</a>
+						<a href="/login" class="btn btn-primary h-full"><LoginIcon />{$_('account.login')}</a>
 					{/if}
 				</li>
 			</ul>

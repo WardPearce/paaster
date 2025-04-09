@@ -64,19 +64,19 @@
 {#if bookmarkedPastes.length > 0}
 	<div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-4">
 		{#each bookmarkedPastes as paste}
-			<div class="bg-neutral-content rounded-lg p-4">
-				<div class="mb-5">
-					<h2 class="text-lg font-semibold">{paste.name ?? paste.id}</h2>
-					<p class="text-sm text-neutral-500">{relativeDate(paste.created)}</p>
-				</div>
-				<div class="flex space-x-2 sm:ml-auto sm:mt-0 sm:space-x-4">
-					<a href={`/${paste.id}#${paste.masterKey}`} class="btn btn-primary">Go to</a>
-					{#if paste.accessKey}
-						<button
-							onclick={async () => await deletePaste(paste.id, paste.accessKey as string)}
-							class="btn btn-outline">{$_('paste_actions.delete.button')}</button
-						>
-					{/if}
+			<div class="card sm:max-w-sm">
+				<div class="card-body">
+					<h5 class="card-title">{paste.name ?? paste.id}</h5>
+					<p class="mb-2 text-sm text-neutral-500">{relativeDate(paste.created)}</p>
+					<div class="card-actions">
+						<a href={`/${paste.id}#${paste.masterKey}`} class="btn btn-primary">Go to</a>
+						{#if paste.accessKey}
+							<button
+								onclick={async () => await deletePaste(paste.id, paste.accessKey as string)}
+								class="btn btn-outline">{$_('paste_actions.delete.button')}</button
+							>
+						{/if}
+					</div>
 				</div>
 			</div>
 		{/each}
