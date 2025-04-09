@@ -410,7 +410,7 @@
 	tabindex="-1"
 >
 	<div class="modal-dialog overlay-open:opacity-100">
-		<div class="modal-content p-4">
+		<div class="modal-content border-base-content/20 border p-4">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('paste_actions.qr_code.model.header')}</h1>
 			</div>
@@ -428,7 +428,7 @@
 	tabindex="-1"
 >
 	<div class="modal-dialog overlay-open:opacity-100">
-		<div class="modal-content p-4">
+		<div class="modal-content border-base-content/20 border p-4">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('shortcuts')}</h1>
 			</div>
