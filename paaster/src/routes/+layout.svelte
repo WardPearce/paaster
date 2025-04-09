@@ -9,7 +9,7 @@
 
 	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
-	import { authStore } from '$lib/client/stores';
+	import { authStore, themeStore } from '$lib/client/stores';
 	import 'notyf/notyf.min.css';
 	import { onMount } from 'svelte';
 	import '../app.css';
@@ -23,11 +23,19 @@
 		goto('/');
 	}
 
+	async function onThemeChange() {
+		if ($themeStore === 'dark') {
+			themeStore.set('light');
+		} else {
+			themeStore.set('dark');
+		}
+	}
+
 	onMount(async () => {
 		// @ts-ignore
 		HSStaticMethods.autoInit();
 
-		themeChange();
+		themeChange(true);
 
 		const account = await localDb.accounts.toArray();
 		if (account.length > 0) {
@@ -80,7 +88,12 @@
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
 				<li>
 					<label class="swap swap-rotate m-0">
-						<input type="checkbox" value="light" class="theme-controller" />
+						<input
+							onchange={onThemeChange}
+							type="checkbox"
+							value="light"
+							class="theme-controller"
+						/>
 						<span class="swap-off"><SunIcon /></span>
 						<span class="swap-on"><MoonIcon /></span>
 					</label>

@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { relativeDate } from '$lib/client/date.js';
 	import { localDb, type Paste } from '$lib/client/dexie';
 	import { authStore } from '$lib/client/stores';
-	import { relativeDate } from '$lib/date';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
@@ -62,9 +62,9 @@
 </script>
 
 {#if bookmarkedPastes.length > 0}
-	<div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-4">
+	<div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-6">
 		{#each bookmarkedPastes as paste}
-			<div class="card sm:max-w-sm">
+			<div class="card border-base-content/20 border sm:max-w-sm">
 				<div class="card-body">
 					<h5 class="card-title">{paste.name ?? paste.id}</h5>
 					<p class="mb-2 text-sm text-neutral-500">{relativeDate(paste.created)}</p>
