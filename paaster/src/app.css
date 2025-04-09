@@ -13,6 +13,10 @@
     background-color: transparent !important;
 }
 
+textarea {
+    resize: none;
+}
+
 textarea::placeholder {
     font-size: 1.3em;
 }

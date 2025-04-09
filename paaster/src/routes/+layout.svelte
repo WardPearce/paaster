@@ -2,8 +2,10 @@
 	import BookMarkedIcon from 'lucide-svelte/icons/book-marked';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
+	import MenuIcon from 'lucide-svelte/icons/menu';
 	import MoonIcon from 'lucide-svelte/icons/moon';
 	import SunIcon from 'lucide-svelte/icons/sun';
+	import XIcon from 'lucide-svelte/icons/x';
 	import { _ } from 'svelte-i18n';
 	import { themeChange } from 'theme-change';
 
@@ -75,8 +77,8 @@
 						aria-controls="default-navbar-collapse"
 						aria-label="Toggle navigation"
 					>
-						<span class="icon-[tabler--menu-2] collapse-open:hidden size-6"></span>
-						<span class="icon-[tabler--x] collapse-open:block hidden size-6"></span>
+						<span class="collapse-open:hidden size-6"><MenuIcon /></span>
+						<span class="collapse-open:block hidden size-6"><XIcon /></span>
 					</button>
 				</div>
 			</div>
@@ -99,7 +101,7 @@
 					</label>
 				</li>
 				<li>
-					<a href="/pastes" class="btn btn-text h-full"><BookMarkedIcon /></a>
+					<a href="/pastes" class="btn btn-text h-full"><BookMarkedIcon /> {$_('saved_pastes')}</a>
 				</li>
 				<li>
 					{#if $authStore}
@@ -115,4 +117,18 @@
 	</div>
 </nav>
 
-{@render children?.()}
+<div class="flex min-h-screen flex-col">
+	<div class="flex-grow">
+		{@render children?.()}
+	</div>
+
+	<footer class="footer mt-auto items-center px-6 py-4">
+		<aside class="grid-flow-col items-center">
+			<p><a class="link link-hover font-medium" href="/">Paaster</a></p>
+		</aside>
+		<nav class="text-base-content grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+			<a class="link link-hover" href="/terms-of-service">Terms of service</a>
+			<a class="link link-hover" href="/privacy-policy">Privacy Policy</a>
+		</nav>
+	</footer>
+</div>

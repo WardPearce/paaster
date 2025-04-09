@@ -415,7 +415,7 @@
 				<h1 class="modal-title">{$_('paste_actions.qr_code.model.header')}</h1>
 			</div>
 			<div class="modal-body">
-				<QrCode value={page.url.href} color="#8478c9" background="#191724" size={540} />
+				<QrCode value={page.url.href} color="#fff" background="transparent" size={540} />
 			</div>
 		</div>
 	</div>
