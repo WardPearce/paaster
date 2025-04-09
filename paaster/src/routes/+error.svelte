@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { deletePaste } from '$lib/client/paste';
 	import CircleSlashIcon from 'lucide-svelte/icons/circle-slash';
+
+	if ('pasteId' in page.params) {
+		deletePaste(page.params.pasteId);
+	}
 </script>
 
 <div class="flex flex-col items-center pt-10">

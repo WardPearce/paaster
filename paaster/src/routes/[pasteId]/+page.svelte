@@ -7,9 +7,9 @@
 		secretBoxDecryptFromMaster,
 		secretBoxEncryptFromMaster
 	} from '$lib/client/sodiumWrapped';
-	import { authStore } from '$lib/client/stores.js';
+	import { authStore, themeStore } from '$lib/client/stores.js';
+	import { getToast } from '$lib/client/toasts';
 	import Loading from '$lib/components/Loading.svelte';
-	import { getToast } from '$lib/toasts';
 	import sodium from 'libsodium-wrappers-sumo';
 	import CommandIcon from 'lucide-svelte/icons/command';
 	import QrCodeIcon from 'lucide-svelte/icons/qr-code';
@@ -20,7 +20,8 @@
 	import { onMount } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import type { LanguageType } from 'svelte-highlight/languages';
-	import rosPine from 'svelte-highlight/styles/ros-pine';
+	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
+	import atonOneLight from 'svelte-highlight/styles/atom-one-light';
 	import { _ } from 'svelte-i18n';
 	import Select from 'svelte-select';
 	// @ts-ignore
@@ -387,7 +388,11 @@
 </script>
 
 <svelte:head>
-	{@html rosPine}
+	{#if $themeStore === 'light'}
+		{@html atonOneLight}
+	{:else}
+		{@html atonOneDark}
+	{/if}
 
 	{#if preWrap}
 		<style>
@@ -410,7 +415,7 @@
 				<h1 class="modal-title">{$_('paste_actions.qr_code.model.header')}</h1>
 			</div>
 			<div class="modal-body">
-				<QrCode value={page.url.href} color="#8478c9" background="#191724" size={540} />
+				<QrCode value={page.url.href} color="#fff" background="transparent" size={540} />
 			</div>
 		</div>
 	</div>
@@ -452,18 +457,18 @@
 		<div class={`w-full rounded-lg ${localStored?.accessKey ? 'md:w-5/6' : ''}`}>
 			{#if langImport}
 				<Highlight language={langImport} code={rawPaste} let:highlighted>
-					<LineNumbers {highlighted} />
+					<LineNumbers {highlighted} hideBorder />
 				</Highlight>
 			{:else}
 				<HighlightAuto code={rawPaste} let:highlighted>
-					<LineNumbers {highlighted} />
+					<LineNumbers {highlighted} hideBorder />
 				</HighlightAuto>
 			{/if}
 		</div>
 
 		{#if localStored && localStored.accessKey}
 			<div
-				class="bg-neutral-content order-first flex w-full flex-col space-y-2 rounded-lg p-4 md:order-last md:ml-4 md:w-1/6"
+				class="card border-base-content/20 order-first flex w-full flex-col space-y-2 rounded-lg border p-4 md:order-last md:ml-4 md:w-1/6"
 			>
 				<h1 class="text-base-content text-2xl">{$_('paste_owner')}</h1>
 
@@ -472,8 +477,8 @@
 						>{$_('paste_actions.rename.button')}</label
 					>
 					<div class="flex items-center">
-						<input bind:value={pasteName} type="text" class="input" id="name-paste" />
-						<button type="submit" class="btn btn-outline h-full"><SendIcon /></button>
+						<input bind:value={pasteName} type="text" class="input h-10" id="name-paste" />
+						<button type="submit" class="btn btn-text h-10"><SendIcon /></button>
 					</div>
 				</form>
 

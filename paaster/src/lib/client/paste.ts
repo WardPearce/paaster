@@ -3,6 +3,18 @@ import { get } from "svelte/store";
 import { localDb } from "./dexie";
 import { authStore } from "./stores";
 
+export async function deletePaste(pasteId: string, accessKey?: string) {
+  if (accessKey) {
+    await fetch(`/api/paste/${pasteId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessKey}`
+      }
+    });
+  }
+  await localDb.pastes.delete(pasteId);
+}
+
 export async function savePaste(
   pasteId: string,
   accessKey: string,

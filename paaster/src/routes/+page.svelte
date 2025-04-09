@@ -2,9 +2,9 @@
 	import { goto } from '$app/navigation';
 	import { savePaste } from '$lib/client/paste';
 	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
+	import { getToast } from '$lib/client/toasts';
 	import Loading from '$lib/components/Loading.svelte';
 	import { CHUNK_SIZE, MAX_UPLOAD_SIZE } from '$lib/consts';
-	import { getToast } from '$lib/toasts';
 	import sodium from 'libsodium-wrappers-sumo';
 	import Dropzone from 'svelte-file-dropzone';
 	import { _ } from 'svelte-i18n';
