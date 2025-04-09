@@ -89,7 +89,7 @@
 		>
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
 				<li>
-					<label class="swap swap-rotate m-0">
+					<label class="swap swap-rotate m-0 p-3">
 						<input
 							onchange={onThemeChange}
 							type="checkbox"
@@ -101,15 +101,19 @@
 					</label>
 				</li>
 				<li>
-					<a href="/pastes" class="btn btn-text h-full"><BookMarkedIcon /> {$_('saved_pastes')}</a>
+					<a href="/pastes" class="btn btn-text h-full p-3"
+						><BookMarkedIcon /> {$_('saved_pastes')}</a
+					>
 				</li>
 				<li>
 					{#if $authStore}
-						<button onclick={logout} class="btn btn-primary h-full"
+						<button onclick={logout} class="btn btn-primary h-full p-3"
 							><LogoutIcon />{$_('account.logout')}</button
 						>
 					{:else}
-						<a href="/login" class="btn btn-primary h-full"><LoginIcon />{$_('account.login')}</a>
+						<a href="/login" class="btn btn-primary h-full p-3"
+							><LoginIcon />{$_('account.login')}</a
+						>
 					{/if}
 				</li>
 			</ul>
