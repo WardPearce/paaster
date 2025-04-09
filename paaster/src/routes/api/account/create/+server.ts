@@ -1,6 +1,9 @@
+import { env } from '$env/dynamic/private';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
+import { sign } from 'cookie-signature';
 import { z } from 'zod';
+
 
 const createSchema = z.object({
   serverSideSalt: z.string().trim().max(64),
@@ -12,7 +15,7 @@ const createSchema = z.object({
   encryptionKeyKeySalt: z.string().trim().max(64),
 });
 
-export async function POST({ locals, request }) {
+export async function POST({ locals, request, cookies }) {
   const formData = createSchema.safeParse(
     Object.fromEntries(await request.formData())
   );
@@ -39,7 +42,17 @@ export async function POST({ locals, request }) {
     username: formData.data.username
   });
 
+  const userId = createdUser.insertedId.toString();
+
+  // Set signed cookie of userId
+  cookies.set('userId', sign(userId, env.COOKIE_SECRET ?? ''), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 31
+  });
+
   return json({
-    userId: createdUser.insertedId.toString()
+    userId: userId
   });
 }
