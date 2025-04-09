@@ -124,7 +124,13 @@
 
 	<footer class="footer mt-auto items-center px-6 py-4">
 		<aside class="grid-flow-col items-center">
-			<p><a class="link link-hover font-medium" href="/">Paaster</a></p>
+			<p>
+				<a
+					class="link link-hover font-medium"
+					target="_blank"
+					href="https://github.com/WardPearce/paaster">Github</a
+				>
+			</p>
 		</aside>
 		<nav class="text-base-content grid-flow-col gap-4 md:place-self-center md:justify-self-end">
 			<a class="link link-hover" href="/terms-of-service">Terms of service</a>
