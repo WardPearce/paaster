@@ -13,6 +13,10 @@
     background-color: transparent !important;
 }
 
+.hljs td {
+ background-color: var(--color-base-100) !important;
+}
+
 textarea {
     resize: none;
 }
