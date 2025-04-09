@@ -10,7 +10,8 @@
 		"password": "Password",
 		"already_have_account": "Log into existing",
 		"create_new_account": "Create new account",
-		"remember": "Remember me"
+		"remember": "Remember me",
+		"settings": "Settings"
 	},
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",
