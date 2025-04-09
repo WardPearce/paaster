@@ -44,6 +44,7 @@
 		"@types/libsodium-wrappers-sumo": "^0.7.8",
 		"@types/mousetrap": "^1.6.15",
 		"argon2": "^0.41.1",
+		"comlink": "^4.4.2",
 		"cookie-signature": "^1.2.2",
 		"dayjs": "^1.11.13",
 		"dexie": "^4.0.11",
