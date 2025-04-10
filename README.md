@@ -28,6 +28,7 @@
 - Paste history.
 - Delete after view or X amount of time.
 - Share via QR code.
+- [CLI Tool](https://github.com/WardPearce/paaster-cli)
 - i18n support ([Contribute](https://fink.inlang.com/github.com/WardPearce/paaster)).
 - Automatic or manual language detection.
 - No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
