@@ -26,6 +26,7 @@
 - File drag & drop.
 - Shortcuts.
 - Paste history.
+- Themes
 - Delete after view or X amount of time.
 - Share via QR code.
 - [CLI Tool](https://github.com/WardPearce/paaster-cli)
