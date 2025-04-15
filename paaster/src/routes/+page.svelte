@@ -28,8 +28,6 @@
 		if (!codeTextArea) return;
 		// Binds textarea doesn't work otherwise on chrome.
 		await uploadPaste(codeTextArea.value);
-
-		codeTextArea.value = '';
 	}
 
 	async function uploadPaste(rawCode: string, codeName?: string) {
