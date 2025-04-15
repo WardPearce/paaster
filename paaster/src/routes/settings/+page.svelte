@@ -3,7 +3,9 @@
 	import { localDb } from '$lib/client/dexie';
 	import { secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
 	import { authStore } from '$lib/client/stores';
+	import { setTheme } from '$lib/client/theme';
 	import Loading from '$lib/components/Loading.svelte';
+	import { THEMES } from '$lib/consts';
 	import * as comlink from 'comlink';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
@@ -131,6 +133,26 @@
 {#if isLoading}
 	<Loading />
 {:else}
+	<div class="p-4 pb-0">
+		<h1 class="text-base-content mb-2 text-3xl">{$_('themes')}</h1>
+		<div class="flex flex-col flex-wrap gap-4 sm:flex-row">
+			{#each THEMES as theme}
+				<button
+					data-theme={theme}
+					onclick={async () => await setTheme(theme)}
+					class="btn btn-lg bg-base-100 border-base-300 text-base-content flex w-full items-center justify-between rounded-xl border p-3 shadow transition hover:shadow-md sm:w-auto"
+				>
+					<span class="text-sm font-semibold capitalize">{theme}</span>
+					<div class="ml-4 flex space-x-1">
+						<div class="bg-primary h-4 w-2 rounded"></div>
+						<div class="bg-secondary h-4 w-2 rounded"></div>
+						<div class="bg-accent h-4 w-2 rounded"></div>
+					</div>
+				</button>
+			{/each}
+		</div>
+	</div>
+
 	<main class="flex p-5">
 		<div class="w-full max-w-md">
 			{#if errorMsg}

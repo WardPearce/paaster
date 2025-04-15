@@ -10,6 +10,7 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
 	import { authStore, themeStore } from '$lib/client/stores';
+	import { setTheme } from '$lib/client/theme';
 	import 'notyf/notyf.min.css';
 	import { onMount } from 'svelte';
 	import '../app.css';
@@ -52,6 +53,12 @@
 					authStore.set(undefined);
 					await localDb.accounts.clear();
 				}
+			});
+
+			fetch('/api/account/theme').then(async (response) => {
+				if (!response.ok) return;
+				const responseJson = await response.json();
+				await setTheme(responseJson.theme, false);
 			});
 		}
 	});

@@ -2,7 +2,7 @@
 @import "flyonui/variants.css";
 @source "../node_modules/flyonui/flyonui/index.js";
 @plugin "flyonui" {
-    themes: black, light;
+    themes: dark, light, black, ghibli, corporate, luxury, mintlify;
 }
 
 :root {
