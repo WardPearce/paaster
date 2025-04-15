@@ -2,6 +2,7 @@
 	"saved_pastes": "Pastes",
 	"empty_paste": "Paste contains no characters",
 	"paste_size_too_large": "Paste size surpasses max size",
+	"themes": "Themes",
 	"account": {
 		"login": "Login",
 		"logout": "Logout",

@@ -388,10 +388,10 @@
 </script>
 
 <svelte:head>
-	{#if $themeStore === 'light'}
-		{@html atonOneLight}
-	{:else}
+	{#if $themeStore === 'black' || $themeStore === 'dark' || $themeStore === 'luxury'}
 		{@html atonOneDark}
+	{:else}
+		{@html atonOneLight}
 	{/if}
 
 	{#if preWrap}
