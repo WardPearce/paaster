@@ -3,12 +3,9 @@
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
 	import MenuIcon from 'lucide-svelte/icons/menu';
-	import MoonIcon from 'lucide-svelte/icons/moon';
 	import SettingsIcon from 'lucide-svelte/icons/settings';
-	import SunIcon from 'lucide-svelte/icons/sun';
 	import XIcon from 'lucide-svelte/icons/x';
 	import { _ } from 'svelte-i18n';
-	import { themeChange } from 'theme-change';
 
 	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
@@ -39,8 +36,6 @@
 			// @ts-ignore
 			HSStaticMethods.autoInit();
 		} catch (error) {}
-
-		themeChange(true);
 
 		const account = await localDb.accounts.toArray();
 		if (account.length > 0) {
@@ -93,18 +88,6 @@
 			class="md:navbar-end collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 max-md:w-full"
 		>
 			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
-				<li>
-					<label class="swap swap-rotate m-0 p-3">
-						<input
-							onchange={onThemeChange}
-							type="checkbox"
-							value="light"
-							class="theme-controller"
-						/>
-						<span class="swap-off"><SunIcon /></span>
-						<span class="swap-on"><MoonIcon /></span>
-					</label>
-				</li>
 				{#if $authStore}
 					<li>
 						<a href="/settings" class="btn btn-text h-full p-3"
