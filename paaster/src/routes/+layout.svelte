@@ -35,8 +35,10 @@
 	}
 
 	onMount(async () => {
-		// @ts-ignore
-		HSStaticMethods.autoInit();
+		try {
+			// @ts-ignore
+			HSStaticMethods.autoInit();
+		} catch (error) {}
 
 		themeChange(true);
 
@@ -60,8 +62,10 @@
 	});
 
 	afterNavigate(() => {
-		// @ts-ignore
-		HSStaticMethods.autoInit();
+		try {
+			// @ts-ignore
+			HSStaticMethods.autoInit();
+		} catch (error) {}
 	});
 </script>
 
