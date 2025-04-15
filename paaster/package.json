@@ -17,7 +17,7 @@
 		"@eslint/compat": "^1.2.8",
 		"@eslint/js": "^9.24.0",
 		"@sveltejs/adapter-auto": "^6.0.0",
-		"@sveltejs/kit": "^2.20.2",
+		"@sveltejs/kit": "^2.20.6",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/cookie-signature": "^1.1.2",
 		"@types/node": "^22.13.13",
