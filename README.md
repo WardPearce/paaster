@@ -72,6 +72,7 @@ services:
   paaster_minio:
     container_name: paaster_minio
     image: quay.io/minio/minio
+    restart: unless-stopped
     ports:
       - "9000:9000"
       - "9001:9001"
