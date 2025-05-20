@@ -51,7 +51,7 @@
 		"flyonui": "^2.1.0",
 		"libsodium-wrappers-sumo": "^0.7.15",
 		"lucide-svelte": "^0.507.0",
-		"mongodb": "^6.15.0",
+		"mongodb": "^6.16.0",
 		"mousetrap": "^1.6.5",
 		"notyf": "^3.10.0",
 		"svelte-file-dropzone": "^2.0.9",
