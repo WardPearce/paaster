@@ -22,7 +22,7 @@
 		"@types/cookie-signature": "^1.1.2",
 		"@types/node": "^22.15.17",
 		"autoprefixer": "^10.4.21",
-		"eslint": "^9.21.0",
+		"eslint": "^9.27.0",
 		"eslint-config-prettier": "^10.1.2",
 		"eslint-plugin-svelte": "^3.8.1",
 		"globals": "^16.0.0",
