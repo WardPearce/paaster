@@ -20,6 +20,7 @@
 		"@sveltejs/kit": "^2.21.1",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/cookie-signature": "^1.1.2",
+		"@types/culori": "^4.0.0",
 		"@types/node": "^22.15.17",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.27.0",
