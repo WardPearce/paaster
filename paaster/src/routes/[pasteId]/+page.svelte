@@ -17,7 +17,7 @@
 	import ShareIcon from 'lucide-svelte/icons/share-2';
 	import TrashIcon from 'lucide-svelte/icons/trash';
 	import Mousetrap from 'mousetrap';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import type { LanguageType } from 'svelte-highlight/languages';
 	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
@@ -27,6 +27,7 @@
 	// @ts-expect-error qrcode types missing
 	import QrCode from 'svelte-qrcode';
 	import { get } from 'svelte/store';
+	import { oklchToHex } from '$lib/client/colors.js';
 
 	let { data } = $props();
 
@@ -38,6 +39,9 @@
 	let localStored: Paste | undefined = $state();
 
 	let pasteDownloading = $state(true);
+
+	let qrCodeColor: string | undefined = $state();
+	let qrCodeBg: string | undefined = $state();
 
 	let supportedLangs: {
 		[key: string]: LanguageType<string>;
@@ -235,6 +239,28 @@
 		window.URL.revokeObjectURL(url);
 	}
 
+	async function setQrColors() {
+		qrCodeColor = undefined;
+		qrCodeBg = undefined;
+		await tick();
+		qrCodeColor = oklchToHex(
+			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim()
+		);
+		qrCodeBg = oklchToHex(
+			getComputedStyle(document.documentElement).getPropertyValue('--color-base-100').trim()
+		);
+
+		console.log(
+			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim()
+		);
+
+		console.log(qrCodeColor);
+	}
+
+	themeStore.subscribe(() => {
+		setQrColors();
+	});
+
 	onMount(async () => {
 		await sodium.ready;
 
@@ -405,17 +431,19 @@
 
 <div
 	id="qr-code"
-	class="overlay modal overlay-open:opacity-100 modal-middle hidden"
+	class="overlay modal overlay-open:opacity-100 modal-middle overlay-open:duration-300 hidden"
 	role="dialog"
 	tabindex="-1"
 >
-	<div class="modal-dialog overlay-open:opacity-100">
+	<div class="modal-dialog overlay-open:opacity-100 overlay-open:duration-300">
 		<div class="modal-content border-base-content/20 border p-4">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('paste_actions.qr_code.model.header')}</h1>
 			</div>
 			<div class="modal-body">
-				<QrCode value={page.url.href} color="#fff" background="transparent" size={540} />
+				{#if qrCodeBg && qrCodeColor}
+					<QrCode value={page.url.href} color={qrCodeColor} background={qrCodeBg} size={540} />
+				{/if}
 			</div>
 		</div>
 	</div>
