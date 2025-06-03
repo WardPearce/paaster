@@ -38,6 +38,7 @@
 # Deployment
 Paaster requires s3 for deployment, you can use a hosted solution or self-host using [MinIO](https://github.com/minio/minio).
 
+## Docker compose
 ```yaml
 services:
   paaster:
@@ -84,9 +85,55 @@ services:
     command: server /data --console-address ":9001"
 ```
 
+## Reverse proxy
+
+### Caddy
+```caddy
+paaster.io {
+	reverse_proxy localhost:3016
+}
+
+s3.paaster.io {
+        header Access-Control-Allow-Origin "https://paaster.io" {
+                defer
+        }
+        header Access-Control-Allow-Methods "GET,POST,OPTIONS,HEAD,PATCH,PUT,DELETE"
+        header Access-Control-Allow-Headers "User-Agent,Authorization,Content-Type"
+	reverse_proxy localhost:9000
+}
+```
+
+### NGINX
+```nginx
+server {
+    listen 80;
+    server_name paaster.io;
+
+    location / {
+        proxy_pass http://localhost:3016;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+server {
+    listen 80;
+    server_name s3.paaster.io;
+
+    location / {
+        add_header 'Access-Control-Allow-Origin' 'https://paaster.io' always;
+        add_header 'Access-Control-Allow-Methods' 'GET,POST,OPTIONS,HEAD,PATCH,PUT,DELETE' always;
+        add_header 'Access-Control-Allow-Headers' 'User-Agent,Authorization,Content-Type' always;
+
+        proxy_pass http://localhost:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
 ### Object storage providers
 - [iDrive e2](https://www.idrive.com/e2/) (no free tier anymore)
-- [Backblaze b2](https://www.backblaze.com/b2/cloud-storage.html) (10 GB free)
 - [Wasabi Hot Cloud Storage](https://wasabi.com/hot-cloud-storage/)
 - [Storj](https://www.storj.io/) (25GB free tier)
 - [Contabo object storage](https://contabo.com/en/object-storage/)

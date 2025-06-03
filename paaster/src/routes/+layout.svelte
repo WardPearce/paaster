@@ -24,14 +24,6 @@
 		goto('/');
 	}
 
-	async function onThemeChange() {
-		if ($themeStore === 'dark') {
-			themeStore.set('light');
-		} else {
-			themeStore.set('dark');
-		}
-	}
-
 	onMount(async () => {
 		try {
 			// @ts-ignore
@@ -58,7 +50,7 @@
 			fetch('/api/account/theme').then(async (response) => {
 				if (!response.ok) return;
 				const responseJson = await response.json();
-				await setTheme(responseJson.theme, false);
+				setTheme(responseJson.theme, false);
 			});
 		}
 	});

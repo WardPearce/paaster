@@ -59,10 +59,10 @@
 
 {#if bookmarkedPastes.length > 0}
 	<div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-6">
-		{#each bookmarkedPastes as paste}
+		{#each bookmarkedPastes as paste (paste.id)}
 			<div class="card border-base-content/20 border sm:max-w-sm">
 				<div class="card-body">
-					<h5 class="card-title">{paste.name ?? paste.id}</h5>
+					<h6 class="card-title break-text">{paste.name ?? paste.id}</h6>
 					<p class="mb-2 text-sm text-neutral-500">{relativeDate(paste.created)}</p>
 					<div class="card-actions">
 						<a href={`/${paste.id}#${paste.masterKey}`} class="btn btn-primary">Go to</a>

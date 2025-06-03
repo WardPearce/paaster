@@ -1,7 +1,7 @@
 {
 	"name": "paaster",
 	"private": true,
-	"version": "3.1.4",
+	"version": "3.1.5",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -20,6 +20,7 @@
 		"@sveltejs/kit": "^2.21.1",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/cookie-signature": "^1.1.2",
+		"@types/culori": "^4.0.0",
 		"@types/node": "^22.15.17",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.27.0",
@@ -46,9 +47,10 @@
 		"argon2": "^0.41.1",
 		"comlink": "^4.4.2",
 		"cookie-signature": "^1.2.2",
+		"culori": "^4.0.1",
 		"dayjs": "^1.11.13",
 		"dexie": "^4.0.11",
-		"flyonui": "^2.1.0",
+		"flyonui": "^2.2.0",
 		"libsodium-wrappers-sumo": "^0.7.15",
 		"lucide-svelte": "^0.511.0",
 		"mongodb": "^6.16.0",
