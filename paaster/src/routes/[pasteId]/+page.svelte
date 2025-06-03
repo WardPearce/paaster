@@ -24,7 +24,7 @@
 	import atonOneLight from 'svelte-highlight/styles/atom-one-light';
 	import { _ } from 'svelte-i18n';
 	import Select from 'svelte-select';
-	// @ts-ignore
+	// @ts-expect-error qrcode types missing
 	import QrCode from 'svelte-qrcode';
 	import { get } from 'svelte/store';
 
@@ -437,11 +437,11 @@
 					<h3 class="text-base-content text-1xl">{$_('paste_actions.share.button')}</h3>
 					<kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">X</kbd>
 				</div>
-				<div class="pb-2 pt-2">
+				<div class="pt-2 pb-2">
 					<h3 class="text-base-content text-1xl">{$_('paste_actions.clipboard.button')}</h3>
 					<kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">A</kbd>
 				</div>
-				<div class="pb-2 pt-2">
+				<div class="pt-2 pb-2">
 					<h3 class="text-base-content text-1xl">{$_('paste_actions.download.button')}</h3>
 					<kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">S</kbd>
 				</div>
@@ -453,7 +453,7 @@
 {#if pasteDownloading}
 	<Loading />
 {:else}
-	<div class="flex flex-col gap-4 p-0 pb-4 pt-4 sm:p-4 md:flex-row">
+	<div class="flex flex-col gap-4 p-0 pt-4 pb-4 sm:p-4 md:flex-row">
 		<div class={`w-full rounded-lg ${localStored?.accessKey ? 'md:w-5/6' : ''}`}>
 			{#if langImport}
 				<Highlight language={langImport} code={rawPaste} let:highlighted>
