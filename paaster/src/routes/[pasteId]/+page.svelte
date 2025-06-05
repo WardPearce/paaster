@@ -22,7 +22,7 @@
 	import type { LanguageType } from 'svelte-highlight/languages';
 	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
 	import atonOneLight from 'svelte-highlight/styles/atom-one-light';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/i18n';
 	import Select from 'svelte-select';
 	// @ts-expect-error qrcode types missing
 	import QrCode from 'svelte-qrcode';

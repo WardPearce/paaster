@@ -5,7 +5,7 @@
 	import { authStore } from '$lib/client/stores';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onMount } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/i18n';
 
 	let { data } = $props();
 
