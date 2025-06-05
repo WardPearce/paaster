@@ -5,11 +5,11 @@
 	import MenuIcon from 'lucide-svelte/icons/menu';
 	import SettingsIcon from 'lucide-svelte/icons/settings';
 	import XIcon from 'lucide-svelte/icons/x';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/i18n';
 
 	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
-	import { authStore, themeStore } from '$lib/client/stores';
+	import { authStore } from '$lib/client/stores';
 	import { setTheme } from '$lib/client/theme';
 	import 'notyf/notyf.min.css';
 	import { onMount } from 'svelte';

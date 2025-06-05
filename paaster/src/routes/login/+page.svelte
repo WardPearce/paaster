@@ -10,7 +10,7 @@
 	import * as comlink from 'comlink';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/i18n';
 
 	let loginMode = $state(true);
 	let rememberMe = $state(true);
@@ -214,7 +214,7 @@
 				<label class="label label-text" for="password">{$_('account.password')}</label>
 				<input bind:value={rawPassword} type="password" class="input" id="password" />
 			</div>
-			<div class="pb-2 pt-2">
+			<div class="pt-2 pb-2">
 				<div class="flex items-center gap-1">
 					<input
 						bind:checked={rememberMe}

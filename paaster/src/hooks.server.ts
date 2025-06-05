@@ -1,5 +1,4 @@
 import type { Handle } from '@sveltejs/kit';
-import { locale } from 'svelte-i18n';
 
 import { env } from '$env/dynamic/private';
 import { S3Client } from '@aws-sdk/client-s3';
@@ -20,11 +19,6 @@ const s3Client = new S3Client({
 });
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const lang = event.request.headers.get('accept-language')?.split(',')[0];
-	if (lang) {
-		locale.set(lang);
-	}
-
 	event.locals.s3Client = s3Client;
 
 	if (!mongoDb) {

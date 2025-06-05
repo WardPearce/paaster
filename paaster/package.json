@@ -1,7 +1,7 @@
 {
 	"name": "paaster",
 	"private": true,
-	"version": "3.1.5",
+	"version": "3.1.6",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -51,6 +51,7 @@
 		"dayjs": "^1.11.13",
 		"dexie": "^4.0.11",
 		"flyonui": "^2.2.0",
+		"i18next": "^25.2.1",
 		"libsodium-wrappers-sumo": "^0.7.15",
 		"lucide-svelte": "^0.511.0",
 		"mongodb": "^6.16.0",
@@ -58,7 +59,6 @@
 		"notyf": "^3.10.0",
 		"svelte-file-dropzone": "^2.0.9",
 		"svelte-highlight": "^7.8.2",
-		"svelte-i18n": "^4.0.1",
 		"svelte-qrcode": "^1.0.1",
 		"svelte-select": "^5.8.3",
 		"tailwindcss": "^4.1.7",

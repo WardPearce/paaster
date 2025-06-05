@@ -7,7 +7,7 @@
 	import { CHUNK_SIZE, MAX_UPLOAD_SIZE } from '$lib/consts';
 	import sodium from 'libsodium-wrappers-sumo';
 	import Dropzone from 'svelte-file-dropzone';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
 
 	let codeTextArea: HTMLTextAreaElement | undefined = $state();

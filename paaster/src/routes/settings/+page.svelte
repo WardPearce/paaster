@@ -9,7 +9,7 @@
 	import * as comlink from 'comlink';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
 
 	let worker: Worker | undefined;
