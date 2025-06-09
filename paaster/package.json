@@ -38,7 +38,7 @@
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.817.0",
-		"@aws-sdk/s3-presigned-post": "^3.821.0",
+		"@aws-sdk/s3-presigned-post": "^3.826.0",
 		"@aws-sdk/s3-request-presigner": "^3.821.0",
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@tailwindcss/vite": "^4.1.3",
