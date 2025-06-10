@@ -3,6 +3,7 @@
 	"empty_paste": "Paste contains no characters",
 	"paste_size_too_large": "Paste size surpasses max size",
 	"themes": "Themes",
+	"defaultPasteExpiry": "Default paste expiry",
 	"account": {
 		"login": "Login",
 		"logout": "Logout",
@@ -17,7 +18,8 @@
 		"newPassword": "New Password",
 		"changePassword": "Change password",
 		"deleteAccount": "Delete account",
-		"deleteConfirm": "Type \"Confirm account deletion\" to delete account"
+		"deleteConfirm": "Type \"{{content}}\" to delete account",
+		"deleteConfirmContent": "Confirm account deletion"
 	},
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",

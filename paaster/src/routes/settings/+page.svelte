@@ -11,6 +11,9 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
+	import { pasteDeletionTimes } from '$lib/client/paste';
+
+	let { data }: { data: { expireAfter: number } } = $props();
 
 	let worker: Worker | undefined;
 	let derivePassword:
@@ -23,9 +26,11 @@
 	let rawPasswordReset: string | undefined = $state();
 
 	let accountDeleteConfirm: string | undefined = $state();
-	const accountDeletionConfirmText = 'Confirm account deletion';
+	const accountDeletionConfirmText = get(_)('account.deleteConfirmContent');
 
-	onMount(() => {
+	let defaultPasteDelectionTime = $state(data.expireAfter);
+
+	onMount(async () => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
 			type: 'module'
 		});
@@ -128,6 +133,13 @@
 
 		isLoading = false;
 	}
+
+	async function setDefaultPasteExpiry() {
+		const payload = new FormData();
+		payload.append('expireAfter', defaultPasteDelectionTime.toString());
+
+		await fetch('/api/account/defaults', { method: 'POST', body: payload });
+	}
 </script>
 
 {#if isLoading}
@@ -136,7 +148,7 @@
 	<div class="p-4 pb-0">
 		<h1 class="text-base-content mb-2 text-3xl">{$_('themes')}</h1>
 		<div class="flex flex-col flex-wrap gap-4 sm:flex-row">
-			{#each THEMES as theme}
+			{#each THEMES as theme (theme)}
 				<button
 					data-theme={theme}
 					onclick={async () => await setTheme(theme)}
@@ -150,6 +162,21 @@
 					</div>
 				</button>
 			{/each}
+		</div>
+	</div>
+
+	<div class="p-4 pb-0">
+		<h1 class="text-base-content mb-2 text-3xl">{$_('defaultPasteExpiry')}</h1>
+		<div class="w-96">
+			<select
+				class="select"
+				onchange={setDefaultPasteExpiry}
+				bind:value={defaultPasteDelectionTime}
+			>
+				{#each pasteDeletionTimes() as period (period.value)}
+					<option value={period.value}>{period.label}</option>
+				{/each}
+			</select>
 		</div>
 	</div>
 
@@ -173,7 +200,11 @@
 			<h1 class="text-base-content mt-5 text-3xl">{$_('account.deleteAccount')}</h1>
 			<form onsubmit={deleteAccount}>
 				<div>
-					<label class="label label-text" for="username">{$_('account.deleteConfirm')}</label>
+					<label class="label label-text" for="username"
+						>{$_('account.deleteConfirm', {
+							content: accountDeletionConfirmText
+						})}</label
+					>
 					<input
 						bind:value={accountDeleteConfirm}
 						type="text"

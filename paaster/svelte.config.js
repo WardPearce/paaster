@@ -14,7 +14,12 @@ const config = {
 		adapter: adapter({
 			out: 'build',
 			precompress: true
-		})
+		}),
+		csrf: {
+			// Disable origin check while in development mode.
+			// Required due to how i develop
+			checkOrigin: !(process.env.NODE_ENV === 'development')
+		}
 	}
 };
 
