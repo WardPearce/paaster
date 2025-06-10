@@ -11,6 +11,9 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
+	import { pasteDeletionTimes } from '$lib/client/paste';
+
+	let { data }: { data: { expireAfter: number } } = $props();
 
 	let worker: Worker | undefined;
 	let derivePassword:
@@ -25,7 +28,9 @@
 	let accountDeleteConfirm: string | undefined = $state();
 	const accountDeletionConfirmText = get(_)('account.deleteConfirmContent');
 
-	onMount(() => {
+	let defaultPasteDelectionTime = $state(data.expireAfter);
+
+	onMount(async () => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
 			type: 'module'
 		});
@@ -128,6 +133,13 @@
 
 		isLoading = false;
 	}
+
+	async function setDefaultPasteExpiry() {
+		const payload = new FormData();
+		payload.append('expireAfter', defaultPasteDelectionTime.toString());
+
+		await fetch('/api/account/defaults', { method: 'POST', body: payload });
+	}
 </script>
 
 {#if isLoading}
@@ -150,6 +162,21 @@
 					</div>
 				</button>
 			{/each}
+		</div>
+	</div>
+
+	<div class="p-4 pb-0">
+		<h1 class="text-base-content mb-2 text-3xl">{$_('defaultPasteExpiry')}</h1>
+		<div class="w-96">
+			<select
+				class="select"
+				onchange={setDefaultPasteExpiry}
+				bind:value={defaultPasteDelectionTime}
+			>
+				{#each pasteDeletionTimes() as period (period.value)}
+					<option value={period.value}>{period.label}</option>
+				{/each}
+			</select>
 		</div>
 	</div>
 
