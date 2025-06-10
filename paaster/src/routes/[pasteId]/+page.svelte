@@ -27,7 +27,9 @@
 	// @ts-expect-error qrcode types missing
 	import QrCode from 'svelte-qrcode';
 	import { get } from 'svelte/store';
-	import { oklchToHex } from '$lib/client/colors.js';
+	import { oklchToHex } from '$lib/client/colors';
+	import { pasteDeletionTimes } from '$lib/client/paste.js';
+	import { HSOverlay } from 'flyonui/flyonui.js';
 
 	let { data } = $props();
 
@@ -48,40 +50,8 @@
 	} = $state({});
 	let langImport: LanguageType<string> | null = $state(null);
 
-	const timePeriods = [
-		{ value: -2, label: $_('paste_actions.expire.periods.never') },
-		{ value: -1, label: $_('paste_actions.expire.periods.being_viewed') },
-		{
-			value: 0.08333,
-			label: `5 ${$_('paste_actions.expire.periods.minutes')}`
-		},
-		{ value: 0.25, label: `15 ${$_('paste_actions.expire.periods.minutes')}` },
-		{ value: 0.5, label: `30 ${$_('paste_actions.expire.periods.minutes')}` },
-		{ value: 1, label: `1 ${$_('paste_actions.expire.periods.hour')}` },
-		{ value: 2, label: `2 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 3, label: `3 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 4, label: `4 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 5, label: `5 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 6, label: `6 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 7, label: `7 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 8, label: `8 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 9, label: `9 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 10, label: `10 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 11, label: `11 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 12, label: `12 ${$_('paste_actions.expire.periods.hours')}` },
-		{ value: 24, label: `1 ${$_('paste_actions.expire.periods.day')}` },
-		{ value: 48, label: `2 ${$_('paste_actions.expire.periods.days')}` },
-		{ value: 72, label: `3 ${$_('paste_actions.expire.periods.days')}` },
-		{ value: 96, label: `4 ${$_('paste_actions.expire.periods.days')}` },
-		{ value: 120, label: `5 ${$_('paste_actions.expire.periods.days')}` },
-		{ value: 144, label: `6 ${$_('paste_actions.expire.periods.days')}` },
-		{ value: 168, label: `1 ${$_('paste_actions.expire.periods.week')}` },
-		{ value: 336, label: `2 ${$_('paste_actions.expire.periods.weeks')}` },
-		{ value: 504, label: `3 ${$_('paste_actions.expire.periods.weeks')}` },
-		{ value: 730, label: `1 ${$_('paste_actions.expire.periods.month')}` },
-		{ value: 1461, label: `2 ${$_('paste_actions.expire.periods.months')}` },
-		{ value: 2192, label: `3 ${$_('paste_actions.expire.periods.months')}` }
-	];
+	let qrCodeOverlay: HSOverlay;
+	let shortcutsOverlay: HSOverlay;
 
 	async function loadSupportedLangs() {
 		const rawSupportedLangs: { [key: string]: any } = await import('svelte-highlight/languages');
@@ -386,7 +356,7 @@
 
 		if (data.expireAfter !== null) {
 			// Allows us to change the period label in the future.
-			timePeriods.forEach((time) => {
+			pasteDeletionTimes().forEach((time) => {
 				if (time.value === data.expireAfter) {
 					expireTime = time;
 					return true;
@@ -410,6 +380,12 @@
 			downloadPaste();
 			return false;
 		});
+
+		qrCodeOverlay = new HSOverlay(document.querySelector('#qr-code') as HTMLElement);
+		shortcutsOverlay = new HSOverlay(document.querySelector('#shortcuts') as HTMLElement);
+
+		qrCodeOverlay.isCloseWhenClickInside = true;
+		shortcutsOverlay.isCloseWhenClickInside = true;
 	});
 </script>
 
@@ -514,7 +490,7 @@
 					>{$_('paste_actions.expire.button')}</label
 				>
 				<Select
-					items={timePeriods}
+					items={pasteDeletionTimes()}
 					clearable={false}
 					bind:value={expireTime}
 					on:change={setExpire}
@@ -546,8 +522,7 @@
 				<button
 					class="btn btn-primary"
 					onclick={() => {
-						// @ts-ignore
-						new HSOverlay(document.querySelector('#qr-code')).open();
+						qrCodeOverlay.open();
 					}}
 				>
 					<QrCodeIcon />
@@ -562,8 +537,7 @@
 				<button
 					class="btn btn-primary"
 					onclick={() => {
-						// @ts-ignore
-						new HSOverlay(document.querySelector('#shortcuts')).open();
+						shortcutsOverlay.open();
 					}}
 				>
 					<CommandIcon /> {$_('shortcuts')}</button

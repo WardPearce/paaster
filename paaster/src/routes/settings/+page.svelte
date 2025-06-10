@@ -136,7 +136,7 @@
 	<div class="p-4 pb-0">
 		<h1 class="text-base-content mb-2 text-3xl">{$_('themes')}</h1>
 		<div class="flex flex-col flex-wrap gap-4 sm:flex-row">
-			{#each THEMES as theme}
+			{#each THEMES as theme (theme)}
 				<button
 					data-theme={theme}
 					onclick={async () => await setTheme(theme)}
