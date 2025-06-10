@@ -1,98 +1,98 @@
 {
-	"saved_pastes": "Pasta yang disimpan",
-	"empty_paste": "Tempel tidak mengandung karakter apa pun",
-	"paste_size_too_large": "Ukuran pasta melampaui ukuran maksimal",
+	"saved_pastes": "Tempel Tersimpan",
+	"empty_paste": "Tempelan tidak berisi karakter",
+	"paste_size_too_large": "Ukuran tempelan melebihi ukuran maksimal",
+	"themes": "Tema",
 	"account": {
-		"login": "Login",
+		"login": "Masuk",
 		"logout": "Keluar",
 		"create": "Buat akun",
-		"username": "Nama belakang",
+		"username": "Nama pengguna",
 		"password": "Kata sandi",
 		"already_have_account": "Masuk ke akun yang sudah ada",
 		"create_new_account": "Buat akun baru",
-		"remember": "Ingat aku"
+		"remember": "Ingat saya",
+		"settings": "Pengaturan",
+		"passwordReset": "Setel ulang kata sandi",
+		"newPassword": "Kata Sandi Baru",
+		"changePassword": "Ubah kata sandi",
+		"deleteAccount": "Hapus akun",
+		"deleteConfirm": "Ketik \"Confirm account deletion\" untuk menghapus akun"
 	},
-	"shortcuts": "Jalan Pintas",
+	"shortcuts": "Pintasan",
 	"paste_owner": "Panel Pemilik",
-	"upload_failed": "Gagal mengunggah tempel",
+	"upload_failed": "Unggahan tempelan gagal",
 	"create": {
-		"input": "tempel atau seret & jatuhkan kode Anda di sini",
+		"input": "tempel atau seret & lepas kode Anda di sini",
 		"errors": {
-			"private_window": "Tidak dapat menyimpan riwayat tempel, kemungkinan besar karena berada di jendela pribadi."
+			"private_window": "Tidak dapat menyimpan riwayat tempelan, kemungkinan karena berada di jendela penyamaran."
 		}
 	},
 	"view": {
-		"404": "Tempel tidak ada lagi",
-		"no_key": "Rekatkan kunci rahasia yang tidak disediakan",
-		"invalid_format": "Format kunci Rahasia tidak valid",
-		"cdn_down": "Tidak dapat mendownload tempel dari CDN, coba lagi nanti"
+		"404": "Tempelan tidak ada lagi",
+		"no_key": "Kunci rahasia tempelan tidak diberikan",
+		"invalid_format": "Format kunci rahasia tidak valid",
+		"cdn_down": "Tidak dapat mengunduh tempelan dari CDN, coba lagi nanti"
 	},
-	"search": "Cari pasta...",
+	"search": "Cari tempelan...",
 	"paste_actions": {
 		"delete": {
-			"loading": "Menghapus tempel",
-			"error": "Tempel tidak ditemukan di server",
-			"success": "Tempel dihapus dari server",
-			"button": "menghapus"
+			"loading": "Menghapus tempelan",
+			"error": "Tempelan tidak ditemukan di server",
+			"success": "Tempelan dihapus dari server",
+			"button": "Hapus"
 		},
 		"rename": {
-			"button": "ganti nama",
-			"success": "Nama diperbarui",
-			"model": {
-				"header": "ganti nama pasta"
-			}
+			"button": "Ubah Nama",
+			"success": "Nama diperbarui"
 		},
 		"share": {
-			"success": "Tautan berbagi disalin",
-			"button": "membagikan"
+			"success": "Tautan disalin ke papan klip",
+			"button": "Bagikan tautan"
 		},
 		"access_code": {
-			"button": "mengatur kode akses",
-			"access_code_len": "Kode akses harus {max_length} karakter atau lebih",
+			"button": "Kode akses",
+			"access_code_len": "Kode akses harus terdiri dari {max_length} karakter atau lebih",
 			"loading": "Mengatur kode akses",
-			"success": "Kumpulan kode akses",
-			"error": "Tidak dapat menyetel kode akses",
-			"success_copied_to_clipboard": "Kode akses disalin ke papan klip",
-			"model": {
-				"header": "atur kode akses tempel",
-				"input": "Masukkan kode akses",
-				"tooltip": "Hasilkan kode",
-				"button": "Tetapkan kode akses"
-			}
+			"success": "Kode akses diatur",
+			"error": "Tidak dapat mengatur kode akses",
+			"success_copied_to_clipboard": "Kode akses disalin ke papan klip"
 		},
 		"qr_code": {
-			"button": "menghasilkan kode QR",
+			"button": "Buat kode QR",
 			"model": {
-				"header": "pindai untuk mengakses tempel"
+				"header": "Pindai untuk mengakses tempelan"
 			}
 		},
 		"clipboard": {
-			"success": "Tempel disalin",
-			"button": "menyalin"
+			"success": "Tempelan disalin",
+			"button": "Salin kode ke papan klip"
 		},
 		"save": {
-			"success": "Tempel disimpan",
-			"button": "menyimpan"
+			"success": "Tempelan disimpan",
+			"button": "Simpan"
 		},
 		"download": {
-			"button": "unduh"
+			"button": "Unduh"
 		},
+		"wrap_words": "Bungkus kata",
 		"lang_updated": "Bahasa diperbarui",
+		"language": "Bahasa",
 		"expire": {
 			"loading": "Memperbarui kedaluwarsa setelah",
-			"error": "Tidak dapat menetapkan kedaluwarsa setelah",
-			"success": "Tempel disetel untuk kedaluwarsa dalam {period}",
+			"error": "Tidak dapat mengatur kedaluwarsa setelah",
+			"success": "Tempelan diatur untuk kedaluwarsa dalam {period}",
 			"button": "Kedaluwarsa setelah",
 			"periods": {
-				"never": "tidak pernah",
-				"being_viewed": "sedang melihat",
+				"never": "Tidak pernah",
+				"being_viewed": "Sedang dilihat",
 				"minute": "menit",
 				"minutes": "menit",
 				"hour": "jam",
 				"hours": "jam",
 				"day": "hari",
 				"days": "hari",
-				"week": "pekan",
+				"week": "minggu",
 				"weeks": "minggu",
 				"month": "bulan",
 				"months": "bulan"
@@ -101,14 +101,14 @@
 	},
 	"require_access_code_model": {
 		"input": "Masukkan kode akses",
-		"header": "diperlukan kode akses",
+		"header": "kode akses diperlukan",
 		"button": "kirim"
 	},
-	"no_saved_pastes": "tidak ada pasta yang disimpan",
+	"no_saved_pastes": "Tidak ada tempelan yang disimpan",
 	"shared_with": "Dibagikan dengan Anda",
 	"about": {
 		"title": "bagaimana kami melindungi privasi Anda.",
-		"content": "Paaster menggunakan enkripsi end-to-end untuk menyimpan dan berbagi pasta, artinya bahkan server tidak dapat melihat apa yang Anda simpan di sini.",
+		"content": "Paaster menggunakan enkripsi ujung-ke-ujung untuk menyimpan dan berbagi tempelan, yang berarti bahkan server tidak dapat melihat apa yang Anda simpan di sini.",
 		"source_code": "Kode sumber kami sepenuhnya open source dan dapat ditinjau di {github}"
 	}
 }
