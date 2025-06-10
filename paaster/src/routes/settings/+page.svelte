@@ -23,7 +23,7 @@
 	let rawPasswordReset: string | undefined = $state();
 
 	let accountDeleteConfirm: string | undefined = $state();
-	const accountDeletionConfirmText = 'Confirm account deletion';
+	const accountDeletionConfirmText = get(_)('account.deleteConfirmContent');
 
 	onMount(() => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
@@ -173,7 +173,11 @@
 			<h1 class="text-base-content mt-5 text-3xl">{$_('account.deleteAccount')}</h1>
 			<form onsubmit={deleteAccount}>
 				<div>
-					<label class="label label-text" for="username">{$_('account.deleteConfirm')}</label>
+					<label class="label label-text" for="username"
+						>{$_('account.deleteConfirm', {
+							content: accountDeletionConfirmText
+						})}</label
+					>
 					<input
 						bind:value={accountDeleteConfirm}
 						type="text"

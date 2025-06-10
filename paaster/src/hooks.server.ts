@@ -1,5 +1,4 @@
 import type { Handle } from '@sveltejs/kit';
-
 import { env } from '$env/dynamic/private';
 import { S3Client } from '@aws-sdk/client-s3';
 import { unsign } from 'cookie-signature';

@@ -93,6 +93,7 @@ paaster.io {
 	reverse_proxy localhost:3016
 }
 
+# Only required for Minio
 s3.paaster.io {
         header Access-Control-Allow-Origin "https://paaster.io" {
                 defer
@@ -116,6 +117,7 @@ server {
     }
 }
 
+# Only required for minio
 server {
     listen 80;
     server_name s3.paaster.io;
@@ -130,6 +132,26 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
     }
 }
+```
+
+## Minio
+### Install minio mc cli tool
+[Follow guide here](https://min.io/docs/minio/linux/reference/minio-mc.html#install-mc)
+
+### Add instance
+```
+mc alias set minio_instance https://s3.paaster.io my_minio_username my_minio_password
+```
+
+### Create bucket
+
+```
+mc mb minio_instance/paaster;mc anonymous set none minio_instance/paaster
+```
+
+### Get credentials
+```
+mc admin accesskey create minio_instance/my_minio_username
 ```
 
 ### Object storage providers

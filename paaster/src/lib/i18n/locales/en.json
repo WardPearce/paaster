@@ -17,7 +17,8 @@
 		"newPassword": "New Password",
 		"changePassword": "Change password",
 		"deleteAccount": "Delete account",
-		"deleteConfirm": "Type \"Confirm account deletion\" to delete account"
+		"deleteConfirm": "Type \"{{content}}\" to delete account",
+		"deleteConfirmContent": "Confirm account deletion"
 	},
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",
