@@ -109,6 +109,6 @@
 	"about": {
 		"title": "bagaimana kami melindungi privasi Anda.",
 		"content": "Paaster menggunakan enkripsi ujung-ke-ujung untuk menyimpan dan berbagi tempelan, yang berarti bahkan server tidak dapat melihat apa yang Anda simpan di sini.",
-		"source_code": "Kode sumber kami sepenuhnya sumber terbuka dan dapat ditinjau di {github}"
+		"source_code": "Kode sumber kami sepenuhnya open source dan dapat ditinjau di {github}"
 	}
 }
