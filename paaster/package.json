@@ -58,7 +58,7 @@
 		"mousetrap": "^1.6.5",
 		"notyf": "^3.10.0",
 		"svelte-file-dropzone": "^2.0.9",
-		"svelte-highlight": "^7.8.2",
+		"svelte-highlight": "^7.8.3",
 		"svelte-qrcode": "^1.0.1",
 		"svelte-select": "^5.8.3",
 		"tailwindcss": "^4.1.7",
