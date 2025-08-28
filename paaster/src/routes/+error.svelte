@@ -4,7 +4,7 @@
 	import CircleSlashIcon from 'lucide-svelte/icons/circle-slash';
 
 	if ('pasteId' in page.params) {
-		deletePaste(page.params.pasteId);
+		deletePaste(page.params.pasteId as string);
 	}
 </script>
 
