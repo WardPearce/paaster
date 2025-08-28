@@ -261,7 +261,7 @@
 				);
 
 				localStored = {
-					id: page.params.pasteId,
+					id: page.params.pasteId as string,
 					accessKey: sodium.to_base64(rawAccessKey),
 					masterKey: sodium.to_base64(rawPasteKey),
 					created: data.account.created,
@@ -274,7 +274,7 @@
 				localStored = result;
 			} else {
 				await localDb.pastes.add({
-					id: page.params.pasteId,
+					id: page.params.pasteId as string,
 					masterKey: sodium.to_base64(rawMasterKey),
 					accessKey: undefined,
 					created: data.created,
