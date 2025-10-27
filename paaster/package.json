@@ -24,7 +24,7 @@
 		"@types/node": "^24.8.1",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.36.0",
-		"eslint-config-prettier": "^10.1.5",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.12.4",
 		"globals": "^16.4.0",
 		"prettier": "^3.6.2",
