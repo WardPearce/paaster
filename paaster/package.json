@@ -49,7 +49,7 @@
 		"cookie-signature": "^1.2.2",
 		"culori": "^4.0.2",
 		"dayjs": "^1.11.18",
-		"dexie": "^4.0.11",
+		"dexie": "^4.2.1",
 		"flyonui": "^2.4.1",
 		"i18next": "^25.5.2",
 		"libsodium-wrappers-sumo": "^0.7.15",
