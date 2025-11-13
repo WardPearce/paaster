@@ -20,7 +20,7 @@
 		"@sveltejs/kit": "^2.48.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@types/cookie-signature": "^1.1.2",
-		"@types/culori": "^4.0.0",
+		"@types/culori": "^4.0.1",
 		"@types/node": "^24.9.1",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.39.1",
@@ -34,7 +34,7 @@
 		"svelte-check": "^4.3.3",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.46.2",
-		"vite": "^7.1.11"
+		"vite": "^7.2.2"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.864.0",
@@ -47,9 +47,9 @@
 		"argon2": "^0.44.0",
 		"comlink": "^4.4.2",
 		"cookie-signature": "^1.2.2",
-		"culori": "^4.0.1",
+		"culori": "^4.0.2",
 		"dayjs": "^1.11.18",
-		"dexie": "^4.0.11",
+		"dexie": "^4.2.1",
 		"flyonui": "^2.4.1",
 		"i18next": "^25.5.2",
 		"libsodium-wrappers-sumo": "^0.7.15",
