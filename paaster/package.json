@@ -41,7 +41,7 @@
 		"@aws-sdk/s3-presigned-post": "^3.940.0",
 		"@aws-sdk/s3-request-presigner": "^3.929.0",
 		"@sveltejs/adapter-node": "^5.4.0",
-		"@tailwindcss/vite": "^4.1.16",
+		"@tailwindcss/vite": "^4.1.17",
 		"@types/libsodium-wrappers-sumo": "^0.7.8",
 		"@types/mousetrap": "^1.6.15",
 		"argon2": "^0.44.0",
