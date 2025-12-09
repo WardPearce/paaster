@@ -33,7 +33,7 @@
 		"svelte": "^5.39.11",
 		"svelte-check": "^4.3.4",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.46.2",
+		"typescript-eslint": "^8.49.0",
 		"vite": "^7.2.2"
 	},
 	"dependencies": {
