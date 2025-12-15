@@ -51,7 +51,7 @@
 		"dayjs": "^1.11.19",
 		"dexie": "^4.2.1",
 		"flyonui": "^2.4.1",
-		"i18next": "^25.5.2",
+		"i18next": "^25.7.3",
 		"libsodium-wrappers-sumo": "^0.7.15",
 		"lucide-svelte": "^0.554.0",
 		"mongodb": "^7.0.0",
