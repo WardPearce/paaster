@@ -62,6 +62,6 @@
 		"svelte-qrcode": "^1.0.1",
 		"svelte-select": "^5.8.3",
 		"tailwindcss": "^4.1.14",
-		"zod": "^4.1.12"
+		"zod": "^4.2.1"
 	}
 }
