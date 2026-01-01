@@ -1,24 +1,31 @@
 {
-	"saved_pastes": "保存されたペースト",
+	"saved_pastes": "ペースト履歴",
 	"empty_paste": "貼り付けに文字が含まれていません",
 	"paste_size_too_large": "貼り付けサイズが最大サイズを超えています",
 	"account": {
 		"login": "ログイン",
 		"logout": "ログアウト",
-		"create": "アカウントを作成する",
+		"create": "アカウント作成",
 		"username": "ユーザー名",
 		"password": "パスワード",
-		"already_have_account": "既存のログイン",
-		"create_new_account": "新しいアカウントを作成",
-		"remember": "私を覚えてますか"
+		"already_have_account": "ログイン",
+		"create_new_account": "アカウント作成",
+		"remember": "ログイン状態を保存する",
+		"settings": "設定",
+		"passwordReset": "パスワード複製",
+		"newPassword": "新しいパスワード",
+		"changePassword": "パスワード変更",
+		"deleteAccount": "アカウント削除",
+		"deleteConfirm": "アカウントを削除するのに\"{{content}}\"を入力してください",
+		"deleteConfirmContent": "アカウント削除を確定する"
 	},
 	"shortcuts": "ショートカット",
-	"paste_owner": "オーナーパネル",
+	"paste_owner": "貼り付け管理",
 	"upload_failed": "貼り付けアップロードに失敗しました",
 	"create": {
-		"input": "ペーストまたはドラッグ &ここにコードをドロップしてください",
+		"input": "コードをペーストまたはドラッグ＆ドロップしてください",
 		"errors": {
-			"private_window": "プライベート ウィンドウにいる可能性が高いため、貼り付け履歴を保存できません。"
+			"private_window": "ペースト履歴を保存することができません。おそらくプライベートモードを使っています。"
 		}
 	},
 	"view": {
@@ -61,7 +68,7 @@
 			}
 		},
 		"qr_code": {
-			"button": "QRコードを生成",
+			"button": "QRコード",
 			"model": {
 				"header": "スキャンしてペーストにアクセス"
 			}
@@ -77,25 +84,27 @@
 		"download": {
 			"button": "ダウンロード"
 		},
+		"wrap_words": "改行",
 		"lang_updated": "言語が更新されました",
+		"language": "言語",
 		"expire": {
 			"loading": "更新の有効期限:",
 			"error": "次の後に有効期限を設定できません",
 			"success": "{期間} で有効期限が切れる設定を貼り付け",
-			"button": "期限切れ",
+			"button": "有効期限",
 			"periods": {
-				"never": "一度もない",
-				"being_viewed": "ビュー",
+				"never": "なし",
+				"being_viewed": "閲覧後",
 				"minute": "分",
 				"minutes": "分",
 				"hour": "時間",
 				"hours": "時間",
-				"day": "日",
-				"days": "日々",
-				"week": "週",
+				"day": "日間",
+				"days": "日間",
+				"week": "週間",
 				"weeks": "週間",
-				"month": "月",
-				"months": "月"
+				"month": "ヶ月間",
+				"months": "ヶ月間"
 			}
 		}
 	},
