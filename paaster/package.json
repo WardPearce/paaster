@@ -22,7 +22,7 @@
 		"@types/cookie-signature": "^1.1.2",
 		"@types/culori": "^4.0.1",
 		"@types/node": "^25.0.0",
-		"autoprefixer": "^10.4.22",
+		"autoprefixer": "^10.4.23",
 		"eslint": "^9.39.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.13.0",
