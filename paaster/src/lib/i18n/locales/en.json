@@ -1,6 +1,7 @@
 {
 	"saved_pastes": "Pastes",
 	"empty_paste": "Paste contains no characters",
+	"drop_file": "Drop a file to upload",
 	"paste_size_too_large": "Paste size surpasses max size",
 	"themes": "Themes",
 	"defaultPasteExpiry": "Default paste expiry",
