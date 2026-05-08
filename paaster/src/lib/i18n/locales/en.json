@@ -82,6 +82,7 @@
 		"download": {
 			"button": "Download"
 		},
+		"open": "Open",
 		"wrap_words": "Wrap words",
 		"render_markdown": "Render markdown",
 		"show_raw_text": "Show raw text",
