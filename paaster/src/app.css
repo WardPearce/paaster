@@ -74,7 +74,7 @@ label.label-text {
 }
 
 .svelte-select.focused {
-	border: none !important;
+	border: 2px solid var(--color-primary) !important;
 }
 
 .break-text {
