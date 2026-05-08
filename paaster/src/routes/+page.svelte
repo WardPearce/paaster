@@ -12,11 +12,14 @@
 
 	let codeTextArea: HTMLTextAreaElement | undefined = $state();
 	let pasteUploading = $state(false);
+	let isDragging = $state(false);
 
 	async function onFileDropped(event: { detail: { acceptedFiles: File[] } }) {
 		if (!event.detail.acceptedFiles) {
 			return;
 		}
+
+		isDragging = false;
 
 		await uploadPaste(
 			await event.detail.acceptedFiles[0].text(),
@@ -24,9 +27,16 @@
 		);
 	}
 
+	function onDragEnter() {
+		isDragging = true;
+	}
+
+	function onDragLeave() {
+		isDragging = false;
+	}
+
 	async function onCodePasted() {
 		if (!codeTextArea) return;
-		// Binds textarea doesn't work otherwise on chrome.
 		await uploadPaste(codeTextArea.value);
 	}
 
@@ -70,7 +80,6 @@
 					? sodium.crypto_secretstream_xchacha20poly1305_TAG_FINAL
 					: sodium.crypto_secretstream_xchacha20poly1305_TAG_MESSAGE;
 
-			// Encrypt the chunk
 			const encryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_push(
 				state,
 				rawChunk,
@@ -78,7 +87,6 @@
 				tag
 			);
 
-			// Store the length of the chunk in the little-endian
 			const chunkLength = new Uint8Array(4);
 			new DataView(chunkLength.buffer).setUint32(0, encryptedChunk.byteLength, true);
 
@@ -150,12 +158,22 @@
 {#if pasteUploading}
 	<Loading />
 {:else}
-	<Dropzone on:drop={onFileDropped} multiple={false} noClick={true} disableDefaultStyles={true}>
-		<textarea
-			oninput={onCodePasted}
-			bind:this={codeTextArea}
-			class="textarea h-full min-h-screen w-full rounded-none border-none focus:ring-0"
-			placeholder={$_('create.input')}
-		></textarea>
-	</Dropzone>
+	<div class="flex flex-col p-4 sm:p-6">
+		<Dropzone
+			on:drop={onFileDropped}
+			on:dragenter={onDragEnter}
+			on:dragleave={onDragLeave}
+			multiple={false}
+			noClick={true}
+			disableDefaultStyles={true}
+		>
+			<textarea
+				oninput={onCodePasted}
+				bind:this={codeTextArea}
+				autofocus
+				class="textarea h-[90vh] resize-none rounded-xl border-2 bg-transparent p-6 font-mono text-base leading-relaxed transition-colors placeholder:text-base-content/25 focus:border-primary focus:outline-none {isDragging ? 'border-primary border-dashed bg-primary/5' : 'border-base-content/10'}"
+				placeholder={$_('create.input')}
+			></textarea>
+		</Dropzone>
+	</div>
 {/if}

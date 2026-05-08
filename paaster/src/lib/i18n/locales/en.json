@@ -1,6 +1,7 @@
 {
 	"saved_pastes": "Pastes",
 	"empty_paste": "Paste contains no characters",
+	"drop_file": "Drop a file to upload",
 	"paste_size_too_large": "Paste size surpasses max size",
 	"themes": "Themes",
 	"defaultPasteExpiry": "Default paste expiry",
@@ -21,6 +22,10 @@
 		"deleteConfirm": "Type \"{{content}}\" to delete account",
 		"deleteConfirmContent": "Confirm account deletion"
 	},
+	"password_weak": "Weak",
+	"password_fair": "Fair",
+	"password_good": "Good",
+	"password_strong": "Strong",
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",
 	"upload_failed": "Paste upload failed",
@@ -77,7 +82,12 @@
 		"download": {
 			"button": "Download"
 		},
+		"open": "Open",
 		"wrap_words": "Wrap words",
+		"render_markdown": "Render markdown",
+		"show_raw_text": "Show raw text",
+		"raw_mode": "Raw mode",
+		"exit_raw_mode": "Exit raw mode",
 		"lang_updated": "Language updated",
 		"language": "Language",
 		"expire": {

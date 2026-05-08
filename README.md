@@ -1,44 +1,68 @@
-&nbsp;
-
 <div align="center">
   <img src="./assets/logo.png" width="300px" />
   <h1>Paaster.io</h1>
-  <quote>
+  <blockquote>
     Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and paste history, Paaster ensures that your pasted code remains confidential and accessible.
-  </quote>
+  </blockquote>
 
-<a href="https://paaster.io/terms-of-service">Terms of service |</a>
-<a href="https://paaster.io/privacy-policy"> Privacy policy</a>
+  <a href="https://paaster.io/terms-of-service">Terms of service</a> · <a href="https://paaster.io/privacy-policy">Privacy policy</a>
 
+  <br><br>
+
+  <a href="https://fink.inlang.com/github.com/WardPearce/paaster"><img src="https://img.shields.io/badge/Help_translate-0a0a0a?style=for-the-badge" alt="Translate"></a>
+  <a href="https://github.com/WardPearce/paaster/releases"><img src="https://img.shields.io/github/v/release/WardPearce/paaster?style=for-the-badge&label=Release&color=0a0a0a" alt="Release"></a>
+  <a href="https://matrix.to/#/#ward:matrix.org"><img src="https://img.shields.io/badge/Chat-0a0a0a?style=for-the-badge&logo=matrix" alt="Matrix"></a>
+  <a href="https://hub.docker.com/r/wardpearce/paaster"><img src="https://img.shields.io/docker/pulls/wardpearce/paaster?style=for-the-badge&label=Docker&color=0a0a0a" alt="Docker"></a>
 </div>
 
-&nbsp;
-
-[Help translate paaster!](https://fink.inlang.com/github.com/WardPearce/paaster)
+---
 
 # Preview
+
 ![Preview of paaster](./previews/image.png)
 
+---
+
+# Table of Contents
+
+- [Features](#features)
+- [Deployment](#deployment)
+  - [Docker Compose](#docker-compose)
+  - [Reverse Proxy](#reverse-proxy)
+  - [Minio Setup](#minio)
+- [Security](#security)
+  - [What is E2EE?](#what-is-e2ee)
+  - [FAQ](#faq)
+- [Cipher](#cipher)
+- [Requesting Features](#requesting-features)
+- [Support](#support)
+
+---
 
 # Features
-- [End-to-end encryption](#what-is-e2ee).
-- Memory efficient.
-- File drag & drop.
-- Shortcuts.
-- Paste history.
+
+- [End-to-end encryption](#what-is-e2ee)
+- Memory efficient
+- File drag & drop
+- Keyboard shortcuts
+- Paste history
 - Themes
-- Delete after view or X amount of time.
-- Share via QR code.
+- Delete after view or X amount of time
+- Share via QR code
 - [CLI Tool](https://github.com/WardPearce/paaster-cli)
-- i18n support ([Contribute](https://fink.inlang.com/github.com/WardPearce/paaster)).
-- Automatic or manual language detection.
-- No dynamically loaded 3rd party dependencies, meaning malicious code must be present at build time.
-- Use of `package-lock.json` & [Socket.dev](https://socket.dev/) to fight against supply chain attacks & vulnerabilities.
+- i18n support ([Contribute](https://fink.inlang.com/github.com/WardPearce/paaster))
+- Automatic or manual language detection
+- No dynamically loaded 3rd party dependencies — malicious code must be present at build time
+- Use of `package-lock.json` & [Socket.dev](https://socket.dev/) to fight supply chain attacks
+
+---
 
 # Deployment
-Paaster requires s3 for deployment, you can use a hosted solution or self-host using [MinIO](https://github.com/minio/minio).
 
-## Docker compose
+Paaster requires S3-compatible object storage. You can use a hosted solution or self-host using [MinIO](https://github.com/minio/minio).
+
+## Docker Compose
+
 ```yaml
 services:
   paaster:
@@ -68,8 +92,6 @@ services:
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
 
-  # Not required if using a host s3 solution
-  # Must be reverse proxied so clients can access it
   paaster_minio:
     container_name: paaster_minio
     image: quay.io/minio/minio
@@ -85,26 +107,28 @@ services:
     command: server /data --console-address ":9001"
 ```
 
-## Reverse proxy
+## Reverse Proxy
 
 ### Caddy
+
 ```caddy
 paaster.io {
-	reverse_proxy localhost:3016
+    reverse_proxy localhost:3016
 }
 
-# Only required for Minio
+# Only required for MinIO
 s3.paaster.io {
-        header Access-Control-Allow-Origin "https://paaster.io" {
-                defer
-        }
-        header Access-Control-Allow-Methods "GET,POST,OPTIONS,HEAD,PATCH,PUT,DELETE"
-        header Access-Control-Allow-Headers "User-Agent,Authorization,Content-Type"
-	reverse_proxy localhost:9000
+    header Access-Control-Allow-Origin "https://paaster.io" {
+        defer
+    }
+    header Access-Control-Allow-Methods "GET,POST,OPTIONS,HEAD,PATCH,PUT,DELETE"
+    header Access-Control-Allow-Headers "User-Agent,Authorization,Content-Type"
+    reverse_proxy localhost:9000
 }
 ```
 
 ### NGINX
+
 ```nginx
 server {
     listen 80;
@@ -117,7 +141,7 @@ server {
     }
 }
 
-# Only required for minio
+# Only required for MinIO
 server {
     listen 80;
     server_name s3.paaster.io;
@@ -134,11 +158,14 @@ server {
 }
 ```
 
-## Minio
-### Install minio mc cli tool
-[Follow guide here](https://min.io/docs/minio/linux/reference/minio-mc.html#install-mc)
+## MinIO
+
+### Install mc CLI
+
+[Follow the official guide](https://min.io/docs/minio/linux/reference/minio-mc.html#install-mc)
 
 ### Add instance
+
 ```
 mc alias set minio_instance https://s3.paaster.io my_minio_username my_minio_password
 ```
@@ -146,23 +173,27 @@ mc alias set minio_instance https://s3.paaster.io my_minio_username my_minio_pas
 ### Create bucket
 
 ```
-mc mb minio_instance/paaster;mc anonymous set none minio_instance/paaster
+mc mb minio_instance/paaster
+mc anonymous set none minio_instance/paaster
 ```
 
 ### Get credentials
+
 ```
 mc admin accesskey create minio_instance/my_minio_username
 ```
 
 ### Object storage providers
+
 - [iDrive e2](https://www.idrive.com/e2/) (no free tier anymore)
 - [Wasabi Hot Cloud Storage](https://wasabi.com/hot-cloud-storage/)
-- [Storj](https://www.storj.io/) (25GB free tier)
+- [Storj](https://www.storj.io/) (25 GB free tier)
 - [Contabo object storage](https://contabo.com/en/object-storage/)
 - [Cloudflare R2](https://www.cloudflare.com/products/r2/)
 - [Amazon S3](https://aws.amazon.com/s3/)
 - [Google Cloud Storage](https://cloud.google.com/storage)
 
+---
 
 # Security
 
@@ -170,38 +201,50 @@ mc admin accesskey create minio_instance/my_minio_username
 
 End-to-end encryption (E2EE) is a zero-trust encryption methodology. When you paste code into Paaster, it is encrypted locally in your browser using a secret that is never shared with the server. Only people you share the link with can view the paste.
 
-## Can I trust a instance of paaster not hosted by me?
+## FAQ
 
-No. Anyone could modify the functionality of Paaster to expose your secret key to the server. We recommend using a instance you host or trust.
+### Can I trust an instance of Paaster not hosted by me?
 
-## How are client secrets stored?
+No. Anyone could modify the functionality of Paaster to expose your secret key to the server. We recommend using an instance you host or trust.
 
-Client secrets are stored with IndexedDB when the paste is created, allowing for paste history. This method of storage makes Paaster vulnerable to malicious JavaScript, but it would require malicious code to be present when the Svelte application is built.
+### How are client secrets stored?
 
-## How are client secrets transported?
+Client secrets are stored in IndexedDB when the paste is created, allowing for paste history. This method of storage makes Paaster vulnerable to malicious JavaScript, but it would require malicious code to be present when the application is built.
 
-Paaster uses URI fragments to transport secrets, according to the [Mozilla foundation](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL#anchor) URI fragments aren't meant to be sent to the server. Bitwarden also has a article covering this usage [here](https://bitwarden.com/blog/bitwarden-send-how-it-works/).
+### How are client secrets transported?
 
-## How are server secrets stored?
+Paaster uses URI fragments to transport secrets. According to the [Mozilla Foundation](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_URL#anchor), URI fragments aren't meant to be sent to the server. Bitwarden also has an article covering this usage [here](https://bitwarden.com/blog/bitwarden-send-how-it-works/).
 
-Server secrets are stored with IndexedDB when the paste is created, allowing for modification or deletion of pastes later on.
+### How are server secrets stored?
 
-## Cipher
+Server secrets are stored in IndexedDB when the paste is created, allowing for modification or deletion of pastes later on.
 
-Paaster uses the following libsodium functions crypto_secretstream_xchacha20poly1305_*, crypto_pwhash & crypto_secretbox_easy, which is implemented using the [libsodium-wrappers-sumo](https://www.npmjs.com/package/libsodium-wrappers-sumo) library.
+---
 
-# Requesting features
+# Cipher
 
-- Open a [new issue](https://github.com/WardPearce/paaster/issues/new) to request a feature (one issue per feature.)
+Paaster uses the following libsodium functions:
 
-## What we won't add
+- `crypto_secretstream_xchacha20poly1305_*`
+- `crypto_pwhash`
+- `crypto_secretbox_easy`
 
-- Paste editing.
-  - Paaster isn't a text editor, it's a pastebin.
-- Paste button.
-  - Paaster isn't a text editor, when code is inputted it will always be automatically uploaded.
-- Optional encryption.
-  - Paaster will never have opt-in / opt-out encryption, encryption will always be present.
+These are implemented using the [libsodium-wrappers-sumo](https://www.npmjs.com/package/libsodium-wrappers-sumo) library.
 
-# Have any questions?
-[Join our Matrix space](https://matrix.to/#/#ward:matrix.org)
+---
+
+# Requesting Features
+
+- Open a [new issue](https://github.com/WardPearce/paaster/issues/new) to request a feature (one issue per feature).
+
+### What we won't add
+
+- **Paste editing** — Paaster isn't a text editor, it's a pastebin.
+- **Paste button** — Paaster isn't a text editor. When code is inputted, it will always be automatically uploaded.
+- **Optional encryption** — Paaster will never have opt-in/opt-out encryption. Encryption will always be present.
+
+---
+
+# Support
+
+Have any questions? [Join our Matrix space](https://matrix.to/#/#ward:matrix.org).
