@@ -313,7 +313,7 @@
 			// The actual encrypted chunk (excluding the prefix)
 			const chunk = encryptedCode.slice(chunkStart + 4, chunkEnd);
 
-			const decryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_pull(state, chunk);
+			const decryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_pull(state, chunk, null);
 
 			if (decryptedChunk) {
 				rawPaste += new TextDecoder().decode(decryptedChunk.message);
