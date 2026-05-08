@@ -21,6 +21,10 @@
 		"deleteConfirm": "Type \"{{content}}\" to delete account",
 		"deleteConfirmContent": "Confirm account deletion"
 	},
+	"password_weak": "Weak",
+	"password_fair": "Fair",
+	"password_good": "Good",
+	"password_strong": "Strong",
 	"shortcuts": "Shortcuts",
 	"paste_owner": "Owner Panel",
 	"upload_failed": "Paste upload failed",

@@ -45,6 +45,8 @@
 		"@tailwindcss/vite": "^4.2.2",
 		"@types/libsodium-wrappers-sumo": "^0.7.8",
 		"@types/mousetrap": "^1.6.15",
+		"@zxcvbn-ts/core": "^3.0.4",
+		"@zxcvbn-ts/language-common": "^3.0.4",
 		"argon2": "^0.44.0",
 		"comlink": "^4.4.2",
 		"cookie-signature": "^1.2.2",

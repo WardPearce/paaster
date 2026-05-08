@@ -1,6 +1,9 @@
 import * as comlink from 'comlink';
 import sodium from 'libsodium-wrappers-sumo';
 
+export interface DerivePasswordApi {
+  derivePassword(rawPassword: string, passwordSalt: Uint8Array): Promise<Uint8Array>;
+}
 
 async function derivePassword(rawPassword: string, passwordSalt: Uint8Array): Promise<Uint8Array> {
   await sodium.ready;
@@ -15,5 +18,5 @@ async function derivePassword(rawPassword: string, passwordSalt: Uint8Array): Pr
   );
 }
 
-
-comlink.expose({ derivePassword });
+const api: DerivePasswordApi = { derivePassword };
+comlink.expose(api);
