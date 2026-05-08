@@ -170,6 +170,7 @@
 			<textarea
 				oninput={onCodePasted}
 				bind:this={codeTextArea}
+				autofocus
 				class="textarea h-[90vh] resize-none rounded-xl border-2 bg-transparent p-6 font-mono text-base leading-relaxed transition-colors placeholder:text-base-content/25 focus:border-primary focus:outline-none {isDragging ? 'border-primary border-dashed bg-primary/5' : 'border-base-content/10'}"
 				placeholder={$_('create.input')}
 			></textarea>

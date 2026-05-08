@@ -145,77 +145,89 @@
 {#if isLoading}
 	<Loading />
 {:else}
-	<div class="p-4 pb-0">
-		<h1 class="text-base-content mb-2 text-3xl">{$_('themes')}</h1>
-		<div class="flex flex-col flex-wrap gap-4 sm:flex-row">
-			{#each THEMES as theme (theme)}
-				<button
-					data-theme={theme}
-					onclick={async () => await setTheme(theme)}
-					class="btn btn-lg bg-base-100 border-base-300 text-base-content flex w-full items-center justify-between rounded-xl border p-3 shadow transition hover:shadow-md sm:w-auto"
-				>
-					<span class="text-sm font-semibold capitalize">{theme}</span>
-					<div class="ml-4 flex space-x-1">
-						<div class="bg-primary h-4 w-2 rounded"></div>
-						<div class="bg-secondary h-4 w-2 rounded"></div>
-						<div class="bg-accent h-4 w-2 rounded"></div>
-					</div>
-				</button>
-			{/each}
-		</div>
-	</div>
-
-	<div class="p-4 pb-0">
-		<h1 class="text-base-content mb-2 text-3xl">{$_('defaultPasteExpiry')}</h1>
-		<div class="w-96">
-			<select
-				class="select"
-				onchange={setDefaultPasteExpiry}
-				bind:value={defaultPasteDelectionTime}
-			>
-				{#each pasteDeletionTimes() as period (period.value)}
-					<option value={period.value}>{period.label}</option>
-				{/each}
-			</select>
-		</div>
-	</div>
-
-	<main class="flex p-5">
-		<div class="w-full max-w-md">
-			{#if errorMsg}
-				<div class="alert alert-warning mb-4" role="alert">
-					{errorMsg}
+	<div class="mx-auto max-w-2xl space-y-8 px-4 py-8 sm:px-6">
+		<div class="card border-base-content/20 border">
+			<div class="card-body p-6">
+				<h2 class="text-base-content text-xl font-semibold">{$_('themes')}</h2>
+				<div class="mt-4 flex flex-wrap gap-3">
+					{#each THEMES as theme (theme)}
+						<button
+							data-theme={theme}
+							onclick={async () => await setTheme(theme)}
+							class="bg-base-100 border-base-300 text-base-content inline-flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium capitalize transition hover:shadow-md"
+						>
+							{theme}
+							<div class="flex gap-0.5">
+								<div class="bg-primary h-3 w-2 rounded"></div>
+								<div class="bg-secondary h-3 w-2 rounded"></div>
+								<div class="bg-accent h-3 w-2 rounded"></div>
+							</div>
+						</button>
+					{/each}
 				</div>
-			{/if}
+			</div>
+		</div>
 
-			<h1 class="text-base-content text-3xl">{$_('account.passwordReset')}</h1>
-			<form onsubmit={changePassword}>
-				<div>
-					<label class="label label-text" for="password">{$_('account.newPassword')}</label>
-					<input bind:value={rawPasswordReset} type="password" class="input w-full" id="password" />
-				</div>
-				<button class="btn btn-primary mt-2">{$_('account.changePassword')}</button>
-			</form>
-
-			<h1 class="text-base-content mt-5 text-3xl">{$_('account.deleteAccount')}</h1>
-			<form onsubmit={deleteAccount}>
-				<div>
-					<label class="label label-text" for="username"
-						>{$_('account.deleteConfirm', {
-							content: accountDeletionConfirmText
-						})}</label
+		<div class="card border-base-content/20 border">
+			<div class="card-body p-6">
+				<h2 class="text-base-content text-xl font-semibold">{$_('defaultPasteExpiry')}</h2>
+				<div class="mt-4 max-w-xs">
+					<select
+						class="select w-full"
+						onchange={setDefaultPasteExpiry}
+						bind:value={defaultPasteDelectionTime}
 					>
-					<input
-						bind:value={accountDeleteConfirm}
-						type="text"
-						class="input w-full"
-						id="username"
-						class:border-warning={accountDeleteConfirm !== accountDeletionConfirmText}
-						class:border-success={accountDeleteConfirm === accountDeletionConfirmText}
-					/>
+						{#each pasteDeletionTimes() as period (period.value)}
+							<option value={period.value}>{period.label}</option>
+						{/each}
+					</select>
 				</div>
-				<button class="btn btn-warning mt-2">{$_('account.deleteAccount')}</button>
-			</form>
+			</div>
 		</div>
-	</main>
+
+		{#if errorMsg}
+			<div class="alert alert-warning" role="alert">
+				{errorMsg}
+			</div>
+		{/if}
+
+		<div class="card border-base-content/20 border">
+			<div class="card-body p-6">
+				<h2 class="text-base-content text-xl font-semibold">{$_('account.passwordReset')}</h2>
+				<form onsubmit={changePassword} class="mt-4 max-w-sm space-y-4">
+					<div>
+						<label class="label label-text mb-1" for="password">{$_('account.newPassword')}</label>
+						<input bind:value={rawPasswordReset} type="password" class="input w-full" id="password" />
+					</div>
+					<button class="btn btn-primary">{$_('account.changePassword')}</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="card border-base-content/20 border">
+			<div class="card-body p-6">
+				<h2 class="text-base-content text-xl font-semibold">{$_('account.deleteAccount')}</h2>
+				<form onsubmit={deleteAccount} class="mt-4 max-w-sm space-y-4">
+					<div>
+						<label class="label label-text mb-1" for="username"
+							>{$_('account.deleteConfirm', {
+								content: accountDeletionConfirmText
+							})}</label
+						>
+						<input
+							bind:value={accountDeleteConfirm}
+							type="text"
+							class="input w-full"
+							id="username"
+							class:border-warning={accountDeleteConfirm !== accountDeletionConfirmText && accountDeleteConfirm}
+							class:border-success={accountDeleteConfirm === accountDeletionConfirmText}
+						/>
+					</div>
+					<button class="btn btn-warning" disabled={accountDeleteConfirm !== accountDeletionConfirmText}>
+						{$_('account.deleteAccount')}
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
 {/if}
