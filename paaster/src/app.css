@@ -18,6 +18,32 @@
 	background-color: var(--color-base-100) !important;
 }
 
+.hljs table {
+	border-collapse: separate !important;
+	border-spacing: 0 !important;
+}
+
+.hljs td.hljs-ln-numbers {
+	background-color: color-mix(in oklab, var(--color-base-content) 4%, var(--color-base-100)) !important;
+	border-right: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent) !important;
+	padding: 0 0.75rem 0 1rem !important;
+	text-align: right !important;
+	user-select: none !important;
+	vertical-align: top !important;
+}
+
+.hljs td.hljs-ln-code {
+	padding: 0 1rem !important;
+}
+
+.hljs-ln-line.hljs-ln-numbers .hljs-ln-n {
+	padding: 0 !important;
+	margin: 0 !important;
+	color: var(--color-base-content) !important;
+	opacity: 0.4 !important;
+	font-size: 0.8125rem !important;
+}
+
 textarea {
 	resize: none;
 }

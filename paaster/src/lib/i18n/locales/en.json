@@ -86,6 +86,7 @@
 		"wrap_words": "Wrap words",
 		"render_markdown": "Render markdown",
 		"show_raw_text": "Show raw text",
+		"show_code": "Show code",
 		"raw_mode": "Raw mode",
 		"exit_raw_mode": "Exit raw mode",
 		"lang_updated": "Language updated",
