@@ -412,14 +412,17 @@
 	role="dialog"
 	tabindex="-1"
 >
-	<div class="modal-dialog overlay-open:opacity-100 overlay-open:duration-300">
-		<div class="modal-content border-base-content/20 border p-4">
+	<div class="modal-dialog overlay-open:opacity-100 overlay-open:duration-300 sm:max-w-md">
+		<div class="modal-content border-base-content/20 border">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('paste_actions.qr_code.model.header')}</h1>
+				<button type="button" class="btn btn-text btn-sm" onclick={() => qrCodeOverlay.close()}>
+					✕
+				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body flex justify-center p-6">
 				{#if qrCodeBg && qrCodeColor}
-					<QrCode value={page.url.href} color={qrCodeColor} background={qrCodeBg} size={540} />
+					<QrCode value={page.url.href} color={qrCodeColor} background={qrCodeBg} size={280} />
 				{/if}
 			</div>
 		</div>
@@ -432,23 +435,38 @@
 	role="dialog"
 	tabindex="-1"
 >
-	<div class="modal-dialog overlay-open:opacity-100">
-		<div class="modal-content border-base-content/20 border p-4">
+	<div class="modal-dialog overlay-open:opacity-100 sm:max-w-sm">
+		<div class="modal-content border-base-content/20 border">
 			<div class="modal-header">
 				<h1 class="modal-title">{$_('shortcuts')}</h1>
+				<button type="button" class="btn btn-text btn-sm" onclick={() => shortcutsOverlay.close()}>
+					✕
+				</button>
 			</div>
-			<div class="modal-body">
-				<div class="pb-2">
-					<h3 class="text-base-content text-1xl">{$_('paste_actions.share.button')}</h3>
-					<kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">X</kbd>
+			<div class="modal-body divide-y divide-base-content/10">
+				<div class="flex items-center justify-between py-2.5">
+					<span class="text-base-content text-sm">{$_('paste_actions.share.button')}</span>
+					<div class="flex items-center gap-1">
+						<kbd class="kbd kbd-sm">Ctrl</kbd>
+						<span class="text-base-content/40 text-xs">+</span>
+						<kbd class="kbd kbd-sm">X</kbd>
+					</div>
 				</div>
-				<div class="pt-2 pb-2">
-					<h3 class="text-base-content text-1xl">{$_('paste_actions.clipboard.button')}</h3>
-					<kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">A</kbd>
+				<div class="flex items-center justify-between py-2.5">
+					<span class="text-base-content text-sm">{$_('paste_actions.clipboard.button')}</span>
+					<div class="flex items-center gap-1">
+						<kbd class="kbd kbd-sm">Ctrl</kbd>
+						<span class="text-base-content/40 text-xs">+</span>
+						<kbd class="kbd kbd-sm">A</kbd>
+					</div>
 				</div>
-				<div class="pt-2 pb-2">
-					<h3 class="text-base-content text-1xl">{$_('paste_actions.download.button')}</h3>
-					<kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">S</kbd>
+				<div class="flex items-center justify-between py-2.5">
+					<span class="text-base-content text-sm">{$_('paste_actions.download.button')}</span>
+					<div class="flex items-center gap-1">
+						<kbd class="kbd kbd-sm">Ctrl</kbd>
+						<span class="text-base-content/40 text-xs">+</span>
+						<kbd class="kbd kbd-sm">S</kbd>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -461,101 +479,129 @@
 	<div class="flex flex-col gap-4 p-0 pt-4 pb-4 sm:p-4 md:flex-row">
 		{#if localStored && localStored.accessKey && !$rawModeStore}
 			<div
-				class="card border-base-content/20 flex w-full flex-col gap-3 rounded-lg border p-4 md:order-last md:w-72 md:shrink-0"
+				class="card border-base-content/20 flex w-full flex-col gap-4 rounded-lg border p-5 md:order-last md:w-72 md:shrink-0 md:self-start"
 			>
-				<h1 class="text-base-content text-xl sm:text-2xl">{$_('paste_owner')}</h1>
+				<div class="border-b border-base-content/10 pb-3">
+					<h1 class="text-base-content text-lg font-semibold">{$_('paste_owner')}</h1>
+				</div>
 
 				<form onsubmit={setName}>
-					<label class="label label-text" for="name-paste"
+					<label class="label label-text mb-1.5" for="name-paste"
 						>{$_('paste_actions.rename.button')}</label
 					>
 					<div class="flex items-center gap-1">
-						<input bind:value={pasteName} type="text" class="input h-10 flex-1" id="name-paste" />
+						<input bind:value={pasteName} type="text" class="input h-9 flex-1 text-sm" id="name-paste" />
 					</div>
 				</form>
 
-				<label class="label label-text" for="delete-after"
-					>{$_('paste_actions.expire.button')}</label
-				>
-				<Select
-					items={pasteDeletionTimes()}
-					clearable={false}
-					bind:value={expireTime}
-					on:change={setExpire}
-				/>
+				<div>
+					<label class="label label-text mb-1.5" for="delete-after"
+						>{$_('paste_actions.expire.button')}</label
+					>
+					<Select
+						items={pasteDeletionTimes()}
+						clearable={false}
+						bind:value={expireTime}
+						on:change={setExpire}
+					/>
+				</div>
 
-				<label class="label label-text" for="lang">{$_('paste_actions.language')}</label>
-				<Select
-					items={Object.keys(supportedLangs)}
-					clearable={false}
-					bind:value={selectedLang}
-					on:change={setLang}
-					placeholder="Auto-detect language"
-				/>
-				<div class="flex items-center gap-1">
+				<div>
+					<label class="label label-text mb-1.5" for="lang">{$_('paste_actions.language')}</label>
+					<Select
+						items={Object.keys(supportedLangs)}
+						clearable={false}
+						bind:value={selectedLang}
+						on:change={setLang}
+						placeholder="Auto-detect language"
+					/>
+				</div>
+
+				<div class="flex items-center justify-between">
+					<span class="label-text">{$_('paste_actions.wrap_words')}</span>
 					<input
 						type="checkbox"
-						class="checkbox checkbox-primary"
+						class="checkbox checkbox-primary checkbox-sm"
 						id="wrap-words"
 						bind:checked={preWrap}
 						onclick={setPreWrap}
 					/>
-					<label class="label label-text" for="wrap-words"
-						>{$_('paste_actions.wrap_words')}</label
-					>
 				</div>
 
-				<button
-					class="btn btn-primary w-full"
-					onclick={() => {
-						qrCodeOverlay.open();
-					}}
-				>
-					<QrCodeIcon />
-					{$_('paste_actions.qr_code.button')}</button
-				>
+				<div class="border-t border-base-content/10 pt-3 flex flex-col gap-2">
+					<button
+						class="btn btn-primary btn-sm w-full"
+						onclick={() => {
+							qrCodeOverlay.open();
+						}}
+					>
+						<QrCodeIcon size={16} />
+						{$_('paste_actions.qr_code.button')}</button
+					>
 
-				<button class="btn btn-primary w-full" onclick={sharePaste}>
-					<ShareIcon />
-					{$_('paste_actions.share.button')}
-				</button>
+					<button class="btn btn-primary btn-sm w-full" onclick={sharePaste}>
+						<ShareIcon size={16} />
+						{$_('paste_actions.share.button')}
+					</button>
 
-				<button
-					class="btn btn-primary w-full"
-					onclick={() => {
-						shortcutsOverlay.open();
-					}}
-				>
-					<CommandIcon /> {$_('shortcuts')}</button
-				>
+					<button
+						class="btn btn-ghost btn-sm w-full"
+						onclick={() => {
+							shortcutsOverlay.open();
+						}}
+					>
+						<CommandIcon size={16} /> {$_('shortcuts')}</button
+					>
 
-				<button class="btn btn-outline w-full" onclick={deletePaste}>
-					<TrashIcon />
-					{$_('paste_actions.delete.button')}
-				</button>
+					<button class="btn btn-error btn-outline btn-sm w-full mt-1" onclick={deletePaste}>
+						<TrashIcon size={16} />
+						{$_('paste_actions.delete.button')}
+					</button>
+				</div>
 			</div>
 		{/if}
 
 		<div
-				class={`min-w-0 ${localStored?.accessKey ? 'flex-1' : 'w-full'} ${$rawModeStore ? '' : 'rounded-lg'}`}
-			>
-			<div class="mb-2 flex items-center gap-2">
-				{#if isMarkdown && !$rawModeStore}
+			class={`min-w-0 ${localStored?.accessKey ? 'flex-1' : 'w-full'} ${$rawModeStore ? '' : 'rounded-lg'}`}
+		>
+			<div class="mb-3 flex flex-wrap items-center justify-between">
+				<div class="flex items-center gap-2">
+					{#if pasteName}
+						<span class="text-base-content text-sm font-medium max-w-48 truncate">{pasteName}</span>
+					{/if}
+				</div>
+				<div class="flex items-center gap-0.5">
 					<button
 						type="button"
-						class="btn btn-primary btn-sm"
-						onclick={() => showRenderedMarkdown = !showRenderedMarkdown}
+						class="btn btn-soft btn-sm"
+						onclick={copyCode}
 					>
-						{showRenderedMarkdown ? $_('paste_actions.show_raw_text') : $_('paste_actions.render_markdown')}
+						{$_('paste_actions.clipboard.button')}
 					</button>
-				{/if}
-				<button
-					type="button"
-					class="btn btn-primary btn-sm"
-					onclick={() => rawModeStore.set(!$rawModeStore)}
-				>
-					{$rawModeStore ? $_('paste_actions.exit_raw_mode') : $_('paste_actions.raw_mode')}
-				</button>
+					<button
+						type="button"
+						class="btn btn-soft btn-sm"
+						onclick={downloadPaste}
+					>
+						{$_('paste_actions.download.button')}
+					</button>
+					{#if isMarkdown && !$rawModeStore}
+						<button
+							type="button"
+							class="btn btn-soft btn-sm"
+							onclick={() => showRenderedMarkdown = !showRenderedMarkdown}
+						>
+							{showRenderedMarkdown ? $_('paste_actions.show_raw_text') : $_('paste_actions.render_markdown')}
+						</button>
+					{/if}
+					<button
+						type="button"
+						class="btn btn-soft btn-sm"
+						onclick={() => rawModeStore.set(!$rawModeStore)}
+					>
+						{$rawModeStore ? $_('paste_actions.exit_raw_mode') : $_('paste_actions.raw_mode')}
+					</button>
+				</div>
 			</div>
 			{#if showRenderedMarkdown && !$rawModeStore}
 				<div class="markdown-render rounded-lg border border-base-content/10 p-4 sm:p-6">
