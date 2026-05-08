@@ -2,7 +2,6 @@
 	import BookMarkedIcon from 'lucide-svelte/icons/book-marked';
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
-	import MenuIcon from 'lucide-svelte/icons/menu';
 	import SettingsIcon from 'lucide-svelte/icons/settings';
 	import { _ } from '$lib/i18n';
 
