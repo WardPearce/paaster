@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
 	import { secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
-	import { authStore } from '$lib/client/stores';
+	import { authStore, themeStore } from '$lib/client/stores';
 	import { setTheme } from '$lib/client/theme';
 	import Loading from '$lib/components/Loading.svelte';
 	import { THEMES } from '$lib/consts';
@@ -149,21 +149,29 @@
 		<div class="card border-base-content/20 border">
 			<div class="card-body p-6">
 				<h2 class="text-base-content text-xl font-semibold">{$_('themes')}</h2>
-				<div class="mt-4 flex flex-wrap gap-3">
-					{#each THEMES as theme (theme)}
-						<button
-							data-theme={theme}
-							onclick={async () => await setTheme(theme)}
-							class="bg-base-100 border-base-300 text-base-content inline-flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium capitalize transition hover:shadow-md"
-						>
-							{theme}
-							<div class="flex gap-0.5">
-								<div class="bg-primary h-3 w-2 rounded"></div>
-								<div class="bg-secondary h-3 w-2 rounded"></div>
-								<div class="bg-accent h-3 w-2 rounded"></div>
+				<div class="rounded-box mt-4 max-h-32 overflow-y-auto">
+					<div class="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+						{#each THEMES as theme (theme)}
+							<div class="flex flex-col items-center gap-1">
+								<div
+									data-theme={theme}
+									onclick={async () => await setTheme(theme)}
+									class={"bg-base-100 text-base-content w-full cursor-pointer rounded-xl border p-3 transition hover:scale-105 " + ($themeStore === theme ? "border-primary shadow-md shadow-primary/20" : "border-base-content/20 hover:border-base-content/40")}
+								>
+									<div class="flex flex-wrap gap-1">
+										<div class="bg-primary h-3 w-5 rounded-full"></div>
+										<div class="bg-secondary h-3 w-5 rounded-full"></div>
+										<div class="bg-accent h-3 w-5 rounded-full"></div>
+										<div class="bg-success h-3 w-5 rounded-full"></div>
+										<div class="bg-error h-3 w-5 rounded-full"></div>
+										<div class="bg-warning h-3 w-5 rounded-full"></div>
+										<div class="bg-info h-3 w-5 rounded-full"></div>
+									</div>
+								</div>
+								<span class="text-base-content/70 text-xs font-medium capitalize">{theme}</span>
 							</div>
-						</button>
-					{/each}
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>

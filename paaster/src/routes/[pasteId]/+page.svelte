@@ -391,7 +391,7 @@
 </script>
 
 <svelte:head>
-	{#if $themeStore === 'black' || $themeStore === 'dark' || $themeStore === 'luxury'}
+	{#if $themeStore === 'black' || $themeStore === 'dark' || $themeStore === 'luxury' || $themeStore === 'spotify' || $themeStore === 'vscode' || $themeStore === 'pastel'}
 		{@html atonOneDark}
 	{:else}
 		{@html atonOneLight}
