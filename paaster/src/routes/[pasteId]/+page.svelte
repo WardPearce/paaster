@@ -471,7 +471,6 @@
 					>
 					<div class="flex items-center gap-1">
 						<input bind:value={pasteName} type="text" class="input h-10 flex-1" id="name-paste" />
-						<button type="submit" class="btn btn-text h-10 shrink-0"><SendIcon /></button>
 					</div>
 				</form>
 

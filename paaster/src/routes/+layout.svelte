@@ -4,7 +4,6 @@
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
 	import MenuIcon from 'lucide-svelte/icons/menu';
 	import SettingsIcon from 'lucide-svelte/icons/settings';
-	import XIcon from 'lucide-svelte/icons/x';
 	import { _ } from '$lib/i18n';
 
 	import { afterNavigate, goto } from '$app/navigation';
@@ -64,65 +63,62 @@
 </script>
 
 {#if !$rawModeStore}
-<nav class="navbar bg-base-100 border-base-content/10 stickytop-0 z-50 w-full border-b">
-	<div class="w-full md:flex md:items-center md:gap-2">
-		<div class="flex items-center justify-between">
-			<div class="navbar-start items-center justify-between max-md:w-full">
-				<a class="link text-base-content text-xl font-semibold no-underline" href="/">paaster.io</a>
-				<div class="md:hidden">
-					<button
-						type="button"
-						class="collapse-toggle btn btn-outline btn-primary btn-sm btn-square"
-						data-collapse="#default-navbar-collapse"
-						aria-controls="default-navbar-collapse"
-						aria-label="Toggle navigation"
-					>
-						<span class="collapse-open:hidden size-6"><MenuIcon /></span>
-						<span class="collapse-open:block hidden size-6"><XIcon /></span>
-					</button>
-				</div>
-			</div>
-		</div>
-		<div
-			id="default-navbar-collapse"
-			class="md:navbar-end collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 max-md:w-full"
-		>
-			<ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
-				{#if $authStore}
-					<li>
-						<a href="/settings" class="btn btn-text h-full p-3"
-							><SettingsIcon /> {$_('account.settings')}</a
-						>
-					</li>
-				{/if}
-				<li>
-					<a href="/pastes" class="btn btn-text h-full p-3"
-						><BookMarkedIcon /> {$_('saved_pastes')}</a
-					>
-				</li>
-				<li>
-					{#if $authStore}
-						<button onclick={logout} class="btn btn-primary h-full p-3"
-							><LogoutIcon />{$_('account.logout')}</button
-						>
-					{:else}
-						<a href="/login" class="btn btn-primary h-full p-3"
-							><LoginIcon />{$_('account.login')}</a
-						>
-					{/if}
-				</li>
-			</ul>
+<nav class="navbar bg-base-100 border-base-content/10 sticky top-0 z-50 w-full border-b">
+	<div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 sm:px-6">
+		<a class="link text-base-content text-xl font-semibold no-underline" href="/">paaster.io</a>
+
+		<div class="hidden items-center gap-1 md:flex">
+			{#if $authStore}
+				<a href="/settings" class="btn btn-text btn-sm"
+					><SettingsIcon size={18} /> {$_('account.settings')}</a
+				>
+			{/if}
+			<a href="/pastes" class="btn btn-text btn-sm"
+				><BookMarkedIcon size={18} /> {$_('saved_pastes')}</a
+			>
+			{#if $authStore}
+				<button onclick={logout} class="btn btn-primary btn-sm"
+					><LogoutIcon size={18} />{$_('account.logout')}</button
+				>
+			{:else}
+				<a href="/login" class="btn btn-primary btn-sm"
+					><LoginIcon size={18} />{$_('account.login')}</a
+				>
+			{/if}
 		</div>
 	</div>
 </nav>
 {/if}
+
+<!-- mobile bottom nav -->
+<nav class="border-base-content/10 bg-base-100 fixed bottom-0 left-0 right-0 z-50 flex items-center border-t md:hidden {$rawModeStore ? 'hidden' : ''}">
+	<a href="/pastes" class="flex flex-1 flex-col items-center gap-0.5 py-3 text-xs text-base-content/70 hover:text-primary active:text-primary">
+		<BookMarkedIcon size={22} />
+		{$_('saved_pastes')}
+	</a>
+	{#if $authStore}
+		<a href="/settings" class="flex flex-1 flex-col items-center gap-0.5 py-3 text-xs text-base-content/70 hover:text-primary active:text-primary">
+			<SettingsIcon size={22} />
+			{$_('account.settings')}
+		</a>
+		<button onclick={logout} class="flex flex-1 flex-col items-center gap-0.5 py-3 text-xs text-base-content/70 hover:text-primary active:text-primary">
+			<LogoutIcon size={22} />
+			{$_('account.logout')}
+		</button>
+	{:else}
+		<a href="/login" class="flex flex-1 flex-col items-center gap-0.5 py-3 text-xs text-base-content/70 hover:text-primary active:text-primary">
+			<LoginIcon size={22} />
+			{$_('account.login')}
+		</a>
+	{/if}
+</nav>
 
 <div class="flex min-h-screen flex-col">
 	<div class="flex-grow">
 		{@render children?.()}
 	</div>
 
-	<footer class="footer mt-auto items-center px-6 py-4">
+	<footer class="footer mt-auto items-center px-6 py-4 pb-20 md:pb-4">
 		<aside class="grid-flow-col items-center">
 			<p>
 				<a
