@@ -78,6 +78,10 @@
 			"button": "Download"
 		},
 		"wrap_words": "Wrap words",
+		"render_markdown": "Render markdown",
+		"show_raw_text": "Show raw text",
+		"raw_mode": "Raw mode",
+		"exit_raw_mode": "Exit raw mode",
 		"lang_updated": "Language updated",
 		"language": "Language",
 		"expire": {

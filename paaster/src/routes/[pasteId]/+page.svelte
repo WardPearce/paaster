@@ -7,7 +7,7 @@
 		secretBoxDecryptFromMaster,
 		secretBoxEncryptFromMaster
 	} from '$lib/client/sodiumWrapped';
-	import { authStore, themeStore } from '$lib/client/stores.js';
+	import { authStore, themeStore, rawModeStore } from '$lib/client/stores.js';
 	import { getToast } from '$lib/client/toasts';
 	import Loading from '$lib/components/Loading.svelte';
 	import sodium from 'libsodium-wrappers-sumo';
@@ -24,6 +24,7 @@
 	import atonOneLight from 'svelte-highlight/styles/atom-one-light';
 	import { _ } from '$lib/i18n';
 	import Select from 'svelte-select';
+	import SvelteMarkdown from '@humanspeak/svelte-markdown';
 	// @ts-expect-error qrcode types missing
 	import QrCode from 'svelte-qrcode';
 	import { get } from 'svelte/store';
@@ -52,6 +53,9 @@
 
 	let qrCodeOverlay: HSOverlay;
 	let shortcutsOverlay: HSOverlay;
+
+	let isMarkdown = $state(false);
+	let showRenderedMarkdown = $state(false);
 
 	async function loadSupportedLangs() {
 		const rawSupportedLangs: { [key: string]: any } = await import('svelte-highlight/languages');
@@ -150,6 +154,8 @@
 	async function setLang() {
 		if (!selectedLang || !localStored || !localStored.accessKey) return;
 
+		isMarkdown = selectedLang.value === 'markdown';
+
 		const langEncrypted = secretBoxEncryptFromMaster(
 			new TextEncoder().encode(selectedLang.value),
 			rawMasterKey
@@ -219,12 +225,6 @@
 		qrCodeBg = oklchToHex(
 			getComputedStyle(document.documentElement).getPropertyValue('--color-base-100').trim()
 		);
-
-		console.log(
-			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim()
-		);
-
-		console.log(qrCodeColor);
 	}
 
 	themeStore.subscribe(() => {
@@ -340,6 +340,10 @@
 				selectedLang = { value: rawLang, label: rawLang };
 				langImport = supportedLangs[rawLang];
 			}
+
+			if (rawLang === 'markdown') {
+				isMarkdown = true;
+			}
 		}
 
 		if (data.name.value) {
@@ -383,9 +387,6 @@
 
 		qrCodeOverlay = new HSOverlay(document.querySelector('#qr-code') as HTMLElement);
 		shortcutsOverlay = new HSOverlay(document.querySelector('#shortcuts') as HTMLElement);
-
-		qrCodeOverlay.isCloseWhenClickInside = true;
-		shortcutsOverlay.isCloseWhenClickInside = true;
 	});
 </script>
 
@@ -458,31 +459,19 @@
 	<Loading />
 {:else}
 	<div class="flex flex-col gap-4 p-0 pt-4 pb-4 sm:p-4 md:flex-row">
-		<div class={`w-full rounded-lg ${localStored?.accessKey ? 'md:w-5/6' : ''}`}>
-			{#if langImport}
-				<Highlight language={langImport} code={rawPaste} let:highlighted>
-					<LineNumbers {highlighted} hideBorder />
-				</Highlight>
-			{:else}
-				<HighlightAuto code={rawPaste} let:highlighted>
-					<LineNumbers {highlighted} hideBorder />
-				</HighlightAuto>
-			{/if}
-		</div>
-
-		{#if localStored && localStored.accessKey}
+		{#if localStored && localStored.accessKey && !$rawModeStore}
 			<div
-				class="card border-base-content/20 order-first flex w-full flex-col space-y-2 rounded-lg border p-4 md:order-last md:ml-4 md:w-1/6"
+				class="card border-base-content/20 flex w-full flex-col gap-3 rounded-lg border p-4 md:order-last md:w-72 md:shrink-0"
 			>
-				<h1 class="text-base-content text-2xl">{$_('paste_owner')}</h1>
+				<h1 class="text-base-content text-xl sm:text-2xl">{$_('paste_owner')}</h1>
 
 				<form onsubmit={setName}>
 					<label class="label label-text" for="name-paste"
 						>{$_('paste_actions.rename.button')}</label
 					>
-					<div class="flex items-center">
-						<input bind:value={pasteName} type="text" class="input h-10" id="name-paste" />
-						<button type="submit" class="btn btn-text h-10"><SendIcon /></button>
+					<div class="flex items-center gap-1">
+						<input bind:value={pasteName} type="text" class="input h-10 flex-1" id="name-paste" />
+						<button type="submit" class="btn btn-text h-10 shrink-0"><SendIcon /></button>
 					</div>
 				</form>
 
@@ -504,7 +493,6 @@
 					on:change={setLang}
 					placeholder="Auto-detect language"
 				/>
-				<div class="mt-2"></div>
 				<div class="flex items-center gap-1">
 					<input
 						type="checkbox"
@@ -513,14 +501,13 @@
 						bind:checked={preWrap}
 						onclick={setPreWrap}
 					/>
-					<label class="label label-text text-base" for="wrap-words"
+					<label class="label label-text" for="wrap-words"
 						>{$_('paste_actions.wrap_words')}</label
 					>
 				</div>
-				<div class="mt-2"></div>
 
 				<button
-					class="btn btn-primary"
+					class="btn btn-primary w-full"
 					onclick={() => {
 						qrCodeOverlay.open();
 					}}
@@ -529,13 +516,13 @@
 					{$_('paste_actions.qr_code.button')}</button
 				>
 
-				<button class="btn btn-primary" onclick={sharePaste}>
+				<button class="btn btn-primary w-full" onclick={sharePaste}>
 					<ShareIcon />
 					{$_('paste_actions.share.button')}
 				</button>
 
 				<button
-					class="btn btn-primary"
+					class="btn btn-primary w-full"
 					onclick={() => {
 						shortcutsOverlay.open();
 					}}
@@ -543,11 +530,55 @@
 					<CommandIcon /> {$_('shortcuts')}</button
 				>
 
-				<button class="btn btn-outline" onclick={deletePaste}>
+				<button class="btn btn-outline w-full" onclick={deletePaste}>
 					<TrashIcon />
 					{$_('paste_actions.delete.button')}
 				</button>
 			</div>
 		{/if}
+
+		<div
+				class={`min-w-0 ${localStored?.accessKey ? 'flex-1' : 'w-full'} ${$rawModeStore ? '' : 'rounded-lg'}`}
+			>
+			<div class="mb-2 flex items-center gap-2">
+				{#if isMarkdown && !$rawModeStore}
+					<button
+						type="button"
+						class="btn btn-primary btn-sm"
+						onclick={() => showRenderedMarkdown = !showRenderedMarkdown}
+					>
+						{showRenderedMarkdown ? $_('paste_actions.show_raw_text') : $_('paste_actions.render_markdown')}
+					</button>
+				{/if}
+				<button
+					type="button"
+					class="btn btn-primary btn-sm"
+					onclick={() => rawModeStore.set(!$rawModeStore)}
+				>
+					{$rawModeStore ? $_('paste_actions.exit_raw_mode') : $_('paste_actions.raw_mode')}
+				</button>
+			</div>
+			{#if showRenderedMarkdown && !$rawModeStore}
+				<div class="markdown-render rounded-lg border border-base-content/10 p-4 sm:p-6">
+					<SvelteMarkdown source={rawPaste} />
+				</div>
+			{:else if langImport}
+				<Highlight language={langImport} code={rawPaste} let:highlighted>
+					{#if !$rawModeStore}
+						<LineNumbers {highlighted} hideBorder />
+					{:else}
+						{@html highlighted}
+					{/if}
+				</Highlight>
+			{:else}
+				<HighlightAuto code={rawPaste} let:highlighted>
+					{#if !$rawModeStore}
+						<LineNumbers {highlighted} hideBorder />
+					{:else}
+						{@html highlighted}
+					{/if}
+				</HighlightAuto>
+			{/if}
+		</div>
 	</div>
 {/if}

@@ -9,7 +9,7 @@
 
 	import { afterNavigate, goto } from '$app/navigation';
 	import { localDb } from '$lib/client/dexie';
-	import { authStore } from '$lib/client/stores';
+	import { authStore, rawModeStore } from '$lib/client/stores';
 	import { setTheme } from '$lib/client/theme';
 	import 'notyf/notyf.min.css';
 	import { onMount } from 'svelte';
@@ -63,6 +63,7 @@
 	});
 </script>
 
+{#if !$rawModeStore}
 <nav class="navbar bg-base-100 border-base-content/10 stickytop-0 z-50 w-full border-b">
 	<div class="w-full md:flex md:items-center md:gap-2">
 		<div class="flex items-center justify-between">
@@ -114,6 +115,7 @@
 		</div>
 	</div>
 </nav>
+{/if}
 
 <div class="flex min-h-screen flex-col">
 	<div class="flex-grow">
