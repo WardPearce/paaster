@@ -443,7 +443,7 @@
 					✕
 				</button>
 			</div>
-			<div class="modal-body divide-y divide-base-content/10">
+			<div class="modal-body divide-base-content/10 divide-y">
 				<div class="flex items-center justify-between py-2.5">
 					<span class="text-base-content text-sm">{$_('paste_actions.share.button')}</span>
 					<div class="flex items-center gap-1">
@@ -481,7 +481,7 @@
 			<div
 				class="card border-base-content/20 flex w-full flex-col gap-4 rounded-lg border p-5 md:order-last md:w-72 md:shrink-0 md:self-start"
 			>
-				<div class="border-b border-base-content/10 pb-3">
+				<div class="border-base-content/10 border-b pb-3">
 					<h1 class="text-base-content text-lg font-semibold">{$_('paste_owner')}</h1>
 				</div>
 
@@ -490,7 +490,12 @@
 						>{$_('paste_actions.rename.button')}</label
 					>
 					<div class="flex items-center gap-1">
-						<input bind:value={pasteName} type="text" class="input h-9 flex-1 text-sm" id="name-paste" />
+						<input
+							bind:value={pasteName}
+							type="text"
+							class="input h-9 flex-1 text-sm"
+							id="name-paste"
+						/>
 					</div>
 				</form>
 
@@ -528,7 +533,7 @@
 					/>
 				</div>
 
-				<div class="border-t border-base-content/10 pt-3 flex flex-col gap-2">
+				<div class="border-base-content/10 flex flex-col gap-2 border-t pt-3">
 					<button
 						class="btn btn-primary btn-sm w-full"
 						onclick={() => {
@@ -553,7 +558,7 @@
 						<CommandIcon size={16} /> {$_('shortcuts')}</button
 					>
 
-					<button class="btn btn-error btn-outline btn-sm w-full mt-1" onclick={deletePaste}>
+					<button class="btn btn-error btn-outline btn-sm mt-1 w-full" onclick={deletePaste}>
 						<TrashIcon size={16} />
 						{$_('paste_actions.delete.button')}
 					</button>
@@ -567,31 +572,25 @@
 			<div class="mb-3 flex flex-wrap items-center justify-between">
 				<div class="flex items-center gap-2">
 					{#if pasteName}
-						<span class="text-base-content text-sm font-medium max-w-48 truncate">{pasteName}</span>
+						<span class="text-base-content max-w-48 truncate text-sm font-medium">{pasteName}</span>
 					{/if}
 				</div>
 				<div class="flex items-center gap-0.5">
-					<button
-						type="button"
-						class="btn btn-soft btn-sm"
-						onclick={copyCode}
-					>
+					<button type="button" class="btn btn-soft btn-sm" onclick={copyCode}>
 						{$_('paste_actions.clipboard.button')}
 					</button>
-					<button
-						type="button"
-						class="btn btn-soft btn-sm"
-						onclick={downloadPaste}
-					>
+					<button type="button" class="btn btn-soft btn-sm" onclick={downloadPaste}>
 						{$_('paste_actions.download.button')}
 					</button>
 					{#if isMarkdown && !$rawModeStore}
 						<button
 							type="button"
 							class="btn btn-soft btn-sm"
-							onclick={() => showRenderedMarkdown = !showRenderedMarkdown}
+							onclick={() => (showRenderedMarkdown = !showRenderedMarkdown)}
 						>
-							{showRenderedMarkdown ? $_('paste_actions.show_raw_text') : $_('paste_actions.render_markdown')}
+							{showRenderedMarkdown
+								? $_('paste_actions.show_raw_text')
+								: $_('paste_actions.render_markdown')}
 						</button>
 					{/if}
 					<button
@@ -604,7 +603,7 @@
 				</div>
 			</div>
 			{#if showRenderedMarkdown && !$rawModeStore}
-				<div class="markdown-render rounded-lg border border-base-content/10 p-4 sm:p-6">
+				<div class="markdown-render border-base-content/10 rounded-lg border p-4 sm:p-6">
 					<SvelteMarkdown source={rawPaste} />
 				</div>
 			{:else if langImport}

@@ -55,7 +55,7 @@
 		"dexie": "^4.4.2",
 		"flyonui": "^2.4.1",
 		"i18next": "^25.8.18",
-		"libsodium-wrappers-sumo": "^0.7.15",
+		"libsodium-wrappers-sumo": "^0.8.4",
 		"lucide-svelte": "^1.0.1",
 		"mongodb": "^7.1.0",
 		"mousetrap": "^1.6.5",
