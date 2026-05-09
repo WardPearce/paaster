@@ -1,7 +1,6 @@
 import type { Db } from 'mongodb';
-import { stringToObjectId } from './objectId.js';
-
-export const PASTE_PAGE_SIZE = 12;
+import { stringToObjectId } from './objectId';
+import { PASTE_PAGE_SIZE } from '$lib/consts';
 
 export interface PasteResult {
 	paste: { id: string; key: string; nonce: string };

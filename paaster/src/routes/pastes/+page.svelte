@@ -11,54 +11,49 @@
 	import TrashIcon from 'lucide-svelte/icons/trash';
 	import InfiniteLoading from 'svelte-infinite-loading';
 	import { SvelteSet } from 'svelte/reactivity';
+	import { PASTE_PAGE_SIZE } from '$lib/consts';
+	import { onMount } from 'svelte';
 
 	let { data } = $props();
 
 	let bookmarkedPastes: Paste[] = $state([]);
 	let hasMore = $state(true);
-	let offset = $state(12);
-	let loadingInitial = $state(true);
-	let initialProcessed = $state(false);
+	let offset = $state(PASTE_PAGE_SIZE);
 
-	$effect(() => {
-		$authStore;
-		if (initialProcessed) return;
-		initialProcessed = true;
-
-		if (!$authStore) {
-			localDb.pastes
-				.orderBy('created')
-				.reverse()
-				.toArray()
-				.then((results) => {
-					bookmarkedPastes = results;
-					hasMore = false;
-					loadingInitial = false;
-				});
-			return;
-		}
-
-		if (!data.pastes) return;
-
-		sodium.ready.then(async () => {
-			const rawEncryptionKey = sodium.from_base64($authStore.encryptionKey);
-
-			const decrypted = data.pastes.map((p) => decryptPaste(p, rawEncryptionKey));
-			const all = [...decrypted];
-
-			const localPastes = await localDb.pastes.orderBy('created').reverse().toArray();
-			const seen = new SvelteSet(decrypted.map((paste) => paste.id));
-			for (const paste of localPastes) {
-				if (!seen.has(paste.id)) {
-					all.push(paste);
-					seen.add(paste.id);
-				}
+	onMount(() => {
+		authStore.subscribe((auth) => {
+			if (!auth) {
+				localDb.pastes
+					.orderBy('created')
+					.reverse()
+					.toArray()
+					.then((results) => {
+						bookmarkedPastes = results;
+						hasMore = false;
+					});
+				return;
 			}
 
-			bookmarkedPastes = all;
-			hasMore = data.pastes.length === 12;
+			if (!data.pastes) return;
 
-			loadingInitial = false;
+			sodium.ready.then(async () => {
+				const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
+
+				const decrypted = data.pastes.map((p) => decryptPaste(p, rawEncryptionKey));
+				const all = [...decrypted];
+
+				const localPastes = await localDb.pastes.orderBy('created').reverse().toArray();
+				const seen = new SvelteSet(decrypted.map((paste) => paste.id));
+				for (const paste of localPastes) {
+					if (!seen.has(paste.id)) {
+						all.push(paste);
+						seen.add(paste.id);
+					}
+				}
+
+				bookmarkedPastes = all;
+				hasMore = data.pastes.length === 12;
+			});
 		});
 	});
 
@@ -156,58 +151,7 @@
 </script>
 
 <div class="px-4 py-6 sm:px-6">
-	{#if loadingInitial}
-		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-			<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-				<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-				<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
-				<div class="flex items-center gap-2">
-					<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-					<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
-				</div>
-			</div>
-			<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-				<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-				<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
-				<div class="flex items-center gap-2">
-					<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-					<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
-				</div>
-			</div>
-			<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-				<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-				<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
-				<div class="flex items-center gap-2">
-					<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-					<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
-				</div>
-			</div>
-			<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-				<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-				<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
-				<div class="flex items-center gap-2">
-					<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-					<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
-				</div>
-			</div>
-			<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-				<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-				<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
-				<div class="flex items-center gap-2">
-					<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-					<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
-				</div>
-			</div>
-			<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-				<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-				<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
-				<div class="flex items-center gap-2">
-					<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-					<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
-				</div>
-			</div>
-		</div>
-	{:else if bookmarkedPastes.length > 0}
+	{#if bookmarkedPastes.length > 0}
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 			{#each bookmarkedPastes as paste (paste.id)}
 				<div
