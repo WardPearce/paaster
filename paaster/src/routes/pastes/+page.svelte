@@ -47,15 +47,14 @@
 		});
 	});
 
-	function decryptPaste(
-		paste: {
-			paste: { id: string; key: string; nonce: string };
-			accessKey: { key: string; nonce: string };
-			name: { value: string; nonce: string; keySalt: string } | null;
-			created: string | Date;
-		},
-		rawEncryptionKey: Uint8Array
-	): Paste {
+	interface PasteData {
+		paste: { id: string; key: string; nonce: string };
+		accessKey: { key: string; nonce: string };
+		name: { value: string; nonce: string; keySalt: string } | null;
+		created: string | Date;
+	}
+
+	function decryptPaste(paste: PasteData, rawEncryptionKey: Uint8Array): Paste {
 		const rawPasteKey = sodium.crypto_secretbox_open_easy(
 			sodium.from_base64(paste.paste.key),
 			sodium.from_base64(paste.paste.nonce),
@@ -117,9 +116,11 @@
 
 			const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
 
-			const decrypted = result.pastes.map((paste) => decryptPaste(paste, rawEncryptionKey));
+			const decrypted = result.pastes.map((paste: PasteData) =>
+				decryptPaste(paste, rawEncryptionKey)
+			);
 			const seen = new Set(bookmarkedPastes.map((paste) => paste.id));
-			const fresh = decrypted.filter((paste) => !seen.has(paste.id));
+			const fresh = decrypted.filter((paste: Paste) => !seen.has(paste.id));
 			bookmarkedPastes = [...bookmarkedPastes, ...fresh];
 
 			offset += result.pastes.length;
