@@ -1,3 +1,4 @@
+import type { Db } from 'mongodb';
 import { stringToObjectId } from './objectId.js';
 
 export const PASTE_PAGE_SIZE = 12;
@@ -10,10 +11,10 @@ export interface PasteResult {
 }
 
 export async function getUserPastes(
-	mongoDb: import('mongodb').Db,
+	mongoDb: Db,
 	userId: string,
 	offset = 0,
-	limit = PASTE_PAGE_SIZE,
+	limit = PASTE_PAGE_SIZE
 ): Promise<{ pastes: PasteResult[]; hasMore: boolean }> {
 	const userPastes = await mongoDb
 		.collection('userPastes')
