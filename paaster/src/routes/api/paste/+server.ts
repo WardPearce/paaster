@@ -1,6 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { MAX_UPLOAD_SIZE } from '$lib/consts.js';
 import { stringToObjectId } from '$lib/server/objectId.js';
+import { getUserPastes } from '$lib/server/pastes.js';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
@@ -14,6 +15,17 @@ const createPasteSchema = z.object({
 	codeNameNonce: z.string().trim().max(32).optional(),
 	codeNameKeySalt: z.string().trim().max(32).optional()
 });
+
+export async function GET({ locals, url }) {
+	if (!locals.userId) {
+		return json({ pastes: [], hasMore: false });
+	}
+
+	const offset = parseInt(url.searchParams.get('offset') || '0');
+	const { pastes, hasMore } = await getUserPastes(locals.mongoDb, locals.userId, offset);
+
+	return json({ pastes, hasMore });
+}
 
 export async function POST({ locals, request }) {
 	await sodium.ready;

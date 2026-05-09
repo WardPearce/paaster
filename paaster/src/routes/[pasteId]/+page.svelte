@@ -13,7 +13,6 @@
 	import sodium from 'libsodium-wrappers-sumo';
 	import CommandIcon from 'lucide-svelte/icons/command';
 	import QrCodeIcon from 'lucide-svelte/icons/qr-code';
-	import SendIcon from 'lucide-svelte/icons/send-horizontal';
 	import ShareIcon from 'lucide-svelte/icons/share-2';
 	import TrashIcon from 'lucide-svelte/icons/trash';
 	import Mousetrap from 'mousetrap';
@@ -56,6 +55,21 @@
 
 	let isMarkdown = $state(false);
 	let showRenderedMarkdown = $state(false);
+
+	let highlightStyle: string = $state(atonOneLight);
+
+	$effect(() => {
+		$themeStore;
+		if (typeof document !== 'undefined') {
+			const bg = getComputedStyle(document.documentElement)
+				.getPropertyValue('--color-base-100')
+				.trim();
+			const match = bg.match(/oklch\((\d+(?:\.\d+)?)%/);
+			if (match) {
+				highlightStyle = parseFloat(match[1]) > 50 ? atonOneLight : atonOneDark;
+			}
+		}
+	});
 
 	async function loadSupportedLangs() {
 		const rawSupportedLangs: { [key: string]: any } = await import('svelte-highlight/languages');
@@ -391,11 +405,7 @@
 </script>
 
 <svelte:head>
-	{#if $themeStore === 'black' || $themeStore === 'dark' || $themeStore === 'luxury' || $themeStore === 'spotify' || $themeStore === 'vscode' || $themeStore === 'pastel'}
-		{@html atonOneDark}
-	{:else}
-		{@html atonOneLight}
-	{/if}
+	{@html highlightStyle}
 
 	{#if preWrap}
 		<style>
@@ -569,18 +579,63 @@
 		<div
 			class={`min-w-0 ${localStored?.accessKey ? 'flex-1' : 'w-full'} ${$rawModeStore ? '' : 'rounded-lg'}`}
 		>
-			<div class="mb-3 flex flex-wrap items-center justify-between">
+			<div class="mb-3 flex flex-wrap items-center justify-between gap-1.5">
 				<div class="flex items-center gap-2">
 					{#if pasteName}
-						<span class="text-base-content max-w-48 truncate text-sm font-medium">{pasteName}</span>
+						<div class="bg-base-content/5 flex items-center gap-1.5 rounded-md px-3 py-1.5">
+							<svg
+								class="h-4 w-4 shrink-0 opacity-50"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								><path
+									d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"
+								/><polyline points="14 2 14 8 20 8" /></svg
+							>
+							<span
+								class="text-base-content xs:max-w-40 max-w-24 truncate text-sm font-medium sm:max-w-56"
+								>{pasteName}</span
+							>
+						</div>
 					{/if}
 				</div>
-				<div class="flex items-center gap-0.5">
-					<button type="button" class="btn btn-soft btn-sm" onclick={copyCode}>
-						{$_('paste_actions.clipboard.button')}
+				<div class="flex items-center gap-1">
+					<button
+						type="button"
+						class="btn btn-soft btn-sm"
+						onclick={copyCode}
+						title={$_('paste_actions.clipboard.button')}
+					>
+						<svg
+							class="h-4 w-4 shrink-0"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path
+								d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+							/></svg
+						>
+						<span class="hidden sm:inline">{$_('paste_actions.clipboard.button')}</span>
 					</button>
-					<button type="button" class="btn btn-soft btn-sm" onclick={downloadPaste}>
-						{$_('paste_actions.download.button')}
+					<button
+						type="button"
+						class="btn btn-soft btn-sm"
+						onclick={downloadPaste}
+						title={$_('paste_actions.download.button')}
+					>
+						<svg
+							class="h-4 w-4 shrink-0"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline
+								points="7 10 12 15 17 10"
+							/><line x1="12" y1="15" x2="12" y2="3" /></svg
+						>
+						<span class="hidden sm:inline">{$_('paste_actions.download.button')}</span>
 					</button>
 					{#if isMarkdown && !$rawModeStore}
 						<button
@@ -589,7 +644,7 @@
 							onclick={() => (showRenderedMarkdown = !showRenderedMarkdown)}
 						>
 							{showRenderedMarkdown
-								? $_('paste_actions.show_raw_text')
+								? $_('paste_actions.show_code')
 								: $_('paste_actions.render_markdown')}
 						</button>
 					{/if}
