@@ -239,21 +239,6 @@
 					{/each}
 				</div>
 			</div>
-			<div slot="noMore">
-				<div class="mt-6 flex items-center gap-3 px-1">
-					<div class="bg-base-content/10 h-px flex-1" />
-					<span class="text-base-content/30 text-xs">{$_('saved_pastes_end')}</span>
-					<div class="bg-base-content/10 h-px flex-1" />
-				</div>
-			</div>
-			<div slot="error" let:attemptLoad>
-				<div class="mt-6 flex flex-col items-center gap-3">
-					<p class="text-base-content/50 text-sm">{$_('saved_pastes_error')}</p>
-					<button onclick={attemptLoad} class="btn btn-primary btn-sm"
-						>{$_('saved_pastes_retry')}</button
-					>
-				</div>
-			</div>
 		</InfiniteLoading>
 	{:else}
 		<div class="flex flex-col items-center justify-center py-20">
