@@ -1,4 +1,4 @@
-import { getUserPastes } from '$lib/server/pastes.js';
+import { getUserPastes } from '$lib/server/pastes';
 
 export async function load({ locals }) {
 	if (!locals.userId) {

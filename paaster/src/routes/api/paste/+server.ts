@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { MAX_UPLOAD_SIZE } from '$lib/consts.js';
-import { stringToObjectId } from '$lib/server/objectId.js';
-import { getUserPastes } from '$lib/server/pastes.js';
+import { stringToObjectId } from '$lib/server/objectId';
+import { getUserPastes } from '$lib/server/pastes';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
