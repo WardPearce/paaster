@@ -22,8 +22,23 @@
 
 	$effect(() => {
 		$authStore;
-		if (!$authStore || !data.pastes || initialProcessed) return;
+		if (initialProcessed) return;
 		initialProcessed = true;
+
+		if (!$authStore) {
+			localDb.pastes
+				.orderBy('created')
+				.reverse()
+				.toArray()
+				.then((results) => {
+					bookmarkedPastes = results;
+					hasMore = false;
+					loadingInitial = false;
+				});
+			return;
+		}
+
+		if (!data.pastes) return;
 
 		sodium.ready.then(async () => {
 			const rawEncryptionKey = sodium.from_base64($authStore.encryptionKey);
