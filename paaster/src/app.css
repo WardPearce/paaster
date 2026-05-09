@@ -10,7 +10,7 @@
 	--line-number-color: var(--color-base-content) !important;
 }
 
-[data-theme="cupcake"] {
+[data-theme='cupcake'] {
 	color-scheme: light;
 	--color-base-100: oklch(97.58% 0.011 68.67);
 	--color-base-200: oklch(94.62% 0.016 71.11);
@@ -42,7 +42,7 @@
 	--noise: 0;
 }
 
-[data-theme="retro"] {
+[data-theme='retro'] {
 	color-scheme: light;
 	--color-base-100: oklch(92.45% 0.0209 73.06);
 	--color-base-200: oklch(89.2% 0.025 72.26);
@@ -74,7 +74,7 @@
 	--noise: 0;
 }
 
-[data-theme="cyberpunk"] {
+[data-theme='cyberpunk'] {
 	color-scheme: dark;
 	--color-base-100: oklch(20.42% 0.0142 285.95);
 	--color-base-200: oklch(16.47% 0.0134 285.95);
@@ -106,7 +106,7 @@
 	--noise: 0;
 }
 
-[data-theme="synthwave"] {
+[data-theme='synthwave'] {
 	color-scheme: dark;
 	--color-base-100: oklch(24.29% 0.029 296.49);
 	--color-base-200: oklch(20.38% 0.03 296.61);
@@ -138,7 +138,7 @@
 	--noise: 0;
 }
 
-[data-theme="dracula"] {
+[data-theme='dracula'] {
 	color-scheme: dark;
 	--color-base-100: oklch(25.92% 0.019 281.91);
 	--color-base-200: oklch(22.14% 0.019 283.05);
@@ -170,7 +170,7 @@
 	--noise: 0;
 }
 
-[data-theme="autumn"] {
+[data-theme='autumn'] {
 	color-scheme: light;
 	--color-base-100: oklch(97% 0.016 59.8);
 	--color-base-200: oklch(93.74% 0.025 60.87);
@@ -202,7 +202,7 @@
 	--noise: 0;
 }
 
-[data-theme="winter"] {
+[data-theme='winter'] {
 	color-scheme: light;
 	--color-base-100: oklch(99.15% 0.003 247.86);
 	--color-base-200: oklch(95.93% 0.007 248.13);
@@ -234,7 +234,7 @@
 	--noise: 0;
 }
 
-[data-theme="night"] {
+[data-theme='night'] {
 	color-scheme: dark;
 	--color-base-100: oklch(24.71% 0.035 274.39);
 	--color-base-200: oklch(20.23% 0.033 274.78);
@@ -266,7 +266,7 @@
 	--noise: 0;
 }
 
-[data-theme="coffee"] {
+[data-theme='coffee'] {
 	color-scheme: dark;
 	--color-base-100: oklch(26.89% 0.021 66.26);
 	--color-base-200: oklch(21.89% 0.021 66.39);
@@ -298,7 +298,7 @@
 	--noise: 0;
 }
 
-[data-theme="dim"] {
+[data-theme='dim'] {
 	color-scheme: dark;
 	--color-base-100: oklch(30.67% 0.024 264.18);
 	--color-base-200: oklch(26.34% 0.022 264.36);
@@ -349,7 +349,11 @@
 }
 
 .hljs td.hljs-ln-numbers {
-	background-color: color-mix(in oklab, var(--color-base-content) 4%, var(--color-base-100)) !important;
+	background-color: color-mix(
+		in oklab,
+		var(--color-base-content) 4%,
+		var(--color-base-100)
+	) !important;
 	border-right: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent) !important;
 	padding: 0 0.75rem 0 1rem !important;
 	text-align: right !important;
@@ -581,4 +585,8 @@ label.label-text {
 
 .markdown-render em {
 	font-style: italic;
+}
+
+.infinite-status-prompt {
+	display: none;
 }
