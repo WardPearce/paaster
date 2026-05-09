@@ -42,8 +42,6 @@
 				const decrypted = data.pastes.map((p) => decryptPaste(p, rawEncryptionKey));
 				const all = [...decrypted];
 
-				console.log(all);
-
 				const localPastes = await localDb.pastes.orderBy('created').reverse().toArray();
 				const seen = new SvelteSet(decrypted.map((paste) => paste.id));
 				for (const paste of localPastes) {
