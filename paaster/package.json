@@ -42,7 +42,7 @@
 		"@aws-sdk/s3-request-presigner": "^3.1009.0",
 		"@humanspeak/svelte-markdown": "^1.4.5",
 		"@sveltejs/adapter-node": "^5.4.0",
-		"@tailwindcss/vite": "^4.2.2",
+		"@tailwindcss/vite": "^4.3.0",
 		"@types/libsodium-wrappers-sumo": "^0.7.8",
 		"@types/mousetrap": "^1.6.15",
 		"@zxcvbn-ts/core": "^3.0.4",
