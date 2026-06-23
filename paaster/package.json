@@ -18,7 +18,7 @@
 		"@eslint/js": "^9.36.0",
 		"@sveltejs/adapter-auto": "^7.0.1",
 		"@sveltejs/kit": "^2.61.1",
-		"@sveltejs/vite-plugin-svelte": "^6.2.1",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"@types/cookie-signature": "^1.1.2",
 		"@types/culori": "^4.0.1",
 		"@types/node": "^25.0.0",
@@ -34,7 +34,7 @@
 		"svelte-check": "^4.3.5",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.56.1",
-		"vite": "^7.3.2"
+		"vite": "^8.0.16"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.991.0",
