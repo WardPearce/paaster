@@ -1,4 +1,3 @@
-import { cacheDelete } from '$lib/server/cache';
 import { stringToObjectId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
@@ -26,11 +25,6 @@ export async function POST({ locals, request }) {
     throw error(400, formData.error);
   }
 
-  const user = await locals.mongoDb.collection('users').findOne(
-    { _id: stringToObjectId(locals.userId) },
-    { projection: { username: 1 } }
-  );
-
   await locals.mongoDb.collection('users').updateOne(
     {
       _id: stringToObjectId(locals.userId)
@@ -50,6 +44,5 @@ export async function POST({ locals, request }) {
       }
     });
 
-  if (user?.username) cacheDelete(`public:${user.username}`);
   return json({});
 }

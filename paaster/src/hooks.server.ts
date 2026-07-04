@@ -73,7 +73,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/api/')) {
 		const limiter = getLimiter(event.url.pathname);
 		if (await limiter.isLimited(event)) {
-			return new Response(JSON.stringify({ error: 'Too Many Requests' }), {
+			return new Response(JSON.stringify({ message: 'Too Many Requests' }), {
 				status: 429,
 				headers: { 'Content-Type': 'application/json' }
 			});
