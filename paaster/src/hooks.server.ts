@@ -27,7 +27,7 @@ const s3Client = new S3Client({
 });
 
 const limiter = new RateLimiter({
-	IP: [30, 's']
+	IP: [30, 'm']
 });
 
 export const handle: Handle = async ({ event, resolve }) => {
