@@ -12,6 +12,12 @@ export async function load({ params, locals }) {
   });
 
   if (!paste) {
+    if (locals.userId) {
+      await locals.mongoDb.collection('userPastes').deleteOne({
+        userId: locals.userId,
+        'paste.id': params.pasteId
+      });
+    }
     throw error(404, 'Unable to find paste');
   }
 
