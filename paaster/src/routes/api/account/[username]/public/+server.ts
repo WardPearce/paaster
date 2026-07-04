@@ -1,18 +1,29 @@
-import { error, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
+import sodium from 'libsodium-wrappers-sumo';
 
 export async function GET({ locals, params }) {
-  const user = await locals.mongoDb.collection('users').findOne({
-    username: params.username
-  });
+	const user = await locals.mongoDb.collection('users').findOne({
+		username: params.username
+	});
 
-  if (!user) {
-    throw error(404, 'User not found');
-  }
+	await sodium.ready;
 
-  return json({
-    masterPasswordSalt: user.masterPasswordSalt,
-    serverSide: {
-      salt: user.serverSide.salt
-    }
-  });
+	if (!user) {
+		const fakeMasterPasswordSalt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
+		const fakeServerSideSalt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
+
+		return json({
+			masterPasswordSalt: fakeMasterPasswordSalt,
+			serverSide: {
+				salt: fakeServerSideSalt
+			}
+		});
+	}
+
+	return json({
+		masterPasswordSalt: user.masterPasswordSalt,
+		serverSide: {
+			salt: user.serverSide.salt
+		}
+	});
 }
