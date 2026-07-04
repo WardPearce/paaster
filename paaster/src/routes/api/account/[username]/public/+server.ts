@@ -13,9 +13,9 @@ export async function GET({ locals, params }) {
 		const fakeServerSideSalt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
 
 		return json({
-			masterPasswordSalt: fakeMasterPasswordSalt,
+			masterPasswordSalt: sodium.to_base64(fakeMasterPasswordSalt),
 			serverSide: {
-				salt: fakeServerSideSalt
+				salt: sodium.to_base64(fakeServerSideSalt)
 			}
 		});
 	}

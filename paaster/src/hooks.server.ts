@@ -31,10 +31,16 @@ const limiter = new RateLimiter({
 });
 
 const strictLimiter = new RateLimiter({
-	IP: [5, 'm']
+	IP: [10, 'm']
 });
 
-const sensitivePathPatterns = [/^\/api\/account\/create$/, /^\/api\/account\/[^/]+\/login$/];
+const sensitivePathPatterns = [
+	/^\/api\/account\/create$/,
+	/^\/api\/account\/delete$/,
+	/^\/api\/account\/passwordReset$/,
+	/^\/api\/account\/[^/]+\/login$/,
+	/^\/api\/account\/[^/]+\/public$/
+];
 
 function getLimiter(pathname: string): RateLimiter {
 	if (sensitivePathPatterns.some((p) => p.test(pathname))) {
@@ -67,7 +73,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/api/')) {
 		const limiter = getLimiter(event.url.pathname);
 		if (await limiter.isLimited(event)) {
-			return new Response(JSON.stringify({ error: 'Too Many Requests' }), {
+			return new Response(JSON.stringify({ message: 'Too Many Requests' }), {
 				status: 429,
 				headers: { 'Content-Type': 'application/json' }
 			});
