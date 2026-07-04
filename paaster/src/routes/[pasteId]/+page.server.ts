@@ -12,6 +12,12 @@ export async function load({ params, locals }) {
   });
 
   if (!paste) {
+    if (locals.userId) {
+      await locals.mongoDb.collection('userPastes').deleteOne({
+        userId: locals.userId,
+        'paste.id': params.pasteId
+      });
+    }
     throw error(404, 'Unable to find paste');
   }
 
@@ -24,13 +30,12 @@ export async function load({ params, locals }) {
 
   if (paste.expireAfter !== -2) {
     if (paste.expireAfter === -1) {
-      if (paste.deleteNextRequest) {
+      const claimed = await locals.mongoDb.collection('pastes').findOneAndUpdate(
+        { _id: pasteId, deleteNextRequest: { $ne: true } },
+        { $set: { deleteNextRequest: true } }
+      );
+      if (!claimed) {
         deletePaste = true;
-      } else {
-        await locals.mongoDb.collection('pastes').updateOne(
-          { _id: pasteId },
-          { $set: { deleteNextRequest: true } }
-        );
       }
     } else {
       const now = new Date();

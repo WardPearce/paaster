@@ -11,9 +11,11 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			mongoDb: Db,
+			mongoDb: Db;
 			s3Client: S3Client;
 			userId: string | undefined;
+			captchaSignature: string;
+			captchaKey: string;
 		}
 		// interface PageData {}
 		// interface PageState {}
@@ -21,4 +23,4 @@ declare global {
 	}
 }
 
-export { };
+export {};
