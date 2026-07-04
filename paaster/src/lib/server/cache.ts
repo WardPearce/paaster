@@ -14,6 +14,6 @@ export function cacheSet(key: string, value: unknown, ttlMs: number): void {
 	store.set(key, { value, expiry: Date.now() + ttlMs });
 }
 
-export function cacheClear(): void {
-	store.clear();
+export function cacheDelete(key: string): void {
+	store.delete(key);
 }

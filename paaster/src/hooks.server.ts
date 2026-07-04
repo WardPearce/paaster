@@ -31,7 +31,7 @@ const limiter = new RateLimiter({
 });
 
 const strictLimiter = new RateLimiter({
-	IP: [5, 'm']
+	IP: [10, 'm']
 });
 
 const sensitivePathPatterns = [
