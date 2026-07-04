@@ -30,6 +30,19 @@ const limiter = new RateLimiter({
 	IP: [30, 'm']
 });
 
+const strictLimiter = new RateLimiter({
+	IP: [5, 'm']
+});
+
+const sensitivePathPatterns = [/^\/api\/account\/create$/, /^\/api\/account\/[^/]+\/login$/];
+
+function getLimiter(pathname: string): RateLimiter {
+	if (sensitivePathPatterns.some((p) => p.test(pathname))) {
+		return strictLimiter;
+	}
+	return limiter;
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.s3Client = s3Client;
 
@@ -52,7 +65,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (event.url.pathname.startsWith('/api/')) {
-		await limiter.cookieLimiter?.preflight(event);
+		const limiter = getLimiter(event.url.pathname);
 		if (await limiter.isLimited(event)) {
 			return new Response(JSON.stringify({ error: 'Too Many Requests' }), {
 				status: 429,
