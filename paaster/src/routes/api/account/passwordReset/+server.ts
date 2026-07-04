@@ -1,3 +1,4 @@
+import { cacheClear } from '$lib/server/cache';
 import { stringToObjectId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
@@ -44,5 +45,6 @@ export async function POST({ locals, request }) {
       }
     });
 
+  cacheClear();
   return json({});
 }

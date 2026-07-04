@@ -36,6 +36,8 @@ const strictLimiter = new RateLimiter({
 
 const sensitivePathPatterns = [
 	/^\/api\/account\/create$/,
+	/^\/api\/account\/delete$/,
+	/^\/api\/account\/passwordReset$/,
 	/^\/api\/account\/[^/]+\/login$/,
 	/^\/api\/account\/[^/]+\/public$/
 ];

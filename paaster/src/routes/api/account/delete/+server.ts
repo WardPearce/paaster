@@ -1,3 +1,4 @@
+import { cacheClear } from '$lib/server/cache';
 import { stringToObjectId } from '$lib/server/objectId.js';
 import { error, json } from '@sveltejs/kit';
 
@@ -11,5 +12,6 @@ export async function DELETE({ locals, cookies }) {
 
   cookies.delete('userId', { path: '/' });
 
+  cacheClear();
   return json({});
 }
