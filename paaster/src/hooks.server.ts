@@ -34,7 +34,11 @@ const strictLimiter = new RateLimiter({
 	IP: [5, 'm']
 });
 
-const sensitivePathPatterns = [/^\/api\/account\/create$/, /^\/api\/account\/[^/]+\/login$/];
+const sensitivePathPatterns = [
+	/^\/api\/account\/create$/,
+	/^\/api\/account\/[^/]+\/login$/,
+	/^\/api\/account\/[^/]+\/public$/
+];
 
 function getLimiter(pathname: string): RateLimiter {
 	if (sensitivePathPatterns.some((p) => p.test(pathname))) {
