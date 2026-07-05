@@ -27,6 +27,9 @@
 	import QrCode from '$lib/components/QrCode.svelte';
 	import { get } from 'svelte/store';
 	import { pasteDeletionTimes } from '$lib/client/paste.js';
+	import { generatePassphrase } from '$lib/client/passphrase';
+	import KeyIcon from 'lucide-svelte/icons/key';
+	import CopyIcon from 'lucide-svelte/icons/copy';
 	import { HSOverlay } from 'flyonui/flyonui.js';
 
 	let { data } = $props();
@@ -47,6 +50,10 @@
 
 	let qrCodeOverlay: HSOverlay;
 	let shortcutsOverlay: HSOverlay;
+	let passphraseOverlay: HSOverlay;
+
+	let generatedPassphrase = $state('');
+	let passphraseCopied = $state(false);
 
 	let isMarkdown = $state(false);
 	let showRenderedMarkdown = $state(false);
@@ -205,9 +212,38 @@
 		});
 	}
 
+	async function setPassphrase() {
+		if (!localStored || !localStored.accessKey) return;
+
+		const passphrase = await generatePassphrase();
+		generatedPassphrase = passphrase;
+		passphraseCopied = false;
+
+		const updatePayload = new FormData();
+		updatePayload.append('passphrase', passphrase);
+
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			getToast().success(get(_)('paste_actions.passphrase.success'));
+			passphraseOverlay.open();
+		}
+	}
+
 	async function sharePaste() {
 		await navigator.clipboard.writeText(page.url.href);
 		getToast().success(get(_)('paste_actions.share.success'));
+	}
+
+	async function copyPassphrase() {
+		await navigator.clipboard.writeText(generatedPassphrase);
+		passphraseCopied = true;
+		getToast().success(get(_)('paste_actions.passphrase.copied'));
 	}
 
 	async function copyCode() {
@@ -225,6 +261,11 @@
 	}
 
 	onMount(async () => {
+		if (data.passphraseRequired) {
+			await goto(`/${page.params.pasteId}/passphrase${window.location.hash}`);
+			return;
+		}
+
 		await sodium.ready;
 
 		try {
@@ -278,7 +319,7 @@
 
 		await loadSupportedLangs();
 
-		const codeResponse = await fetch(data.signedUrl);
+		const codeResponse = await fetch(data.signedUrl!);
 		if (!codeResponse.ok) {
 			handleError(get(_)('view.cdn_down'));
 			return;
@@ -380,6 +421,7 @@
 
 		qrCodeOverlay = new HSOverlay(document.querySelector('#qr-code') as HTMLElement);
 		shortcutsOverlay = new HSOverlay(document.querySelector('#shortcuts') as HTMLElement);
+		passphraseOverlay = new HSOverlay(document.querySelector('#passphrase') as HTMLElement);
 	});
 </script>
 
@@ -457,6 +499,34 @@
 				</div>
 			</div>
 		</div>
+    </div>
+</div>
+
+<div
+	id="passphrase"
+	class="overlay modal overlay-open:opacity-100 modal-middle hidden"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog overlay-open:opacity-100 sm:max-w-md">
+		<div class="modal-content border-base-content/20 border">
+			<div class="modal-header">
+				<h1 class="modal-title">{$_('paste_actions.passphrase.model.header')}</h1>
+				<button type="button" class="btn btn-text btn-sm" onclick={() => passphraseOverlay.close()}>
+					✕
+				</button>
+			</div>
+			<div class="modal-body flex flex-col gap-4 p-6">
+				<p class="text-base-content/70 text-sm">{$_('paste_actions.passphrase.description')}</p>
+				<div class="bg-base-content/5 flex items-center justify-between gap-2 rounded-lg p-3 font-mono text-sm break-all">
+					<span>{generatedPassphrase}</span>
+				</div>
+				<button class="btn btn-primary btn-sm w-full" onclick={copyPassphrase}>
+					<CopyIcon size={16} />
+					{passphraseCopied ? $_('paste_actions.passphrase.copied') : $_('paste_actions.passphrase.copy')}
+				</button>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -521,6 +591,11 @@
 				</div>
 
 				<div class="border-base-content/10 flex flex-col gap-2 border-t pt-3">
+					<button class="btn btn-primary btn-sm w-full" onclick={setPassphrase}>
+						<KeyIcon size={16} />
+						{$_('paste_actions.passphrase.button')}</button
+					>
+
 					<button
 						class="btn btn-primary btn-sm w-full"
 						onclick={() => {

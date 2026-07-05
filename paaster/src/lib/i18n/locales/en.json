@@ -111,6 +111,18 @@
 		"exit_raw_mode": "Exit raw mode",
 		"lang_updated": "Language updated",
 		"language": "Language",
+		"passphrase": {
+			"button": "Set passphrase",
+			"loading": "Setting passphrase",
+			"success": "Passphrase set",
+			"generate": "Generate passphrase",
+			"copy": "Copy passphrase",
+			"copied": "Passphrase copied to clipboard",
+			"description": "A passphrase is required to view this paste. Share this with anyone you want to grant access.",
+			"model": {
+				"header": "Paste passphrase"
+			}
+		},
 		"expire": {
 			"loading": "Updating expire after",
 			"error": "Unable to set expire after",
@@ -136,6 +148,14 @@
 		"input": "Enter access code",
 		"header": "access code required",
 		"button": "submit"
+	},
+	"require_passphrase_model": {
+		"input": "Enter passphrase",
+		"header": "passphrase required",
+		"description": "This paste is protected by a passphrase. Enter it below to continue.",
+		"button": "submit",
+		"invalid": "Invalid passphrase",
+		"not_found": "Paste not found"
 	},
 	"no_saved_pastes": "No saved pastes",
 	"saved_pastes_end": "reached the end",
