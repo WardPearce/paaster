@@ -5,6 +5,7 @@
 	import { authStore, themeStore } from '$lib/client/stores';
 	import { setTheme } from '$lib/client/theme';
 	import Loading from '$lib/components/Loading.svelte';
+	import QrCode from '$lib/components/QrCode.svelte';
 	import { THEMES } from '$lib/consts';
 	import * as comlink from 'comlink';
 	import sodium from 'libsodium-wrappers-sumo';
@@ -30,6 +31,14 @@
 
 	let defaultPasteDelectionTime = $state(data.expireAfter);
 
+	let twoFactorSecret: string | undefined = $state();
+	let twoFactorURI: string | undefined = $state();
+	let twoFactorVerified = $state(false);
+	let twoFactorLoading = $state(false);
+	let secretCopied = $state(false);
+	let twoFactorToken = $state('');
+	let twoFactorVerifyError: string | undefined = $state();
+
 	onMount(async () => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
 			type: 'module'
@@ -38,6 +47,14 @@
 
 		// @ts-ignore
 		derivePassword = workerApi.derivePassword;
+
+		const resp = await fetch('/api/account/2fa');
+		if (resp.ok) {
+			const { secret, uri, verified } = await resp.json();
+			twoFactorSecret = secret;
+			twoFactorURI = uri;
+			twoFactorVerified = verified;
+		}
 	});
 
 	onDestroy(() => {
@@ -140,6 +157,64 @@
 
 		await fetch('/api/account/defaults', { method: 'POST', body: payload });
 	}
+
+	async function enable2FA() {
+		twoFactorLoading = true;
+		const resp = await fetch('/api/account/2fa', { method: 'POST' });
+		if (resp.ok) {
+			const { secret, uri } = await resp.json();
+			twoFactorSecret = secret;
+			twoFactorURI = uri;
+			twoFactorToken = '';
+			twoFactorVerifyError = undefined;
+		}
+		twoFactorLoading = false;
+	}
+
+	async function verify2FA(event: Event) {
+		event.preventDefault();
+		twoFactorLoading = true;
+		twoFactorVerifyError = undefined;
+
+		const payload = new FormData();
+		payload.append('token', twoFactorToken);
+
+		const resp = await fetch('/api/account/2fa/verify', { method: 'POST', body: payload });
+		if (resp.ok) {
+			twoFactorVerified = true;
+			twoFactorToken = '';
+		} else {
+			twoFactorVerifyError = get(_)('account.twoFactor.invalidCode');
+		}
+		twoFactorLoading = false;
+	}
+
+	async function cancel2FASetup() {
+		await fetch('/api/account/2fa', { method: 'DELETE' });
+		twoFactorSecret = undefined;
+		twoFactorURI = undefined;
+		twoFactorToken = '';
+		twoFactorVerifyError = undefined;
+	}
+
+	async function disable2FA() {
+		twoFactorLoading = true;
+		await fetch('/api/account/2fa', { method: 'DELETE' });
+		twoFactorSecret = undefined;
+		twoFactorURI = undefined;
+		twoFactorVerified = false;
+		twoFactorLoading = false;
+	}
+
+	async function copySecret() {
+		if (twoFactorSecret) {
+			await navigator.clipboard.writeText(twoFactorSecret);
+			secretCopied = true;
+			setTimeout(() => {
+				secretCopied = false;
+			}, 2000);
+		}
+	}
 </script>
 
 {#if isLoading}
@@ -156,7 +231,10 @@
 								<div
 									data-theme={theme}
 									onclick={async () => await setTheme(theme)}
-									class={"bg-base-100 text-base-content w-full cursor-pointer rounded-xl border p-3 transition hover:scale-105 " + ($themeStore === theme ? "border-primary shadow-md shadow-primary/20" : "border-base-content/20 hover:border-base-content/40")}
+									class={'bg-base-100 text-base-content w-full cursor-pointer rounded-xl border p-3 transition hover:scale-105 ' +
+										($themeStore === theme
+											? 'border-primary shadow-primary/20 shadow-md'
+											: 'border-base-content/20 hover:border-base-content/40')}
 								>
 									<div class="flex flex-wrap gap-1">
 										<div class="bg-primary h-3 w-5 rounded-full"></div>
@@ -205,10 +283,77 @@
 				<form onsubmit={changePassword} class="mt-4 max-w-sm space-y-4">
 					<div>
 						<label class="label label-text mb-1" for="password">{$_('account.newPassword')}</label>
-						<input bind:value={rawPasswordReset} type="password" class="input w-full" id="password" />
+						<input
+							bind:value={rawPasswordReset}
+							type="password"
+							class="input w-full"
+							id="password"
+						/>
 					</div>
 					<button class="btn btn-primary">{$_('account.changePassword')}</button>
 				</form>
+			</div>
+		</div>
+
+		<div class="card border-base-content/20 border">
+			<div class="card-body p-6">
+				<h2 class="text-base-content text-xl font-semibold">{$_('account.twoFactor.title')}</h2>
+				{#if twoFactorVerified}
+					<p class="text-base-content/70 mt-2 text-sm">{$_('account.twoFactor.enabled')}</p>
+					<div class="mt-4">
+						<button class="btn btn-warning" onclick={disable2FA} disabled={twoFactorLoading}>
+							{$_('account.twoFactor.disable')}
+						</button>
+					</div>
+				{:else if twoFactorSecret && twoFactorURI}
+					<p class="text-base-content/70 mt-2 text-sm">{$_('account.twoFactor.description')}</p>
+					<div class="mt-4 flex justify-center">
+						<QrCode data={twoFactorURI} width={200} height={200} />
+					</div>
+					<div class="mt-4 flex items-center gap-2">
+						<span class="text-base-content/70 text-sm">{$_('account.twoFactor.secret')}:</span>
+						<code class="bg-base-200 rounded px-2 py-1 font-mono text-sm">{twoFactorSecret}</code>
+						<button class="btn btn-xs" onclick={copySecret}>
+							{secretCopied ? $_('account.twoFactor.copied') : $_('account.twoFactor.copy')}
+						</button>
+					</div>
+					<form onsubmit={verify2FA} class="mt-4 max-w-xs space-y-3">
+						<p class="text-base-content/70 text-sm">{$_('account.twoFactor.enterCode')}</p>
+						<input
+							bind:value={twoFactorToken}
+							type="text"
+							class="input w-full"
+							maxlength={6}
+							placeholder="000000"
+							inputmode="numeric"
+							pattern="[0-9]*"
+						/>
+						{#if twoFactorVerifyError}
+							<div class="alert alert-error py-2 text-sm" role="alert">
+								{twoFactorVerifyError}
+							</div>
+						{/if}
+						<div class="flex gap-2">
+							<button
+								class="btn btn-primary"
+								type="submit"
+								disabled={twoFactorLoading || twoFactorToken.length !== 6}
+							>
+								{$_('account.twoFactor.verify')}
+							</button>
+							<button class="btn btn-ghost" type="button" onclick={cancel2FASetup} disabled={twoFactorLoading}>
+								{$_('account.twoFactor.cancelSetup')}
+							</button>
+						</div>
+					</form>
+				{:else}
+					<p class="text-base-content/70 mt-2 text-sm">{$_('account.twoFactor.notConfigured')}</p>
+					<div class="mt-4">
+						<button class="btn btn-primary" onclick={enable2FA} disabled={twoFactorLoading}>
+							{$_('account.twoFactor.enable')}
+						</button>
+					</div>
+				{/if}
 			</div>
 		</div>
 
@@ -227,11 +372,15 @@
 							type="text"
 							class="input w-full"
 							id="username"
-							class:border-warning={accountDeleteConfirm !== accountDeletionConfirmText && accountDeleteConfirm}
+							class:border-warning={accountDeleteConfirm !== accountDeletionConfirmText &&
+								accountDeleteConfirm}
 							class:border-success={accountDeleteConfirm === accountDeletionConfirmText}
 						/>
 					</div>
-					<button class="btn btn-warning" disabled={accountDeleteConfirm !== accountDeletionConfirmText}>
+					<button
+						class="btn btn-warning"
+						disabled={accountDeleteConfirm !== accountDeletionConfirmText}
+					>
 						{$_('account.deleteAccount')}
 					</button>
 				</form>

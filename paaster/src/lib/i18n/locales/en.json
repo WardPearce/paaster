@@ -20,7 +20,22 @@
 		"changePassword": "Change password",
 		"deleteAccount": "Delete account",
 		"deleteConfirm": "Type \"{{content}}\" to delete account",
-		"deleteConfirmContent": "Confirm account deletion"
+		"deleteConfirmContent": "Confirm account deletion",
+		"twoFactor": {
+			"title": "Two-factor authentication",
+			"description": "Scan the QR code with your authenticator app.",
+			"secret": "Secret",
+			"enable": "Enable 2FA",
+			"disable": "Disable 2FA",
+			"copy": "Copy secret",
+			"copied": "Copied!",
+			"notConfigured": "2FA is not configured",
+			"enabled": "2FA is enabled",
+			"verify": "Verify",
+			"enterCode": "Enter the 6-digit code from your authenticator app to verify setup",
+			"invalidCode": "Invalid code, please try again",
+			"cancelSetup": "Cancel"
+		}
 	},
 	"password_weak": "Weak",
 	"password_fair": "Fair",

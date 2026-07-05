@@ -16,7 +16,7 @@
 	import ShareIcon from 'lucide-svelte/icons/share-2';
 	import TrashIcon from 'lucide-svelte/icons/trash';
 	import Mousetrap from 'mousetrap';
-	import { onMount, tick } from 'svelte';
+	import { onMount } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import type { LanguageType } from 'svelte-highlight/languages';
 	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
@@ -24,10 +24,8 @@
 	import { _ } from '$lib/i18n';
 	import Select from 'svelte-select';
 	import SvelteMarkdown from '@humanspeak/svelte-markdown';
-	// @ts-expect-error qrcode types missing
-	import QrCode from 'svelte-qrcode';
+	import QrCode from '$lib/components/QrCode.svelte';
 	import { get } from 'svelte/store';
-	import { oklchToHex } from '$lib/client/colors';
 	import { pasteDeletionTimes } from '$lib/client/paste.js';
 	import { HSOverlay } from 'flyonui/flyonui.js';
 
@@ -41,9 +39,6 @@
 	let localStored: Paste | undefined = $state();
 
 	let pasteDownloading = $state(true);
-
-	let qrCodeColor: string | undefined = $state();
-	let qrCodeBg: string | undefined = $state();
 
 	let supportedLangs: {
 		[key: string]: LanguageType<string>;
@@ -228,22 +223,6 @@
 		anchor.click();
 		window.URL.revokeObjectURL(url);
 	}
-
-	async function setQrColors() {
-		qrCodeColor = undefined;
-		qrCodeBg = undefined;
-		await tick();
-		qrCodeColor = oklchToHex(
-			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim()
-		);
-		qrCodeBg = oklchToHex(
-			getComputedStyle(document.documentElement).getPropertyValue('--color-base-100').trim()
-		);
-	}
-
-	themeStore.subscribe(() => {
-		setQrColors();
-	});
 
 	onMount(async () => {
 		await sodium.ready;
@@ -431,9 +410,7 @@
 				</button>
 			</div>
 			<div class="modal-body flex justify-center p-6">
-				{#if qrCodeBg && qrCodeColor}
-					<QrCode value={page.url.href} color={qrCodeColor} background={qrCodeBg} size={280} />
-				{/if}
+				<QrCode data={page.url.href} />
 			</div>
 		</div>
 	</div>

@@ -16,7 +16,8 @@ export async function GET({ locals, params }) {
 			masterPasswordSalt: sodium.to_base64(fakeMasterPasswordSalt),
 			serverSide: {
 				salt: sodium.to_base64(fakeServerSideSalt)
-			}
+			},
+			twoFactor: Math.random() < 0.5
 		});
 	}
 
@@ -24,6 +25,7 @@ export async function GET({ locals, params }) {
 		masterPasswordSalt: user.masterPasswordSalt,
 		serverSide: {
 			salt: user.serverSide.salt
-		}
+		},
+		twoFactor: typeof user.twoFactorSecret === 'string' && user.twoFactorVerified === true
 	});
 }
