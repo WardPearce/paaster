@@ -21,6 +21,11 @@
 		"deleteAccount": "Delete account",
 		"deleteConfirm": "Type \"{{content}}\" to delete account",
 		"deleteConfirmContent": "Confirm account deletion",
+		"twoFactorCode": "Authenticator code",
+		"verifying_captcha": "Verifying captcha...",
+		"captcha_verified": "Captcha verified",
+		"captcha_failed": "Captcha verification failed",
+		"retry": "Retry",
 		"twoFactor": {
 			"title": "Two-factor authentication",
 			"description": "Scan the QR code with your authenticator app.",
