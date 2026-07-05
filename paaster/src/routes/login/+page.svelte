@@ -40,6 +40,12 @@
 	let captchaPayload = $state<CaptchaPayload | null>(null);
 	let captchaState = $state<'idle' | 'solving' | 'solved' | 'error'>('idle');
 
+	let twoFactorRequired = $state(false);
+	let twoFactorToken = $state('');
+	let pendingServerSidePw: string | undefined = $state();
+	let pendingUsername: string | undefined = $state();
+	let pendingMasterPassword: Uint8Array | undefined = $state();
+
 	async function solveCaptchaChallenge() {
 		captchaState = 'solving';
 
@@ -172,7 +178,58 @@
 		solveCaptchaChallenge();
 	}
 
-	async function logIntoAccount(event: SubmitEvent) {
+	async function logIntoAccount(
+		serverSidePwB64: string,
+		masterPassword: Uint8Array,
+		username: string,
+		event: SubmitEvent,
+		twoFactorTokenArg?: string
+	) {
+		isLoading = true;
+
+		if (!captchaPayload) return;
+
+		const loginPayload = new FormData();
+		loginPayload.append('serverSidePassword', serverSidePwB64);
+		loginPayload.append('captchaPayload', JSON.stringify(captchaPayload));
+		if (twoFactorTokenArg) {
+			loginPayload.append('twoFactorToken', twoFactorTokenArg);
+		}
+
+		const loginResp = await fetch(`/api/account/${username}/login`, {
+			method: 'POST',
+			body: loginPayload
+		});
+		if (loginResp.ok) {
+			const loginJson = await loginResp.json();
+			const encryptionKey = secretBoxDecryptFromMaster(
+				{
+					value: sodium.from_base64(loginJson.encryptionKey.value),
+					nonce: sodium.from_base64(loginJson.encryptionKey.nonce)
+				},
+				{ value: masterPassword, salt: sodium.from_base64(loginJson.encryptionKey.keySalt) }
+			);
+			const toStore = {
+				id: loginJson.userId,
+				encryptionKey: sodium.to_base64(encryptionKey.rawData)
+			};
+			if (rememberMe) await localDb.accounts.add(toStore);
+			authStore.set(toStore);
+			goto('/', { replaceState: true });
+			return;
+		}
+
+		captchaPayload = null;
+		solveCaptchaChallenge();
+		if (twoFactorTokenArg) {
+			twoFactorToken = '';
+		}
+
+		errorMsg = await fetchError(loginResp);
+		isLoading = false;
+	}
+
+	async function check2FA(event: SubmitEvent) {
 		event.preventDefault();
 		isLoading = true;
 
@@ -200,38 +257,41 @@
 			masterPassword,
 			sodium.from_base64(saltJson.serverSide.salt)
 		);
+		const serverSidePwB64 = sodium.to_base64(serverSidePw);
 
-		const loginPayload = new FormData();
-		loginPayload.append('serverSidePassword', sodium.to_base64(serverSidePw));
-		loginPayload.append('captchaPayload', JSON.stringify(captchaPayload));
-
-		const loginResp = await fetch(`/api/account/${guardVals.username}/login`, {
-			method: 'POST',
-			body: loginPayload
-		});
-		if (loginResp.ok) {
-			const loginJson = await loginResp.json();
-			const encryptionKey = secretBoxDecryptFromMaster(
-				{
-					value: sodium.from_base64(loginJson.encryptionKey.value),
-					nonce: sodium.from_base64(loginJson.encryptionKey.nonce)
-				},
-				{ value: masterPassword, salt: sodium.from_base64(loginJson.encryptionKey.keySalt) }
-			);
-			const toStore = {
-				id: loginJson.userId,
-				encryptionKey: sodium.to_base64(encryptionKey.rawData)
-			};
-			if (rememberMe) await localDb.accounts.add(toStore);
-			authStore.set(toStore);
-			goto('/', { replaceState: true });
-			return;
+		if (saltJson.twoFactor) {
+			pendingServerSidePw = serverSidePwB64;
+			pendingUsername = guardVals.username;
+			pendingMasterPassword = masterPassword;
+			twoFactorRequired = true;
+			isLoading = false;
+		} else {
+			await logIntoAccount(serverSidePwB64, masterPassword, guardVals.username, event);
 		}
+	}
 
-		errorMsg = await fetchError(loginResp);
-		isLoading = false;
-		captchaPayload = null;
-		solveCaptchaChallenge();
+	function handleLogin(event: SubmitEvent) {
+		if (twoFactorRequired) {
+			if (!pendingServerSidePw || !pendingUsername || !pendingMasterPassword) return;
+			logIntoAccount(
+				pendingServerSidePw,
+				pendingMasterPassword,
+				pendingUsername,
+				event,
+				twoFactorToken
+			);
+		} else {
+			check2FA(event);
+		}
+	}
+
+	function cancel2FA() {
+		twoFactorRequired = false;
+		twoFactorToken = '';
+		pendingServerSidePw = undefined;
+		pendingUsername = undefined;
+		pendingMasterPassword = undefined;
+		errorMsg = undefined;
 	}
 </script>
 
@@ -244,7 +304,7 @@
 				{loginMode ? $_('account.login') : $_('account.create')}
 			</h1>
 
-			<form onsubmit={loginMode ? logIntoAccount : createAccount} class="flex flex-col gap-4">
+			<form onsubmit={loginMode ? handleLogin : createAccount} class="flex flex-col gap-4">
 				{#if errorMsg}
 					<div class="alert alert-warning" role="alert">
 						{errorMsg}
@@ -253,7 +313,13 @@
 
 				<div>
 					<label class="label label-text mb-1" for="username">{$_('account.username')}</label>
-					<input bind:value={rawUsername} type="text" class="input w-full" id="username" />
+					<input
+						bind:value={rawUsername}
+						type="text"
+						class="input w-full"
+						id="username"
+						disabled={twoFactorRequired}
+					/>
 				</div>
 
 				<div>
@@ -264,6 +330,7 @@
 						type="password"
 						class="input w-full"
 						id="password"
+						disabled={twoFactorRequired}
 					/>
 					{#if !loginMode && rawPassword}
 						<div class="mt-2">
@@ -272,7 +339,7 @@
 									<div
 										class="h-full flex-1 rounded-full transition-colors {segment <= passwordScore
 											? strengthColors[passwordScore]
-											: 'bg-base-300'}"
+											: 'bg-base-100/10'}"
 									></div>
 								{/each}
 							</div>
@@ -289,25 +356,73 @@
 						type="checkbox"
 						class="checkbox checkbox-primary checkbox-sm"
 						id="remember-me"
+						disabled={twoFactorRequired}
 					/>
 					<label class="label label-text cursor-pointer" for="remember-me"
 						>{$_('account.remember')}</label
 					>
 				</div>
 
+				{#if twoFactorRequired}
+					<div>
+						<label class="label label-text mb-1" for="twofactor-code"
+							>{$_('account.twoFactorCode')}</label
+						>
+						<input
+							bind:value={twoFactorToken}
+							type="text"
+							class="input w-full"
+							id="twofactor-code"
+							maxlength={6}
+							placeholder="000000"
+							inputmode="numeric"
+							pattern="[0-9]*"
+						/>
+					</div>
+				{/if}
+
 				{#if captchaState === 'solving'}
-					<div class="text-base-content/60 flex items-center justify-center gap-2 text-sm">
+					<div
+						class="bg-primary/20 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+						>
 						<span class="loading loading-spinner loading-xs"></span>
-						{$_('account.verifying_captcha', 'Verifying...')}
+						{$_('account.verifying_captcha', 'Verifying captcha...')}
 					</div>
 				{:else if captchaState === 'solved'}
-					<div class="text-success flex items-center justify-center gap-2 text-sm">
-						<span>✓</span>
-						{$_('account.captcha_verified', 'Verified')}
+					<div
+						class="bg-primary/5 text-success flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+						>
+						{$_('account.captcha_verified', 'Captcha verified')}
 					</div>
 				{:else if captchaState === 'error'}
-					<div class="text-error flex items-center justify-center gap-2 text-sm">
-						<span>{$_('account.captcha_failed', 'Verification failed')}</span>
+					<div
+						class="bg-primary/5 text-error flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+						>
+						<span>{$_('account.captcha_failed', 'Captcha verification failed')}</span>
 						<button type="button" class="btn btn-ghost btn-xs" onclick={solveCaptchaChallenge}>
 							{$_('account.retry', 'Retry')}
 						</button>
@@ -315,16 +430,29 @@
 				{/if}
 
 				<div class="flex flex-col gap-2">
-					<button type="submit" class="btn btn-primary w-full" disabled={!captchaPayload}>
-						{loginMode ? $_('account.login') : $_('account.create')}
-					</button>
-					<button
-						type="button"
-						class="btn btn-outline w-full"
-						onclick={() => (loginMode = !loginMode)}
-					>
-						{loginMode ? $_('account.create_new_account') : $_('account.already_have_account')}
-					</button>
+					{#if twoFactorRequired}
+						<button
+							type="submit"
+							class="btn btn-primary w-full"
+							disabled={twoFactorToken.length !== 6}
+						>
+							{$_('account.twoFactor.verify')}
+						</button>
+						<button type="button" class="btn btn-ghost w-full" onclick={cancel2FA}>
+							{$_('account.twoFactor.cancelSetup')}
+						</button>
+					{:else}
+						<button type="submit" class="btn btn-primary w-full" disabled={!captchaPayload}>
+							{loginMode ? $_('account.login') : $_('account.create')}
+						</button>
+						<button
+							type="button"
+							class="btn btn-outline w-full"
+							onclick={() => (loginMode = !loginMode)}
+						>
+							{loginMode ? $_('account.create_new_account') : $_('account.already_have_account')}
+						</button>
+					{/if}
 				</div>
 			</form>
 		</div>

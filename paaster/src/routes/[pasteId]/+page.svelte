@@ -16,7 +16,7 @@
 	import ShareIcon from 'lucide-svelte/icons/share-2';
 	import TrashIcon from 'lucide-svelte/icons/trash';
 	import Mousetrap from 'mousetrap';
-	import { onMount, tick } from 'svelte';
+	import { onMount } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import type { LanguageType } from 'svelte-highlight/languages';
 	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
@@ -24,11 +24,12 @@
 	import { _ } from '$lib/i18n';
 	import Select from 'svelte-select';
 	import SvelteMarkdown from '@humanspeak/svelte-markdown';
-	// @ts-expect-error qrcode types missing
-	import QrCode from 'svelte-qrcode';
+	import QrCode from '$lib/components/QrCode.svelte';
 	import { get } from 'svelte/store';
-	import { oklchToHex } from '$lib/client/colors';
 	import { pasteDeletionTimes } from '$lib/client/paste.js';
+	import { generatePassphrase } from '$lib/client/passphrase';
+	import KeyIcon from 'lucide-svelte/icons/key';
+	import CopyIcon from 'lucide-svelte/icons/copy';
 	import { HSOverlay } from 'flyonui/flyonui.js';
 
 	let { data } = $props();
@@ -37,13 +38,11 @@
 	let rawPaste: string = $state('');
 
 	let preWrap = $state(data.wrapWords);
+	let hasPassphrase = $state(data.hasPassphrase);
 
 	let localStored: Paste | undefined = $state();
 
 	let pasteDownloading = $state(true);
-
-	let qrCodeColor: string | undefined = $state();
-	let qrCodeBg: string | undefined = $state();
 
 	let supportedLangs: {
 		[key: string]: LanguageType<string>;
@@ -52,6 +51,10 @@
 
 	let qrCodeOverlay: HSOverlay;
 	let shortcutsOverlay: HSOverlay;
+	let passphraseOverlay: HSOverlay;
+
+	let generatedPassphrase = $state('');
+	let passphraseCopied = $state(false);
 
 	let isMarkdown = $state(false);
 	let showRenderedMarkdown = $state(false);
@@ -210,9 +213,58 @@
 		});
 	}
 
+	async function setPassphrase() {
+		if (!localStored || !localStored.accessKey) return;
+
+		const passphrase = await generatePassphrase();
+		generatedPassphrase = passphrase;
+		passphraseCopied = false;
+
+		const updatePayload = new FormData();
+		updatePayload.append('passphrase', passphrase);
+
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			hasPassphrase = true;
+			getToast().success(get(_)('paste_actions.passphrase.success'));
+			passphraseOverlay.open();
+		}
+	}
+
+	async function removePassphrase() {
+		if (!localStored || !localStored.accessKey) return;
+
+		const updatePayload = new FormData();
+		updatePayload.append('passphrase', '');
+
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			hasPassphrase = false;
+			getToast().success('Passphrase removed');
+		}
+	}
+
 	async function sharePaste() {
 		await navigator.clipboard.writeText(page.url.href);
 		getToast().success(get(_)('paste_actions.share.success'));
+	}
+
+	async function copyPassphrase() {
+		await navigator.clipboard.writeText(generatedPassphrase);
+		passphraseCopied = true;
+		getToast().success(get(_)('paste_actions.passphrase.copied'));
 	}
 
 	async function copyCode() {
@@ -229,23 +281,12 @@
 		window.URL.revokeObjectURL(url);
 	}
 
-	async function setQrColors() {
-		qrCodeColor = undefined;
-		qrCodeBg = undefined;
-		await tick();
-		qrCodeColor = oklchToHex(
-			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim()
-		);
-		qrCodeBg = oklchToHex(
-			getComputedStyle(document.documentElement).getPropertyValue('--color-base-100').trim()
-		);
-	}
-
-	themeStore.subscribe(() => {
-		setQrColors();
-	});
-
 	onMount(async () => {
+		if (data.passphraseRequired) {
+			await goto(`/${page.params.pasteId}/passphrase${window.location.hash}`);
+			return;
+		}
+
 		await sodium.ready;
 
 		try {
@@ -299,7 +340,7 @@
 
 		await loadSupportedLangs();
 
-		const codeResponse = await fetch(data.signedUrl);
+		const codeResponse = await fetch(data.signedUrl!);
 		if (!codeResponse.ok) {
 			handleError(get(_)('view.cdn_down'));
 			return;
@@ -401,6 +442,7 @@
 
 		qrCodeOverlay = new HSOverlay(document.querySelector('#qr-code') as HTMLElement);
 		shortcutsOverlay = new HSOverlay(document.querySelector('#shortcuts') as HTMLElement);
+		passphraseOverlay = new HSOverlay(document.querySelector('#passphrase') as HTMLElement);
 	});
 </script>
 
@@ -431,9 +473,7 @@
 				</button>
 			</div>
 			<div class="modal-body flex justify-center p-6">
-				{#if qrCodeBg && qrCodeColor}
-					<QrCode value={page.url.href} color={qrCodeColor} background={qrCodeBg} size={280} />
-				{/if}
+				<QrCode data={page.url.href} />
 			</div>
 		</div>
 	</div>
@@ -478,6 +518,34 @@
 						<kbd class="kbd kbd-sm">S</kbd>
 					</div>
 				</div>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div
+	id="passphrase"
+	class="overlay modal overlay-open:opacity-100 modal-middle hidden"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog overlay-open:opacity-100 sm:max-w-md">
+		<div class="modal-content border-base-content/20 border">
+			<div class="modal-header">
+				<h1 class="modal-title">{$_('paste_actions.passphrase.model.header')}</h1>
+				<button type="button" class="btn btn-text btn-sm" onclick={() => passphraseOverlay.close()}>
+					✕
+				</button>
+			</div>
+			<div class="modal-body flex flex-col gap-4 p-6">
+				<p class="text-base-content/70 text-sm">{$_('paste_actions.passphrase.description')}</p>
+				<div class="bg-base-content/5 flex items-center justify-between gap-2 rounded-lg p-3 font-mono text-sm break-all">
+					<span>{generatedPassphrase}</span>
+				</div>
+				<button class="btn btn-primary btn-sm w-full" onclick={copyPassphrase}>
+					<CopyIcon size={16} />
+					{passphraseCopied ? $_('paste_actions.passphrase.copied') : $_('paste_actions.passphrase.copy')}
+				</button>
 			</div>
 		</div>
 	</div>
@@ -544,6 +612,18 @@
 				</div>
 
 				<div class="border-base-content/10 flex flex-col gap-2 border-t pt-3">
+					{#if hasPassphrase}
+						<button class="btn btn-primary btn-sm w-full" onclick={removePassphrase}>
+							<TrashIcon size={16} />
+							Remove passphrase
+						</button>
+					{:else}
+						<button class="btn btn-primary btn-sm w-full" onclick={setPassphrase}>
+							<KeyIcon size={16} />
+							{$_('paste_actions.passphrase.button')}</button
+						>
+					{/if}
+
 					<button
 						class="btn btn-primary btn-sm w-full"
 						onclick={() => {

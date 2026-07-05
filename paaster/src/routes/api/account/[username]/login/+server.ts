@@ -5,10 +5,12 @@ import argon2 from 'argon2';
 import { sign } from 'cookie-signature';
 import sodium from 'libsodium-wrappers-sumo';
 import { z } from 'zod';
+import { verify } from 'otplib';
 
 const loginSchema = z.object({
 	serverSidePassword: z.string().trim().max(64).min(24),
-	captchaPayload
+	captchaPayload,
+	twoFactorToken: z.string().max(6).min(6).optional()
 });
 
 export async function POST({ params, locals, request, cookies }) {
@@ -35,6 +37,15 @@ export async function POST({ params, locals, request, cookies }) {
 
 	if (!(await argon2.verify(user.serverSide.password, formData.data.serverSidePassword))) {
 		throw error(401, 'Invalid password');
+	}
+
+	if (user.twoFactorSecret && user.twoFactorVerified) {
+		if (
+			!(await verify({ secret: user.twoFactorSecret, token: formData.data.twoFactorToken ?? '' }))
+				.valid
+		) {
+			throw error(401, 'Invalid password');
+		}
 	}
 
 	if (!env.COOKIE_SECRET) {

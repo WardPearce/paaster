@@ -20,7 +20,27 @@
 		"changePassword": "Change password",
 		"deleteAccount": "Delete account",
 		"deleteConfirm": "Type \"{{content}}\" to delete account",
-		"deleteConfirmContent": "Confirm account deletion"
+		"deleteConfirmContent": "Confirm account deletion",
+		"twoFactorCode": "Authenticator code",
+		"verifying_captcha": "Verifying captcha...",
+		"captcha_verified": "Captcha verified",
+		"captcha_failed": "Captcha verification failed",
+		"retry": "Retry",
+		"twoFactor": {
+			"title": "Two-factor authentication",
+			"description": "Scan the QR code with your authenticator app.",
+			"secret": "Secret",
+			"enable": "Enable 2FA",
+			"disable": "Disable 2FA",
+			"copy": "Copy secret",
+			"copied": "Copied!",
+			"notConfigured": "2FA is not configured",
+			"enabled": "2FA is enabled",
+			"verify": "Verify",
+			"enterCode": "Enter the 6-digit code from your authenticator app to verify setup",
+			"invalidCode": "Invalid code, please try again",
+			"cancelSetup": "Cancel"
+		}
 	},
 	"password_weak": "Weak",
 	"password_fair": "Fair",
@@ -91,6 +111,18 @@
 		"exit_raw_mode": "Exit raw mode",
 		"lang_updated": "Language updated",
 		"language": "Language",
+		"passphrase": {
+			"button": "Set passphrase",
+			"loading": "Setting passphrase",
+			"success": "Passphrase set",
+			"generate": "Generate passphrase",
+			"copy": "Copy passphrase",
+			"copied": "Passphrase copied to clipboard",
+			"description": "A passphrase is required to view this paste. Share this with anyone you want to grant access.",
+			"model": {
+				"header": "Paste passphrase"
+			}
+		},
 		"expire": {
 			"loading": "Updating expire after",
 			"error": "Unable to set expire after",
@@ -116,6 +148,14 @@
 		"input": "Enter access code",
 		"header": "access code required",
 		"button": "submit"
+	},
+	"require_passphrase_model": {
+		"input": "Enter passphrase",
+		"header": "passphrase required",
+		"description": "This paste is protected by a passphrase. Enter it below to continue.",
+		"button": "submit",
+		"invalid": "Invalid passphrase",
+		"not_found": "Paste not found"
 	},
 	"no_saved_pastes": "No saved pastes",
 	"saved_pastes_end": "reached the end",
