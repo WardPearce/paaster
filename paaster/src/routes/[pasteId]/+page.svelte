@@ -38,6 +38,7 @@
 	let rawPaste: string = $state('');
 
 	let preWrap = $state(data.wrapWords);
+	let hasPassphrase = $state(data.hasPassphrase);
 
 	let localStored: Paste | undefined = $state();
 
@@ -230,8 +231,28 @@
 			}
 		});
 		if (updatePayloadResponse.ok) {
+			hasPassphrase = true;
 			getToast().success(get(_)('paste_actions.passphrase.success'));
 			passphraseOverlay.open();
+		}
+	}
+
+	async function removePassphrase() {
+		if (!localStored || !localStored.accessKey) return;
+
+		const updatePayload = new FormData();
+		updatePayload.append('passphrase', '');
+
+		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
+			method: 'POST',
+			body: updatePayload,
+			headers: {
+				Authorization: `Bearer ${localStored.accessKey}`
+			}
+		});
+		if (updatePayloadResponse.ok) {
+			hasPassphrase = false;
+			getToast().success('Passphrase removed');
 		}
 	}
 
@@ -591,10 +612,17 @@
 				</div>
 
 				<div class="border-base-content/10 flex flex-col gap-2 border-t pt-3">
-					<button class="btn btn-primary btn-sm w-full" onclick={setPassphrase}>
-						<KeyIcon size={16} />
-						{$_('paste_actions.passphrase.button')}</button
-					>
+					{#if hasPassphrase}
+						<button class="btn btn-primary btn-sm w-full" onclick={removePassphrase}>
+							<TrashIcon size={16} />
+							Remove passphrase
+						</button>
+					{:else}
+						<button class="btn btn-primary btn-sm w-full" onclick={setPassphrase}>
+							<KeyIcon size={16} />
+							{$_('paste_actions.passphrase.button')}</button
+						>
+					{/if}
 
 					<button
 						class="btn btn-primary btn-sm w-full"

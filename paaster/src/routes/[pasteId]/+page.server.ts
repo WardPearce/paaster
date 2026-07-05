@@ -120,6 +120,7 @@ export async function load({ params, locals, url, cookies }) {
 		created: paste.created,
 		wrapWords: paste.wrapWords,
 		signedUrl: signedUrl,
-		account: account
+		account: account,
+		hasPassphrase: !!paste.passphrase
 	};
 }

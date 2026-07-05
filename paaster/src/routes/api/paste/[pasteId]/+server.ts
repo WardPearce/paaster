@@ -63,10 +63,10 @@ const updatePasteSchema = z.object({
 		.refine((val) => val == 'true' || val === 'false', { message: 'Must be a boolean' })
 		.transform((val) => val === 'true')
 		.optional(),
-	passphrase: z.string().trim().min(8).max(255).optional()
+	passphrase: z.string().trim().max(255).optional()
 });
 
-export async function POST({ locals, request, params }) {
+export async function POST({ locals, request, params, cookies, url }) {
 	const pasteId = stringToObjectId(params.pasteId);
 
 	const paste = await locals.mongoDb.collection('pastes').findOne({
@@ -112,11 +112,26 @@ export async function POST({ locals, request, params }) {
 		toUpdate.wrapWords = formData.data.wrapWords;
 	}
 
+	const toUnset: Record<string, string> = {};
+
 	if (typeof formData.data.passphrase !== 'undefined') {
-		toUpdate.passphrase = await argon2.hash(formData.data.passphrase);
+		if (formData.data.passphrase === '') {
+			toUnset.passphrase = '';
+			cookies.delete('passphrase_' + params.pasteId, { path: '/' });
+		} else {
+			if (formData.data.passphrase.length < 8) {
+				throw error(400, 'Passphrase must be at least 8 characters');
+			}
+			toUpdate.passphrase = await argon2.hash(formData.data.passphrase);
+		}
 	}
 
-	await locals.mongoDb.collection('pastes').updateOne({ _id: pasteId }, { $set: toUpdate });
+	const updateOp: Record<string, Record<string, unknown>> = { $set: toUpdate };
+	if (Object.keys(toUnset).length > 0) {
+		updateOp.$unset = toUnset;
+	}
+
+	await locals.mongoDb.collection('pastes').updateOne({ _id: pasteId }, updateOp);
 
 	return json({});
 }
