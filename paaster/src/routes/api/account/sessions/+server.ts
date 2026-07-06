@@ -1,6 +1,5 @@
 import { stringToObjectId } from '$lib/server/objectId';
 import { revokeSession } from '$lib/server/session';
-import { stringToObjectId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 
