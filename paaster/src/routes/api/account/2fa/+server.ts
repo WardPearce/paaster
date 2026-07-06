@@ -7,7 +7,7 @@ import { generateSecret, generateURI } from 'otplib';
 function secretURI(secret: string, username: string): string {
 	return generateURI({
 		secret: secret,
-		issuer: 'Paaster' + (process.env.NODE_ENV !== 'production' ? ' Dev' : ''),
+		issuer: 'Paaster' + (process.env.NODE_ENV === 'development' ? ' Dev' : ''),
 		label: username
 	});
 }
