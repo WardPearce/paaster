@@ -1,8 +1,7 @@
-import { env } from '$env/dynamic/private';
 import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
+import { createSession, setSessionCookie } from '$lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
-import { sign } from 'cookie-signature';
 import { z } from 'zod';
 import { verify } from 'otplib';
 
@@ -46,14 +45,8 @@ export async function POST({ params, locals, request, cookies }) {
 			throw error(401, 'Invalid login');
 		}
 	}
-	// Set signed cookie of userId
-	cookies.set('userId', sign(user._id.toString(), env.COOKIE_SECRET ?? ''), {
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
-		path: '/',
-		maxAge: 60 * 60 * 24 * 31,
-		sameSite: 'strict'
-	});
+	const sessionId = await createSession(locals.mongoDb, user._id);
+	setSessionCookie(cookies, sessionId);
 
 	return json({
 		userId: user._id.toString(),

@@ -166,6 +166,17 @@
 	"saved_pastes_end": "reached the end",
 	"saved_pastes_error": "failed to load pastes",
 	"saved_pastes_retry": "retry",
+	"sessions": {
+		"title": "Sessions",
+		"current": "Current session",
+		"lastUsed": "Last used {{date}}",
+		"created": "Created {{date}}",
+		"expires": "Expires {{date}}",
+		"revoke": "Revoke",
+		"revoking": "Revoking...",
+		"revoked": "Session revoked",
+		"noOtherSessions": "No other active sessions"
+	},
 	"shared_with": "Shared with you",
 	"about": {
 		"title": "how we protect your privacy.",

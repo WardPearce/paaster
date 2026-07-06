@@ -11,6 +11,7 @@
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
 	import { _ } from '$lib/i18n';
+	import { relativeDate } from '$lib/client/date';
 	import { get } from 'svelte/store';
 	import { pasteDeletionTimes } from '$lib/client/paste';
 	import { resolve } from '$app/paths';
@@ -36,7 +37,10 @@
 		const resp = await fetch(`/api/account/${data.username}/public`);
 		if (!resp.ok) throw new Error('Failed to fetch account info');
 		const saltJson = await resp.json();
-		const masterPassword = await derivePassword!(password, sodium.from_base64(saltJson.masterPasswordSalt));
+		const masterPassword = await derivePassword!(
+			password,
+			sodium.from_base64(saltJson.masterPasswordSalt)
+		);
 		const serverSidePw = sodium.crypto_pwhash(
 			32,
 			masterPassword,
@@ -61,6 +65,34 @@
 	let showTwoFactorPassword = $state(false);
 	let twoFactorAction: 'enable' | 'disable' | null = $state(null);
 
+	let sessions: {
+		sessionId: string;
+		current: boolean;
+		created: string;
+		lastUsed: string;
+		expiresAt: string;
+	}[] = $state([]);
+	let revokingSession: string | null = $state(null);
+
+	async function loadSessions() {
+		const resp = await fetch('/api/account/sessions');
+		if (resp.ok) {
+			const data = await resp.json();
+			sessions = data.sessions;
+		}
+	}
+
+	async function revokeSession(sessionId: string) {
+		revokingSession = sessionId;
+		const payload = new FormData();
+		payload.append('sessionId', sessionId);
+		const resp = await fetch('/api/account/sessions', { method: 'DELETE', body: payload });
+		if (resp.ok) {
+			sessions = sessions.filter((s) => s.sessionId !== sessionId);
+		}
+		revokingSession = null;
+	}
+
 	onMount(async () => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
 			type: 'module'
@@ -77,6 +109,8 @@
 			twoFactorURI = uri;
 			twoFactorVerified = verified;
 		}
+
+		await loadSessions();
 	});
 
 	onDestroy(() => {
@@ -187,7 +221,10 @@
 		const payload = new FormData();
 		payload.append('serverSidePassword', currentServerSidePassword);
 
-		const deleteAccountResp = await fetch('/api/account/delete', { method: 'DELETE', body: payload });
+		const deleteAccountResp = await fetch('/api/account/delete', {
+			method: 'DELETE',
+			body: payload
+		});
 		if (deleteAccountResp.ok) {
 			await localDb.accounts.clear();
 			authStore.set(undefined);
@@ -382,7 +419,9 @@
 				<h2 class="text-base-content text-xl font-semibold">{$_('account.passwordReset')}</h2>
 				<form onsubmit={changePassword} class="mt-4 max-w-sm space-y-4">
 					<div>
-						<label class="label label-text mb-1" for="current-password">{$_('account.currentPassword')}</label>
+						<label class="label label-text mb-1" for="current-password"
+							>{$_('account.currentPassword')}</label
+						>
 						<input
 							bind:value={rawCurrentPassword}
 							type="password"
@@ -392,7 +431,9 @@
 						/>
 					</div>
 					<div>
-						<label class="label label-text mb-1" for="new-password">{$_('account.newPassword')}</label>
+						<label class="label label-text mb-1" for="new-password"
+							>{$_('account.newPassword')}</label
+						>
 						<input
 							bind:value={rawPasswordReset}
 							type="password"
@@ -416,7 +457,9 @@
 								? $_('account.twoFactor.enterPasswordEnable')
 								: $_('account.twoFactor.enterPasswordDisable')}
 						</p>
-						<label class="label label-text mb-1" for="two-factor-password">{$_('account.password')}</label>
+						<label class="label label-text mb-1" for="two-factor-password"
+							>{$_('account.password')}</label
+						>
 						<input
 							bind:value={twoFactorPassword}
 							type="password"
@@ -509,10 +552,52 @@
 
 		<div class="card border-base-content/20 border">
 			<div class="card-body p-6">
+				<h2 class="text-base-content text-xl font-semibold">{$_('sessions.title')}</h2>
+				<div class="mt-4 space-y-3">
+					{#each sessions as session (session.sessionId)}
+						<div
+							class="border-base-content/10 flex items-center justify-between rounded-lg border p-3 {session.current
+								? 'border-primary/30'
+								: ''}"
+						>
+							<div class="min-w-0 flex-1">
+								<p class="text-base-content font-medium">
+									{session.current ? $_('sessions.current') : session.sessionId.slice(0, 8) + '...'}
+								</p>
+								<div class="text-base-content/50 mt-0.5 space-y-0.5 text-xs">
+									<p>{$_('sessions.created', { date: relativeDate(session.created) })}</p>
+									<p>{$_('sessions.lastUsed', { date: relativeDate(session.lastUsed) })}</p>
+									<p>{$_('sessions.expires', { date: relativeDate(session.expiresAt) })}</p>
+								</div>
+							</div>
+							{#if !session.current}
+								<button
+									class="btn btn-error btn-xs"
+									disabled={revokingSession === session.sessionId}
+									onclick={() => revokeSession(session.sessionId)}
+								>
+									{revokingSession === session.sessionId
+										? $_('sessions.revoking')
+										: $_('sessions.revoke')}
+								</button>
+							{/if}
+						</div>
+					{/each}
+					{#if sessions.length === 0}
+						<p class="text-base-content/50 text-sm">{$_('sessions.noOtherSessions')}</p>
+					{/if}
+				</div>
+			</div>
+		</div>
+
+		<div class="card border-base-content/20 border">
+			<div class="card-body p-6">
 				<h2 class="text-base-content text-xl font-semibold">{$_('account.deleteAccount')}</h2>
 				<form onsubmit={deleteAccount} class="mt-4 max-w-sm space-y-4">
 					<div>
-						<label class="label label-text mb-1" for="delete-password">{$_('account.password')}</label>
+						<label class="label label-text mb-1" for="delete-password"
+							>{$_('account.password')}</label
+						>
 						<input
 							bind:value={deletePassword}
 							type="password"
