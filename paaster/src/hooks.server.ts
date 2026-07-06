@@ -14,6 +14,7 @@ let captchaSignature = '';
 sodium.ready.then(() => {
 	captchaKey = sodium.to_base64(sodium.randombytes_buf(32));
 	captchaSignature = sodium.to_base64(sodium.randombytes_buf(32));
+	env.COOKIE_SECRET = sodium.to_base64(sodium.randombytes_buf(32));
 });
 
 const s3Client = new S3Client({
@@ -38,6 +39,7 @@ const sensitivePathPatterns = [
 	/^\/api\/account\/create$/,
 	/^\/api\/account\/delete$/,
 	/^\/api\/account\/passwordReset$/,
+	/^\/api\/account\/2fa\/verify$/,
 	/^\/api\/account\/[^/]+\/login$/,
 	/^\/api\/account\/[^/]+\/public$/
 ];
@@ -55,6 +57,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!mongoDb) {
 		await mongoClient.connect();
 		mongoDb = mongoClient.db(env.MONGO_DB ?? 'paasterv3');
+		mongoDb.collection('captcha').createIndex({ created: 1 }, { expireAfterSeconds: 7200 }).catch(() => {});
 	}
 
 	event.locals.captchaKey = captchaKey;

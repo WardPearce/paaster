@@ -47,12 +47,6 @@ export async function POST({ params, locals, request, cookies }) {
 			throw error(401, 'Invalid password');
 		}
 	}
-
-	if (!env.COOKIE_SECRET) {
-		await sodium.ready;
-		env.COOKIE_SECRET = sodium.to_base64(sodium.randombytes_buf(32));
-	}
-
 	// Set signed cookie of userId
 	cookies.set('userId', sign(user._id.toString(), env.COOKIE_SECRET ?? ''), {
 		httpOnly: true,

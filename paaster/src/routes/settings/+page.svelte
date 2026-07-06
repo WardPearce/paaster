@@ -57,6 +57,9 @@
 	let secretCopied = $state(false);
 	let twoFactorToken = $state('');
 	let twoFactorVerifyError: string | undefined = $state();
+	let twoFactorPassword = $state('');
+	let showTwoFactorPassword = $state(false);
+	let twoFactorAction: 'enable' | 'disable' | null = $state(null);
 
 	onMount(async () => {
 		worker = new Worker(new URL('../../workers/derivePassword.ts', import.meta.url), {
@@ -208,14 +211,35 @@
 	}
 
 	async function enable2FA() {
+		if (!twoFactorPassword) {
+			twoFactorAction = 'enable';
+			showTwoFactorPassword = true;
+			return;
+		}
+
 		twoFactorLoading = true;
-		const resp = await fetch('/api/account/2fa', { method: 'POST' });
+
+		let serverSidePassword: string;
+		try {
+			serverSidePassword = await deriveCurrentServerSidePassword(twoFactorPassword);
+		} catch {
+			twoFactorLoading = false;
+			return;
+		}
+
+		const payload = new FormData();
+		payload.append('serverSidePassword', serverSidePassword);
+
+		const resp = await fetch('/api/account/2fa', { method: 'POST', body: payload });
 		if (resp.ok) {
 			const { secret, uri } = await resp.json();
 			twoFactorSecret = secret;
 			twoFactorURI = uri;
 			twoFactorToken = '';
 			twoFactorVerifyError = undefined;
+			showTwoFactorPassword = false;
+			twoFactorPassword = '';
+			twoFactorAction = null;
 		}
 		twoFactorLoading = false;
 	}
@@ -244,14 +268,40 @@
 		twoFactorURI = undefined;
 		twoFactorToken = '';
 		twoFactorVerifyError = undefined;
+		showTwoFactorPassword = false;
+		twoFactorPassword = '';
+		twoFactorAction = null;
 	}
 
 	async function disable2FA() {
+		if (!twoFactorPassword) {
+			twoFactorAction = 'disable';
+			showTwoFactorPassword = true;
+			return;
+		}
+
 		twoFactorLoading = true;
-		await fetch('/api/account/2fa', { method: 'DELETE' });
-		twoFactorSecret = undefined;
-		twoFactorURI = undefined;
-		twoFactorVerified = false;
+
+		let serverSidePassword: string;
+		try {
+			serverSidePassword = await deriveCurrentServerSidePassword(twoFactorPassword);
+		} catch {
+			twoFactorLoading = false;
+			return;
+		}
+
+		const payload = new FormData();
+		payload.append('serverSidePassword', serverSidePassword);
+
+		const resp = await fetch('/api/account/2fa', { method: 'DELETE', body: payload });
+		if (resp.ok) {
+			twoFactorSecret = undefined;
+			twoFactorURI = undefined;
+			twoFactorVerified = false;
+			showTwoFactorPassword = false;
+			twoFactorPassword = '';
+			twoFactorAction = null;
+		}
 		twoFactorLoading = false;
 	}
 
@@ -359,7 +409,41 @@
 		<div class="card border-base-content/20 border">
 			<div class="card-body p-6">
 				<h2 class="text-base-content text-xl font-semibold">{$_('account.twoFactor.title')}</h2>
-				{#if twoFactorVerified}
+				{#if showTwoFactorPassword}
+					<div class="mt-4 max-w-xs space-y-3">
+						<p class="text-base-content/70 text-sm">
+							{twoFactorAction === 'enable'
+								? $_('account.twoFactor.enterPasswordEnable')
+								: $_('account.twoFactor.enterPasswordDisable')}
+						</p>
+						<label class="label label-text mb-1" for="two-factor-password">{$_('account.password')}</label>
+						<input
+							bind:value={twoFactorPassword}
+							type="password"
+							class="input w-full"
+							id="two-factor-password"
+						/>
+						<div class="flex gap-2">
+							<button
+								class="btn btn-primary"
+								onclick={twoFactorAction === 'enable' ? enable2FA : disable2FA}
+								disabled={twoFactorLoading || !twoFactorPassword}
+							>
+								{$_('account.confirm')}
+							</button>
+							<button
+								class="btn btn-ghost"
+								onclick={() => {
+									showTwoFactorPassword = false;
+									twoFactorPassword = '';
+									twoFactorAction = null;
+								}}
+							>
+								{$_('account.cancel')}
+							</button>
+						</div>
+					</div>
+				{:else if twoFactorVerified}
 					<p class="text-base-content/70 mt-2 text-sm">{$_('account.twoFactor.enabled')}</p>
 					<div class="mt-4">
 						<button class="btn btn-warning" onclick={disable2FA} disabled={twoFactorLoading}>

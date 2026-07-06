@@ -1,13 +1,39 @@
 import { stringToObjectId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
+import argon2 from 'argon2';
+import type { Db, WithId, Document } from 'mongodb';
 import { generateSecret, generateURI } from 'otplib';
 
 function secretURI(secret: string, username: string): string {
 	return generateURI({
 		secret: secret,
-		issuer: 'Paaster',
+		issuer: 'Paaster' + (process.env.NODE_ENV !== 'production' ? ' Dev' : ''),
 		label: username
 	});
+}
+
+async function requirePassword(
+	mongoDb: Db,
+	userId: string,
+	formData: FormData
+): Promise<WithId<Document>> {
+	const user = await mongoDb.collection('users').findOne({
+		_id: stringToObjectId(userId)
+	});
+	if (!user) {
+		throw error(404, 'User not found');
+	}
+
+	const serverSidePassword = formData.get('serverSidePassword') as string | null;
+	if (!serverSidePassword) {
+		throw error(400, 'Current password is required');
+	}
+
+	if (!(await argon2.verify(user.serverSide.password, serverSidePassword))) {
+		throw error(401, 'Invalid password');
+	}
+
+	return user;
 }
 
 export async function GET({ locals }) {
@@ -33,25 +59,19 @@ export async function GET({ locals }) {
 	});
 }
 
-export async function POST({ locals }) {
+export async function POST({ locals, request }) {
 	if (!locals.userId) {
 		throw error(401);
 	}
 
-	const userId = stringToObjectId(locals.userId);
+	const formData = await request.formData();
 
-	const user = await locals.mongoDb.collection('users').findOne({
-		_id: userId
-	});
-	if (!user) {
-		throw error(404, 'User not found');
-	}
-
+	const user = await requirePassword(locals.mongoDb, locals.userId, formData);
 	const secret = generateSecret();
 
 	await locals.mongoDb.collection('users').updateOne(
 		{
-			_id: userId
+			_id: stringToObjectId(locals.userId)
 		},
 		{ $set: { twoFactorSecret: secret, twoFactorVerified: false } }
 	);
@@ -62,10 +82,13 @@ export async function POST({ locals }) {
 	});
 }
 
-export async function DELETE({ locals }) {
+export async function DELETE({ locals, request }) {
 	if (!locals.userId) {
 		throw error(401);
 	}
+
+	const formData = await request.formData();
+	await requirePassword(locals.mongoDb, locals.userId, formData);
 
 	await locals.mongoDb.collection('users').updateOne(
 		{

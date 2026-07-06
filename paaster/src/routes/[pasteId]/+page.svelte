@@ -284,9 +284,7 @@
 
 	onMount(async () => {
 		if (data.passphraseRequired) {
-			goto(
-				resolve(`/[pasteId]/passphrase${window.location.hash}`, { pasteId: page.params.pasteId })
-			);
+			goto(resolve(`/${page.params.pasteId}/passphrase${window.location.hash}`));
 			return;
 		}
 

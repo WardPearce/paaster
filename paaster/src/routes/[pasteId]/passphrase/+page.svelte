@@ -12,7 +12,7 @@
 
 	function onSuccess() {
 		const hash = window.location.hash;
-		goto(resolve(`/[pasteId]${hash}`, { pasteId: page.params.pasteId }));
+		goto(resolve(`/${page.params.pasteId}${hash}`));
 	}
 </script>
 

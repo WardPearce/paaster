@@ -27,6 +27,8 @@
 		"captcha_verified": "Captcha verified",
 		"captcha_failed": "Captcha verification failed",
 		"retry": "Retry",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
 		"twoFactor": {
 			"title": "Two-factor authentication",
 			"description": "Scan the QR code with your authenticator app.",
@@ -40,7 +42,9 @@
 			"verify": "Verify",
 			"enterCode": "Enter the 6-digit code from your authenticator app to verify setup",
 			"invalidCode": "Invalid code, please try again",
-			"cancelSetup": "Cancel"
+			"cancelSetup": "Cancel",
+			"enterPasswordEnable": "Enter your current password to enable two-factor authentication",
+			"enterPasswordDisable": "Enter your current password to disable two-factor authentication"
 		}
 	},
 	"password_weak": "Weak",
