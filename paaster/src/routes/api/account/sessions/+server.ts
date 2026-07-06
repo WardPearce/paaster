@@ -1,7 +1,7 @@
 import { stringToObjectId } from '$lib/server/objectId';
 import { revokeSession } from '$lib/server/session';
+import { stringToObjectId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
-import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
 export async function GET({ locals }) {
@@ -49,13 +49,12 @@ export async function DELETE({ locals, request }) {
 		throw error(400, 'Cannot revoke current session');
 	}
 
-	const session = await locals.mongoDb.collection('sessions').findOne({ sessionId });
+	const session = await locals.mongoDb.collection('sessions').findOne({
+		sessionId,
+		userId: stringToObjectId(locals.userId)
+	});
 	if (!session) {
 		throw error(404, 'Session not found');
-	}
-
-	if (!session.userId.equals(new ObjectId(locals.userId))) {
-		throw error(403, 'Session does not belong to you');
 	}
 
 	await revokeSession(locals.mongoDb, sessionId);
