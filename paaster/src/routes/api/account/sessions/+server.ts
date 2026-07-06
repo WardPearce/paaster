@@ -19,7 +19,7 @@ export async function GET({ locals }) {
 
 	return json({
 		sessions: sessions.map((s) => ({
-			sessionId: s.sessionId,
+			sessionId: s.sessionId.slice(0, 6) + '...',
 			current: s.sessionId === locals.sessionId,
 			created: s.created,
 			lastUsed: s.lastUsed,
