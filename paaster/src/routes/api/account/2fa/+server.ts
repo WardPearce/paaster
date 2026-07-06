@@ -52,10 +52,14 @@ export async function GET({ locals }) {
 		throw error(404, '2FA not configured');
 	}
 
+	if (user.twoFactorVerified) {
+		return json({ verified: user.twoFactorVerified });
+	}
+
 	return json({
 		secret: user.twoFactorSecret,
 		uri: secretURI(user.twoFactorSecret, user.username),
-		verified: user.twoFactorVerified === true
+		verified: user.twoFactorVerified
 	});
 }
 
