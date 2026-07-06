@@ -17,10 +17,10 @@ const config = {
 		}),
 		csp: {
 			directives: {
-				'script-src': ['self']
+				'script-src': ['self', 'wasm-unsafe-eval']
 			},
 			reportOnly: {
-				'script-src': ['self'],
+				'script-src': ['self', 'wasm-unsafe-eval'],
 				'report-uri': ['/']
 			}
 		}

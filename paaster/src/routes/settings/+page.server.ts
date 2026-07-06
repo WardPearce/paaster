@@ -1,8 +1,14 @@
 import { stringToObjectId } from '$lib/server/objectId';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {
 	if (!locals.userId) throw redirect(307, '/');
+
+	const user = await locals.mongoDb
+		.collection('users')
+		.findOne({ _id: stringToObjectId(locals.userId) });
+
+	if (!user) throw error(404, 'User not found');
 
 	let expireAfter = -2;
 
@@ -15,6 +21,7 @@ export async function load({ locals }) {
 	}
 
 	return {
-		expireAfter: expireAfter
+		expireAfter: expireAfter,
+		username: user.username
 	};
 }

@@ -15,7 +15,7 @@
 	import { pasteDeletionTimes } from '$lib/client/paste';
 	import { resolve } from '$app/paths';
 
-	let { data }: { data: { expireAfter: number } } = $props();
+	let { data }: { data: { expireAfter: number; username: string } } = $props();
 
 	let worker: Worker | undefined;
 	let derivePassword:
@@ -25,10 +25,28 @@
 	let errorMsg: string | undefined = $state();
 	let isLoading = $state(false);
 
+	let rawCurrentPassword: string | undefined = $state();
 	let rawPasswordReset: string | undefined = $state();
 
+	let deletePassword: string | undefined = $state();
 	let accountDeleteConfirm: string | undefined = $state();
 	const accountDeletionConfirmText = get(_)('account.deleteConfirmContent');
+
+	async function deriveCurrentServerSidePassword(password: string): Promise<string> {
+		const resp = await fetch(`/api/account/${data.username}/public`);
+		if (!resp.ok) throw new Error('Failed to fetch account info');
+		const saltJson = await resp.json();
+		const masterPassword = await derivePassword!(password, sodium.from_base64(saltJson.masterPasswordSalt));
+		const serverSidePw = sodium.crypto_pwhash(
+			32,
+			masterPassword,
+			sodium.from_base64(saltJson.serverSide.salt),
+			sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+			sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
+			sodium.crypto_pwhash_ALG_DEFAULT
+		);
+		return sodium.to_base64(serverSidePw);
+	}
 
 	let defaultPasteDelectionTime = $state(data.expireAfter);
 
@@ -71,13 +89,22 @@
 
 		const auth = get(authStore);
 
-		if (!derivePassword || !rawPasswordReset || !auth) return;
+		if (!derivePassword || !rawCurrentPassword || !rawPasswordReset || !auth) return;
 
 		await sodium.ready;
 
 		await localDb.accounts.clear();
 
 		errorMsg = undefined;
+
+		let currentServerSidePassword: string;
+		try {
+			currentServerSidePassword = await deriveCurrentServerSidePassword(rawCurrentPassword);
+		} catch {
+			errorMsg = 'Failed to verify current password';
+			isLoading = false;
+			return;
+		}
 
 		const masterPasswordSalt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
 
@@ -95,6 +122,7 @@
 		);
 
 		const createAccountPayload = new FormData();
+		createAccountPayload.append('currentServerSidePassword', currentServerSidePassword);
 		createAccountPayload.append('serverSideSalt', sodium.to_base64(serverSideSalt));
 		createAccountPayload.append('serverSidePassword', sodium.to_base64(serverSidePassword));
 
@@ -138,15 +166,35 @@
 	async function deleteAccount(event: Event) {
 		event.preventDefault();
 
-		if (accountDeleteConfirm !== accountDeletionConfirmText) return;
+		if (accountDeleteConfirm !== accountDeletionConfirmText || !deletePassword) return;
 
 		isLoading = true;
 
-		const deleteAccountResp = await fetch('/api/account/delete', { method: 'DELETE' });
+		errorMsg = undefined;
+
+		let currentServerSidePassword: string;
+		try {
+			currentServerSidePassword = await deriveCurrentServerSidePassword(deletePassword);
+		} catch {
+			errorMsg = 'Failed to verify password';
+			isLoading = false;
+			return;
+		}
+
+		const payload = new FormData();
+		payload.append('serverSidePassword', currentServerSidePassword);
+
+		const deleteAccountResp = await fetch('/api/account/delete', { method: 'DELETE', body: payload });
 		if (deleteAccountResp.ok) {
 			await localDb.accounts.clear();
 			authStore.set(undefined);
 			goto(resolve('/'), { replaceState: true });
+		} else {
+			try {
+				errorMsg = (await deleteAccountResp.json()).message;
+			} catch {
+				errorMsg = await deleteAccountResp.text();
+			}
 		}
 
 		isLoading = false;
@@ -284,12 +332,23 @@
 				<h2 class="text-base-content text-xl font-semibold">{$_('account.passwordReset')}</h2>
 				<form onsubmit={changePassword} class="mt-4 max-w-sm space-y-4">
 					<div>
-						<label class="label label-text mb-1" for="password">{$_('account.newPassword')}</label>
+						<label class="label label-text mb-1" for="current-password">{$_('account.currentPassword')}</label>
+						<input
+							bind:value={rawCurrentPassword}
+							type="password"
+							class="input w-full"
+							id="current-password"
+							required
+						/>
+					</div>
+					<div>
+						<label class="label label-text mb-1" for="new-password">{$_('account.newPassword')}</label>
 						<input
 							bind:value={rawPasswordReset}
 							type="password"
 							class="input w-full"
-							id="password"
+							id="new-password"
+							required
 						/>
 					</div>
 					<button class="btn btn-primary">{$_('account.changePassword')}</button>
@@ -369,6 +428,16 @@
 				<h2 class="text-base-content text-xl font-semibold">{$_('account.deleteAccount')}</h2>
 				<form onsubmit={deleteAccount} class="mt-4 max-w-sm space-y-4">
 					<div>
+						<label class="label label-text mb-1" for="delete-password">{$_('account.password')}</label>
+						<input
+							bind:value={deletePassword}
+							type="password"
+							class="input w-full"
+							id="delete-password"
+							required
+						/>
+					</div>
+					<div>
 						<label class="label label-text mb-1" for="username"
 							>{$_('account.deleteConfirm', {
 								content: accountDeletionConfirmText
@@ -386,7 +455,7 @@
 					</div>
 					<button
 						class="btn btn-warning"
-						disabled={accountDeleteConfirm !== accountDeletionConfirmText}
+						disabled={accountDeleteConfirm !== accountDeletionConfirmText || !deletePassword}
 					>
 						{$_('account.deleteAccount')}
 					</button>

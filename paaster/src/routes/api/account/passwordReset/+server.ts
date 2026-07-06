@@ -4,6 +4,7 @@ import argon2 from 'argon2';
 import { z } from 'zod';
 
 const passwordResetSchema = z.object({
+  currentServerSidePassword: z.string().trim().max(64),
   serverSideSalt: z.string().trim().max(64),
   serverSidePassword: z.string().trim().max(64),
   masterPasswordSalt: z.string().trim().max(64),
@@ -23,6 +24,17 @@ export async function POST({ locals, request }) {
 
   if (!formData.success) {
     throw error(400, formData.error);
+  }
+
+  const user = await locals.mongoDb.collection('users').findOne({
+    _id: stringToObjectId(locals.userId)
+  });
+  if (!user) {
+    throw error(404, 'User not found');
+  }
+
+  if (!(await argon2.verify(user.serverSide.password, formData.data.currentServerSidePassword))) {
+    throw error(401, 'Invalid current password');
   }
 
   await locals.mongoDb.collection('users').updateOne(
