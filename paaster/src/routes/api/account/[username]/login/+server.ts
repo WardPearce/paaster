@@ -3,7 +3,6 @@ import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { sign } from 'cookie-signature';
-import sodium from 'libsodium-wrappers-sumo';
 import { z } from 'zod';
 import { verify } from 'otplib';
 
@@ -18,7 +17,7 @@ export async function POST({ params, locals, request, cookies }) {
 		username: params.username
 	});
 	if (!user) {
-		throw error(404, 'User not found');
+		throw error(404, 'Invalid login');
 	}
 
 	const formData = loginSchema.safeParse(Object.fromEntries(await request.formData()));
@@ -36,7 +35,7 @@ export async function POST({ params, locals, request, cookies }) {
 	});
 
 	if (!(await argon2.verify(user.serverSide.password, formData.data.serverSidePassword))) {
-		throw error(401, 'Invalid password');
+		throw error(401, 'Invalid login');
 	}
 
 	if (user.twoFactorSecret && user.twoFactorVerified) {
@@ -44,7 +43,7 @@ export async function POST({ params, locals, request, cookies }) {
 			!(await verify({ secret: user.twoFactorSecret, token: formData.data.twoFactorToken ?? '' }))
 				.valid
 		) {
-			throw error(401, 'Invalid password');
+			throw error(401, 'Invalid login');
 		}
 	}
 	// Set signed cookie of userId
