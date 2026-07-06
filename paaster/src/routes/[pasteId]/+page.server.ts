@@ -91,7 +91,7 @@ export async function load({ params, locals, url, cookies }) {
 	const command = new GetObjectCommand(s3Location);
 
 	const signedUrl = await getSignedUrl(locals.s3Client, command, {
-		expiresIn: 82800
+		expiresIn: 600
 	});
 
 	let account;
