@@ -562,7 +562,9 @@
 						>
 							<div class="min-w-0 flex-1">
 								<p class="text-base-content font-medium">
-									{session.current ? $_('sessions.current') : session.sessionId.slice(0, 8) + '...'}
+									{session.current
+										? `${$_('sessions.current')} (${session.sessionId})`
+										: session.sessionId}
 								</p>
 								<div class="text-base-content/50 mt-0.5 space-y-0.5 text-xs">
 									<p>{$_('sessions.created', { date: relativeDate(session.created) })}</p>

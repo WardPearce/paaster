@@ -17,7 +17,8 @@ const COOKIE_NAME = 'sessionId';
 
 async function generateSessionToken(): Promise<string> {
 	await sodium.ready;
-	return sodium.to_base64(sodium.randombytes_buf(32));
+	// 6 bytes will be shown in settings under sessions, so length 38 so 32 bytes of still remain unknown.
+	return sodium.to_base64(sodium.randombytes_buf(38));
 }
 
 export async function createSession(mongoDb: Db, userId: ObjectId): Promise<string> {
