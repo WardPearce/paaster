@@ -9,6 +9,7 @@
 	import Dropzone from 'svelte-file-dropzone';
 	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
+	import { resolve } from '$app/paths';
 
 	let codeTextArea: HTMLTextAreaElement | undefined = $state();
 	let pasteUploading = $state(false);
@@ -151,7 +152,7 @@
 			codeName
 		);
 
-		goto(`${createPasteJson.pasteId}#${rawMasterKeyB64}`);
+		goto(resolve(`/[pasteId]#${rawMasterKeyB64}`, { pasteId: createPasteJson.pasteId }));
 	}
 </script>
 
@@ -171,7 +172,9 @@
 				oninput={onCodePasted}
 				bind:this={codeTextArea}
 				autofocus
-				class="textarea h-[90vh] resize-none rounded-xl border-2 bg-transparent p-6 font-mono text-base leading-relaxed transition-colors placeholder:text-base-content/25 focus:border-primary focus:outline-none {isDragging ? 'border-primary border-dashed bg-primary/5' : 'border-base-content/10'}"
+				class="textarea placeholder:text-base-content/25 focus:border-primary h-[90vh] resize-none rounded-xl border-2 bg-transparent p-6 font-mono text-base leading-relaxed transition-colors focus:outline-none {isDragging
+					? 'border-primary bg-primary/5 border-dashed'
+					: 'border-base-content/10'}"
 				placeholder={$_('create.input')}
 			></textarea>
 		</Dropzone>

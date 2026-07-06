@@ -14,7 +14,16 @@ const config = {
 		adapter: adapter({
 			out: 'build',
 			precompress: true
-		})
+		}),
+		csp: {
+			directives: {
+				'script-src': ['self', 'wasm-unsafe-eval']
+			},
+			reportOnly: {
+				'script-src': ['self', 'wasm-unsafe-eval'],
+				'report-uri': ['/']
+			}
+		}
 	}
 };
 

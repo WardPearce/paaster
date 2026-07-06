@@ -185,14 +185,14 @@
 		<InfiniteLoading on:infinite={loadMore}>
 			<div slot="spinner" let:isFirstLoad>
 				<div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-					{#each Array(6) as _, i (i)}
+					{#each Array(6) as i (i)}
 						{#if isFirstLoad || i <= 3}
 							<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
-								<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded" />
-								<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded" />
+								<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded"></div>
+								<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded"></div>
 								<div class="flex items-center gap-2">
-									<div class="bg-base-content/10 h-9 w-full rounded-lg" />
-									<div class="bg-base-content/10 h-9 w-9 rounded-lg" />
+									<div class="bg-base-content/10 h-9 w-full rounded-lg"></div>
+									<div class="bg-base-content/10 h-9 w-9 rounded-lg"></div>
 								</div>
 							</div>
 						{/if}

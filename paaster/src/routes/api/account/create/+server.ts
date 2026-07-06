@@ -1,9 +1,7 @@
-import { env } from '$env/dynamic/private';
 import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
+import { createSession, setSessionCookie } from '$lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
-import { sign } from 'cookie-signature';
-import sodium from 'libsodium-wrappers-sumo';
 import { z } from 'zod';
 
 const createSchema = z.object({
@@ -55,19 +53,8 @@ export async function POST({ locals, request, cookies }) {
 	});
 
 	const userId = createdUser.insertedId.toString();
-
-	if (!env.COOKIE_SECRET) {
-		await sodium.ready;
-		env.COOKIE_SECRET = sodium.to_base64(sodium.randombytes_buf(32));
-	}
-
-	// Set signed cookie of userId
-	cookies.set('userId', sign(userId, env.COOKIE_SECRET ?? ''), {
-		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
-		path: '/',
-		maxAge: 60 * 60 * 24 * 31
-	});
+	const sessionId = await createSession(locals.mongoDb, createdUser.insertedId);
+	setSessionCookie(cookies, sessionId);
 
 	return json({
 		userId: userId

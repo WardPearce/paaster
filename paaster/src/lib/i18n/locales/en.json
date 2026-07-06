@@ -17,6 +17,7 @@
 		"settings": "Settings",
 		"passwordReset": "Password reset",
 		"newPassword": "New Password",
+		"currentPassword": "Current Password",
 		"changePassword": "Change password",
 		"deleteAccount": "Delete account",
 		"deleteConfirm": "Type \"{{content}}\" to delete account",
@@ -26,6 +27,8 @@
 		"captcha_verified": "Captcha verified",
 		"captcha_failed": "Captcha verification failed",
 		"retry": "Retry",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
 		"twoFactor": {
 			"title": "Two-factor authentication",
 			"description": "Scan the QR code with your authenticator app.",
@@ -39,7 +42,9 @@
 			"verify": "Verify",
 			"enterCode": "Enter the 6-digit code from your authenticator app to verify setup",
 			"invalidCode": "Invalid code, please try again",
-			"cancelSetup": "Cancel"
+			"cancelSetup": "Cancel",
+			"enterPasswordEnable": "Enter your current password to enable two-factor authentication",
+			"enterPasswordDisable": "Enter your current password to disable two-factor authentication"
 		}
 	},
 	"password_weak": "Weak",
@@ -161,6 +166,17 @@
 	"saved_pastes_end": "reached the end",
 	"saved_pastes_error": "failed to load pastes",
 	"saved_pastes_retry": "retry",
+	"sessions": {
+		"title": "Sessions",
+		"current": "Current session",
+		"lastUsed": "Last used {{date}}",
+		"created": "Created {{date}}",
+		"expires": "Expires {{date}}",
+		"revoke": "Revoke",
+		"revoking": "Revoking...",
+		"revoked": "Session revoked",
+		"noOtherSessions": "No other active sessions"
+	},
 	"shared_with": "Shared with you",
 	"about": {
 		"title": "how we protect your privacy.",

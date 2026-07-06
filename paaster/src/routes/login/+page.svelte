@@ -13,10 +13,13 @@
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
 	import { _ } from '$lib/i18n';
-	import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core';
+	import { ZxcvbnFactory } from '@zxcvbn-ts/core';
 	import { adjacencyGraphs, dictionary } from '@zxcvbn-ts/language-common';
 	import { solveChallenge } from 'altcha-lib';
 	import { deriveKey } from 'altcha-lib/algorithms/web/pbkdf2';
+	import { resolve } from '$app/paths';
+
+	const zxcvbn = new ZxcvbnFactory({ dictionary, graphs: adjacencyGraphs });
 
 	type CaptchaPayload = {
 		solution: { counter: number; derivedKey: string; time?: number };
@@ -74,8 +77,6 @@
 		const workerApi: Remote<DerivePasswordApi> = comlink.wrap(worker);
 		derivePassword = workerApi.derivePassword;
 
-		zxcvbnOptions.setOptions({ dictionary, graphs: adjacencyGraphs });
-
 		solveCaptchaChallenge();
 	});
 
@@ -109,7 +110,7 @@
 
 	function onPasswordInput() {
 		if (rawPassword) {
-			passwordScore = zxcvbn(rawPassword).score;
+			passwordScore = zxcvbn.check(rawPassword).score;
 		} else {
 			passwordScore = 0;
 		}
@@ -168,7 +169,7 @@
 					encryptionKey: sodium.to_base64(rawEncryptionKey)
 				});
 			authStore.set({ id: json.userId, encryptionKey: sodium.to_base64(rawEncryptionKey) });
-			goto('/', { replaceState: true });
+			goto(resolve('/'), { replaceState: true });
 			return;
 		}
 
@@ -215,7 +216,7 @@
 			};
 			if (rememberMe) await localDb.accounts.add(toStore);
 			authStore.set(toStore);
-			goto('/', { replaceState: true });
+			goto(resolve('/'), { replaceState: true });
 			return;
 		}
 

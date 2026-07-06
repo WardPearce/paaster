@@ -14,6 +14,7 @@ declare global {
 			mongoDb: Db;
 			s3Client: S3Client;
 			userId: string | undefined;
+			sessionId: string | undefined;
 			captchaSignature: string;
 			captchaKey: string;
 		}

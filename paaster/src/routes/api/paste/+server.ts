@@ -70,7 +70,7 @@ export async function POST({ locals, request }) {
 		Bucket: env.S3_BUCKET ?? '',
 		Key: `${createdPaste.insertedId}.bin`,
 		Conditions: [['content-length-range', 0, MAX_UPLOAD_SIZE]],
-		Expires: 82800
+		Expires: 600
 	});
 
 	return json({

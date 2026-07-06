@@ -34,13 +34,16 @@ const zCaptchaSolution = z.object({
 	time: z.number().optional()
 });
 
-export const captchaPayload = z.preprocess((val) => {
-	if (typeof val === 'string') return JSON.parse(val);
-	return val;
-}, z.object({
-	solution: zCaptchaSolution,
-	challenge: zCaptchaChallenge
-}));
+export const captchaPayload = z.preprocess(
+	(val) => {
+		if (typeof val === 'string') return JSON.parse(val);
+		return val;
+	},
+	z.object({
+		solution: zCaptchaSolution,
+		challenge: zCaptchaChallenge
+	})
+);
 
 export async function verifyCaptcha(captcha: {
 	solution: z.infer<typeof zCaptchaSolution>;
