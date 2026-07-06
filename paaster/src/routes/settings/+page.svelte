@@ -13,6 +13,7 @@
 	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
 	import { pasteDeletionTimes } from '$lib/client/paste';
+	import { resolve } from '$app/paths';
 
 	let { data }: { data: { expireAfter: number } } = $props();
 
@@ -122,7 +123,7 @@
 
 			authStore.set(toStore);
 
-			goto('/', { replaceState: true });
+			goto(resolve('/'), { replaceState: true });
 		} else {
 			try {
 				errorMsg = (await passwordResetResp.json()).message;
@@ -145,7 +146,7 @@
 		if (deleteAccountResp.ok) {
 			await localDb.accounts.clear();
 			authStore.set(undefined);
-			goto('/', { replaceState: true });
+			goto(resolve('/'), { replaceState: true });
 		}
 
 		isLoading = false;
@@ -231,6 +232,7 @@
 								<div
 									data-theme={theme}
 									onclick={async () => await setTheme(theme)}
+									role="presentation"
 									class={'bg-base-100 text-base-content w-full cursor-pointer rounded-xl border p-3 transition hover:scale-105 ' +
 										($themeStore === theme
 											? 'border-primary shadow-primary/20 shadow-md'
@@ -341,7 +343,12 @@
 							>
 								{$_('account.twoFactor.verify')}
 							</button>
-							<button class="btn btn-ghost" type="button" onclick={cancel2FASetup} disabled={twoFactorLoading}>
+							<button
+								class="btn btn-ghost"
+								type="button"
+								onclick={cancel2FASetup}
+								disabled={twoFactorLoading}
+							>
 								{$_('account.twoFactor.cancelSetup')}
 							</button>
 						</div>

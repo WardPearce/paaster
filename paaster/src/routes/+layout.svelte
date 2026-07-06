@@ -15,6 +15,7 @@
 	import 'notyf/notyf.min.css';
 	import { onMount } from 'svelte';
 	import '../app.css';
+	import { resolve } from '$app/paths';
 
 	let { children } = $props();
 
@@ -22,7 +23,7 @@
 		await fetch('/api/account/logout', { method: 'DELETE' });
 		await localDb.accounts.clear();
 		authStore.set(undefined);
-		goto('/');
+		goto(resolve('/'));
 	}
 
 	onMount(async () => {

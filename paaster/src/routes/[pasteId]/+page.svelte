@@ -31,6 +31,7 @@
 	import KeyIcon from 'lucide-svelte/icons/key';
 	import CopyIcon from 'lucide-svelte/icons/copy';
 	import { HSOverlay } from 'flyonui/flyonui.js';
+	import { resolve } from '$app/paths';
 
 	let { data } = $props();
 
@@ -90,7 +91,7 @@
 
 	function handleError(error: string) {
 		getToast().error(error);
-		goto('/');
+		goto(resolve('/'));
 	}
 
 	async function deletePaste() {
@@ -106,7 +107,7 @@
 		if (deletePasteResponse.ok) {
 			await localDb.pastes.delete(page.params.pasteId);
 			getToast().success(get(_)('paste_actions.delete.success'));
-			goto('/');
+			goto(resolve('/'));
 		}
 	}
 
@@ -283,7 +284,9 @@
 
 	onMount(async () => {
 		if (data.passphraseRequired) {
-			await goto(`/${page.params.pasteId}/passphrase${window.location.hash}`);
+			goto(
+				resolve(`/[pasteId]/passphrase${window.location.hash}`, { pasteId: page.params.pasteId })
+			);
 			return;
 		}
 
@@ -520,7 +523,7 @@
 				</div>
 			</div>
 		</div>
-    </div>
+	</div>
 </div>
 
 <div
@@ -539,12 +542,16 @@
 			</div>
 			<div class="modal-body flex flex-col gap-4 p-6">
 				<p class="text-base-content/70 text-sm">{$_('paste_actions.passphrase.description')}</p>
-				<div class="bg-base-content/5 flex items-center justify-between gap-2 rounded-lg p-3 font-mono text-sm break-all">
+				<div
+					class="bg-base-content/5 flex items-center justify-between gap-2 rounded-lg p-3 font-mono text-sm break-all"
+				>
 					<span>{generatedPassphrase}</span>
 				</div>
 				<button class="btn btn-primary btn-sm w-full" onclick={copyPassphrase}>
 					<CopyIcon size={16} />
-					{passphraseCopied ? $_('paste_actions.passphrase.copied') : $_('paste_actions.passphrase.copy')}
+					{passphraseCopied
+						? $_('paste_actions.passphrase.copied')
+						: $_('paste_actions.passphrase.copy')}
 				</button>
 			</div>
 		</div>

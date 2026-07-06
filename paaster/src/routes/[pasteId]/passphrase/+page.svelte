@@ -5,13 +5,14 @@
 	import { _ } from '$lib/i18n';
 	import KeyIcon from 'lucide-svelte/icons/key';
 	import ArrowRightIcon from 'lucide-svelte/icons/arrow-right';
+	import { resolve } from '$app/paths';
 
 	let passphrase = $state('');
 	let formError = $state('');
 
 	function onSuccess() {
 		const hash = window.location.hash;
-		goto(`/${page.params.pasteId}${hash}`);
+		goto(resolve(`/[pasteId]${hash}`, { pasteId: page.params.pasteId }));
 	}
 </script>
 
