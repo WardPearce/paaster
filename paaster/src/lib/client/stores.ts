@@ -3,5 +3,5 @@ import type { Writable } from 'svelte/store';
 import { writable } from 'svelte/store';
 
 export const authStore: Writable<Account | undefined> = writable();
-export const themeStore: Writable<string> = writable('dark');
+export const themeStore: Writable<string> = writable('black');
 export const rawModeStore: Writable<boolean> = writable(false);
