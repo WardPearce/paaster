@@ -1,3 +1,4 @@
+import { stringToObjectId } from '$lib/server/objectId';
 import { revokeSession } from '$lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
@@ -11,7 +12,7 @@ export async function GET({ locals }) {
 	const sessions = await locals.mongoDb
 		.collection('sessions')
 		.find(
-			{ userId: new ObjectId(locals.userId) },
+			{ userId: stringToObjectId(locals.userId) },
 			{ projection: { sessionId: 1, created: 1, lastUsed: 1, expiresAt: 1 } }
 		)
 		.sort({ lastUsed: -1 })
