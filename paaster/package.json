@@ -18,7 +18,7 @@
 		"@eslint/js": "^10.0.1",
 		"@sveltejs/adapter-auto": "^7.0.1",
 		"@sveltejs/kit": "^2.69.2",
-		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@types/culori": "^4.0.1",
 		"@types/node": "^26.0.1",
 		"autoprefixer": "^10.5.2",
