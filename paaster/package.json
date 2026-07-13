@@ -52,7 +52,7 @@
 		"comlink": "^4.4.2",
 		"culori": "^4.0.2",
 		"dayjs": "^1.11.19",
-		"dexie": "^4.4.2",
+		"dexie": "^4.4.4",
 		"flyonui": "^2.4.1",
 		"i18next": "^25.8.18",
 		"libsodium-wrappers-sumo": "^0.8.4",
