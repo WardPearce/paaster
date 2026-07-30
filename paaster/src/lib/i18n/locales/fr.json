@@ -1,91 +1,141 @@
 {
-	"saved_pastes": "Notes enregistrées",
-	"empty_paste": "Le collage ne contient aucun caractère",
-	"paste_size_too_large": "La taille de la pâte dépasse la taille maximale",
+	"saved_pastes": "Notes enregistrés",
+	"empty_paste": "La note ne contient aucun caractère",
+	"drop_file": "Déposez un fichier à téléverser",
+	"paste_size_too_large": "La taille de la note dépasse la taille maximale",
+	"themes": "Thèmes",
+	"defaultPasteExpiry": "Expiration par défaut des notes",
 	"account": {
-		"login": "Se connecter",
+		"login": "Connexion",
 		"logout": "Déconnexion",
 		"create": "Créer un compte",
 		"username": "Nom d'utilisateur",
 		"password": "Mot de passe",
-		"already_have_account": "Connectez-vous à l'existant",
+		"already_have_account": "Se connecter à un compte existant",
 		"create_new_account": "Créer un nouveau compte",
-		"remember": "Souviens-toi de moi"
+		"remember": "Se souvenir de moi",
+		"settings": "Paramètres",
+		"passwordReset": "Réinitialisation du mot de passe",
+		"newPassword": "Nouveau mot de passe",
+		"currentPassword": "Mot de passe actuel",
+		"changePassword": "Changer le mot de passe",
+		"deleteAccount": "Supprimer le compte",
+		"deleteConfirm": "Tapez \"{{content}}\" pour supprimer le compte",
+		"deleteConfirmContent": "Confirmer la suppression du compte",
+		"twoFactorCode": "Code d'authentification",
+		"verifying_captcha": "Vérification du captcha...",
+		"captcha_verified": "Captcha vérifié",
+		"captcha_failed": "Échec de la vérification du captcha",
+		"retry": "Réessayer",
+		"confirm": "Confirmer",
+		"cancel": "Annuler",
+		"twoFactor": {
+			"title": "Authentification à deux facteurs",
+			"description": "Scannez le code QR avec votre application d'authentification.",
+			"secret": "Secret",
+			"enable": "Activer la 2FA",
+			"disable": "Désactiver la 2FA",
+			"copy": "Copier le secret",
+			"copied": "Copié !",
+			"notConfigured": "La 2FA n'est pas configurée",
+			"enabled": "La 2FA est activée",
+			"verify": "Vérifier",
+			"enterCode": "Entrez le code à 6 chiffres de votre application d'authentification pour vérifier la configuration",
+			"invalidCode": "Code invalide, veuillez réessayer",
+			"cancelSetup": "Annuler",
+			"enterPasswordEnable": "Entrez votre mot de passe actuel pour activer l'authentification à deux facteurs",
+			"enterPasswordDisable": "Entrez votre mot de passe actuel pour désactiver l'authentification à deux facteurs"
+		}
 	},
+	"password_weak": "Faible",
+	"password_fair": "Correct",
+	"password_good": "Bon",
+	"password_strong": "Fort",
 	"shortcuts": "Raccourcis",
 	"paste_owner": "Panneau du propriétaire",
-	"upload_failed": "Le téléchargement du collage a échoué",
+	"upload_failed": "Échec du téléversement de la note",
 	"create": {
-		"input": "collez ou glissez & déposez votre code ici",
+		"input": "collez ou glissez-déposez votre code ici",
 		"errors": {
-			"private_window": "Impossible d'enregistrer l'historique des notes, probablement parce qu'il s'agit d'une fenêtre privée."
+			"private_window": "Impossible d'enregistrer l'historique des notes, probablement en raison de l'utilisation d'une navigation privée."
 		}
 	},
 	"view": {
 		"404": "La note n'existe plus",
-		"no_key": "Clé secrète de la note manquante",
+		"no_key": "Clé secrète de la note non fournie",
 		"invalid_format": "Format de clé secrète invalide",
-		"cdn_down": "Impossible de télécharger la note à partir du CDN, réessayez plus tard"
+		"cdn_down": "Impossible de télécharger la note depuis le CDN, réessayez plus tard"
 	},
-	"search": "Rechercher...",
+	"search": "Rechercher des notes...",
 	"paste_actions": {
 		"delete": {
 			"loading": "Suppression de la note",
 			"error": "Note introuvable sur le serveur",
-			"success": "Note supprimée du serveur",
-			"button": "supprimer"
+			"success": "Note supprimé du serveur",
+			"button": "Supprimer"
 		},
 		"rename": {
 			"button": "Renommer",
-			"success": "Nom mis à jour",
-			"model": {
-				"header": "renommer note"
-			}
+			"success": "Nom mis à jour"
 		},
 		"share": {
-			"success": "Lien de partage copié",
-			"button": "partager"
+			"success": "Lien copié dans le presse-papiers",
+			"button": "Partager le lien"
 		},
 		"access_code": {
-			"button": "définir le code d'accès",
-			"access_code_len": "Le code d'accès doit comporter {max_length} caractères ou plus",
-			"loading": "Réglage du code d'accès",
+			"button": "Code d'accès",
+			"access_code_len": "Le code d'accès doit contenir au moins {max_length} caractères",
+			"loading": "Définition du code d'accès",
 			"success": "Code d'accès défini",
 			"error": "Impossible de définir le code d'accès",
-			"success_copied_to_clipboard": "Code d'accès copié dans le presse-papiers",
-			"model": {
-				"header": "définir le code d'accès de la note",
-				"input": "Entrez le code d'accès",
-				"tooltip": "Générer un code",
-				"button": "Définir le code d'accès"
-			}
+			"success_copied_to_clipboard": "Code d'accès copié dans le presse-papiers"
 		},
 		"qr_code": {
-			"button": "générer un code QR",
+			"button": "Générer un code QR",
 			"model": {
-				"header": "scannez pour accéder à la note"
+				"header": "Scanner pour accéder à la note"
 			}
 		},
 		"clipboard": {
-			"success": "Note copiée",
-			"button": "copier"
+			"success": "Note copié",
+			"button": "Copier le code dans le presse-papiers"
 		},
 		"save": {
-			"success": "Note sauvegardée",
-			"button": "sauvegarder"
+			"success": "Note enregistré",
+			"button": "enregistrer"
 		},
 		"download": {
-			"button": "télécharger"
+			"button": "Télécharger"
 		},
+		"open": "Ouvrir",
+		"wrap_words": "Retour à la ligne",
+		"render_markdown": "Afficher le markdown",
+		"show_raw_text": "Afficher le texte brut",
+		"show_code": "Afficher le code",
+		"raw_mode": "Mode brut",
+		"exit_raw_mode": "Quitter le mode brut",
 		"lang_updated": "Langue mise à jour",
+		"language": "Langue",
+		"passphrase": {
+			"button": "Définir une phrase secrète",
+			"loading": "Définition de la phrase secrète",
+			"success": "Phrase secrète définie",
+			"generate": "Générer une phrase secrète",
+			"copy": "Copier la phrase secrète",
+			"copied": "Phrase secrète copiée dans le presse-papiers",
+			"description": "Une phrase secrète est requise pour consulter cette note. Partagez-la avec toute personne à qui vous souhaitez accorder l'accès.",
+			"model": {
+				"header": "Phrase secrète de la note"
+			}
+		},
 		"expire": {
 			"loading": "Mise à jour de l'expiration",
-			"error": "Impossible de mettre à jour l'expiration",
-			"success": "Note mise à jour pour expirer dans {période}",
+			"error": "Impossible de définir l'expiration",
+			"success": "La note expirera dans {period}",
 			"button": "Expire après",
 			"periods": {
-				"never": "jamais",
-				"being_viewed": "être vue",
+				"never": "Jamais",
+				"being_viewed": "En cours de consultation",
 				"minute": "minute",
 				"minutes": "minutes",
 				"hour": "heure",
@@ -104,11 +154,33 @@
 		"header": "code d'accès requis",
 		"button": "valider"
 	},
-	"no_saved_pastes": "pas de notes enregistrées",
+	"require_passphrase_model": {
+		"input": "Entrez la phrase secrète",
+		"header": "phrase secrète requise",
+		"description": "Cette note est protégé par une phrase secrète. Entrez-la ci-dessous pour continuer.",
+		"button": "valider",
+		"invalid": "Phrase secrète invalide",
+		"not_found": "Note introuvable"
+	},
+	"no_saved_pastes": "Aucun note enregistré",
+	"saved_pastes_end": "fin de la liste",
+	"saved_pastes_error": "échec du chargement des Notes",
+	"saved_pastes_retry": "réessayer",
+	"sessions": {
+		"title": "Sessions",
+		"current": "Session actuelle",
+		"lastUsed": "Dernière utilisation {{date}}",
+		"created": "Créée {{date}}",
+		"expires": "Expire {{date}}",
+		"revoke": "Révoquer",
+		"revoking": "Révocation...",
+		"revoked": "Session révoquée",
+		"noOtherSessions": "Aucune autre session active"
+	},
 	"shared_with": "Partagé avec vous",
 	"about": {
 		"title": "comment nous protégeons votre vie privée.",
-		"content": "Paaster utilise un chiffrement de bout en bout pour stocker et partager les notes, ce qui signifie que même le serveur ne peut pas voir ce que vous enregistrez ici.",
-		"source_code": "Notre code est entièrement open source et peut être consulté sur {github}"
+		"content": "Paaster utilise le chiffrement de bout en bout pour stocker et partager les notes, ce qui signifie que même le serveur ne peut pas voir ce que vous enregistrez ici.",
+		"source_code": "Notre code source est entièrement open source et peut être consulté sur {github}"
 	}
 }
