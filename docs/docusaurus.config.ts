@@ -63,6 +63,11 @@ const config: Config = {
           label: 'Deployment',
         },
         {
+          href: 'https://paaster.io',
+          label: 'paaster.io',
+          position: 'right',
+        },
+        {
           href: 'https://github.com/WardPearce/paaster',
           label: 'GitHub',
           position: 'right',
