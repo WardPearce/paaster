@@ -20,8 +20,15 @@ const sidebars: SidebarsConfig = {
       items: ['api/paste', 'api/account'],
     },
     'configuration',
-    'deployment',
     'development',
+  ],
+  deploymentSidebar: [
+    {
+      type: 'category',
+      label: 'Deployment',
+      items: ['deployment/mongodb', 'deployment/s3', 'deployment/filesystem'],
+    },
+    'configuration',
   ],
 };
 

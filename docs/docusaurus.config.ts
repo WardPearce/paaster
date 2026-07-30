@@ -57,6 +57,12 @@ const config: Config = {
           label: 'Docs',
         },
         {
+          type: 'docSidebar',
+          sidebarId: 'deploymentSidebar',
+          position: 'left',
+          label: 'Deployment',
+        },
+        {
           href: 'https://github.com/WardPearce/paaster',
           label: 'GitHub',
           position: 'right',
@@ -72,7 +78,7 @@ const config: Config = {
             {label: 'Introduction', to: '/docs/intro'},
             {label: 'Architecture', to: '/docs/architecture'},
             {label: 'Configuration', to: '/docs/configuration'},
-            {label: 'Deployment', to: '/docs/deployment'},
+            {label: 'Deployment', to: '/docs/deployment/mongodb'},
           ],
         },
         {
