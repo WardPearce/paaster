@@ -89,6 +89,7 @@
 		const createPasteJson = await createPasteResp.json();
 
 		const pasteId = createPasteJson.pasteId;
+		const accessKey = createPasteJson.accessKey;
 		const maxUploadSize = createPasteJson.maxUploadSize;
 
 		if (rawCode.length > maxUploadSize) {
@@ -124,7 +125,7 @@
 			chunkForm.append('totalChunks', totalChunks.toString());
 			chunkForm.append('data', new File([new Uint8Array(encryptedChunk)], `chunk_${i / CHUNK_SIZE}`, { type: 'application/octet-stream' }));
 
-			const chunkResp = await fetch(`/api/paste/${pasteId}/chunks`, { method: 'POST', body: chunkForm });
+			const chunkResp = await fetch(`/api/paste/${pasteId}/chunks`, { method: 'POST', headers: { 'Authorization': `Bearer ${accessKey}` }, body: chunkForm });
 			if (!chunkResp.ok) {
 				pasteUploading = false;
 				try {

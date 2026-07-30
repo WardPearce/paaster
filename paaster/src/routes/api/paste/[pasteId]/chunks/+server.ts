@@ -1,4 +1,5 @@
 import { CHUNK_SIZE } from '$lib/consts';
+import { validateAuth } from '$lib/server/auth';
 import { stringToObjectId } from '$lib/server/objectId';
 import { getMaxUploadBytes } from '$lib/server/storage';
 import { error, json } from '@sveltejs/kit';
@@ -20,6 +21,8 @@ export async function POST({ locals, params, request }) {
 	if (!paste) {
 		throw error(404, 'Paste not found');
 	}
+
+	await validateAuth(request.headers.get('Authorization'), paste.accessKey);
 
 	const formData = Object.fromEntries(await request.formData());
 	const parsed = chunkSchema.safeParse(formData);

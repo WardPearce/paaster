@@ -1,18 +1,8 @@
+import { validateAuth } from '$lib/server/auth';
 import { stringToObjectId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { z } from 'zod';
-
-async function validateAuth(bearer: string | null, hash: string) {
-	if (!bearer) {
-		throw error(401, 'Authorization invalid');
-	}
-	const withoutPrefixAuthorization = bearer.replace('Bearer ', '').replace('bearer ', '');
-
-	if (!(await argon2.verify(hash, withoutPrefixAuthorization))) {
-		throw error(401, 'Authorization invalid');
-	}
-}
 
 export async function DELETE({ locals, request, params }) {
 	const pasteId = stringToObjectId(params.pasteId);
