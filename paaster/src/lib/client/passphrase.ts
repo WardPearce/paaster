@@ -8,13 +8,20 @@ async function loadWords(): Promise<string[]> {
 	return words;
 }
 
+function unbiasedRandom(max: number): number {
+	const random = new Uint32Array(1);
+	const limit = 0x100000000 - (0x100000000 % max);
+	while (true) {
+		crypto.getRandomValues(random);
+		if (random[0] < limit) return random[0] % max;
+	}
+}
+
 export async function generatePassphrase(): Promise<string> {
 	const wordList = await loadWords();
 	const selected: string[] = [];
-	const random = new Uint32Array(1);
 	for (let i = 0; i < 6; i++) {
-		crypto.getRandomValues(random);
-		selected.push(wordList[random[0] % wordList.length]);
+		selected.push(wordList[unbiasedRandom(wordList.length)]);
 	}
 	return selected.join('-');
 }

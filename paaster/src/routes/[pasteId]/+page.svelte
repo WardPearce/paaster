@@ -341,13 +341,11 @@
 
 		await loadSupportedLangs();
 
-		const codeResponse = await fetch(data.signedUrl!);
-		if (!codeResponse.ok) {
-			handleError(get(_)('view.cdn_down'));
+		const totalChunks = data.totalChunks;
+		if (!totalChunks) {
+			handleError(get(_)('view.invalid_format'));
 			return;
 		}
-
-		const encryptedCode = new Uint8Array(await codeResponse.arrayBuffer());
 
 		const fileKey = deriveExistingKeyFromMaster(
 			sodium.crypto_secretstream_xchacha20poly1305_KEYBYTES,
@@ -360,16 +358,15 @@
 			fileKey.rawKey
 		);
 
-		let chunkStart = 0;
-		while (chunkStart < encryptedCode.byteLength) {
-			// Extract the chunk length from the first 4 bytes (the prefix)
-			const chunkLength = new DataView(encryptedCode.buffer, chunkStart, 4).getUint32(0, true);
-			const chunkEnd = chunkStart + 4 + chunkLength;
+		for (let i = 0; i < totalChunks; i++) {
+			const resp = await fetch(`${data.chunksUrlBase}/${i}`);
+			if (!resp.ok) {
+				handleError(get(_)('view.cdn_down'));
+				return;
+			}
 
-			// The actual encrypted chunk (excluding the prefix)
-			const chunk = encryptedCode.slice(chunkStart + 4, chunkEnd);
-
-			const decryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_pull(state, chunk, null);
+			const encrypted = new Uint8Array(await resp.arrayBuffer());
+			const decryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_pull(state, encrypted, null);
 
 			if (decryptedChunk) {
 				rawPaste += new TextDecoder().decode(decryptedChunk.message);
@@ -377,8 +374,6 @@
 				handleError(get(_)('view.invalid_format'));
 				return;
 			}
-
-			chunkStart = chunkEnd; // Move to the next chunk
 		}
 
 		if (data.language) {

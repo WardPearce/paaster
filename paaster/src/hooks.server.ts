@@ -1,10 +1,11 @@
 import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import { S3Client } from '@aws-sdk/client-s3';
 import { Db, MongoClient } from 'mongodb';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import sodium from 'libsodium-wrappers-sumo';
 import { getSession, getSessionIdFromCookie } from '$lib/server/session';
+import { createStorageBackend } from '$lib/server/storage';
+import type { StorageBackend } from '$lib/server/storage/types';
 
 const mongoClient = new MongoClient(env.MONGO_URL ?? 'mongodb://localhost:27017');
 let mongoDb: Db | undefined;
@@ -16,15 +17,7 @@ sodium.ready.then(() => {
 	captchaSignature = sodium.to_base64(sodium.randombytes_buf(32));
 });
 
-const s3Client = new S3Client({
-	region: env.S3_REGION as string,
-	endpoint: env.S3_ENDPOINT as string,
-	credentials: {
-		accessKeyId: env.S3_ACCESS_KEY_ID as string,
-		secretAccessKey: env.S3_SECRET_ACCESS_KEY as string
-	},
-	forcePathStyle: (env.s3_FORCE_PATH_STYLE ?? 'false') === 'true'
-});
+let storageBackend: StorageBackend | undefined;
 
 const limiter = new RateLimiter({
 	IP: [30, 'm']
@@ -51,8 +44,6 @@ function getLimiter(pathname: string): RateLimiter {
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
-	event.locals.s3Client = s3Client;
-
 	if (!mongoDb) {
 		await mongoClient.connect();
 		mongoDb = mongoClient.db(env.MONGO_DB ?? 'paasterv3');
@@ -68,8 +59,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 			.collection('sessions')
 			.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })
 			.catch(() => {});
+		mongoDb
+			.collection('pasteChunks')
+			.createIndex({ pasteId: 1, chunkIndex: 1 })
+			.catch(() => {});
 	}
 
+	if (!storageBackend) {
+		storageBackend = createStorageBackend(mongoDb);
+	}
+
+	event.locals.storageBackend = storageBackend;
 	event.locals.captchaKey = captchaKey;
 	event.locals.captchaSignature = captchaSignature;
 

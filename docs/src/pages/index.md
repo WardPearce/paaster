@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.png" width="300px" />
+  <img src="https://raw.githubusercontent.com/WardPearce/paaster/main/assets/logo.png" width="300px" />
   <h1>Paaster.io</h1>
   <blockquote>
     Paaster is a secure and user-friendly pastebin application that prioritizes privacy and simplicity. With end-to-end encryption and paste history, Paaster ensures that your pasted code remains confidential and accessible.
@@ -7,19 +7,13 @@
 
   <a href="https://paaster.io/terms-of-service">Terms of service</a> · <a href="https://paaster.io/privacy-policy">Privacy policy</a>
 
-  <br><br>
+  <br /><br />
 
-  <a href="https://fink.inlang.com/github.com/WardPearce/paaster"><img src="https://img.shields.io/badge/Help_translate-0a0a0a?style=for-the-badge" alt="Translate"></a>
-  <a href="https://github.com/WardPearce/paaster/releases"><img src="https://img.shields.io/github/v/release/WardPearce/paaster?style=for-the-badge&label=Release&color=0a0a0a" alt="Release"></a>
-  <a href="https://matrix.to/#/#ward:matrix.org"><img src="https://img.shields.io/badge/Chat-0a0a0a?style=for-the-badge&logo=matrix" alt="Matrix"></a>
-  <a href="https://hub.docker.com/r/wardpearce/paaster"><img src="https://img.shields.io/docker/pulls/wardpearce/paaster?style=for-the-badge&label=Docker&color=0a0a0a" alt="Docker"></a>
+  <a href="https://fink.inlang.com/github.com/WardPearce/paaster"><img src="https://img.shields.io/badge/Help_translate-0a0a0a?style=for-the-badge" alt="Translate" /></a>
+  <a href="https://github.com/WardPearce/paaster/releases"><img src="https://img.shields.io/github/v/release/WardPearce/paaster?style=for-the-badge&label=Release&color=0a0a0a" alt="Release" /></a>
+  <a href="https://matrix.to/#/#ward:matrix.org"><img src="https://img.shields.io/badge/Chat-0a0a0a?style=for-the-badge&logo=matrix" alt="Matrix" /></a>
+  <a href="https://hub.docker.com/r/wardpearce/paaster"><img src="https://img.shields.io/docker/pulls/wardpearce/paaster?style=for-the-badge&label=Docker&color=0a0a0a" alt="Docker" /></a>
 </div>
-
----
-
-# Preview
-
-![Preview of paaster](./previews/image.png)
 
 ---
 
@@ -38,12 +32,6 @@
 - Automatic or manual language detection
 - No dynamically loaded 3rd party dependencies — malicious code must be present at build time
 - Use of `package-lock.json` & [Socket.dev](https://socket.dev/) to fight supply chain attacks
-
----
-
-# Documentation
-
-See the [documentation site](https://docs.paaster.io) for deployment, configuration, API reference, and architecture details.
 
 ---
 

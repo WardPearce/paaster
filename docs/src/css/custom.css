@@ -1,0 +1,67 @@
+:root {
+  --ifm-color-primary: #605dff;
+  --ifm-color-primary-dark: #4a47e6;
+  --ifm-color-primary-darker: #3c3dfc;
+  --ifm-color-primary-darkest: #2a28cc;
+  --ifm-color-primary-light: #7a78ff;
+  --ifm-color-primary-lighter: #8f8dff;
+  --ifm-color-primary-lightest: #b0afff;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #605dff;
+  --ifm-color-primary-dark: #4a47e6;
+  --ifm-color-primary-darker: #3c3dfc;
+  --ifm-color-primary-darkest: #2a28cc;
+  --ifm-color-primary-light: #7a78ff;
+  --ifm-color-primary-lighter: #8f8dff;
+  --ifm-color-primary-lightest: #b0afff;
+  --ifm-background-color: #09090b;
+  --ifm-background-surface-color: #1d1d20;
+  --ifm-navbar-background-color: #1d1d20;
+  --ifm-footer-background-color: #09090b;
+  --ifm-toc-border-color: #1d1d20;
+  --ifm-font-color-base: #f2f2f2;
+  --ifm-font-color-secondary: #a0a0a0;
+  --ifm-heading-color: #f2f2f2;
+  --ifm-link-color: #605dff;
+  --ifm-link-hover-color: #7a78ff;
+  --ifm-table-border-color: #1d1d20;
+  --ifm-table-stripe-background: rgba(255, 255, 255, 0.02);
+  --ifm-hr-background-color: #1d1d20;
+  --ifm-alert-background-color: #1d1d20;
+  --ifm-card-background-color: #1d1d20;
+  --ifm-dropdown-background-color: #1d1d20;
+  --ifm-dropdown-hover-background-color: #09090b;
+  --ifm-menu-color: #a0a0a0;
+  --ifm-menu-color-active: #f2f2f2;
+  --ifm-menu-color-background-hover: rgba(255, 255, 255, 0.05);
+  --ifm-menu-color-background-active: rgba(96, 93, 255, 0.1);
+  --ifm-breadcrumb-color-active: #605dff;
+  --ifm-breadcrumb-separator-color: #a0a0a0;
+  --ifm-code-background: #282a36;
+  --ifm-pre-background: #282a36;
+  --ifm-pagination-color-active: #f2f2f2;
+  --ifm-pagination-nav-background: #1d1d20;
+  --ifm-scrollbar-track-background-color: #09090b;
+  --ifm-scrollbar-thumb-background-color: #1d1d20;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .navbar {
+  border-bottom: 2px solid #09090b;
+}
+
+[data-theme='dark'] .footer {
+  border-top: 2px solid #1d1d20;
+}
+
+[data-theme='dark'] table {
+  border: 2px solid #1d1d20;
+}
+
+[data-theme='dark'] th {
+  background-color: #09090b;
+}
