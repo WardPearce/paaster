@@ -197,6 +197,11 @@
 						target="_blank"
 						href="https://matrix.to/#/#ward:matrix.org">Matrix</a
 					>
+					<a
+						class="link link-hover text-base-content/70 hover:text-base-content text-sm"
+						target="_blank"
+						href="https://docs.paaster.io">Docs</a
+					>
 				</nav>
 			</div>
 		</footer>
