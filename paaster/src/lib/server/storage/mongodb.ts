@@ -26,7 +26,7 @@ export class MongoDBStorageBackend implements StorageBackend {
 	async getChunk(pasteId: string, chunkIndex: number): Promise<Uint8Array | null> {
 		const doc = await this.db.collection('pasteChunks').findOne({ pasteId, chunkIndex });
 		if (!doc) return null;
-		return (doc.data as unknown as Uint8Array) ?? null;
+		return new Uint8Array((doc.data as Binary).buffer);
 	}
 
 	async deletePaste(pasteId: string): Promise<void> {
