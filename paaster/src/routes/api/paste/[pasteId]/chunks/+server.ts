@@ -1,3 +1,4 @@
+import { CHUNK_SIZE } from '$lib/consts';
 import { stringToObjectId } from '$lib/server/objectId';
 import { getMaxUploadBytes } from '$lib/server/storage';
 import { error, json } from '@sveltejs/kit';
@@ -28,11 +29,27 @@ export async function POST({ locals, params, request }) {
 	}
 
 	const { chunkIndex, totalChunks, data: file } = parsed.data;
-	const maxBytes = getMaxUploadBytes();
 
 	const buf = await file.arrayBuffer();
-	if (buf.byteLength > maxBytes) {
-		throw error(413, 'Chunk exceeds maximum upload size');
+	if (buf.byteLength > CHUNK_SIZE) {
+		throw error(413, 'Chunk exceeds maximum chunk size');
+	}
+
+	const maxBytes = getMaxUploadBytes();
+	const result = await locals.mongoDb.collection('pastes').findOneAndUpdate(
+		{
+			_id: objectId,
+			$or: [
+				{ totalBytes: { $exists: false } },
+				{ totalBytes: { $lte: maxBytes - buf.byteLength } }
+			]
+		},
+		{ $inc: { totalBytes: buf.byteLength } },
+		{ returnDocument: 'after' }
+	);
+
+	if (!result) {
+		throw error(413, 'Total upload size exceeded');
 	}
 
 	await locals.storageBackend.saveChunk(pasteId, chunkIndex, new Uint8Array(buf), totalChunks);
