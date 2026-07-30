@@ -6,7 +6,7 @@
 	"themes": "Thèmes",
 	"defaultPasteExpiry": "Expiration par défaut des notes",
 	"account": {
-		"login": "Connexion",
+		"login": "Se connecter",
 		"logout": "Déconnexion",
 		"create": "Créer un compte",
 		"username": "Nom d'utilisateur",
