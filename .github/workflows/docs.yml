@@ -1,5 +1,8 @@
 name: Build and Release Docs
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:

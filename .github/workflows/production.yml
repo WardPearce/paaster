@@ -1,5 +1,8 @@
 name: Build and Release Website
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
