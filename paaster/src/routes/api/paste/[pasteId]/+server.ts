@@ -1,6 +1,4 @@
-import { env } from '$env/dynamic/private';
 import { stringToObjectId } from '$lib/server/objectId';
-import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { z } from 'zod';
@@ -35,12 +33,7 @@ export async function DELETE({ locals, request, params }) {
 			'paste.id': params.pasteId
 		});
 	}
-	await locals.s3Client.send(
-		new DeleteObjectCommand({
-			Bucket: env.S3_BUCKET,
-			Key: `${paste._id}.bin`
-		})
-	);
+	await locals.storageBackend.deletePaste(paste._id.toString());
 
 	return json({});
 }
@@ -66,7 +59,7 @@ const updatePasteSchema = z.object({
 	passphrase: z.string().trim().max(255).optional()
 });
 
-export async function POST({ locals, request, params, cookies, url }) {
+export async function POST({ locals, request, params, cookies }) {
 	const pasteId = stringToObjectId(params.pasteId);
 
 	const paste = await locals.mongoDb.collection('pastes').findOne({

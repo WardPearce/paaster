@@ -1,8 +1,6 @@
-import { env } from '$env/dynamic/private';
-import { MAX_UPLOAD_SIZE } from '$lib/consts.js';
 import { stringToObjectId } from '$lib/server/objectId';
 import { getUserPastes } from '$lib/server/pastes';
-import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
+import { getMaxUploadBytes } from '$lib/server/storage';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import sodium from 'libsodium-wrappers-sumo';
@@ -66,16 +64,9 @@ export async function POST({ locals, request }) {
 		wrapWords: false
 	});
 
-	const signedUrl = await createPresignedPost(locals.s3Client, {
-		Bucket: env.S3_BUCKET ?? '',
-		Key: `${createdPaste.insertedId}.bin`,
-		Conditions: [['content-length-range', 0, MAX_UPLOAD_SIZE]],
-		Expires: 600
-	});
-
 	return json({
 		pasteId: createdPaste.insertedId.toString(),
 		accessKey: accessKey,
-		signedUrl: signedUrl
+		maxUploadSize: getMaxUploadBytes()
 	});
 }

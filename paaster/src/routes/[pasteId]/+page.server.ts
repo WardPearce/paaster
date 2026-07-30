@@ -1,11 +1,8 @@
-import { env } from '$env/dynamic/private';
 import { stringToObjectId } from '$lib/server/objectId';
-import { DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { error } from '@sveltejs/kit';
 import argon2 from 'argon2';
 
-export async function load({ params, locals, url, cookies }) {
+export async function load({ params, locals, cookies }) {
 	const pasteId = stringToObjectId(params.pasteId);
 
 	const paste = await locals.mongoDb.collection('pastes').findOne({
@@ -41,18 +38,12 @@ export async function load({ params, locals, url, cookies }) {
 				expireAfter: null,
 				created: null,
 				wrapWords: null,
-				signedUrl: null,
+				chunksUrlBase: null,
+				totalChunks: null,
 				account: null
 			};
 		}
 	}
-
-	const s3Location = {
-		Bucket: env.S3_BUCKET,
-		Key: `${paste._id}.bin`
-	};
-
-	let deletePaste = false;
 
 	if (paste.expireAfter !== -2) {
 		if (paste.expireAfter === -1) {
@@ -63,36 +54,32 @@ export async function load({ params, locals, url, cookies }) {
 					{ $set: { deleteNextRequest: true } }
 				);
 			if (!claimed) {
-				deletePaste = true;
+				await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
+				await locals.storageBackend.deletePaste(paste._id.toString());
+				if (locals.userId) {
+					await locals.mongoDb.collection('userPastes').deleteOne({
+						userId: locals.userId,
+						'paste.id': params.pasteId
+					});
+				}
+				throw error(404, 'Unable to find paste');
 			}
 		} else {
 			const now = new Date();
-
 			const expireTime = paste.created.getTime() + paste.expireAfter * 60 * 60 * 1000;
-
 			if (now > expireTime) {
-				deletePaste = true;
+				await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
+				await locals.storageBackend.deletePaste(paste._id.toString());
+				if (locals.userId) {
+					await locals.mongoDb.collection('userPastes').deleteOne({
+						userId: locals.userId,
+						'paste.id': params.pasteId
+					});
+				}
+				throw error(404, 'Unable to find paste');
 			}
 		}
 	}
-
-	if (deletePaste) {
-		await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
-		if (locals.userId) {
-			await locals.mongoDb.collection('userPastes').deleteOne({
-				userId: locals.userId,
-				'paste.id': params.pasteId
-			});
-		}
-		await locals.s3Client.send(new DeleteObjectCommand(s3Location));
-		throw error(404, 'Unable to find paste');
-	}
-
-	const command = new GetObjectCommand(s3Location);
-
-	const signedUrl = await getSignedUrl(locals.s3Client, command, {
-		expiresIn: 600
-	});
 
 	let account;
 	if (locals.userId) {
@@ -119,7 +106,8 @@ export async function load({ params, locals, url, cookies }) {
 		expireAfter: paste.expireAfter,
 		created: paste.created,
 		wrapWords: paste.wrapWords,
-		signedUrl: signedUrl,
+		chunksUrlBase: `/api/paste/${paste._id.toString()}/chunks`,
+		totalChunks: paste.totalChunks ?? null,
 		account: account,
 		hasPassphrase: !!paste.passphrase
 	};

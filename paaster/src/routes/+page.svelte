@@ -4,7 +4,7 @@
 	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
 	import { getToast } from '$lib/client/toasts';
 	import Loading from '$lib/components/Loading.svelte';
-	import { CHUNK_SIZE, MAX_UPLOAD_SIZE } from '$lib/consts';
+	import { CHUNK_SIZE } from '$lib/consts';
 	import sodium from 'libsodium-wrappers-sumo';
 	import Dropzone from 'svelte-file-dropzone';
 	import { _ } from '$lib/i18n';
@@ -47,11 +47,6 @@
 			return;
 		}
 
-		if (rawCode.length > MAX_UPLOAD_SIZE) {
-			getToast().error(get(_)('paste_size_too_large'));
-			return;
-		}
-
 		pasteUploading = true;
 		await sodium.ready;
 
@@ -65,34 +60,6 @@
 		const { state, header } = sodium.crypto_secretstream_xchacha20poly1305_init_push(
 			pasteKey.rawKey
 		);
-
-		let encryptedBuffer = [];
-		let rawProcessedLength = 0;
-
-		for (let i = 0; i < rawCode.length; i += CHUNK_SIZE) {
-			let rawNonEncodedChunk = rawCode.substring(i, i + CHUNK_SIZE);
-
-			rawProcessedLength += rawNonEncodedChunk.length;
-
-			let rawChunk = new TextEncoder().encode(rawNonEncodedChunk);
-
-			const tag =
-				rawProcessedLength >= rawCode.length
-					? sodium.crypto_secretstream_xchacha20poly1305_TAG_FINAL
-					: sodium.crypto_secretstream_xchacha20poly1305_TAG_MESSAGE;
-
-			const encryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_push(
-				state,
-				rawChunk,
-				null,
-				tag
-			);
-
-			const chunkLength = new Uint8Array(4);
-			new DataView(chunkLength.buffer).setUint32(0, encryptedChunk.byteLength, true);
-
-			encryptedBuffer.push(new Uint8Array([...chunkLength, ...encryptedChunk]));
-		}
 
 		const formData = new FormData();
 		formData.append('codeHeader', sodium.to_base64(header));
@@ -121,25 +88,52 @@
 		}
 		const createPasteJson = await createPasteResp.json();
 
-		const s3Payload = new FormData();
-		for (const [key, value] of Object.entries(createPasteJson.signedUrl.fields)) {
-			s3Payload.append(key, value as string);
+		const pasteId = createPasteJson.pasteId;
+		const maxUploadSize = createPasteJson.maxUploadSize;
+
+		if (rawCode.length > maxUploadSize) {
+			pasteUploading = false;
+			getToast().error(get(_)('paste_size_too_large'));
+			return;
 		}
 
-		const blob = new Blob(encryptedBuffer, { type: 'application/octet-stream' });
-		s3Payload.append('file', blob);
+		let rawProcessedLength = 0;
+		const totalChunks = Math.ceil(rawCode.length / CHUNK_SIZE);
 
-		const s3Response = await fetch(createPasteJson.signedUrl.url, {
-			method: 'POST',
-			body: s3Payload
-		});
-		if (!s3Response.ok) {
-			try {
-				getToast().error(await s3Response.json());
-			} catch {
-				getToast().error(get(_)('upload_failed'));
+		for (let i = 0; i < rawCode.length; i += CHUNK_SIZE) {
+			let rawNonEncodedChunk = rawCode.substring(i, i + CHUNK_SIZE);
+
+			rawProcessedLength += rawNonEncodedChunk.length;
+
+			let rawChunk = new TextEncoder().encode(rawNonEncodedChunk);
+
+			const tag =
+				rawProcessedLength >= rawCode.length
+					? sodium.crypto_secretstream_xchacha20poly1305_TAG_FINAL
+					: sodium.crypto_secretstream_xchacha20poly1305_TAG_MESSAGE;
+
+			const encryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_push(
+				state,
+				rawChunk,
+				null,
+				tag
+			);
+
+			const chunkForm = new FormData();
+			chunkForm.append('chunkIndex', (i / CHUNK_SIZE).toString());
+			chunkForm.append('totalChunks', totalChunks.toString());
+			chunkForm.append('data', new File([new Uint8Array(encryptedChunk)], `chunk_${i / CHUNK_SIZE}`, { type: 'application/octet-stream' }));
+
+			const chunkResp = await fetch(`/api/paste/${pasteId}/chunks`, { method: 'POST', body: chunkForm });
+			if (!chunkResp.ok) {
+				pasteUploading = false;
+				try {
+					getToast().error(await chunkResp.json());
+				} catch {
+					getToast().error(get(_)('upload_failed'));
+				}
+				return;
 			}
-			return;
 		}
 
 		const rawMasterKeyB64 = sodium.to_base64(rawMasterKey);
