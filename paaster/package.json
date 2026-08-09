@@ -56,7 +56,7 @@
 		"i18next": "^25.8.18",
 		"libsodium-wrappers-sumo": "^0.8.4",
 		"lucide-svelte": "^1.0.1",
-		"mongodb": "^7.1.0",
+		"mongodb": "^7.5.0",
 		"mousetrap": "^1.6.5",
 		"notyf": "^3.10.0",
 		"otplib": "^13.4.1",
