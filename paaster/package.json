@@ -41,7 +41,7 @@
 		"@humanspeak/svelte-markdown": "^1.4.5",
 		"@svelte-put/qr": "^2.1.3",
 		"@sveltejs/adapter-node": "^5.5.7",
-		"@tailwindcss/vite": "^4.3.0",
+		"@tailwindcss/vite": "^4.3.3",
 		"@types/libsodium-wrappers-sumo": "^0.7.8",
 		"@types/mousetrap": "^1.6.15",
 		"@zxcvbn-ts/core": "^4.1.2",
