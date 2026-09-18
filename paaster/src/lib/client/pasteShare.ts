@@ -1,4 +1,7 @@
 import sodium from 'libsodium-wrappers-sumo';
+import dayjs from 'dayjs';
+import { get } from 'svelte/store';
+import { _ } from '$lib/i18n';
 import { localDb } from './dexie';
 import { solveCaptchaChallenge } from './captcha';
 
@@ -145,13 +148,16 @@ export async function openPasteShareData(
 }
 
 export async function applySharedPaste(pasteId: string, masterKey: string, created?: Date) {
+	const shortDate = dayjs().format('MMM D, YYYY');
+	const name = get(_)('quickShare.sharedOn', { date: shortDate });
+
 	await localDb.pastes
 		.put({
 			id: pasteId,
 			masterKey: masterKey,
 			accessKey: undefined,
 			created: created ?? new Date(),
-			name: 'Unknown'
+			name
 		})
 		.catch(() => {
 			// Ignore storage failures, the link still works.

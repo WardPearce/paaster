@@ -138,6 +138,7 @@
 		"sent": "Paste sent.",
 		"expiresIn": "Expires in {{seconds}} seconds",
 		"done": "Done",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"sharedOn": "Shared on {{date}}"
 	}
 }
