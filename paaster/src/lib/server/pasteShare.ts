@@ -22,11 +22,18 @@ export function normalizePasteShareCode(code: string): string {
 		.replace(/O/g, '0');
 }
 
+function unbiasedIndex(max: number): number {
+	const limit = 256 - (256 % max);
+	while (true) {
+		const byte = crypto.randomBytes(1)[0];
+		if (byte < limit) return byte % max;
+	}
+}
+
 export function generatePasteShareCode(): string {
-	const bytes = crypto.randomBytes(pasteShareCodeLength);
 	let code = '';
 	for (let i = 0; i < pasteShareCodeLength; i++) {
-		code += pasteShareCodeAlphabet[bytes[i] % pasteShareCodeAlphabet.length];
+		code += pasteShareCodeAlphabet[unbiasedIndex(pasteShareCodeAlphabet.length)];
 	}
 	return code;
 }
