@@ -115,12 +115,6 @@ export async function setPasteShareData(
 	return true;
 }
 
-export async function getPasteShareData(mongoDb: Db, code: string): Promise<string | null> {
-	const session = await getPasteShareSession(mongoDb, code);
-	if (!session) return null;
-	return session.cipher ?? null;
-}
-
 export async function deletePasteShareSession(mongoDb: Db, code: string): Promise<void> {
 	await mongoDb.collection('pasteShare').deleteOne({ codeHash: hashPasteShareCode(code) });
 }
