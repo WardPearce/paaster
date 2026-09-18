@@ -10,10 +10,13 @@
 	import { _ } from '$lib/i18n';
 	import { get } from 'svelte/store';
 	import { resolve } from '$app/paths';
+	import KeyboardIcon from 'lucide-svelte/icons/keyboard';
+	import PasteShareReceiver from '$lib/components/PasteShareReceiver.svelte';
 
 	let codeTextArea: HTMLTextAreaElement | undefined = $state();
 	let pasteUploading = $state(false);
 	let isDragging = $state(false);
+	let showReceivePaste = $state(false);
 
 	async function onFileDropped(event: { detail: { acceptedFiles: File[] } }) {
 		if (!event.detail.acceptedFiles) {
@@ -123,9 +126,18 @@
 			const chunkForm = new FormData();
 			chunkForm.append('chunkIndex', (i / CHUNK_SIZE).toString());
 			chunkForm.append('totalChunks', totalChunks.toString());
-			chunkForm.append('data', new File([new Uint8Array(encryptedChunk)], `chunk_${i / CHUNK_SIZE}`, { type: 'application/octet-stream' }));
+			chunkForm.append(
+				'data',
+				new File([new Uint8Array(encryptedChunk)], `chunk_${i / CHUNK_SIZE}`, {
+					type: 'application/octet-stream'
+				})
+			);
 
-			const chunkResp = await fetch(`/api/paste/${pasteId}/chunks`, { method: 'POST', headers: { 'Authorization': `Bearer ${accessKey}` }, body: chunkForm });
+			const chunkResp = await fetch(`/api/paste/${pasteId}/chunks`, {
+				method: 'POST',
+				headers: { Authorization: `Bearer ${accessKey}` },
+				body: chunkForm
+			});
 			if (!chunkResp.ok) {
 				pasteUploading = false;
 				try {
@@ -155,6 +167,33 @@
 	<Loading />
 {:else}
 	<div class="flex flex-col p-4 sm:p-6">
+		{#if showReceivePaste}
+			<div class="border-base-content/10 bg-base-content/5 mb-4 rounded-xl border p-4">
+				<div class="mb-2 flex items-center justify-between">
+					<h2 class="text-base-content text-sm font-semibold">
+						{$_('quickShare.receiveTitle')}
+					</h2>
+					<button
+						type="button"
+						class="btn btn-soft btn-xs"
+						onclick={() => (showReceivePaste = false)}
+					>
+						✕
+					</button>
+				</div>
+				<p class="text-base-content/70 mb-4 text-sm">{$_('quickShare.receiveSubtitle')}</p>
+				<PasteShareReceiver />
+			</div>
+		{:else}
+			<button
+				type="button"
+				class="text-base-content/60 hover:text-base-content hover:border-base-content/30 border-base-content/10 mb-4 inline-flex items-center gap-2 self-start rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors"
+				onclick={() => (showReceivePaste = true)}
+			>
+				<KeyboardIcon size={14} />
+				{$_('quickShare.receive')}
+			</button>
+		{/if}
 		<Dropzone
 			on:drop={onFileDropped}
 			on:dragenter={onDragEnter}
@@ -170,8 +209,7 @@
 				class="textarea placeholder:text-base-content/25 focus:border-primary h-[90vh] resize-none rounded-xl border-2 bg-transparent p-6 font-mono text-base leading-relaxed transition-colors focus:outline-none {isDragging
 					? 'border-primary bg-primary/5 border-dashed'
 					: 'border-base-content/10'}"
-				placeholder={$_('create.input')}
-			></textarea>
+				placeholder={$_('create.input')}></textarea>
 		</Dropzone>
 	</div>
 {/if}

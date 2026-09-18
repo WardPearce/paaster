@@ -15,16 +15,10 @@
 	import { _ } from '$lib/i18n';
 	import { ZxcvbnFactory } from '@zxcvbn-ts/core';
 	import { adjacencyGraphs, dictionary } from '@zxcvbn-ts/language-common';
-	import { solveChallenge } from 'altcha-lib';
-	import { deriveKey } from 'altcha-lib/algorithms/web/pbkdf2';
+	import { solveCaptchaChallenge, type CaptchaPayload } from '$lib/client/captcha';
 	import { resolve } from '$app/paths';
 
 	const zxcvbn = new ZxcvbnFactory({ dictionary, graphs: adjacencyGraphs });
-
-	type CaptchaPayload = {
-		solution: { counter: number; derivedKey: string; time?: number };
-		challenge: Record<string, unknown>;
-	};
 
 	let loginMode = $state(true);
 	let rememberMe = $state(true);
@@ -49,25 +43,11 @@
 	let pendingUsername: string | undefined = $state();
 	let pendingMasterPassword: Uint8Array | undefined = $state();
 
-	async function solveCaptchaChallenge() {
+	async function refreshCaptcha() {
 		captchaState = 'solving';
 
-		try {
-			const resp = await fetch('/api/captcha');
-			const challenge = await resp.json();
-
-			const solution = await solveChallenge({ challenge, deriveKey });
-
-			if (!solution) {
-				captchaState = 'error';
-				return;
-			}
-
-			captchaPayload = { solution, challenge };
-			captchaState = 'solved';
-		} catch {
-			captchaState = 'error';
-		}
+		captchaPayload = await solveCaptchaChallenge();
+		captchaState = captchaPayload ? 'solved' : 'error';
 	}
 
 	onMount(() => {
@@ -77,7 +57,7 @@
 		const workerApi: Remote<DerivePasswordApi> = comlink.wrap(worker);
 		derivePassword = workerApi.derivePassword;
 
-		solveCaptchaChallenge();
+		void refreshCaptcha();
 	});
 
 	onDestroy(() => {
@@ -176,7 +156,7 @@
 		errorMsg = await fetchError(resp);
 		isLoading = false;
 		captchaPayload = null;
-		solveCaptchaChallenge();
+		void refreshCaptcha();
 	}
 
 	async function logIntoAccount(
@@ -221,7 +201,7 @@
 		}
 
 		captchaPayload = null;
-		solveCaptchaChallenge();
+		void refreshCaptcha();
 		if (twoFactorTokenArg) {
 			twoFactorToken = '';
 		}
@@ -245,7 +225,7 @@
 			errorMsg = await fetchError(saltResp);
 			isLoading = false;
 			captchaPayload = null;
-			solveCaptchaChallenge();
+			void refreshCaptcha();
 			return;
 		}
 
@@ -424,7 +404,11 @@
 							stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
 						>
 						<span>{$_('account.captcha_failed', 'Captcha verification failed')}</span>
-						<button type="button" class="btn btn-ghost btn-xs" onclick={solveCaptchaChallenge}>
+						<button
+							type="button"
+							class="btn btn-ghost btn-xs"
+							onclick={() => void refreshCaptcha()}
+						>
 							{$_('account.retry', 'Retry')}
 						</button>
 					</div>

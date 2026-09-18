@@ -147,6 +147,12 @@
 				"month": "mois",
 				"months": "mois"
 			}
+		},
+		"send_to_device": {
+			"button": "Send to device",
+			"model": {
+				"header": "Send to device"
+			}
 		}
 	},
 	"require_access_code_model": {
@@ -182,5 +188,28 @@
 		"title": "comment nous protégeons votre vie privée.",
 		"content": "Paaster utilise le chiffrement de bout en bout pour stocker et partager les notes, ce qui signifie que même le serveur ne peut pas voir ce que vous enregistrez ici.",
 		"source_code": "Notre code source est entièrement open source et peut être consulté sur {github}"
+	},
+	"quickShare": {
+		"receive": "Have a code? Receive a paste",
+		"receiveTitle": "Receive a paste",
+		"receiveSubtitle": "Enter the 8-character code shown on the device sharing the paste.",
+		"codeLocation": "Find the code by opening a paste and choosing Send to device.",
+		"connecting": "Connecting…",
+		"waiting": "Waiting for the other device to send the paste…",
+		"success": "Paste received!",
+		"invalidCode": "That code isn't valid. Check it and try again.",
+		"captchaFailed": "Captcha verification failed",
+		"alreadyUsed": "That code has already been used.",
+		"expired": "That code has expired. Ask for a new one.",
+		"generate": "Show code",
+		"generateFailed": "Couldn't create a code. Try again.",
+		"waitingForDevice": "Waiting for a device to enter this code…",
+		"deviceConnected": "A device connected. Send the paste?",
+		"send": "Send paste",
+		"sendFailed": "Couldn't send the paste. Try again.",
+		"sent": "Paste sent.",
+		"expiresIn": "Expires in {{seconds}} seconds",
+		"done": "Done",
+		"cancel": "Cancel"
 	}
 }

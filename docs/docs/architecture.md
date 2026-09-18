@@ -32,6 +32,7 @@ All paste metadata lives in MongoDB, regardless of the content storage backend:
 | `sessions` | Authentication sessions |
 | `userPastes` | User-to-paste bookmarks |
 | `captcha` | Used CAPTCHA challenge signatures |
+| `pasteShare` | Ephemeral quick-connect sessions (hashed code, receiver public key, sealed cipher) |
 
 ### Content storage (pluggable)
 
