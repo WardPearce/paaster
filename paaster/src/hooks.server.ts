@@ -28,7 +28,7 @@ const strictLimiter = new RateLimiter({
 });
 
 const pasteSharePollLimiter = new RateLimiter({
-	IP: [120, 'm']
+	IP: [420, 'm']
 });
 
 const sensitivePathPatterns = [
