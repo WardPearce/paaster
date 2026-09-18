@@ -65,6 +65,6 @@
 		"svelte-select": "^5.8.3",
 		"sveltekit-rate-limiter": "^0.8.0",
 		"tailwindcss": "^4.3.3",
-		"zod": "^4.3.6"
+		"zod": "^4.6.5"
 	}
 }
