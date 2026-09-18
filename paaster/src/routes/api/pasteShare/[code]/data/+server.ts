@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { getPasteShareData, setPasteShareData } from '$lib/server/pasteShare';
+import { getPasteShareSession, setPasteShareData } from '$lib/server/pasteShare';
 import { z } from 'zod';
 
 const zCipher = z.object({
@@ -7,10 +7,10 @@ const zCipher = z.object({
 });
 
 export async function GET({ locals, params }) {
-	const cipher = await getPasteShareData(locals.mongoDb, params.code);
-	if (!cipher) throw error(404);
+	const session = await getPasteShareSession(locals.mongoDb, params.code);
+	if (!session) throw error(404);
 
-	return json({ cipher });
+	return json({ cipher: session.cipher });
 }
 
 export async function POST({ request, locals, params }) {

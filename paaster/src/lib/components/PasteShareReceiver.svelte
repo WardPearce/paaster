@@ -23,6 +23,8 @@
 
 	let pollTimer: ReturnType<typeof setInterval> | undefined;
 	let errorResetTimer: ReturnType<typeof setTimeout> | undefined;
+	let pollGeneration = 0;
+	let pollInFlight = false;
 
 	async function submit(enteredCode: string) {
 		if (phase !== 'entering') return;
@@ -56,23 +58,45 @@
 	}
 
 	async function poll() {
-		if (!keypair) return;
+		if (!keypair || pollInFlight) return;
 
-		const cipher = await fetchPasteShareData(code);
-		if (cipher) {
-			const payload = await openPasteShareData(cipher, keypair.publicKey, keypair.privateKey);
-			if (payload) {
+		const generation = pollGeneration;
+		pollInFlight = true;
+		try {
+			const result = await fetchPasteShareData(code);
+			if (generation !== pollGeneration) return;
+
+			if (result.status === 'not-found') {
 				stopPolling();
-				phase = 'success';
-				await applySharedPaste(payload.pasteId, payload.masterKey);
-				goto(resolve(`/[pasteId]#${payload.masterKey}`, { pasteId: payload.pasteId }));
+				phase = 'entering';
+				code = '';
+				keypair = null;
+				deadline = 0;
+				errorMessage = '';
 				return;
 			}
-		}
 
-		if (Date.now() > deadline) {
-			stopPolling();
-			showError(get(_)('quickShare.expired'));
+			if (result.status === 'ok') {
+				const payload = await openPasteShareData(
+					result.cipher,
+					keypair.publicKey,
+					keypair.privateKey
+				);
+				if (payload) {
+					stopPolling();
+					phase = 'success';
+					await applySharedPaste(payload.pasteId, payload.masterKey);
+					goto(resolve(`/[pasteId]#${payload.masterKey}`, { pasteId: payload.pasteId }));
+					return;
+				}
+			}
+
+			if (Date.now() > deadline) {
+				stopPolling();
+				showError(get(_)('quickShare.expired'));
+			}
+		} finally {
+			pollInFlight = false;
 		}
 	}
 
@@ -83,6 +107,7 @@
 	}
 
 	function stopPolling() {
+		pollGeneration++;
 		if (pollTimer) {
 			clearInterval(pollTimer);
 			pollTimer = undefined;

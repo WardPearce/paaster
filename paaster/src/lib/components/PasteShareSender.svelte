@@ -18,16 +18,17 @@
 		pasteId,
 		masterKey,
 		initialSession = null,
-		active = true
+		active = true,
+		oncancel
 	}: {
 		pasteId: string;
 		masterKey: string;
 		initialSession?: { code: string; expires: string } | null;
 		active?: boolean;
+		oncancel?: () => void;
 	} = $props();
 
-	let phase = $state<'idle' | 'showing' | 'awaiting-send' | 'sent' | 'error'>('idle');
-	let errorMessage = $state('');
+	let phase = $state<'idle' | 'showing' | 'awaiting-send' | 'sent'>('idle');
 
 	let code = $state('');
 	let expiresAt = $state(0);
@@ -36,6 +37,8 @@
 
 	let pollTimer: ReturnType<typeof setInterval> | undefined;
 	let clockTimer: ReturnType<typeof setInterval> | undefined;
+	let pollGeneration = 0;
+	let pollInFlight = false;
 
 	const remainingSeconds = $derived(Math.max(0, Math.ceil((expiresAt - now) / 1000)));
 
@@ -43,7 +46,6 @@
 		code = codeValue;
 		expiresAt = expiryValue.getTime();
 		receiverPublicKey = null;
-		errorMessage = '';
 		phase = 'showing';
 	}
 
@@ -58,6 +60,7 @@
 		if (!active) {
 			stopPolling();
 			stopClock();
+			if (code) void cancelPasteShareSession(code);
 			return;
 		}
 
@@ -70,8 +73,8 @@
 	async function generate() {
 		const session = await createPasteShareSession();
 		if (!session) {
-			errorMessage = get(_)('quickShare.generateFailed');
-			phase = 'error';
+			getToast().error(get(_)('quickShare.generateFailed'));
+			oncancel?.();
 			return;
 		}
 
@@ -79,32 +82,38 @@
 	}
 
 	async function poll() {
-		if (!code) return;
+		if (!code || pollInFlight) return;
 
-		if (Date.now() > expiresAt) {
-			await cancel();
-			errorMessage = get(_)('quickShare.expired');
-			phase = 'error';
-			return;
-		}
+		const generation = pollGeneration;
+		pollInFlight = true;
+		try {
+			if (Date.now() > expiresAt) {
+				await cancel();
+				getToast().error(get(_)('quickShare.expired'));
+				return;
+			}
 
-		const status = await getPasteShareStatus(code);
-		if (!status) {
-			await cancel();
-			errorMessage = get(_)('quickShare.expired');
-			phase = 'error';
-			return;
-		}
+			const status = await getPasteShareStatus(code);
+			if (generation !== pollGeneration) return;
 
-		if (status.status === 'completed') {
-			stopPolling();
-			phase = 'sent';
-			return;
-		}
+			if (!status) {
+				await cancel();
+				getToast().error(get(_)('quickShare.expired'));
+				return;
+			}
 
-		if (status.receiverPublicKey) {
-			receiverPublicKey = status.receiverPublicKey;
-			phase = 'awaiting-send';
+			if (status.status === 'completed') {
+				stopPolling();
+				phase = 'sent';
+				return;
+			}
+
+			if (status.receiverPublicKey) {
+				receiverPublicKey = status.receiverPublicKey;
+				phase = 'awaiting-send';
+			}
+		} finally {
+			pollInFlight = false;
 		}
 	}
 
@@ -118,8 +127,8 @@
 
 		const success = await sendPasteShareData(code, receiverPublicKey, payload);
 		if (!success) {
-			errorMessage = get(_)('quickShare.sendFailed');
-			phase = 'error';
+			await cancel();
+			getToast().error(get(_)('quickShare.sendFailed'));
 			return;
 		}
 
@@ -136,6 +145,7 @@
 		code = '';
 		receiverPublicKey = null;
 		phase = 'idle';
+		oncancel?.();
 	}
 
 	function startPolling() {
@@ -145,6 +155,7 @@
 	}
 
 	function stopPolling() {
+		pollGeneration++;
 		if (pollTimer) {
 			clearInterval(pollTimer);
 			pollTimer = undefined;
@@ -172,15 +183,12 @@
 	});
 </script>
 
-{#if phase === 'idle' || phase === 'error'}
+{#if phase === 'idle'}
 	<div class="flex flex-col gap-4">
 		<button class="btn btn-primary btn-sm w-full" onclick={generate}>
 			<SmartphoneIcon size={16} />
 			{$_('quickShare.generate')}
 		</button>
-		{#if phase === 'error'}
-			<p class="text-error text-sm">{errorMessage}</p>
-		{/if}
 	</div>
 {:else}
 	<div class="flex flex-col gap-4">

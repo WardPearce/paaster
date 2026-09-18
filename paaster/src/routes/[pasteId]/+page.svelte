@@ -103,6 +103,11 @@
 	let senderSession = $state<{ code: string; expires: string } | null>(null);
 	let sendPasteOpen = $state(false);
 
+	function closeSendPaste() {
+		sendPasteOverlay.close();
+		sendPasteOpen = false;
+	}
+
 	async function openSendPaste() {
 		const session = await createPasteShareSession();
 		if (!session) {
@@ -601,6 +606,7 @@
 						masterKey={senderMasterKey}
 						initialSession={senderSession}
 						active={sendPasteOpen}
+						oncancel={closeSendPaste}
 					/>
 				{/if}
 			</div>

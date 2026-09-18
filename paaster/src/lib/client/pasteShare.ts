@@ -111,14 +111,23 @@ export async function registerPasteShareReceiver(code: string): Promise<PasteSha
 	};
 }
 
-export async function fetchPasteShareData(code: string): Promise<string | null> {
+export type PasteShareDataResult =
+	| { status: 'ok'; cipher: string }
+	| { status: 'awaiting' }
+	| { status: 'not-found' }
+	| { status: 'error' };
+
+export async function fetchPasteShareData(code: string): Promise<PasteShareDataResult> {
 	const resp = await fetch(
 		`/api/pasteShare/${encodeURIComponent(normalizePasteShareCode(code))}/data`
 	);
-	if (!resp.ok) return null;
+	if (resp.status === 404) return { status: 'not-found' };
+	if (!resp.ok) return { status: 'error' };
 
 	const data = await resp.json().catch(() => null);
-	return data?.cipher ?? null;
+	if (!data?.cipher) return { status: 'awaiting' };
+
+	return { status: 'ok', cipher: data.cipher };
 }
 
 export async function openPasteShareData(
