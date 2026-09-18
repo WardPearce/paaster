@@ -30,8 +30,11 @@
 	import { generatePassphrase } from '$lib/client/passphrase';
 	import KeyIcon from 'lucide-svelte/icons/key';
 	import CopyIcon from 'lucide-svelte/icons/copy';
+	import SendIcon from 'lucide-svelte/icons/send';
 	import { HSOverlay } from 'flyonui/flyonui.js';
 	import { resolve } from '$app/paths';
+	import PasteShareSender from '$lib/components/PasteShareSender.svelte';
+	import { createPasteShareSession } from '$lib/client/pasteShare';
 
 	let { data } = $props();
 
@@ -53,6 +56,7 @@
 	let qrCodeOverlay: HSOverlay;
 	let shortcutsOverlay: HSOverlay;
 	let passphraseOverlay: HSOverlay;
+	let sendPasteOverlay: HSOverlay;
 
 	let generatedPassphrase = $state('');
 	let passphraseCopied = $state(false);
@@ -92,6 +96,23 @@
 	function handleError(error: string) {
 		getToast().error(error);
 		goto(resolve('/'));
+	}
+
+	let senderMasterKey = $derived((localStored?.masterKey ?? '') as string);
+
+	let senderSession = $state<{ code: string; expires: string } | null>(null);
+	let sendPasteOpen = $state(false);
+
+	async function openSendPaste() {
+		const session = await createPasteShareSession();
+		if (!session) {
+			getToast().error(get(_)('quickShare.generateFailed'));
+			return;
+		}
+
+		senderSession = session;
+		sendPasteOpen = true;
+		sendPasteOverlay.open();
 	}
 
 	async function deletePaste() {
@@ -366,7 +387,11 @@
 			}
 
 			const encrypted = new Uint8Array(await resp.arrayBuffer());
-			const decryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_pull(state, encrypted, null);
+			const decryptedChunk = sodium.crypto_secretstream_xchacha20poly1305_pull(
+				state,
+				encrypted,
+				null
+			);
 
 			if (decryptedChunk) {
 				rawPaste += new TextDecoder().decode(decryptedChunk.message);
@@ -439,6 +464,10 @@
 		qrCodeOverlay = new HSOverlay(document.querySelector('#qr-code') as HTMLElement);
 		shortcutsOverlay = new HSOverlay(document.querySelector('#shortcuts') as HTMLElement);
 		passphraseOverlay = new HSOverlay(document.querySelector('#passphrase') as HTMLElement);
+		sendPasteOverlay = new HSOverlay(document.querySelector('#send-paste') as HTMLElement);
+		sendPasteOverlay.el.addEventListener('close.overlay', () => {
+			sendPasteOpen = false;
+		});
 	});
 </script>
 
@@ -546,6 +575,34 @@
 						? $_('paste_actions.passphrase.copied')
 						: $_('paste_actions.passphrase.copy')}
 				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	id="send-paste"
+	class="overlay modal overlay-open:opacity-100 modal-middle hidden"
+	role="dialog"
+	tabindex="-1"
+>
+	<div class="modal-dialog overlay-open:opacity-100 sm:max-w-md">
+		<div class="modal-content border-base-content/20 border">
+			<div class="modal-header">
+				<h1 class="modal-title">{$_('paste_actions.send_to_device.model.header')}</h1>
+				<button type="button" class="btn btn-text btn-sm" onclick={() => sendPasteOverlay.close()}>
+					✕
+				</button>
+			</div>
+			<div class="modal-body flex flex-col gap-4 p-6">
+				{#if senderMasterKey}
+					<PasteShareSender
+						pasteId={page.params.pasteId as string}
+						masterKey={senderMasterKey}
+						initialSession={senderSession}
+						active={sendPasteOpen}
+					/>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -716,6 +773,15 @@
 							/><line x1="12" y1="15" x2="12" y2="3" /></svg
 						>
 						<span class="hidden sm:inline">{$_('paste_actions.download.button')}</span>
+					</button>
+					<button
+						type="button"
+						class="btn btn-soft btn-sm"
+						onclick={() => void openSendPaste()}
+						title={$_('paste_actions.send_to_device.button')}
+					>
+						<SendIcon size={16} />
+						<span class="hidden sm:inline">{$_('paste_actions.send_to_device.button')}</span>
 					</button>
 					{#if isMarkdown && !$rawModeStore}
 						<button

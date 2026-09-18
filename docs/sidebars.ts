@@ -12,7 +12,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Upload & Encryption',
-      items: ['chunked-uploads', 'client-side-encryption'],
+      items: ['chunked-uploads', 'client-side-encryption', 'quick-connect'],
     },
     {
       type: 'category',

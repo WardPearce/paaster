@@ -27,6 +27,10 @@ const strictLimiter = new RateLimiter({
 	IP: [10, 'm']
 });
 
+const pasteSharePollLimiter = new RateLimiter({
+	IP: [420, 'm']
+});
+
 const sensitivePathPatterns = [
 	/^\/api\/account\/create$/,
 	/^\/api\/account\/delete$/,
@@ -36,9 +40,17 @@ const sensitivePathPatterns = [
 	/^\/api\/account\/[^/]+\/public$/
 ];
 
-function getLimiter(pathname: string): RateLimiter {
+const pasteSharePollPathPatterns = [
+	/^\/api\/pasteShare\/[A-Z0-9]{8}$/,
+	/^\/api\/pasteShare\/[A-Z0-9]{8}\/data$/
+];
+
+function getLimiter(pathname: string, method: string): RateLimiter {
 	if (sensitivePathPatterns.some((p) => p.test(pathname))) {
 		return strictLimiter;
+	}
+	if (method === 'GET' && pasteSharePollPathPatterns.some((p) => p.test(pathname))) {
+		return pasteSharePollLimiter;
 	}
 	return limiter;
 }
@@ -63,6 +75,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			.collection('pasteChunks')
 			.createIndex({ pasteId: 1, chunkIndex: 1 })
 			.catch(() => {});
+		mongoDb
+			.collection('pasteShare')
+			.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })
+			.catch(() => {});
 	}
 
 	if (!storageBackend) {
@@ -85,7 +101,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (event.url.pathname.startsWith('/api/')) {
-		const limiter = getLimiter(event.url.pathname);
+		const limiter = getLimiter(event.url.pathname, event.request.method);
 		if (await limiter.isLimited(event)) {
 			return new Response(JSON.stringify({ message: 'Too Many Requests' }), {
 				status: 429,

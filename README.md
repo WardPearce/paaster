@@ -33,6 +33,7 @@
 - Themes
 - Delete after view or X amount of time
 - Share via QR code
+- [Send to device](#what-is-send-to-device)
 - [CLI Tool](https://github.com/WardPearce/paaster-cli)
 - i18n support ([Contribute](https://fink.inlang.com/github.com/WardPearce/paaster))
 - Automatic or manual language detection
@@ -70,6 +71,16 @@ Paaster uses URI fragments to transport secrets. According to the [Mozilla Found
 ### How are server secrets stored?
 
 Server secrets are stored in IndexedDB when the paste is created, allowing for modification or deletion of pastes later on.
+
+---
+
+# Send to device
+
+## What is "Send to device"?
+
+Send to device securely transfers the paste you're viewing to another of your devices — for example, from your phone to your desktop — without manually copying the link.
+
+When you click **Send to device**, Paaster generates a short-lived code that's valid for 5 minutes. Enter that code on your other device, solve the captcha, and the paste is transferred directly. The transfer is protected with end-to-end encryption (`crypto_box_seal`), so the server never sees the paste's contents or secret key.
 
 ---
 
