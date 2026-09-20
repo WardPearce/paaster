@@ -17,7 +17,7 @@ export async function GET({ locals, params }) {
 			serverSide: {
 				salt: sodium.to_base64(fakeServerSideSalt)
 			},
-			twoFactor: Math.random() < 0.5
+			twoFactor: true
 		});
 	}
 
