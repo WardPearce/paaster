@@ -23,5 +23,7 @@ jobs:
         run: npm install
       - name: Check linting
         run: npm run check
+      - name: Run tests
+        run: npm run test
       - name: Attempt to build codebase
         run: npm run build
