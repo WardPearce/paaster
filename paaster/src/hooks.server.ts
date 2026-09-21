@@ -1,10 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { Db, MongoClient } from 'mongodb';
-import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import sodium from 'libsodium-wrappers-sumo';
 import { getSession, getSessionIdFromCookie } from '$lib/server/session';
 import { createStorageBackend } from '$lib/server/storage';
+import { getLimiter } from '$lib/server/rateLimit';
 import type { StorageBackend } from '$lib/server/storage/types';
 
 const mongoClient = new MongoClient(env.MONGO_URL ?? 'mongodb://localhost:27017');
@@ -18,42 +18,6 @@ sodium.ready.then(() => {
 });
 
 let storageBackend: StorageBackend | undefined;
-
-const limiter = new RateLimiter({
-	IP: [30, 'm']
-});
-
-const strictLimiter = new RateLimiter({
-	IP: [10, 'm']
-});
-
-const pasteSharePollLimiter = new RateLimiter({
-	IP: [120, 'm']
-});
-
-const sensitivePathPatterns = [
-	/^\/api\/account\/create$/,
-	/^\/api\/account\/delete$/,
-	/^\/api\/account\/passwordReset$/,
-	/^\/api\/account\/2fa\/verify$/,
-	/^\/api\/account\/[^/]+\/login$/,
-	/^\/api\/account\/[^/]+\/public$/
-];
-
-const pasteSharePollPathPatterns = [
-	/^\/api\/pasteShare\/[A-Z0-9]{8}$/,
-	/^\/api\/pasteShare\/[A-Z0-9]{8}\/data$/
-];
-
-function getLimiter(pathname: string, method: string): RateLimiter {
-	if (sensitivePathPatterns.some((p) => p.test(pathname))) {
-		return strictLimiter;
-	}
-	if (method === 'GET' && pasteSharePollPathPatterns.some((p) => p.test(pathname))) {
-		return pasteSharePollLimiter;
-	}
-	return limiter;
-}
 
 export const handle: Handle = async ({ event, resolve }) => {
 	if (!mongoDb) {

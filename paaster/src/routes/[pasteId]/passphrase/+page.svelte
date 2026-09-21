@@ -6,9 +6,24 @@
 	import KeyIcon from 'lucide-svelte/icons/key';
 	import ArrowRightIcon from 'lucide-svelte/icons/arrow-right';
 	import { resolve } from '$app/paths';
+	import { onMount } from 'svelte';
+	import { solveCaptchaChallenge, type CaptchaPayload } from '$lib/client/captcha';
 
 	let passphrase = $state('');
 	let formError = $state('');
+
+	let captchaPayload = $state<CaptchaPayload | null>(null);
+	let captchaState = $state<'idle' | 'solving' | 'solved' | 'error'>('idle');
+
+	async function refreshCaptcha() {
+		captchaState = 'solving';
+		captchaPayload = await solveCaptchaChallenge();
+		captchaState = captchaPayload ? 'solved' : 'error';
+	}
+
+	onMount(() => {
+		void refreshCaptcha();
+	});
 
 	function onSuccess() {
 		const hash = window.location.hash;
@@ -36,9 +51,11 @@
 				return async ({ result }) => {
 					if (result.type === 'success') {
 						onSuccess();
-					} else if (result.type === 'failure') {
-						const data = result.data as { error?: string };
-						formError = data?.error ?? '';
+					} else {
+						const data =
+							result.type === 'failure' ? (result.data as { error?: string }) : undefined;
+						formError = data?.error ?? $_('require_passphrase_model.invalid');
+						void refreshCaptcha();
 					}
 				};
 			}}
@@ -54,11 +71,42 @@
 					autofocus
 				/>
 
+				{#if captchaPayload}
+					<input type="hidden" name="captchaPayload" value={JSON.stringify(captchaPayload)} />
+				{/if}
+
+				{#if captchaState === 'solving'}
+					<div
+						class="bg-primary/20 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+					>
+						<span class="loading loading-spinner loading-xs"></span>
+						{$_('account.verifying_captcha', 'Verifying captcha...')}
+					</div>
+				{:else if captchaState === 'solved'}
+					<div
+						class="bg-primary/5 text-success flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+					>
+						{$_('account.captcha_verified', 'Captcha verified')}
+					</div>
+				{:else if captchaState === 'error'}
+					<div
+						class="bg-primary/5 text-error flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+					>
+						<button
+							type="button"
+							class="btn btn-ghost btn-xs"
+							onclick={() => void refreshCaptcha()}
+						>
+							{$_('account.retry', 'Retry')}
+						</button>
+					</div>
+				{/if}
+
 				{#if formError}
 					<p class="text-error text-xs">{formError}</p>
 				{/if}
 
-				<button type="submit" class="btn btn-primary btn-sm h-10 w-full">
+				<button type="submit" class="btn btn-primary btn-sm h-10 w-full" disabled={!captchaPayload}>
 					<ArrowRightIcon size={16} />
 					{$_('require_passphrase_model.button')}
 				</button>

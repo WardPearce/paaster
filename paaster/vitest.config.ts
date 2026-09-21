@@ -12,6 +12,11 @@ export default defineConfig({
 			'$env/static/private': resolve(root, 'src/test/utils/env-static.ts')
 		}
 	},
+	ssr: {
+		resolve: {
+			conditions: ['node', 'development', 'import', 'svelte']
+		}
+	},
 	test: {
 		environment: 'node',
 		include: ['src/test/**/*.test.ts'],

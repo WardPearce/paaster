@@ -1,8 +1,10 @@
 import { error } from '@sveltejs/kit';
 import type { PasteDoc } from '$lib/server/pastes';
 import argon2 from 'argon2';
+import { passphraseLimiter } from '$lib/server/rateLimit';
 
-export async function load({ params, locals, cookies }) {
+export async function load(event) {
+	const { params, locals, cookies } = event;
 	const pasteId = params.pasteId;
 
 	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
@@ -23,6 +25,9 @@ export async function load({ params, locals, cookies }) {
 		const passphraseCookie = cookies.get('passphrase_' + params.pasteId);
 
 		if (passphraseCookie) {
+			if (await passphraseLimiter.isLimited(event)) {
+				throw error(429, 'Too many attempts. Try again later.');
+			}
 			if (!(await argon2.verify(paste.passphrase, passphraseCookie))) {
 				cookies.delete('passphrase_' + params.pasteId, { path: '/' });
 				throw error(401, 'Invalid passphrase');
