@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ObjectId } from 'mongodb';
-import { stringToObjectId } from '$lib/server/objectId';
+import { nanoid } from 'nanoid';
+import { parsePasteId, stringToObjectId } from '$lib/server/objectId';
 import {
 	generatePasteShareCode,
 	getPasteShareSession,
@@ -28,6 +29,18 @@ describe('stringToObjectId', () => {
 			Promise.resolve().then(() => stringToObjectId('not-an-id')),
 			400
 		);
+	});
+});
+
+describe('parsePasteId', () => {
+	it('returns an ObjectId for a legacy ObjectId hex string', () => {
+		const id = new ObjectId();
+		expect(parsePasteId(id.toHexString())).toBeInstanceOf(ObjectId);
+	});
+
+	it('returns the string for a nanoid paste id', () => {
+		const id = nanoid();
+		expect(parsePasteId(id)).toBe(id);
 	});
 });
 
@@ -91,9 +104,7 @@ describe('getUserPastes', () => {
 	it('honours a custom limit and reports hasMore', async () => {
 		const userId = new ObjectId().toHexString();
 		const start = Date.now();
-		const pastes = await Promise.all(
-			Array.from({ length: 5 }, () => insertPaste(getDb(), {}))
-		);
+		const pastes = await Promise.all(Array.from({ length: 5 }, () => insertPaste(getDb(), {})));
 		await Promise.all(
 			pastes.map((paste, i) =>
 				insertUserPaste(getDb(), {
@@ -109,5 +120,24 @@ describe('getUserPastes', () => {
 		expect(result.pastes).toHaveLength(3);
 		expect(result.hasMore).toBe(true);
 		expect(result.pastes[0].paste.id).toBe(pastes[4]._id);
+	});
+
+	it('resolves pastes with legacy ObjectId ids', async () => {
+		const userId = new ObjectId().toHexString();
+		const legacyId = new ObjectId();
+		const name = { value: 'bmFtZQ==', nonce: 'bm9uY2U=', keySalt: 'a2V5c2FsdA==' };
+
+		await getDb().collection('pastes').insertOne({
+			_id: legacyId,
+			name,
+			created: new Date()
+		});
+		await insertUserPaste(getDb(), { userId, pasteId: legacyId.toHexString() });
+
+		const result = await getUserPastes(getDb(), userId, 0, 10);
+
+		expect(result.pastes).toHaveLength(1);
+		expect(result.pastes[0].paste.id).toBe(legacyId.toHexString());
+		expect(result.pastes[0].name).toEqual(name);
 	});
 });

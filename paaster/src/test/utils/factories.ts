@@ -69,7 +69,7 @@ export async function insertUser(
 export async function insertPaste(
 	db: Db,
 	overrides: Record<string, unknown> = {}
-): Promise<PasteDoc> {
+): Promise<Omit<PasteDoc, '_id'> & { _id: string }> {
 	const doc = {
 		_id: nanoid(),
 		header: 'aGVhZGVy',
@@ -85,7 +85,7 @@ export async function insertPaste(
 	};
 
 	const result = await db.collection<PasteDoc>('pastes').insertOne(doc);
-	return { ...doc, _id: result.insertedId };
+	return { ...doc, _id: result.insertedId.toString() };
 }
 
 export async function insertUserPaste(

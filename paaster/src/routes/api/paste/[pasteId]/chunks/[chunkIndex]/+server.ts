@@ -1,10 +1,11 @@
 import { error } from '@sveltejs/kit';
 import type { PasteDoc } from '$lib/server/pastes';
+import { parsePasteId } from '$lib/server/objectId';
 
 export async function GET({ locals, params }) {
-	const pasteId = params.pasteId;
-
-	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({ _id: pasteId });
+	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
+		_id: parsePasteId(params.pasteId)
+	});
 	if (!paste) {
 		throw error(404, 'Paste not found');
 	}
@@ -14,7 +15,7 @@ export async function GET({ locals, params }) {
 		throw error(400, 'Invalid chunkIndex');
 	}
 
-	const data = await locals.storageBackend.getChunk(pasteId, chunkIndex);
+	const data = await locals.storageBackend.getChunk(params.pasteId, chunkIndex);
 	if (!data) {
 		throw error(404, 'Chunk not found');
 	}
