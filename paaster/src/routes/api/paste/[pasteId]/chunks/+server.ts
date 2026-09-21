@@ -1,23 +1,30 @@
 import { CHUNK_SIZE } from '$lib/consts';
 import { validateAuth } from '$lib/server/auth';
-import { stringToObjectId } from '$lib/server/objectId';
+import type { PasteDoc } from '$lib/server/pastes';
 import { getMaxUploadBytes } from '$lib/server/storage';
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 
-const chunkSchema = z.object({
-	chunkIndex: z.string().transform((v) => parseInt(v, 10)).pipe(z.number().int().nonnegative()),
-	totalChunks: z.string().transform((v) => parseInt(v, 10)).pipe(z.number().int().min(1)),
-	data: z.instanceof(File)
-}).refine((v) => v.chunkIndex < v.totalChunks, {
-	message: 'chunkIndex must be less than totalChunks'
-});
+const chunkSchema = z
+	.object({
+		chunkIndex: z
+			.string()
+			.transform((v) => parseInt(v, 10))
+			.pipe(z.number().int().nonnegative()),
+		totalChunks: z
+			.string()
+			.transform((v) => parseInt(v, 10))
+			.pipe(z.number().int().min(1)),
+		data: z.instanceof(File)
+	})
+	.refine((v) => v.chunkIndex < v.totalChunks, {
+		message: 'chunkIndex must be less than totalChunks'
+	});
 
 export async function POST({ locals, params, request }) {
 	const pasteId = params.pasteId;
-	const objectId = stringToObjectId(pasteId);
 
-	const paste = await locals.mongoDb.collection('pastes').findOne({ _id: objectId });
+	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({ _id: pasteId });
 	if (!paste) {
 		throw error(404, 'Paste not found');
 	}
@@ -39,13 +46,10 @@ export async function POST({ locals, params, request }) {
 	}
 
 	const maxBytes = getMaxUploadBytes();
-	const result = await locals.mongoDb.collection('pastes').findOneAndUpdate(
+	const result = await locals.mongoDb.collection<PasteDoc>('pastes').findOneAndUpdate(
 		{
-			_id: objectId,
-			$or: [
-				{ totalBytes: { $exists: false } },
-				{ totalBytes: { $lte: maxBytes - buf.byteLength } }
-			]
+			_id: pasteId,
+			$or: [{ totalBytes: { $exists: false } }, { totalBytes: { $lte: maxBytes - buf.byteLength } }]
 		},
 		{ $inc: { totalBytes: buf.byteLength } },
 		{ returnDocument: 'after' }
@@ -58,10 +62,9 @@ export async function POST({ locals, params, request }) {
 	await locals.storageBackend.saveChunk(pasteId, chunkIndex, new Uint8Array(buf), totalChunks);
 
 	if (chunkIndex === totalChunks - 1) {
-		await locals.mongoDb.collection('pastes').updateOne(
-			{ _id: objectId },
-			{ $set: { totalChunks } }
-		);
+		await locals.mongoDb
+			.collection<PasteDoc>('pastes')
+			.updateOne({ _id: pasteId }, { $set: { totalChunks } });
 	}
 
 	return json({});

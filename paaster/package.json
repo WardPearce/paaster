@@ -61,6 +61,7 @@
 		"lucide-svelte": "^1.0.1",
 		"mongodb": "^7.5.0",
 		"mousetrap": "^1.6.5",
+		"nanoid": "^3.3.18",
 		"notyf": "^3.10.0",
 		"otplib": "^13.4.1",
 		"svelte-file-dropzone": "^2.0.9",

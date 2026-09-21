@@ -1,6 +1,8 @@
 import { ObjectId, type Db, type WithId, type Document } from 'mongodb';
 import argon2 from 'argon2';
+import { nanoid } from 'nanoid';
 import { generateSecret } from 'otplib';
+import type { PasteDoc } from '$lib/server/pastes';
 import { createSession } from '$lib/server/session';
 
 export const TEST_ACCESS_KEY = 'A'.repeat(44);
@@ -67,8 +69,9 @@ export async function insertUser(
 export async function insertPaste(
 	db: Db,
 	overrides: Record<string, unknown> = {}
-): Promise<WithId<Document>> {
+): Promise<PasteDoc> {
 	const doc = {
+		_id: nanoid(),
 		header: 'aGVhZGVy',
 		keySalt: 'a2V5c2FsdA==',
 		name: { value: 'bmFtZQ==', nonce: 'bm9uY2U=', keySalt: 'a2V5c2FsdA==' },
@@ -81,8 +84,8 @@ export async function insertPaste(
 		...overrides
 	};
 
-	const result = await db.collection('pastes').insertOne(doc);
-	return { _id: result.insertedId, ...doc } as WithId<Document>;
+	const result = await db.collection<PasteDoc>('pastes').insertOne(doc);
+	return { ...doc, _id: result.insertedId };
 }
 
 export async function insertUserPaste(
@@ -90,7 +93,7 @@ export async function insertUserPaste(
 	overrides: { userId?: string; pasteId?: string; created?: Date } = {}
 ): Promise<string> {
 	const userId = overrides.userId ?? new ObjectId().toHexString();
-	const pasteId = overrides.pasteId ?? new ObjectId().toHexString();
+	const pasteId = overrides.pasteId ?? nanoid();
 
 	await db.collection('userPastes').insertOne({
 		userId,

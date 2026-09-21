@@ -1,8 +1,10 @@
 import { error, fail } from '@sveltejs/kit';
-import { stringToObjectId } from '$lib/server/objectId';
+import type { PasteDoc } from '$lib/server/pastes';
 
 export async function load({ params, locals }) {
-	const paste = await locals.mongoDb.collection('pastes').findOne({ _id: stringToObjectId(params.pasteId) });
+	const paste = await locals.mongoDb
+		.collection<PasteDoc>('pastes')
+		.findOne({ _id: params.pasteId });
 	if (!paste) throw error(404, 'Paste not found');
 	return { pasteId: params.pasteId };
 }

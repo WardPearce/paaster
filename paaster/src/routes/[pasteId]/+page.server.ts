@@ -1,11 +1,11 @@
-import { stringToObjectId } from '$lib/server/objectId';
 import { error } from '@sveltejs/kit';
+import type { PasteDoc } from '$lib/server/pastes';
 import argon2 from 'argon2';
 
 export async function load({ params, locals, cookies }) {
-	const pasteId = stringToObjectId(params.pasteId);
+	const pasteId = params.pasteId;
 
-	const paste = await locals.mongoDb.collection('pastes').findOne({
+	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
 		_id: pasteId
 	});
 
@@ -48,13 +48,13 @@ export async function load({ params, locals, cookies }) {
 	if (paste.expireAfter !== -2) {
 		if (paste.expireAfter === -1) {
 			const claimed = await locals.mongoDb
-				.collection('pastes')
+				.collection<PasteDoc>('pastes')
 				.findOneAndUpdate(
 					{ _id: pasteId, deleteNextRequest: { $ne: true } },
 					{ $set: { deleteNextRequest: true } }
 				);
 			if (!claimed) {
-				await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
+				await locals.mongoDb.collection<PasteDoc>('pastes').deleteOne({ _id: pasteId });
 				await locals.storageBackend.deletePaste(paste._id.toString());
 				if (locals.userId) {
 					await locals.mongoDb.collection('userPastes').deleteOne({
@@ -68,7 +68,7 @@ export async function load({ params, locals, cookies }) {
 			const now = new Date();
 			const expireTime = paste.created.getTime() + paste.expireAfter * 60 * 60 * 1000;
 			if (now > expireTime) {
-				await locals.mongoDb.collection('pastes').deleteOne({ _id: pasteId });
+				await locals.mongoDb.collection<PasteDoc>('pastes').deleteOne({ _id: pasteId });
 				await locals.storageBackend.deletePaste(paste._id.toString());
 				if (locals.userId) {
 					await locals.mongoDb.collection('userPastes').deleteOne({

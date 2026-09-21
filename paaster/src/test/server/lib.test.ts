@@ -98,7 +98,7 @@ describe('getUserPastes', () => {
 			pastes.map((paste, i) =>
 				insertUserPaste(getDb(), {
 					userId,
-					pasteId: paste._id.toHexString(),
+					pasteId: paste._id,
 					created: new Date(start + i)
 				})
 			)
@@ -108,6 +108,6 @@ describe('getUserPastes', () => {
 
 		expect(result.pastes).toHaveLength(3);
 		expect(result.hasMore).toBe(true);
-		expect(result.pastes[0].paste.id).toBe(pastes[4]._id.toHexString());
+		expect(result.pastes[0].paste.id).toBe(pastes[4]._id);
 	});
 });
