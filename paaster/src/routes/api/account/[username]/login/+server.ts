@@ -1,6 +1,7 @@
 import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
 import { createSession, setSessionCookie } from '$lib/server/session';
 import { error, json } from '@sveltejs/kit';
+import { randomBytes } from 'crypto';
 import argon2 from 'argon2';
 import { z } from 'zod';
 import { verify } from 'otplib';
@@ -11,14 +12,15 @@ const loginSchema = z.object({
 	twoFactorToken: z.string().max(6).min(6).optional()
 });
 
-export async function POST({ params, locals, request, cookies }) {
-	const user = await locals.mongoDb.collection('users').findOne({
-		username: params.username
-	});
-	if (!user) {
-		throw error(404, 'Invalid login');
+let fakePasswordVerification: string | undefined;
+async function fakePasswordHash(): Promise<string> {
+	if (!fakePasswordVerification) {
+		fakePasswordVerification = await argon2.hash(randomBytes(32).toString('hex'));
 	}
+	return fakePasswordVerification;
+}
 
+export async function POST({ params, locals, request, cookies }) {
 	const formData = loginSchema.safeParse(Object.fromEntries(await request.formData()));
 
 	if (!formData.success) {
@@ -32,6 +34,14 @@ export async function POST({ params, locals, request, cookies }) {
 		signature: locals.captchaSignature,
 		mongoDb: locals.mongoDb
 	});
+
+	const user = await locals.mongoDb.collection('users').findOne({
+		username: params.username
+	});
+	if (!user) {
+		await argon2.verify(await fakePasswordHash(), formData.data.serverSidePassword);
+		throw error(401, 'Invalid login');
+	}
 
 	if (!(await argon2.verify(user.serverSide.password, formData.data.serverSidePassword))) {
 		throw error(401, 'Invalid login');
