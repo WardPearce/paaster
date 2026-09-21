@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ObjectId } from 'mongodb';
+import { nanoid } from 'nanoid';
 import { generateSync } from 'otplib';
 import sodium from 'libsodium-wrappers-sumo';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -167,21 +168,42 @@ describe('GET /api/account/[username]/public', () => {
 		);
 		const body = await res.json();
 
-		expect(body.twoFactor).toBe(true);
+		expect(typeof body.twoFactor).toBe('boolean');
 		expect(Buffer.from(body.masterPasswordSalt, 'base64')).toHaveLength(sodium.crypto_pwhash_SALTBYTES);
 		expect(Buffer.from(body.serverSide.salt, 'base64')).toHaveLength(sodium.crypto_pwhash_SALTBYTES);
+	});
+
+	it('returns a stable decoy across requests for a missing user', async () => {
+		await sodium.ready;
+		const first = await getPublicUser(
+			makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'ghost' } })
+		).then((r) => r.json());
+		const second = await getPublicUser(
+			makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'ghost' } })
+		).then((r) => r.json());
+
+		expect(second).toEqual(first);
 	});
 });
 
 describe('POST /api/account/[username]/login', () => {
-	it('returns 404 for an unknown user', async () => {
-		const { captcha } = await authFixture();
+	it('requires a captcha before revealing whether a user exists', async () => {
+		const request = formRequest({ serverSidePassword: TEST_SERVER_PASSWORD });
+
+		await expectHttpError(
+			login(makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'ghost' }, request })),
+			400
+		);
+	});
+
+	it('returns 401 for an unknown user', async () => {
+		const { captcha, captchaLocals } = await authFixture();
 		const payload = await captcha();
 		const request = formRequest(withCaptcha({ serverSidePassword: TEST_SERVER_PASSWORD }, payload));
 
 		await expectHttpError(
-			login(makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'ghost' }, request })),
-			404
+			login(makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'ghost' }, request, locals: captchaLocals() })),
+			401
 		);
 	});
 
@@ -570,7 +592,7 @@ describe('POST /api/account/paste/[pasteId]', () => {
 		const request = formRequest(bookmarkFields());
 
 		await expectHttpError(
-			bookmarkPaste(anon(request, { pasteId: new ObjectId().toHexString() })),
+			bookmarkPaste(anon(request, { pasteId: nanoid() })),
 			401
 		);
 	});
@@ -590,12 +612,12 @@ describe('POST /api/account/paste/[pasteId]', () => {
 		const request = formRequest(bookmarkFields());
 
 		const res = await bookmarkPaste(
-			authed(user._id.toHexString(), undefined, request, { pasteId: paste._id.toHexString() })
+			authed(user._id.toHexString(), undefined, request, { pasteId: paste._id })
 		);
 		expect(res.status).toBe(200);
 
 		const stored = (await getDb().collection('userPastes').findOne({ userId: user._id.toHexString() }))!;
-		expect(stored.paste.id).toBe(paste._id.toHexString());
+		expect(stored.paste.id).toBe(paste._id);
 	});
 });
 
@@ -705,7 +727,7 @@ describe('DELETE /api/account/delete', () => {
 		const user = await insertUser(getDb(), {});
 		const sessionId = await insertSession(getDb(), user._id);
 		const paste = await insertPaste(getDb(), {});
-		await insertUserPaste(getDb(), { userId: user._id.toHexString(), pasteId: paste._id.toHexString() });
+		await insertUserPaste(getDb(), { userId: user._id.toHexString(), pasteId: paste._id });
 		const cookies = makeCookies();
 		cookies.set('sessionId', sessionId);
 		const request = formRequest({ serverSidePassword: TEST_SERVER_PASSWORD }, { method: 'DELETE' });

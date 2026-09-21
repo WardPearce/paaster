@@ -1,5 +1,7 @@
 import { describe, beforeEach, expect, it } from 'vitest';
 import { ObjectId } from 'mongodb';
+import { nanoid } from 'nanoid';
+import type { PasteDoc } from '$lib/server/pastes';
 import { GET as listPastes, POST as createPaste } from '../../routes/api/paste/+server';
 import { DELETE as deletePaste, POST as updatePaste } from '../../routes/api/paste/[pasteId]/+server';
 import { POST as uploadChunk } from '../../routes/api/paste/[pasteId]/chunks/+server';
@@ -48,7 +50,7 @@ describe('POST /api/paste', () => {
 		expect(body.accessKey).toBeTruthy();
 		expect(body.maxUploadSize).toBe(getMaxUploadBytes());
 
-		const paste = (await getDb().collection('pastes').findOne({ _id: new ObjectId(body.pasteId) }))!;
+		const paste = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: body.pasteId }))!;
 		expect(paste).not.toBeNull();
 		expect(paste.header).toBe('aGVhZGVy');
 		expect(paste.expireAfter).toBe(-2);
@@ -66,7 +68,7 @@ describe('POST /api/paste', () => {
 		);
 
 		const body = await res.json();
-		const paste = (await getDb().collection('pastes').findOne({ _id: new ObjectId(body.pasteId) }))!;
+		const paste = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: body.pasteId }))!;
 		expect(paste.expireAfter).toBe(14);
 	});
 });
@@ -81,7 +83,7 @@ describe('GET /api/paste', () => {
 		const userId = new ObjectId().toHexString();
 		for (let i = 0; i < 13; i++) {
 			const paste = await createPasteDoc();
-			await insertUserPaste(getDb(), { userId, pasteId: paste._id.toHexString() });
+			await insertUserPaste(getDb(), { userId, pasteId: paste._id });
 		}
 
 		const event = makeEvent(getDb(), makeMemoryStorage(), { locals: { userId } });
@@ -103,7 +105,7 @@ describe('POST /api/paste/[pasteId]', () => {
 	it('returns 404 for an unknown paste', async () => {
 		const req = formRequest({ codeName: 'bmFtZQ==' });
 		await expectHttpError(
-			updatePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: new ObjectId().toHexString() }, request: req })),
+			updatePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: nanoid() }, request: req })),
 			404
 		);
 	});
@@ -113,7 +115,7 @@ describe('POST /api/paste/[pasteId]', () => {
 		const req = formRequest({ codeName: 'bmFtZQ==' }, { headers: { Authorization: 'Bearer wrong' } });
 
 		await expectHttpError(
-			updatePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })),
+			updatePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })),
 			401
 		);
 	});
@@ -135,11 +137,11 @@ describe('POST /api/paste/[pasteId]', () => {
 		);
 
 		const res = await updatePaste(
-			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })
+			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })
 		);
 		expect(res.status).toBe(200);
 
-		const updated = (await getDb().collection('pastes').findOne({ _id: paste._id }))!;
+		const updated = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: paste._id }))!;
 		expect(updated.name).toEqual({ value: 'bmV3TmFtZQ==', nonce: 'bm9uY2Uy', keySalt: 'c2FsdDI=' });
 		expect(updated.language).toEqual({ value: 'cHl0aG9u', nonce: 'bm9uY2Uz', keySalt: 'c2FsdDM=' });
 		expect(updated.expireAfter).toBe(10);
@@ -151,10 +153,10 @@ describe('POST /api/paste/[pasteId]', () => {
 		const req = formRequest({ expireAfter: '5000' }, { headers: authHeaders() });
 
 		await updatePaste(
-			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })
+			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })
 		);
 
-		const updated = (await getDb().collection('pastes').findOne({ _id: paste._id }))!;
+		const updated = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: paste._id }))!;
 		expect(updated.expireAfter).toBe(-2);
 	});
 
@@ -163,10 +165,10 @@ describe('POST /api/paste/[pasteId]', () => {
 		const req = formRequest({ passphrase: 'supersecret' }, { headers: authHeaders() });
 
 		await updatePaste(
-			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })
+			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })
 		);
 
-		const updated = (await getDb().collection('pastes').findOne({ _id: paste._id }))!;
+		const updated = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: paste._id }))!;
 		expect(updated.passphrase).toBeTruthy();
 		expect(updated.passphrase.startsWith('$argon2')).toBe(true);
 	});
@@ -176,7 +178,7 @@ describe('POST /api/paste/[pasteId]', () => {
 		const req = formRequest({ passphrase: 'short' }, { headers: authHeaders() });
 
 		await expectHttpError(
-			updatePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })),
+			updatePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })),
 			400
 		);
 	});
@@ -184,17 +186,17 @@ describe('POST /api/paste/[pasteId]', () => {
 	it('unsets the passphrase and deletes the cookie when cleared', async () => {
 		const paste = await createPasteDoc();
 		const cookies = makeCookies();
-		cookies.set('passphrase_' + paste._id.toHexString(), 'something');
+		cookies.set('passphrase_' + paste._id, 'something');
 		const req = formRequest({ passphrase: '' }, { headers: authHeaders() });
 
 		const res = await updatePaste(
-			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req, cookies })
+			makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req, cookies })
 		);
 		expect(res.status).toBe(200);
 
-		const updated = (await getDb().collection('pastes').findOne({ _id: paste._id }))!;
+		const updated = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: paste._id }))!;
 		expect(updated.passphrase).toBeUndefined();
-		expect(cookies.get('passphrase_' + paste._id.toHexString())).toBeUndefined();
+		expect(cookies.get('passphrase_' + paste._id)).toBeUndefined();
 	});
 });
 
@@ -202,7 +204,7 @@ describe('DELETE /api/paste/[pasteId]', () => {
 	it('returns 404 for an unknown paste', async () => {
 		const req = new Request('http://localhost', { method: 'DELETE' });
 		await expectHttpError(
-			deletePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: new ObjectId().toHexString() }, request: req })),
+			deletePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: nanoid() }, request: req })),
 			404
 		);
 	});
@@ -215,7 +217,7 @@ describe('DELETE /api/paste/[pasteId]', () => {
 		});
 
 		await expectHttpError(
-			deletePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })),
+			deletePaste(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })),
 			401
 		);
 	});
@@ -223,7 +225,7 @@ describe('DELETE /api/paste/[pasteId]', () => {
 	it('deletes the paste, user paste and uploaded chunks', async () => {
 		const paste = await createPasteDoc();
 		const userId = new ObjectId().toHexString();
-		const pasteId = paste._id.toHexString();
+		const pasteId = paste._id;
 		await insertUserPaste(getDb(), { userId, pasteId });
 
 		const storage = makeMemoryStorage();
@@ -235,7 +237,7 @@ describe('DELETE /api/paste/[pasteId]', () => {
 		);
 		expect(res.status).toBe(200);
 
-		await expect(getDb().collection('pastes').findOne({ _id: paste._id })).resolves.toBeNull();
+		await expect(getDb().collection<PasteDoc>('pastes').findOne({ _id: paste._id })).resolves.toBeNull();
 		await expect(getDb().collection('userPastes').findOne({ userId, 'paste.id': pasteId })).resolves.toBeNull();
 		expect(storage.chunks.size).toBe(0);
 	});
@@ -248,7 +250,7 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 			{ headers: authHeaders() }
 		);
 		await expectHttpError(
-			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: new ObjectId().toHexString() }, request: req })),
+			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: nanoid() }, request: req })),
 			404
 		);
 	});
@@ -260,7 +262,7 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 			{ headers: { Authorization: 'Bearer wrong' } }
 		);
 		await expectHttpError(
-			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })),
+			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })),
 			401
 		);
 	});
@@ -272,7 +274,7 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 			{ headers: authHeaders() }
 		);
 		await expectHttpError(
-			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })),
+			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })),
 			400
 		);
 	});
@@ -289,7 +291,7 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 		);
 
 		await expectHttpError(
-			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id.toHexString() }, request: req })),
+			uploadChunk(makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request: req })),
 			413
 		);
 	});
@@ -304,7 +306,7 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 			{ headers: authHeaders() }
 		);
 		const res = await uploadChunk(
-			makeEvent(getDb(), storage, { params: { pasteId: paste._id.toHexString() }, request: first })
+			makeEvent(getDb(), storage, { params: { pasteId: paste._id }, request: first })
 		);
 		expect(res.status).toBe(200);
 
@@ -313,14 +315,14 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 			{ headers: authHeaders() }
 		);
 		await expectHttpError(
-			uploadChunk(makeEvent(getDb(), storage, { params: { pasteId: paste._id.toHexString() }, request: second })),
+			uploadChunk(makeEvent(getDb(), storage, { params: { pasteId: paste._id }, request: second })),
 			413
 		);
 	});
 
 	it('stores chunks and records totalChunks on the final chunk', async () => {
 		const paste = await createPasteDoc();
-		const pasteId = paste._id.toHexString();
+		const pasteId = paste._id;
 		const storage = makeMemoryStorage();
 
 		for (let i = 0; i < 2; i++) {
@@ -338,7 +340,7 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 			expect(res.status).toBe(200);
 		}
 
-		const updated = (await getDb().collection('pastes').findOne({ _id: paste._id }))!;
+		const updated = (await getDb().collection<PasteDoc>('pastes').findOne({ _id: paste._id }))!;
 		expect(updated.totalChunks).toBe(2);
 		expect(storage.chunks.get(`${pasteId}:0`)).toEqual(new Uint8Array([1]));
 		expect(storage.chunks.get(`${pasteId}:1`)).toEqual(new Uint8Array([2]));
@@ -349,7 +351,7 @@ describe('GET /api/paste/[pasteId]/chunks/[chunkIndex]', () => {
 	it('returns 404 for an unknown paste', async () => {
 		await expectHttpError(
 			getChunk(makeEvent(getDb(), makeMemoryStorage(), {
-				params: { pasteId: new ObjectId().toHexString(), chunkIndex: '0' }
+				params: { pasteId: nanoid(), chunkIndex: '0' }
 			})),
 			404
 		);
@@ -359,7 +361,7 @@ describe('GET /api/paste/[pasteId]/chunks/[chunkIndex]', () => {
 		const paste = await createPasteDoc();
 		await expectHttpError(
 			getChunk(makeEvent(getDb(), makeMemoryStorage(), {
-				params: { pasteId: paste._id.toHexString(), chunkIndex: 'not-a-number' }
+				params: { pasteId: paste._id, chunkIndex: 'not-a-number' }
 			})),
 			400
 		);
@@ -369,7 +371,7 @@ describe('GET /api/paste/[pasteId]/chunks/[chunkIndex]', () => {
 		const paste = await createPasteDoc();
 		await expectHttpError(
 			getChunk(makeEvent(getDb(), makeMemoryStorage(), {
-				params: { pasteId: paste._id.toHexString(), chunkIndex: '0' }
+				params: { pasteId: paste._id, chunkIndex: '0' }
 			})),
 			404
 		);
@@ -377,7 +379,7 @@ describe('GET /api/paste/[pasteId]/chunks/[chunkIndex]', () => {
 
 	it('returns the stored chunk bytes', async () => {
 		const paste = await createPasteDoc();
-		const pasteId = paste._id.toHexString();
+		const pasteId = paste._id;
 		const storage = makeMemoryStorage();
 		const bytes = new Uint8Array([9, 8, 7, 6]);
 		await storage.saveChunk(pasteId, 0, bytes, 1);

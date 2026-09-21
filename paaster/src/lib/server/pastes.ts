@@ -1,6 +1,7 @@
-import type { Db } from 'mongodb';
-import { stringToObjectId } from './objectId';
+import type { Db, Document } from 'mongodb';
 import { PASTE_PAGE_SIZE } from '$lib/consts';
+
+export type PasteDoc = { _id: string } & Document;
 
 export interface PasteResult {
 	paste: { id: string; key: string; nonce: string };
@@ -30,9 +31,9 @@ export async function getUserPastes(
 		return { pastes: [], hasMore: false };
 	}
 
-	const pasteIds = userPastes.map((up) => stringToObjectId(up.paste.id));
+	const pasteIds = userPastes.map((up) => up.paste.id);
 	const pasteDocs = await mongoDb
-		.collection('pastes')
+		.collection<PasteDoc>('pastes')
 		.find({ _id: { $in: pasteIds } })
 		.project({ name: 1 })
 		.toArray();

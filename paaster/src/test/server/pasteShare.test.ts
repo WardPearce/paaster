@@ -4,6 +4,10 @@ import { DELETE as deleteSession, GET as getSession } from '../../routes/api/pas
 import { GET as getData, POST as setData } from '../../routes/api/pasteShare/[code]/data/+server';
 import { POST as registerReceiver } from '../../routes/api/pasteShare/[code]/receiver/+server';
 import { setupTestDb } from '../utils/db';
+import {
+	registerPasteShareReceiver as registerReceiverDirect,
+	setPasteShareData as setDataDirect
+} from '$lib/server/pasteShare';
 import { createSolvedCaptcha, getCaptchaSecrets } from '../utils/captcha';
 import { expectHttpError, jsonRequest, makeEvent, makeMemoryStorage } from '../utils/event';
 
@@ -113,6 +117,25 @@ describe('POST /api/pasteShare/[code]/receiver', () => {
 			409
 		);
 	});
+
+	it('registers exactly one receiver under concurrent registration', async () => {
+		const { event } = await events();
+
+		const created = await createSession(event({}));
+		const { code } = await created.json();
+
+		const attackerKey = 'A'.repeat(44);
+		const results = await Promise.all([
+			registerReceiverDirect(getDb(), code, RECEIVER_KEY),
+			registerReceiverDirect(getDb(), code, attackerKey)
+		]);
+
+		expect(results.filter((r) => r === 'ok')).toHaveLength(1);
+		expect(results.filter((r) => r === 'conflict')).toHaveLength(1);
+
+		const stored = (await getDb().collection('pasteShare').findOne({}))!;
+		expect([RECEIVER_KEY, attackerKey]).toContain(stored.receiverPublicKey);
+	});
 });
 
 describe('POST /api/pasteShare/[code]/data', () => {
@@ -146,6 +169,27 @@ describe('POST /api/pasteShare/[code]/data', () => {
 
 		const data = await getData(event({ code }));
 		await expect(data.json()).resolves.toEqual({ cipher: 'cGllY2U=' });
+	});
+
+	it('stores exactly one cipher under concurrent writes', async () => {
+		const { event, secrets, captcha } = await events();
+
+		const created = await createSession(event({}));
+		const { code } = await created.json();
+
+		const payload = await captcha(secrets.key, secrets.signature);
+		await registerReceiver(event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: payload })));
+
+		const results = await Promise.all([
+			setDataDirect(getDb(), code, 'Zmlyc3Q='),
+			setDataDirect(getDb(), code, 'c2Vjb25k')
+		]);
+
+		expect(results.filter((r) => r === true)).toHaveLength(1);
+		expect(results.filter((r) => r === false)).toHaveLength(1);
+
+		const stored = (await getDb().collection('pasteShare').findOne({}))!;
+		expect(['Zmlyc3Q=', 'c2Vjb25k']).toContain(stored.cipher);
 	});
 });
 

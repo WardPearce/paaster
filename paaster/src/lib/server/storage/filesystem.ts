@@ -10,13 +10,18 @@ export class FileSystemStorageBackend implements StorageBackend {
 	}
 
 	private pasteDir(pasteId: string): string {
-		if (!/^[0-9a-fA-F]{24}$/.test(pasteId)) {
+		if (!/^[A-Za-z0-9_-]{21}$/.test(pasteId)) {
 			throw new Error('Invalid pasteId');
 		}
 		return join(this.basePath, pasteId);
 	}
 
-	async saveChunk(pasteId: string, chunkIndex: number, data: Uint8Array, _totalChunks: number): Promise<void> {
+	async saveChunk(
+		pasteId: string,
+		chunkIndex: number,
+		data: Uint8Array,
+		_totalChunks: number
+	): Promise<void> {
 		void _totalChunks;
 		const dir = this.pasteDir(pasteId);
 		await mkdir(dir, { recursive: true });

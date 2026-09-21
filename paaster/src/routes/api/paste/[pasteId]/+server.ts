@@ -1,13 +1,13 @@
 import { validateAuth } from '$lib/server/auth';
-import { stringToObjectId } from '$lib/server/objectId';
+import type { PasteDoc } from '$lib/server/pastes';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { z } from 'zod';
 
 export async function DELETE({ locals, request, params }) {
-	const pasteId = stringToObjectId(params.pasteId);
+	const pasteId = params.pasteId;
 
-	const paste = await locals.mongoDb.collection('pastes').findOne({
+	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
 		_id: pasteId
 	});
 	if (!paste) {
@@ -16,7 +16,7 @@ export async function DELETE({ locals, request, params }) {
 
 	await validateAuth(request.headers.get('Authorization'), paste.accessKey);
 
-	await locals.mongoDb.collection('pastes').deleteOne({ _id: paste._id });
+	await locals.mongoDb.collection<PasteDoc>('pastes').deleteOne({ _id: paste._id });
 	if (locals.userId) {
 		await locals.mongoDb.collection('userPastes').deleteOne({
 			userId: locals.userId,
@@ -50,9 +50,9 @@ const updatePasteSchema = z.object({
 });
 
 export async function POST({ locals, request, params, cookies }) {
-	const pasteId = stringToObjectId(params.pasteId);
+	const pasteId = params.pasteId;
 
-	const paste = await locals.mongoDb.collection('pastes').findOne({
+	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
 		_id: pasteId
 	});
 	if (!paste) {
@@ -114,7 +114,7 @@ export async function POST({ locals, request, params, cookies }) {
 		updateOp.$unset = toUnset;
 	}
 
-	await locals.mongoDb.collection('pastes').updateOne({ _id: pasteId }, updateOp);
+	await locals.mongoDb.collection<PasteDoc>('pastes').updateOne({ _id: pasteId }, updateOp);
 
 	return json({});
 }

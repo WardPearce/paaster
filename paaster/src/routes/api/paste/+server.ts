@@ -1,9 +1,10 @@
 import { stringToObjectId } from '$lib/server/objectId';
-import { getUserPastes } from '$lib/server/pastes';
+import { getUserPastes, type PasteDoc } from '$lib/server/pastes';
 import { getMaxUploadBytes } from '$lib/server/storage';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import sodium from 'libsodium-wrappers-sumo';
+import { nanoid } from 'nanoid';
 import { z } from 'zod';
 
 const createPasteSchema = z.object({
@@ -48,7 +49,10 @@ export async function POST({ locals, request }) {
 
 	const accessKey = sodium.to_base64(sodium.randombytes_buf(32));
 
-	const createdPaste = await locals.mongoDb.collection('pastes').insertOne({
+	const pasteId = nanoid();
+
+	await locals.mongoDb.collection<PasteDoc>('pastes').insertOne({
+		_id: pasteId,
 		header: formData.data.codeHeader,
 		keySalt: formData.data.codeKeySalt,
 		name: {
@@ -65,7 +69,7 @@ export async function POST({ locals, request }) {
 	});
 
 	return json({
-		pasteId: createdPaste.insertedId.toString(),
+		pasteId,
 		accessKey: accessKey,
 		maxUploadSize: getMaxUploadBytes()
 	});
