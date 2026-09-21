@@ -87,13 +87,19 @@ export async function registerPasteShareReceiver(
 	code: string,
 	receiverPublicKey: string
 ): Promise<PasteShareRegisterResult> {
-	const session = await getPasteShareSession(mongoDb, code);
-	if (!session) return 'not-found';
-	if (session.receiverPublicKey) return 'conflict';
+	const claimed = await mongoDb.collection('pasteShare').findOneAndUpdate(
+		{
+			codeHash: hashPasteShareCode(code),
+			expiresAt: { $gt: new Date() },
+			receiverPublicKey: null
+		},
+		{ $set: { receiverPublicKey } }
+	);
 
-	await mongoDb
-		.collection('pasteShare')
-		.updateOne({ codeHash: hashPasteShareCode(code) }, { $set: { receiverPublicKey } });
+	if (!claimed) {
+		const session = await getPasteShareSession(mongoDb, code);
+		return session ? 'conflict' : 'not-found';
+	}
 
 	return 'ok';
 }
@@ -103,16 +109,17 @@ export async function setPasteShareData(
 	code: string,
 	cipher: string
 ): Promise<boolean> {
-	const session = await getPasteShareSession(mongoDb, code);
-	if (!session) return false;
-	if (!session.receiverPublicKey) return false;
-	if (session.cipher) return false;
+	const claimed = await mongoDb.collection('pasteShare').findOneAndUpdate(
+		{
+			codeHash: hashPasteShareCode(code),
+			expiresAt: { $gt: new Date() },
+			receiverPublicKey: { $ne: null },
+			cipher: null
+		},
+		{ $set: { cipher } }
+	);
 
-	await mongoDb
-		.collection('pasteShare')
-		.updateOne({ codeHash: hashPasteShareCode(code) }, { $set: { cipher } });
-
-	return true;
+	return claimed !== null;
 }
 
 export async function deletePasteShareSession(mongoDb: Db, code: string): Promise<void> {
