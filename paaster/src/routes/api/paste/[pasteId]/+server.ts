@@ -1,14 +1,13 @@
 import { validateAuth } from '$lib/server/auth';
 import type { PasteDoc } from '$lib/server/pastes';
+import { parsePasteId } from '$lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { z } from 'zod';
 
 export async function DELETE({ locals, request, params }) {
-	const pasteId = params.pasteId;
-
 	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
-		_id: pasteId
+		_id: parsePasteId(params.pasteId)
 	});
 	if (!paste) {
 		throw error(404, 'Paste not found');
@@ -50,10 +49,8 @@ const updatePasteSchema = z.object({
 });
 
 export async function POST({ locals, request, params, cookies }) {
-	const pasteId = params.pasteId;
-
 	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
-		_id: pasteId
+		_id: parsePasteId(params.pasteId)
 	});
 	if (!paste) {
 		throw error(404, 'Paste not found');
@@ -114,7 +111,9 @@ export async function POST({ locals, request, params, cookies }) {
 		updateOp.$unset = toUnset;
 	}
 
-	await locals.mongoDb.collection<PasteDoc>('pastes').updateOne({ _id: pasteId }, updateOp);
+	await locals.mongoDb
+		.collection<PasteDoc>('pastes')
+		.updateOne({ _id: parsePasteId(params.pasteId) }, updateOp);
 
 	return json({});
 }

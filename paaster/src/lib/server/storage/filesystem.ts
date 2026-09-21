@@ -10,7 +10,7 @@ export class FileSystemStorageBackend implements StorageBackend {
 	}
 
 	private pasteDir(pasteId: string): string {
-		if (!/^[A-Za-z0-9_-]{21}$/.test(pasteId)) {
+		if (!/^(?:[A-Za-z0-9_-]{21}|[0-9a-fA-F]{24})$/.test(pasteId)) {
 			throw new Error('Invalid pasteId');
 		}
 		return join(this.basePath, pasteId);

@@ -1,6 +1,7 @@
 import { CHUNK_SIZE } from '$lib/consts';
 import { validateAuth } from '$lib/server/auth';
 import type { PasteDoc } from '$lib/server/pastes';
+import { parsePasteId } from '$lib/server/objectId';
 import { getMaxUploadBytes } from '$lib/server/storage';
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
@@ -24,7 +25,9 @@ const chunkSchema = z
 export async function POST({ locals, params, request }) {
 	const pasteId = params.pasteId;
 
-	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({ _id: pasteId });
+	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
+		_id: parsePasteId(pasteId)
+	});
 	if (!paste) {
 		throw error(404, 'Paste not found');
 	}
@@ -48,7 +51,7 @@ export async function POST({ locals, params, request }) {
 	const maxBytes = getMaxUploadBytes();
 	const result = await locals.mongoDb.collection<PasteDoc>('pastes').findOneAndUpdate(
 		{
-			_id: pasteId,
+			_id: parsePasteId(pasteId),
 			$or: [{ totalBytes: { $exists: false } }, { totalBytes: { $lte: maxBytes - buf.byteLength } }]
 		},
 		{ $inc: { totalBytes: buf.byteLength } },
@@ -64,7 +67,7 @@ export async function POST({ locals, params, request }) {
 	if (chunkIndex === totalChunks - 1) {
 		await locals.mongoDb
 			.collection<PasteDoc>('pastes')
-			.updateOne({ _id: pasteId }, { $set: { totalChunks } });
+			.updateOne({ _id: parsePasteId(pasteId) }, { $set: { totalChunks } });
 	}
 
 	return json({});
