@@ -19,6 +19,7 @@ export async function GET({ locals }) {
 
 	return json({
 		sessions: sessions.map((s) => ({
+			id: s._id.toString(),
 			sessionId: s.sessionId.slice(0, 6) + '...',
 			current: s.sessionId === locals.sessionId,
 			created: s.created,
@@ -29,7 +30,7 @@ export async function GET({ locals }) {
 }
 
 const revokeSchema = z.object({
-	sessionId: z.string().trim().min(1)
+	id: z.string().trim().min(1)
 });
 
 export async function DELETE({ locals, request }) {
@@ -42,21 +43,21 @@ export async function DELETE({ locals, request }) {
 		throw error(400, formData.error);
 	}
 
-	const { sessionId } = formData.data;
-
-	if (sessionId === locals.sessionId) {
-		throw error(400, 'Cannot revoke current session');
-	}
+	const { id } = formData.data;
 
 	const session = await locals.mongoDb.collection('sessions').findOne({
-		sessionId,
+		_id: stringToObjectId(id),
 		userId: stringToObjectId(locals.userId)
 	});
 	if (!session) {
 		throw error(404, 'Session not found');
 	}
 
-	await revokeSession(locals.mongoDb, sessionId);
+	if (session.sessionId === locals.sessionId) {
+		throw error(400, 'Cannot revoke current session');
+	}
+
+	await revokeSession(locals.mongoDb, session.sessionId);
 
 	return json({});
 }
