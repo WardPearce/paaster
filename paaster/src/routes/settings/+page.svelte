@@ -66,6 +66,7 @@
 	let twoFactorAction: 'enable' | 'disable' | null = $state(null);
 
 	let sessions: {
+		id: string;
 		sessionId: string;
 		current: boolean;
 		created: string;
@@ -82,13 +83,13 @@
 		}
 	}
 
-	async function revokeSession(sessionId: string) {
-		revokingSession = sessionId;
+	async function revokeSession(id: string) {
+		revokingSession = id;
 		const payload = new FormData();
-		payload.append('sessionId', sessionId);
+		payload.append('id', id);
 		const resp = await fetch('/api/account/sessions', { method: 'DELETE', body: payload });
 		if (resp.ok) {
-			sessions = sessions.filter((s) => s.sessionId !== sessionId);
+			sessions = sessions.filter((s) => s.id !== id);
 		}
 		revokingSession = null;
 	}
@@ -554,7 +555,7 @@
 			<div class="card-body p-6">
 				<h2 class="text-base-content text-xl font-semibold">{$_('sessions.title')}</h2>
 				<div class="mt-4 space-y-3">
-					{#each sessions as session (session.sessionId)}
+					{#each sessions as session (session.id)}
 						<div
 							class="border-base-content/10 flex items-center justify-between rounded-lg border p-3 {session.current
 								? 'border-primary/30'
@@ -575,10 +576,10 @@
 							{#if !session.current}
 								<button
 									class="btn btn-error btn-xs"
-									disabled={revokingSession === session.sessionId}
-									onclick={() => revokeSession(session.sessionId)}
+									disabled={revokingSession === session.id}
+									onclick={() => revokeSession(session.id)}
 								>
-									{revokingSession === session.sessionId
+									{revokingSession === session.id
 										? $_('sessions.revoking')
 										: $_('sessions.revoke')}
 								</button>

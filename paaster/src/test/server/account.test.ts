@@ -446,27 +446,42 @@ describe('GET /api/account/sessions', () => {
 		const currentSession = body.sessions.find((s: { current: boolean }) => s.current);
 		expect(currentSession.sessionId).toBe(current.slice(0, 6) + '...');
 	});
+
+	it('returns a stable id for each session', async () => {
+		const { authed } = await authFixture();
+		const user = await insertUser(getDb(), {});
+		const sessionId = await insertSession(getDb(), user._id);
+		const doc = (await getDb().collection('sessions').findOne({ sessionId }))!;
+
+		const res = await listSessions(authed(user._id.toHexString(), sessionId));
+		const body = await res.json();
+
+		expect(body.sessions).toHaveLength(1);
+		expect(body.sessions[0].id).toBe(doc._id.toString());
+	});
 });
 
 describe('DELETE /api/account/sessions', () => {
 	it('returns 401 when unauthenticated', async () => {
 		const { anon } = await authFixture();
-		const request = formRequest({ sessionId: 'abc' }, { method: 'DELETE' });
+		const request = formRequest({ id: 'abc' }, { method: 'DELETE' });
 		await expectHttpError(revokeSession(anon(request)), 401);
 	});
 
 	it('rejects revoking the current session', async () => {
 		const { authed } = await authFixture();
 		const user = await insertUser(getDb(), {});
-		const request = formRequest({ sessionId: 'current-session' }, { method: 'DELETE' });
+		const sessionId = await insertSession(getDb(), user._id);
+		const doc = (await getDb().collection('sessions').findOne({ sessionId }))!;
+		const request = formRequest({ id: doc._id.toString() }, { method: 'DELETE' });
 
-		await expectHttpError(revokeSession(authed(user._id.toHexString(), 'current-session', request)), 400);
+		await expectHttpError(revokeSession(authed(user._id.toHexString(), sessionId, request)), 400);
 	});
 
 	it('returns 404 for an unknown session', async () => {
 		const { authed } = await authFixture();
 		const user = await insertUser(getDb(), {});
-		const request = formRequest({ sessionId: 'missing-session' }, { method: 'DELETE' });
+		const request = formRequest({ id: new ObjectId().toHexString() }, { method: 'DELETE' });
 
 		await expectHttpError(revokeSession(authed(user._id.toHexString(), 'current-session', request)), 404);
 	});
@@ -476,7 +491,8 @@ describe('DELETE /api/account/sessions', () => {
 		const user = await insertUser(getDb(), {});
 		const current = await insertSession(getDb(), user._id);
 		const other = await insertSession(getDb(), user._id);
-		const request = formRequest({ sessionId: other }, { method: 'DELETE' });
+		const otherDoc = (await getDb().collection('sessions').findOne({ sessionId: other }))!;
+		const request = formRequest({ id: otherDoc._id.toString() }, { method: 'DELETE' });
 
 		const res = await revokeSession(authed(user._id.toHexString(), current, request));
 		expect(res.status).toBe(200);
