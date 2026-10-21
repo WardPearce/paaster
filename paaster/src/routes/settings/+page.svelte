@@ -15,6 +15,7 @@
 	import { get } from 'svelte/store';
 	import { pasteDeletionTimes } from '#lib/client/paste';
 	import { resolve } from '$app/paths';
+	import Select from 'svelte-select';
 
 	let { data }: { data: { expireAfter: number; username: string } } = $props();
 
@@ -51,7 +52,12 @@
 		return sodium.to_base64(serverSidePw);
 	}
 
-	let defaultPasteDelectionTime = $state(data.expireAfter);
+	let defaultPasteDelectionTime:
+		| {
+				value: number;
+				label: string;
+		  }
+		| undefined = $state(pasteDeletionTimes().find((time) => time.value === data.expireAfter));
 
 	let twoFactorSecret: string | undefined = $state();
 	let twoFactorURI: string | undefined = $state();
@@ -241,8 +247,10 @@
 	}
 
 	async function setDefaultPasteExpiry() {
+		if (!defaultPasteDelectionTime) return;
+
 		const payload = new FormData();
-		payload.append('expireAfter', defaultPasteDelectionTime.toString());
+		payload.append('expireAfter', defaultPasteDelectionTime.value.toString());
 
 		await fetch('/api/account/defaults', { method: 'POST', body: payload });
 	}
@@ -395,15 +403,12 @@
 			<div class="card-body p-6">
 				<h2 class="text-base-content text-xl font-semibold">{$_('defaultPasteExpiry')}</h2>
 				<div class="mt-4 max-w-xs">
-					<select
-						class="select w-full"
-						onchange={setDefaultPasteExpiry}
+					<Select
+						items={pasteDeletionTimes()}
+						clearable={false}
 						bind:value={defaultPasteDelectionTime}
-					>
-						{#each pasteDeletionTimes() as period (period.value)}
-							<option value={period.value}>{period.label}</option>
-						{/each}
-					</select>
+						onchange={setDefaultPasteExpiry}
+					/>
 				</div>
 			</div>
 		</div>
