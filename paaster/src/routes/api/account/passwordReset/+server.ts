@@ -1,5 +1,5 @@
-import { stringToObjectId } from '$lib/server/objectId';
-import { revokeAllOtherSessions } from '$lib/server/session';
+import { stringToObjectId } from '#lib/server/objectId';
+import { revokeAllOtherSessions } from '#lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { ObjectId } from 'mongodb';
@@ -23,7 +23,7 @@ export async function POST({ locals, request }) {
 	const formData = passwordResetSchema.safeParse(Object.fromEntries(await request.formData()));
 
 	if (!formData.success) {
-		throw error(400, formData.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	const user = await locals.mongoDb.collection('users').findOne({

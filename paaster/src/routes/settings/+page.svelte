@@ -1,27 +1,26 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { localDb } from '$lib/client/dexie';
-	import { secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
-	import { authStore, themeStore } from '$lib/client/stores';
-	import { setTheme } from '$lib/client/theme';
-	import Loading from '$lib/components/Loading.svelte';
-	import QrCode from '$lib/components/QrCode.svelte';
-	import { THEMES } from '$lib/consts';
+	import { localDb } from '#lib/client/dexie';
+	import { secretBoxEncryptFromMaster } from '#lib/client/sodiumWrapped';
+	import { authStore, themeStore } from '#lib/client/stores';
+	import { setTheme } from '#lib/client/theme';
+	import Loading from '#lib/components/Loading.svelte';
+	import QrCode from '#lib/components/QrCode.svelte';
+	import { THEMES } from '#lib/consts';
 	import * as comlink from 'comlink';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
-	import { _ } from '$lib/i18n';
-	import { relativeDate } from '$lib/client/date';
+	import { _ } from '#lib/i18n/index';
+	import { relativeDate } from '#lib/client/date';
 	import { get } from 'svelte/store';
-	import { pasteDeletionTimes } from '$lib/client/paste';
+	import { pasteDeletionTimes } from '#lib/client/paste';
 	import { resolve } from '$app/paths';
 
 	let { data }: { data: { expireAfter: number; username: string } } = $props();
 
 	let worker: Worker | undefined;
 	let derivePassword:
-		| ((rawPassword: string, passwordSalt: Uint8Array) => Promise<Uint8Array>)
-		| undefined;
+		((rawPassword: string, passwordSalt: Uint8Array) => Promise<Uint8Array>) | undefined;
 
 	let errorMsg: string | undefined = $state();
 	let isLoading = $state(false);
@@ -579,9 +578,7 @@
 									disabled={revokingSession === session.id}
 									onclick={() => revokeSession(session.id)}
 								>
-									{revokingSession === session.id
-										? $_('sessions.revoking')
-										: $_('sessions.revoke')}
+									{revokingSession === session.id ? $_('sessions.revoking') : $_('sessions.revoke')}
 								</button>
 							{/if}
 						</div>

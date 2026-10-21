@@ -1,8 +1,8 @@
 import { error, fail } from '@sveltejs/kit';
-import type { PasteDoc } from '$lib/server/pastes';
-import { parsePasteId } from '$lib/server/objectId';
-import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
-import { passphraseLimiter } from '$lib/server/rateLimit';
+import type { PasteDoc } from '#lib/server/pastes';
+import { parsePasteId } from '#lib/server/objectId';
+import { captchaPayload, verifyCaptcha } from '#lib/server/captcha';
+import { passphraseLimiter } from '#lib/server/rateLimit';
 
 export async function load({ params, locals }) {
 	const paste = await locals.mongoDb

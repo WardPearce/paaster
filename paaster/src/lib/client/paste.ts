@@ -2,7 +2,7 @@ import sodium from 'libsodium-wrappers-sumo';
 import { localDb } from './dexie';
 import { authStore } from './stores';
 import { get } from 'svelte/store';
-import { _ } from '$lib/i18n';
+import { _ } from '#lib/i18n/index';
 
 export async function deletePaste(pasteId: string, accessKey?: string) {
 	if (accessKey) {

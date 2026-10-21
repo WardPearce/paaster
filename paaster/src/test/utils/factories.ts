@@ -2,8 +2,8 @@ import { ObjectId, type Db, type WithId, type Document } from 'mongodb';
 import argon2 from 'argon2';
 import { nanoid } from 'nanoid';
 import { generateSecret } from 'otplib';
-import type { PasteDoc } from '$lib/server/pastes';
-import { createSession } from '$lib/server/session';
+import type { PasteDoc } from '#lib/server/pastes';
+import { createSession } from '#lib/server/session';
 
 export const TEST_ACCESS_KEY = 'A'.repeat(44);
 export const TEST_SERVER_PASSWORD = 'sup3r-secret-server-side-passw0rd';

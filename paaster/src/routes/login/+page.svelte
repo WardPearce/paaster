@@ -1,21 +1,21 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { localDb } from '$lib/client/dexie';
+	import { localDb } from '#lib/client/dexie';
 	import {
 		secretBoxDecryptFromMaster,
 		secretBoxEncryptFromMaster
-	} from '$lib/client/sodiumWrapped';
-	import { authStore } from '$lib/client/stores';
-	import Loading from '$lib/components/Loading.svelte';
+	} from '#lib/client/sodiumWrapped';
+	import { authStore } from '#lib/client/stores';
+	import Loading from '#lib/components/Loading.svelte';
 	import * as comlink from 'comlink';
 	import type { Remote } from 'comlink';
 	import type { DerivePasswordApi } from '../../workers/derivePassword';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import { ZxcvbnFactory } from '@zxcvbn-ts/core';
 	import { adjacencyGraphs, dictionary } from '@zxcvbn-ts/language-common';
-	import { solveCaptchaChallenge, type CaptchaPayload } from '$lib/client/captcha';
+	import { solveCaptchaChallenge, type CaptchaPayload } from '#lib/client/captcha';
 	import { resolve } from '$app/paths';
 
 	const zxcvbn = new ZxcvbnFactory({ dictionary, graphs: adjacencyGraphs });
@@ -366,20 +366,12 @@
 					<div
 						class="bg-primary/20 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-						>
 						<span class="loading loading-spinner loading-xs"></span>
 						{$_('account.verifying_captcha', 'Verifying captcha...')}
 					</div>
 				{:else if captchaState === 'solved'}
 					<div
-						class="bg-primary/5 text-success flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+						class="bg-primary/5 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -393,7 +385,7 @@
 					</div>
 				{:else if captchaState === 'error'}
 					<div
-						class="bg-primary/5 text-error flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
+						class="bg-primary/5 flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

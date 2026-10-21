@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-import type { PasteDoc } from '$lib/server/pastes';
-import { parsePasteId } from '$lib/server/objectId';
+import type { PasteDoc } from '#lib/server/pastes';
+import { parsePasteId } from '#lib/server/objectId';
 import argon2 from 'argon2';
-import { passphraseLimiter } from '$lib/server/rateLimit';
+import { passphraseLimiter } from '#lib/server/rateLimit';
 
 export async function load(event) {
 	const { params, locals, cookies } = event;

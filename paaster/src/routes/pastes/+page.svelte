@@ -1,24 +1,26 @@
 <script lang="ts">
-	import { relativeDate } from '$lib/client/date.js';
-	import { localDb, type Paste } from '$lib/client/dexie';
-	import { deletePaste } from '$lib/client/paste.js';
-	import { secretBoxDecryptFromMaster } from '$lib/client/sodiumWrapped';
-	import { authStore } from '$lib/client/stores';
+	import { relativeDate } from '#lib/client/date';
+	import { localDb, type Paste } from '#lib/client/dexie';
+	import { deletePaste } from '#lib/client/paste';
+	import { secretBoxDecryptFromMaster } from '#lib/client/sodiumWrapped';
+	import { authStore } from '#lib/client/stores';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { get } from 'svelte/store';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import FileTextIcon from 'lucide-svelte/icons/file-text';
 	import TrashIcon from 'lucide-svelte/icons/trash';
-	import InfiniteLoading from 'svelte-infinite-loading';
 	import { SvelteSet } from 'svelte/reactivity';
-	import { PASTE_PAGE_SIZE } from '$lib/consts';
+	import { PASTE_PAGE_SIZE } from '#lib/consts';
 	import { onMount } from 'svelte';
 
 	let { data } = $props();
 
 	let bookmarkedPastes: Paste[] = $state([]);
-	let hasMore = $state(true);
+	let hasMore = $state(false);
 	let offset = $state(PASTE_PAGE_SIZE);
+	let loadingMore = $state(false);
+	let loaded = $state(false);
+	let sentinel = $state<HTMLDivElement | null>(null);
 
 	onMount(() => {
 		authStore.subscribe((auth) => {
@@ -30,11 +32,15 @@
 					.then((results) => {
 						bookmarkedPastes = results;
 						hasMore = false;
+						loaded = true;
 					});
 				return;
 			}
 
-			if (!data.pastes) return;
+			if (!data.pastes) {
+				loaded = true;
+				return;
+			}
 
 			sodium.ready.then(async () => {
 				const rawEncryptionKey = sodium.from_base64(auth.encryptionKey);
@@ -52,7 +58,8 @@
 				}
 
 				bookmarkedPastes = all;
-				hasMore = data.pastes.length === 12;
+				hasMore = data.hasMore;
+				loaded = true;
 			});
 		});
 	});
@@ -99,20 +106,16 @@
 		};
 	}
 
-	async function loadMore(event: CustomEvent) {
-		const stateChanger = event.detail;
-
-		if (!hasMore) {
-			stateChanger.complete();
-			return;
-		}
+	async function loadMore() {
+		if (loadingMore || !hasMore) return;
 
 		const auth = get(authStore);
 		if (!auth) {
 			hasMore = false;
-			stateChanger.complete();
 			return;
 		}
+
+		loadingMore = true;
 
 		try {
 			const response = await fetch(`/api/paste?offset=${offset}`);
@@ -120,7 +123,6 @@
 
 			if (!result.pastes || result.pastes.length === 0) {
 				hasMore = false;
-				stateChanger.complete();
 				return;
 			}
 
@@ -135,11 +137,30 @@
 
 			offset += result.pastes.length;
 			hasMore = result.hasMore;
-			stateChanger.loaded();
 		} catch {
-			stateChanger.error();
+			hasMore = false;
+		} finally {
+			loadingMore = false;
 		}
 	}
+
+	$effect(() => {
+		const node = sentinel;
+		if (!node) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					loadMore();
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+
+		observer.observe(node);
+
+		return () => observer.disconnect();
+	});
 
 	async function onPasteDelete(pasteId: string, accessKey?: string) {
 		await deletePaste(pasteId, accessKey);
@@ -151,7 +172,20 @@
 </script>
 
 <div class="px-4 py-6 sm:px-6">
-	{#if bookmarkedPastes.length > 0}
+	{#if !loaded}
+		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			{#each [0, 1, 2, 3, 4, 5] as i (i)}
+				<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
+					<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded"></div>
+					<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded"></div>
+					<div class="flex items-center gap-2">
+						<div class="bg-base-content/10 h-9 w-full rounded-lg"></div>
+						<div class="bg-base-content/10 h-9 w-9 rounded-lg"></div>
+					</div>
+				</div>
+			{/each}
+		</div>
+	{:else if bookmarkedPastes.length > 0}
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 			{#each bookmarkedPastes as paste (paste.id)}
 				<div
@@ -182,11 +216,11 @@
 			{/each}
 		</div>
 
-		<InfiniteLoading on:infinite={loadMore}>
-			<div slot="spinner" let:isFirstLoad>
-				<div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-					{#each Array(6) as i (i)}
-						{#if isFirstLoad || i <= 3}
+		{#if hasMore}
+			<div bind:this={sentinel} class="mt-3 min-h-4" aria-hidden="true">
+				{#if loadingMore}
+					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+						{#each Array(3) as _, i (i)}
 							<div class="bg-base-100 border-base-content/10 animate-pulse rounded-xl border p-5">
 								<div class="bg-base-content/10 mb-2 h-5 w-3/4 rounded"></div>
 								<div class="bg-base-content/10 mb-4 h-4 w-1/3 rounded"></div>
@@ -195,11 +229,11 @@
 									<div class="bg-base-content/10 h-9 w-9 rounded-lg"></div>
 								</div>
 							</div>
-						{/if}
-					{/each}
-				</div>
+						{/each}
+					</div>
+				{/if}
 			</div>
-		</InfiniteLoading>
+		{/if}
 	{:else}
 		<div class="flex flex-col items-center justify-center py-20">
 			<FileTextIcon class="text-base-content/20 size-16" />

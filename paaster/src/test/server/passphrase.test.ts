@@ -14,7 +14,7 @@ import {
 	type MakeEventInit
 } from '../utils/event';
 import { getCaptchaSecrets, createSolvedCaptcha } from '../utils/captcha';
-import { passphraseLimiter } from '$lib/server/rateLimit';
+import { passphraseLimiter } from '#lib/server/rateLimit';
 
 const getDb = setupTestDb();
 

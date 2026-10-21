@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
 	import {
@@ -8,8 +8,8 @@
 		getPasteShareStatus,
 		sendPasteShareData,
 		type PasteSharePayload
-	} from '$lib/client/pasteShare';
-	import { getToast } from '$lib/client/toasts';
+	} from '#lib/client/pasteShare';
+	import { getToast } from '#lib/client/toasts';
 	import SendIcon from 'lucide-svelte/icons/send';
 	import SmartphoneIcon from 'lucide-svelte/icons/smartphone';
 	import CheckCircle2Icon from 'lucide-svelte/icons/check-circle-2';

@@ -1,4 +1,4 @@
-import { stringToObjectId } from '$lib/server/objectId';
+import { stringToObjectId } from '#lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import { verifySync } from 'otplib';
 
@@ -36,10 +36,9 @@ export async function POST({ locals, request }) {
 		throw error(400, 'Invalid token');
 	}
 
-	await locals.mongoDb.collection('users').updateOne(
-		{ _id: userId },
-		{ $set: { twoFactorVerified: true } }
-	);
+	await locals.mongoDb
+		.collection('users')
+		.updateOne({ _id: userId }, { $set: { twoFactorVerified: true } });
 
 	return json({ success: true });
 }

@@ -1,5 +1,5 @@
-import { stringToObjectId } from '$lib/server/objectId';
-import { revokeSession } from '$lib/server/session';
+import { stringToObjectId } from '#lib/server/objectId';
+import { revokeSession } from '#lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 
@@ -40,7 +40,7 @@ export async function DELETE({ locals, request }) {
 
 	const formData = revokeSchema.safeParse(Object.fromEntries(await request.formData()));
 	if (!formData.success) {
-		throw error(400, formData.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	const { id } = formData.data;

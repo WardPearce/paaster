@@ -1,4 +1,4 @@
-import { revokeSession, getSessionIdFromCookie, deleteSessionCookie } from '$lib/server/session';
+import { revokeSession, getSessionIdFromCookie, deleteSessionCookie } from '#lib/server/session';
 import { json } from '@sveltejs/kit';
 
 export async function DELETE({ locals, cookies }) {

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import 'flyonui/variants.css';
-@plugin '../node_modules/flyonui/index.js' {
+@plugin '../node_modules/flyonui/index' {
 	themes:
 		light, dark, black, claude, corporate, ghibli, gourmet, luxury, marshmallow, mintlify, pastel,
 		perplexity, shadcn, slack, soft, spotify, valorant, vscode;

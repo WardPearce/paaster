@@ -4,7 +4,11 @@ import { nanoid } from 'nanoid';
 import { generateSync } from 'otplib';
 import sodium from 'libsodium-wrappers-sumo';
 import type { RequestEvent } from '@sveltejs/kit';
-import { GET as get2fa, POST as enable2fa, DELETE as disable2fa } from '../../routes/api/account/2fa/+server';
+import {
+	GET as get2fa,
+	POST as enable2fa,
+	DELETE as disable2fa
+} from '../../routes/api/account/2fa/+server';
 import { POST as verify2fa } from '../../routes/api/account/2fa/verify/+server';
 import { GET as getAlive } from '../../routes/api/account/alive/+server';
 import { POST as createAccount } from '../../routes/api/account/create/+server';
@@ -12,7 +16,10 @@ import { GET as getDefaults, POST as setDefaults } from '../../routes/api/accoun
 import { DELETE as deleteAccount } from '../../routes/api/account/delete/+server';
 import { DELETE as logout } from '../../routes/api/account/logout/+server';
 import { POST as resetPassword } from '../../routes/api/account/passwordReset/+server';
-import { GET as listSessions, DELETE as revokeSession } from '../../routes/api/account/sessions/+server';
+import {
+	GET as listSessions,
+	DELETE as revokeSession
+} from '../../routes/api/account/sessions/+server';
 import { GET as getTheme } from '../../routes/api/account/theme/+server';
 import { POST as setTheme } from '../../routes/api/account/theme/[themeName]/+server';
 import { POST as bookmarkPaste } from '../../routes/api/account/paste/[pasteId]/+server';
@@ -20,7 +27,13 @@ import { POST as login } from '../../routes/api/account/[username]/login/+server
 import { GET as getPublicUser } from '../../routes/api/account/[username]/public/+server';
 import { setupTestDb } from '../utils/db';
 import { createSolvedCaptcha, getCaptchaSecrets, type SolvedCaptcha } from '../utils/captcha';
-import { expectHttpError, formRequest, makeCookies, makeEvent, makeMemoryStorage } from '../utils/event';
+import {
+	expectHttpError,
+	formRequest,
+	makeCookies,
+	makeEvent,
+	makeMemoryStorage
+} from '../utils/event';
 import {
 	insertPaste,
 	insertSession,
@@ -103,12 +116,16 @@ describe('POST /api/account/create', () => {
 		const payload = await captcha();
 
 		const first = formRequest(withCaptcha(createFields('bob1'), payload));
-		const res = await createAccount(makeEvent(getDb(), makeMemoryStorage(), { request: first, locals: captchaLocals() }));
+		const res = await createAccount(
+			makeEvent(getDb(), makeMemoryStorage(), { request: first, locals: captchaLocals() })
+		);
 		expect(res.status).toBe(200);
 
 		const second = formRequest(withCaptcha(createFields('carol'), payload));
 		await expectHttpError(
-			createAccount(makeEvent(getDb(), makeMemoryStorage(), { request: second, locals: captchaLocals() })),
+			createAccount(
+				makeEvent(getDb(), makeMemoryStorage(), { request: second, locals: captchaLocals() })
+			),
 			400
 		);
 	});
@@ -153,7 +170,11 @@ describe('GET /api/account/[username]/public', () => {
 	});
 
 	it('reports twoFactor for a verified 2FA user', async () => {
-		await insertUser(getDb(), { username: 'alice', twoFactorSecret: twoFactorSecret(), twoFactorVerified: true });
+		await insertUser(getDb(), {
+			username: 'alice',
+			twoFactorSecret: twoFactorSecret(),
+			twoFactorVerified: true
+		});
 
 		const res = await getPublicUser(
 			makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'alice' } })
@@ -169,8 +190,12 @@ describe('GET /api/account/[username]/public', () => {
 		const body = await res.json();
 
 		expect(typeof body.twoFactor).toBe('boolean');
-		expect(Buffer.from(body.masterPasswordSalt, 'base64')).toHaveLength(sodium.crypto_pwhash_SALTBYTES);
-		expect(Buffer.from(body.serverSide.salt, 'base64')).toHaveLength(sodium.crypto_pwhash_SALTBYTES);
+		expect(Buffer.from(body.masterPasswordSalt, 'base64')).toHaveLength(
+			sodium.crypto_pwhash_SALTBYTES
+		);
+		expect(Buffer.from(body.serverSide.salt, 'base64')).toHaveLength(
+			sodium.crypto_pwhash_SALTBYTES
+		);
 	});
 
 	it('returns a stable decoy across requests for a missing user', async () => {
@@ -202,7 +227,13 @@ describe('POST /api/account/[username]/login', () => {
 		const request = formRequest(withCaptcha({ serverSidePassword: TEST_SERVER_PASSWORD }, payload));
 
 		await expectHttpError(
-			login(makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'ghost' }, request, locals: captchaLocals() })),
+			login(
+				makeEvent(getDb(), makeMemoryStorage(), {
+					params: { username: 'ghost' },
+					request,
+					locals: captchaLocals()
+				})
+			),
 			401
 		);
 	});
@@ -224,21 +255,37 @@ describe('POST /api/account/[username]/login', () => {
 		const request = formRequest(withCaptcha({ serverSidePassword: WRONG_PASSWORD }, payload));
 
 		await expectHttpError(
-			login(makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'alice' }, request, locals: captchaLocals() })),
+			login(
+				makeEvent(getDb(), makeMemoryStorage(), {
+					params: { username: 'alice' },
+					request,
+					locals: captchaLocals()
+				})
+			),
 			401
 		);
 	});
 
 	it('returns 401 for an invalid 2FA token', async () => {
 		const { captcha, captchaLocals } = await authFixture();
-		await insertUser(getDb(), { username: 'alice', twoFactorSecret: twoFactorSecret(), twoFactorVerified: true });
+		await insertUser(getDb(), {
+			username: 'alice',
+			twoFactorSecret: twoFactorSecret(),
+			twoFactorVerified: true
+		});
 		const payload = await captcha();
 		const request = formRequest(
 			withCaptcha({ serverSidePassword: TEST_SERVER_PASSWORD, twoFactorToken: '000000' }, payload)
 		);
 
 		await expectHttpError(
-			login(makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'alice' }, request, locals: captchaLocals() })),
+			login(
+				makeEvent(getDb(), makeMemoryStorage(), {
+					params: { username: 'alice' },
+					request,
+					locals: captchaLocals()
+				})
+			),
 			401
 		);
 	});
@@ -251,7 +298,12 @@ describe('POST /api/account/[username]/login', () => {
 		const request = formRequest(withCaptcha({ serverSidePassword: TEST_SERVER_PASSWORD }, payload));
 
 		const res = await login(
-			makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'alice' }, request, cookies, locals: captchaLocals() })
+			makeEvent(getDb(), makeMemoryStorage(), {
+				params: { username: 'alice' },
+				request,
+				cookies,
+				locals: captchaLocals()
+			})
 		);
 		const body = await res.json();
 
@@ -263,14 +315,25 @@ describe('POST /api/account/[username]/login', () => {
 	it('logs in with a valid 2FA token', async () => {
 		const { captcha, captchaLocals } = await authFixture();
 		const secret = twoFactorSecret();
-		const user = await insertUser(getDb(), { username: 'alice', twoFactorSecret: secret, twoFactorVerified: true });
+		const user = await insertUser(getDb(), {
+			username: 'alice',
+			twoFactorSecret: secret,
+			twoFactorVerified: true
+		});
 		const payload = await captcha();
 		const request = formRequest(
-			withCaptcha({ serverSidePassword: TEST_SERVER_PASSWORD, twoFactorToken: generateSync({ secret }) }, payload)
+			withCaptcha(
+				{ serverSidePassword: TEST_SERVER_PASSWORD, twoFactorToken: generateSync({ secret }) },
+				payload
+			)
 		);
 
 		const res = await login(
-			makeEvent(getDb(), makeMemoryStorage(), { params: { username: 'alice' }, request, locals: captchaLocals() })
+			makeEvent(getDb(), makeMemoryStorage(), {
+				params: { username: 'alice' },
+				request,
+				locals: captchaLocals()
+			})
 		);
 		const body = await res.json();
 		expect(body.userId).toBe(user._id.toHexString());
@@ -283,7 +346,9 @@ describe('GET /api/account/alive', () => {
 		const userId = new ObjectId().toHexString();
 
 		await expect(getAlive(anon()).then((r) => r.json())).resolves.toEqual({ loggedIn: false });
-		await expect(getAlive(authed(userId)).then((r) => r.json())).resolves.toEqual({ loggedIn: true });
+		await expect(getAlive(authed(userId)).then((r) => r.json())).resolves.toEqual({
+			loggedIn: true
+		});
 	});
 });
 
@@ -316,7 +381,10 @@ describe('GET /api/account/2fa', () => {
 
 	it('only reports the verified flag once verified', async () => {
 		const { authed } = await authFixture();
-		const user = await insertUser(getDb(), { twoFactorSecret: twoFactorSecret(), twoFactorVerified: true });
+		const user = await insertUser(getDb(), {
+			twoFactorSecret: twoFactorSecret(),
+			twoFactorVerified: true
+		});
 
 		const res = await get2fa(authed(user._id.toHexString()));
 		await expect(res.json()).resolves.toEqual({ verified: true });
@@ -378,7 +446,10 @@ describe('POST /api/account/2fa/verify', () => {
 
 	it('returns 400 when already verified', async () => {
 		const { authed } = await authFixture();
-		const user = await insertUser(getDb(), { twoFactorSecret: twoFactorSecret(), twoFactorVerified: true });
+		const user = await insertUser(getDb(), {
+			twoFactorSecret: twoFactorSecret(),
+			twoFactorVerified: true
+		});
 		const request = formRequest({ token: '000000' });
 
 		await expectHttpError(verify2fa(authed(user._id.toHexString(), undefined, request)), 400);
@@ -386,7 +457,10 @@ describe('POST /api/account/2fa/verify', () => {
 
 	it('rejects an invalid token', async () => {
 		const { authed } = await authFixture();
-		const user = await insertUser(getDb(), { twoFactorSecret: twoFactorSecret(), twoFactorVerified: false });
+		const user = await insertUser(getDb(), {
+			twoFactorSecret: twoFactorSecret(),
+			twoFactorVerified: false
+		});
 		const request = formRequest({ token: '000000' });
 
 		await expectHttpError(verify2fa(authed(user._id.toHexString(), undefined, request)), 400);
@@ -414,7 +488,10 @@ describe('DELETE /api/account/2fa', () => {
 
 	it('disables 2FA with the current password', async () => {
 		const { authed } = await authFixture();
-		const user = await insertUser(getDb(), { twoFactorSecret: twoFactorSecret(), twoFactorVerified: true });
+		const user = await insertUser(getDb(), {
+			twoFactorSecret: twoFactorSecret(),
+			twoFactorVerified: true
+		});
 		const request = formRequest({ serverSidePassword: TEST_SERVER_PASSWORD }, { method: 'DELETE' });
 
 		const res = await disable2fa(authed(user._id.toHexString(), undefined, request));
@@ -483,7 +560,10 @@ describe('DELETE /api/account/sessions', () => {
 		const user = await insertUser(getDb(), {});
 		const request = formRequest({ id: new ObjectId().toHexString() }, { method: 'DELETE' });
 
-		await expectHttpError(revokeSession(authed(user._id.toHexString(), 'current-session', request)), 404);
+		await expectHttpError(
+			revokeSession(authed(user._id.toHexString(), 'current-session', request)),
+			404
+		);
 	});
 
 	it('revokes another session owned by the user', async () => {
@@ -498,7 +578,9 @@ describe('DELETE /api/account/sessions', () => {
 		expect(res.status).toBe(200);
 
 		await expect(getDb().collection('sessions').findOne({ sessionId: other })).resolves.toBeNull();
-		await expect(getDb().collection('sessions').findOne({ sessionId: current })).resolves.not.toBeNull();
+		await expect(
+			getDb().collection('sessions').findOne({ sessionId: current })
+		).resolves.not.toBeNull();
 	});
 });
 
@@ -586,14 +668,21 @@ describe('POST /api/account/theme/[themeName]', () => {
 		const { authed } = await authFixture();
 		const user = await insertUser(getDb(), {});
 
-		await expectHttpError(setTheme(authed(user._id.toHexString(), undefined, undefined, { themeName: 'no-such-theme' })), 400);
+		await expectHttpError(
+			setTheme(
+				authed(user._id.toHexString(), undefined, undefined, { themeName: 'no-such-theme' })
+			),
+			400
+		);
 	});
 
 	it('upserts the theme', async () => {
 		const { authed } = await authFixture();
 		const user = await insertUser(getDb(), {});
 
-		const res = await setTheme(authed(user._id.toHexString(), undefined, undefined, { themeName: 'dark' }));
+		const res = await setTheme(
+			authed(user._id.toHexString(), undefined, undefined, { themeName: 'dark' })
+		);
 		expect(res.status).toBe(200);
 
 		const stored = await getDb().collection('userTheme').findOne({ _id: user._id });
@@ -607,10 +696,7 @@ describe('POST /api/account/paste/[pasteId]', () => {
 		const { anon } = await authFixture();
 		const request = formRequest(bookmarkFields());
 
-		await expectHttpError(
-			bookmarkPaste(anon(request, { pasteId: nanoid() })),
-			401
-		);
+		await expectHttpError(bookmarkPaste(anon(request, { pasteId: nanoid() })), 401);
 	});
 
 	it('returns 400 for an invalid body', async () => {
@@ -632,7 +718,9 @@ describe('POST /api/account/paste/[pasteId]', () => {
 		);
 		expect(res.status).toBe(200);
 
-		const stored = (await getDb().collection('userPastes').findOne({ userId: user._id.toHexString() }))!;
+		const stored = (await getDb()
+			.collection('userPastes')
+			.findOne({ userId: user._id.toHexString() }))!;
 		expect(stored.paste.id).toBe(paste._id);
 	});
 });
@@ -645,7 +733,9 @@ describe('DELETE /api/account/logout', () => {
 		const cookies = makeCookies();
 		cookies.set('sessionId', sessionId);
 
-		const res = await logout(authed(user._id.toHexString(), sessionId, undefined, undefined, cookies));
+		const res = await logout(
+			authed(user._id.toHexString(), sessionId, undefined, undefined, cookies)
+		);
 		expect(res.status).toBe(200);
 
 		await expect(getDb().collection('sessions').findOne({ sessionId })).resolves.toBeNull();
@@ -678,7 +768,10 @@ describe('POST /api/account/passwordReset', () => {
 		const { authed } = await authFixture();
 		const request = formRequest(resetFields());
 
-		await expectHttpError(resetPassword(authed(new ObjectId().toHexString(), undefined, request)), 404);
+		await expectHttpError(
+			resetPassword(authed(new ObjectId().toHexString(), undefined, request)),
+			404
+		);
 	});
 
 	it('returns 401 for a wrong current password', async () => {
@@ -704,7 +797,9 @@ describe('POST /api/account/passwordReset', () => {
 		expect(updated.masterPasswordSalt).toBe('bmV3TWFzdGVyUGFzc3dvcmQ=');
 
 		await expect(getDb().collection('sessions').findOne({ sessionId: other })).resolves.toBeNull();
-		await expect(getDb().collection('sessions').findOne({ sessionId: current })).resolves.not.toBeNull();
+		await expect(
+			getDb().collection('sessions').findOne({ sessionId: current })
+		).resolves.not.toBeNull();
 	});
 });
 
@@ -727,7 +822,10 @@ describe('DELETE /api/account/delete', () => {
 		const { authed } = await authFixture();
 		const request = formRequest({ serverSidePassword: TEST_SERVER_PASSWORD }, { method: 'DELETE' });
 
-		await expectHttpError(deleteAccount(authed(new ObjectId().toHexString(), undefined, request)), 404);
+		await expectHttpError(
+			deleteAccount(authed(new ObjectId().toHexString(), undefined, request)),
+			404
+		);
 	});
 
 	it('returns 401 for a wrong password', async () => {
@@ -748,11 +846,15 @@ describe('DELETE /api/account/delete', () => {
 		cookies.set('sessionId', sessionId);
 		const request = formRequest({ serverSidePassword: TEST_SERVER_PASSWORD }, { method: 'DELETE' });
 
-		const res = await deleteAccount(authed(user._id.toHexString(), sessionId, request, undefined, cookies));
+		const res = await deleteAccount(
+			authed(user._id.toHexString(), sessionId, request, undefined, cookies)
+		);
 		expect(res.status).toBe(200);
 
 		await expect(getDb().collection('users').findOne({ _id: user._id })).resolves.toBeNull();
-		await expect(getDb().collection('userPastes').findOne({ userId: user._id.toHexString() })).resolves.toBeNull();
+		await expect(
+			getDb().collection('userPastes').findOne({ userId: user._id.toHexString() })
+		).resolves.toBeNull();
 		await expect(getDb().collection('sessions').findOne({ userId: user._id })).resolves.toBeNull();
 		expect(cookies.get('sessionId')).toBeUndefined();
 	});

@@ -1,4 +1,4 @@
-import { stringToObjectId } from '$lib/server/objectId';
+import { stringToObjectId } from '#lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 
@@ -34,7 +34,7 @@ export async function POST({ locals, request }) {
 	const formData = defaultSchema.safeParse(Object.fromEntries(await request.formData()));
 
 	if (!formData.success) {
-		throw error(400, formData.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	await locals.mongoDb

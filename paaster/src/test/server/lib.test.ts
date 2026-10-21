@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ObjectId } from 'mongodb';
 import { nanoid } from 'nanoid';
-import { parsePasteId, stringToObjectId } from '$lib/server/objectId';
+import { parsePasteId, stringToObjectId } from '#lib/server/objectId';
 import {
 	generatePasteShareCode,
 	getPasteShareSession,
@@ -10,8 +10,8 @@ import {
 	pasteShareCodeLength,
 	createPasteShareSession,
 	pasteShareTtlMs
-} from '$lib/server/pasteShare';
-import { getUserPastes } from '$lib/server/pastes';
+} from '#lib/server/pasteShare';
+import { getUserPastes } from '#lib/server/pastes';
 import { setupTestDb } from '../utils/db';
 import { expectHttpError } from '../utils/event';
 import { insertPaste, insertUserPaste } from '../utils/factories';

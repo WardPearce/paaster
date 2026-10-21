@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { qr } from '@svelte-put/qr/img';
-	import { themeStore } from '$lib/client/stores.js';
-	import { oklchToHex } from '$lib/client/colors';
+	import { themeStore } from '#lib/client/stores';
+	import { oklchToHex } from '#lib/client/colors';
 
 	let {
 		data,

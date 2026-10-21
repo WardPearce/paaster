@@ -1,8 +1,8 @@
-import { CHUNK_SIZE } from '$lib/consts';
-import { validateAuth } from '$lib/server/auth';
-import type { PasteDoc } from '$lib/server/pastes';
-import { parsePasteId } from '$lib/server/objectId';
-import { getMaxUploadBytes } from '$lib/server/storage';
+import { CHUNK_SIZE } from '#lib/consts';
+import { validateAuth } from '#lib/server/auth';
+import type { PasteDoc } from '#lib/server/pastes';
+import { parsePasteId } from '#lib/server/objectId';
+import { getMaxUploadBytes } from '#lib/server/storage/index';
 import { error, json } from '@sveltejs/kit';
 import { z } from 'zod';
 
@@ -38,7 +38,7 @@ export async function POST({ locals, params, request }) {
 	const parsed = chunkSchema.safeParse(formData);
 
 	if (!parsed.success) {
-		throw error(400, parsed.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	const { chunkIndex, totalChunks, data: file } = parsed.data;

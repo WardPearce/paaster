@@ -5,13 +5,13 @@
 	import LoginIcon from 'lucide-svelte/icons/log-in';
 	import LogoutIcon from 'lucide-svelte/icons/log-out';
 	import SettingsIcon from 'lucide-svelte/icons/settings';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import { page } from '$app/state';
 
 	import { afterNavigate, goto } from '$app/navigation';
-	import { localDb } from '$lib/client/dexie';
-	import { authStore, rawModeStore } from '$lib/client/stores';
-	import { setTheme } from '$lib/client/theme';
+	import { localDb } from '#lib/client/dexie';
+	import { authStore, rawModeStore } from '#lib/client/stores';
+	import { setTheme } from '#lib/client/theme';
 	import 'notyf/notyf.min.css';
 	import { onMount } from 'svelte';
 	import '../app.css';
@@ -57,7 +57,9 @@
 		}
 	});
 
-	afterNavigate(() => {
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
 		try {
 			// @ts-ignore
 			HSStaticMethods.autoInit();

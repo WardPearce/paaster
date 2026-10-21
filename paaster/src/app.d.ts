@@ -1,7 +1,7 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import type { IStaticMethods } from 'flyonui/flyonui';
 import { Db } from 'mongodb';
-import type { StorageBackend } from '$lib/server/storage/types';
+import type { StorageBackend } from '#lib/server/storage/types';
 
 declare global {
 	interface Window {

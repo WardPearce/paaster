@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { nanoid } from 'nanoid';
-import { FileSystemStorageBackend } from '$lib/server/storage/filesystem';
+import { FileSystemStorageBackend } from '#lib/server/storage/filesystem';
 
 describe('FileSystemStorageBackend', () => {
 	const traversalPasteIds = [

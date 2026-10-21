@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
-import { registerPasteShareReceiver } from '$lib/server/pasteShare';
-import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
+import { registerPasteShareReceiver } from '#lib/server/pasteShare';
+import { captchaPayload, verifyCaptcha } from '#lib/server/captcha';
 import { z } from 'zod';
 
 const zReceiver = z.object({

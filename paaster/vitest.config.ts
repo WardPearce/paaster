@@ -7,7 +7,8 @@ const root = fileURLToPath(new URL('.', import.meta.url));
 export default defineConfig({
 	resolve: {
 		alias: {
-			$lib: resolve(root, 'src/lib'),
+			'#lib': resolve(root, 'src/lib'),
+			'$app/env/private': resolve(root, 'src/test/utils/env-app-private.cjs'),
 			'$env/dynamic/private': resolve(root, 'src/test/utils/env-private.ts'),
 			'$env/static/private': resolve(root, 'src/test/utils/env-static.ts')
 		}

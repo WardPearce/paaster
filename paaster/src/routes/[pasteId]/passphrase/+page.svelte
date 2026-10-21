@@ -2,12 +2,12 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import KeyIcon from 'lucide-svelte/icons/key';
 	import ArrowRightIcon from 'lucide-svelte/icons/arrow-right';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
-	import { solveCaptchaChallenge, type CaptchaPayload } from '$lib/client/captcha';
+	import { solveCaptchaChallenge, type CaptchaPayload } from '#lib/client/captcha';
 
 	let passphrase = $state('');
 	let formError = $state('');
@@ -27,7 +27,7 @@
 
 	function onSuccess() {
 		const hash = window.location.hash;
-		goto(resolve(`/${page.params.pasteId}${hash}`));
+		goto(resolve('/[pasteId]', { pasteId: page.params.pasteId as string }) + hash);
 	}
 </script>
 
