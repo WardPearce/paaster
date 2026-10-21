@@ -648,17 +648,17 @@
 						items={pasteDeletionTimes()}
 						clearable={false}
 						bind:value={expireTime}
-						on:change={setExpire}
+						onchange={setExpire}
 					/>
 				</div>
 
 				<div>
 					<label class="label label-text mb-1.5" for="lang">{$_('paste_actions.language')}</label>
 					<Select
-						items={Object.keys(supportedLangs)}
+						items={Object.keys(supportedLangs).map((lang) => ({ value: lang, label: lang }))}
 						clearable={false}
 						bind:value={selectedLang}
-						on:change={setLang}
+						onchange={setLang}
 						placeholder="Auto-detect language"
 					/>
 				</div>
