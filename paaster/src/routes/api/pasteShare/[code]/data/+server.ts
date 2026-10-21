@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { getPasteShareSession, setPasteShareData } from '$lib/server/pasteShare';
+import { getPasteShareSession, setPasteShareData } from '#lib/server/pasteShare';
 import { z } from 'zod';
 
 const zCipher = z.object({

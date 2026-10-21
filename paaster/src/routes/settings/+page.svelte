@@ -1,27 +1,27 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { localDb } from '$lib/client/dexie';
-	import { secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
-	import { authStore, themeStore } from '$lib/client/stores';
-	import { setTheme } from '$lib/client/theme';
-	import Loading from '$lib/components/Loading.svelte';
-	import QrCode from '$lib/components/QrCode.svelte';
-	import { THEMES } from '$lib/consts';
+	import { localDb } from '#lib/client/dexie';
+	import { secretBoxEncryptFromMaster } from '#lib/client/sodiumWrapped';
+	import { authStore, themeStore } from '#lib/client/stores';
+	import { setTheme } from '#lib/client/theme';
+	import Loading from '#lib/components/Loading.svelte';
+	import QrCode from '#lib/components/QrCode.svelte';
+	import { THEMES } from '#lib/consts';
 	import * as comlink from 'comlink';
 	import sodium from 'libsodium-wrappers-sumo';
 	import { onDestroy, onMount } from 'svelte';
-	import { _ } from '$lib/i18n';
-	import { relativeDate } from '$lib/client/date';
+	import { _ } from '#lib/i18n/index';
+	import { relativeDate } from '#lib/client/date';
 	import { get } from 'svelte/store';
-	import { pasteDeletionTimes } from '$lib/client/paste';
+	import { pasteDeletionTimes } from '#lib/client/paste';
 	import { resolve } from '$app/paths';
+	import Select from 'svelte-select';
 
 	let { data }: { data: { expireAfter: number; username: string } } = $props();
 
 	let worker: Worker | undefined;
 	let derivePassword:
-		| ((rawPassword: string, passwordSalt: Uint8Array) => Promise<Uint8Array>)
-		| undefined;
+		((rawPassword: string, passwordSalt: Uint8Array) => Promise<Uint8Array>) | undefined;
 
 	let errorMsg: string | undefined = $state();
 	let isLoading = $state(false);
@@ -52,7 +52,12 @@
 		return sodium.to_base64(serverSidePw);
 	}
 
-	let defaultPasteDelectionTime = $state(data.expireAfter);
+	let defaultPasteDelectionTime:
+		| {
+				value: number;
+				label: string;
+		  }
+		| undefined = $state(pasteDeletionTimes().find((time) => time.value === data.expireAfter));
 
 	let twoFactorSecret: string | undefined = $state();
 	let twoFactorURI: string | undefined = $state();
@@ -242,8 +247,10 @@
 	}
 
 	async function setDefaultPasteExpiry() {
+		if (!defaultPasteDelectionTime) return;
+
 		const payload = new FormData();
-		payload.append('expireAfter', defaultPasteDelectionTime.toString());
+		payload.append('expireAfter', defaultPasteDelectionTime.value.toString());
 
 		await fetch('/api/account/defaults', { method: 'POST', body: payload });
 	}
@@ -396,15 +403,12 @@
 			<div class="card-body p-6">
 				<h2 class="text-base-content text-xl font-semibold">{$_('defaultPasteExpiry')}</h2>
 				<div class="mt-4 max-w-xs">
-					<select
-						class="select w-full"
-						onchange={setDefaultPasteExpiry}
+					<Select
+						items={pasteDeletionTimes()}
+						clearable={false}
 						bind:value={defaultPasteDelectionTime}
-					>
-						{#each pasteDeletionTimes() as period (period.value)}
-							<option value={period.value}>{period.label}</option>
-						{/each}
-					</select>
+						onchange={setDefaultPasteExpiry}
+					/>
 				</div>
 			</div>
 		</div>
@@ -579,9 +583,7 @@
 									disabled={revokingSession === session.id}
 									onclick={() => revokeSession(session.id)}
 								>
-									{revokingSession === session.id
-										? $_('sessions.revoking')
-										: $_('sessions.revoke')}
+									{revokingSession === session.id ? $_('sessions.revoking') : $_('sessions.revoke')}
 								</button>
 							{/if}
 						</div>

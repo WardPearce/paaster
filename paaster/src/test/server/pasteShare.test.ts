@@ -1,13 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { POST as createSession } from '../../routes/api/pasteShare/+server';
-import { DELETE as deleteSession, GET as getSession } from '../../routes/api/pasteShare/[code]/+server';
+import {
+	DELETE as deleteSession,
+	GET as getSession
+} from '../../routes/api/pasteShare/[code]/+server';
 import { GET as getData, POST as setData } from '../../routes/api/pasteShare/[code]/data/+server';
 import { POST as registerReceiver } from '../../routes/api/pasteShare/[code]/receiver/+server';
 import { setupTestDb } from '../utils/db';
 import {
 	registerPasteShareReceiver as registerReceiverDirect,
 	setPasteShareData as setDataDirect
-} from '$lib/server/pasteShare';
+} from '#lib/server/pasteShare';
 import { createSolvedCaptcha, getCaptchaSecrets } from '../utils/captcha';
 import { expectHttpError, jsonRequest, makeEvent, makeMemoryStorage } from '../utils/event';
 
@@ -113,7 +116,9 @@ describe('POST /api/pasteShare/[code]/receiver', () => {
 
 		const second = await captcha(secrets.key, secrets.signature);
 		await expectHttpError(
-			registerReceiver(event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: second }))),
+			registerReceiver(
+				event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: second }))
+			),
 			409
 		);
 	});
@@ -160,7 +165,9 @@ describe('POST /api/pasteShare/[code]/data', () => {
 		const { code } = await created.json();
 
 		const payload = await captcha(secrets.key, secrets.signature);
-		await registerReceiver(event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: payload })));
+		await registerReceiver(
+			event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: payload }))
+		);
 
 		const res = await setData(event({ code }, jsonRequest({ cipher: 'cGllY2U=' })));
 		await expect(res.json()).resolves.toEqual({ success: true });
@@ -178,7 +185,9 @@ describe('POST /api/pasteShare/[code]/data', () => {
 		const { code } = await created.json();
 
 		const payload = await captcha(secrets.key, secrets.signature);
-		await registerReceiver(event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: payload })));
+		await registerReceiver(
+			event({ code }, jsonRequest({ publicKey: RECEIVER_KEY, captchaPayload: payload }))
+		);
 
 		const results = await Promise.all([
 			setDataDirect(getDb(), code, 'Zmlyc3Q='),

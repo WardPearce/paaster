@@ -3,7 +3,7 @@
 		<span class="loading loading-spinner text-primary size-20"></span>
 	</div>
 	<div class="text-base-content/50 text-xl font-medium tracking-wide">
-		Loading<span class="animate-bounce ml-0.5" style="animation-delay: 0ms">.</span>
+		Loading<span class="ml-0.5 animate-bounce" style="animation-delay: 0ms">.</span>
 		<span class="animate-bounce" style="animation-delay: 200ms">.</span>
 		<span class="animate-bounce" style="animation-delay: 400ms">.</span>
 	</div>

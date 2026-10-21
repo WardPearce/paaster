@@ -1,4 +1,4 @@
-import { stringToObjectId } from '$lib/server/objectId';
+import { stringToObjectId } from '#lib/server/objectId';
 import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ locals }) {

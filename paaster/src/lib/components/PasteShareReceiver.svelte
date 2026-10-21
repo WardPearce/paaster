@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
 	import {
@@ -11,7 +11,7 @@
 		openPasteShareData,
 		registerPasteShareReceiver,
 		pasteShareTtlMs
-	} from '$lib/client/pasteShare';
+	} from '#lib/client/pasteShare';
 	import CheckCircle2Icon from 'lucide-svelte/icons/check-circle-2';
 
 	let phase = $state<'entering' | 'connecting' | 'waiting' | 'success' | 'error'>('entering');

@@ -8,7 +8,12 @@ export class MongoDBStorageBackend implements StorageBackend {
 		this.db = db;
 	}
 
-	async saveChunk(pasteId: string, chunkIndex: number, data: Uint8Array, totalChunks: number): Promise<void> {
+	async saveChunk(
+		pasteId: string,
+		chunkIndex: number,
+		data: Uint8Array,
+		totalChunks: number
+	): Promise<void> {
 		await this.db.collection('pasteChunks').updateOne(
 			{ pasteId, chunkIndex },
 			{

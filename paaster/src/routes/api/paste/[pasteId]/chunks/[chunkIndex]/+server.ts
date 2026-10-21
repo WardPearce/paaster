@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import type { PasteDoc } from '$lib/server/pastes';
-import { parsePasteId } from '$lib/server/objectId';
+import type { PasteDoc } from '#lib/server/pastes';
+import { parsePasteId } from '#lib/server/objectId';
 
 export async function GET({ locals, params }) {
 	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({

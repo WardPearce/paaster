@@ -1,4 +1,4 @@
-import type { Account } from '$lib/client/dexie';
+import type { Account } from '#lib/client/dexie';
 import type { Writable } from 'svelte/store';
 import { writable } from 'svelte/store';
 

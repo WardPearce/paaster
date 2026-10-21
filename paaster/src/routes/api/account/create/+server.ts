@@ -1,5 +1,5 @@
-import { captchaPayload, verifyCaptcha } from '$lib/server/captcha';
-import { createSession, setSessionCookie } from '$lib/server/session';
+import { captchaPayload, verifyCaptcha } from '#lib/server/captcha';
+import { createSession, setSessionCookie } from '#lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ export async function POST({ locals, request, cookies }) {
 	const formData = createSchema.safeParse(Object.fromEntries(await request.formData()));
 
 	if (!formData.success) {
-		throw error(400, formData.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	await verifyCaptcha({

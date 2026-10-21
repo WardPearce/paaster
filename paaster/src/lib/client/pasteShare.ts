@@ -1,7 +1,7 @@
 import sodium from 'libsodium-wrappers-sumo';
 import dayjs from 'dayjs';
 import { get } from 'svelte/store';
-import { _ } from '$lib/i18n';
+import { _ } from '#lib/i18n/index';
 import { localDb } from './dexie';
 import { solveCaptchaChallenge } from './captcha';
 

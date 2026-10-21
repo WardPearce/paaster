@@ -1,6 +1,6 @@
 import type { Db, Document, ObjectId } from 'mongodb';
-import { parsePasteId } from '$lib/server/objectId';
-import { PASTE_PAGE_SIZE } from '$lib/consts';
+import { parsePasteId } from '#lib/server/objectId';
+import { PASTE_PAGE_SIZE } from '#lib/consts';
 
 export type PasteDoc = { _id: string | ObjectId } & Document;
 

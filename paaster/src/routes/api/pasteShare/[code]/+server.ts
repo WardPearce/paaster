@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { deletePasteShareSession, getPasteShareSession } from '$lib/server/pasteShare';
+import { deletePasteShareSession, getPasteShareSession } from '#lib/server/pasteShare';
 
 export async function GET({ locals, params }) {
 	const session = await getPasteShareSession(locals.mongoDb, params.code);

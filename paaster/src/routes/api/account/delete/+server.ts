@@ -1,5 +1,5 @@
-import { stringToObjectId } from '$lib/server/objectId.js';
-import { revokeAllUserSessions, deleteSessionCookie } from '$lib/server/session';
+import { stringToObjectId } from '#lib/server/objectId';
+import { revokeAllUserSessions, deleteSessionCookie } from '#lib/server/session';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { ObjectId } from 'mongodb';

@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { localDb, type Paste } from '$lib/client/dexie';
+	import { localDb, type Paste } from '#lib/client/dexie';
 	import {
 		deriveExistingKeyFromMaster,
 		secretBoxDecryptFromMaster,
 		secretBoxEncryptFromMaster
-	} from '$lib/client/sodiumWrapped';
-	import { authStore, themeStore, rawModeStore } from '$lib/client/stores.js';
-	import { getToast } from '$lib/client/toasts';
-	import Loading from '$lib/components/Loading.svelte';
+	} from '#lib/client/sodiumWrapped';
+	import { authStore, themeStore, rawModeStore } from '#lib/client/stores';
+	import { getToast } from '#lib/client/toasts';
+	import Loading from '#lib/components/Loading.svelte';
 	import sodium from 'libsodium-wrappers-sumo';
 	import CommandIcon from 'lucide-svelte/icons/command';
 	import QrCodeIcon from 'lucide-svelte/icons/qr-code';
@@ -21,20 +21,20 @@
 	import type { LanguageType } from 'svelte-highlight/languages';
 	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
 	import atonOneLight from 'svelte-highlight/styles/atom-one-light';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import Select from 'svelte-select';
 	import SvelteMarkdown from '@humanspeak/svelte-markdown';
-	import QrCode from '$lib/components/QrCode.svelte';
+	import QrCode from '#lib/components/QrCode.svelte';
 	import { get } from 'svelte/store';
-	import { pasteDeletionTimes } from '$lib/client/paste.js';
-	import { generatePassphrase } from '$lib/client/passphrase';
+	import { pasteDeletionTimes } from '#lib/client/paste';
+	import { generatePassphrase } from '#lib/client/passphrase';
 	import KeyIcon from 'lucide-svelte/icons/key';
 	import CopyIcon from 'lucide-svelte/icons/copy';
 	import SendIcon from 'lucide-svelte/icons/send';
 	import { HSOverlay } from 'flyonui/flyonui.js';
 	import { resolve } from '$app/paths';
-	import PasteShareSender from '$lib/components/PasteShareSender.svelte';
-	import { createPasteShareSession } from '$lib/client/pasteShare';
+	import PasteShareSender from '#lib/components/PasteShareSender.svelte';
+	import { createPasteShareSession } from '#lib/client/pasteShare';
 
 	let { data } = $props();
 
@@ -310,7 +310,10 @@
 
 	onMount(async () => {
 		if (data.passphraseRequired) {
-			goto(resolve(`/${page.params.pasteId}/passphrase${window.location.hash}`));
+			goto(
+				resolve('/[pasteId]/passphrase', { pasteId: page.params.pasteId as string }) +
+					window.location.hash
+			);
 			return;
 		}
 
@@ -648,17 +651,17 @@
 						items={pasteDeletionTimes()}
 						clearable={false}
 						bind:value={expireTime}
-						on:change={setExpire}
+						onchange={setExpire}
 					/>
 				</div>
 
 				<div>
 					<label class="label label-text mb-1.5" for="lang">{$_('paste_actions.language')}</label>
 					<Select
-						items={Object.keys(supportedLangs)}
+						items={Object.keys(supportedLangs).map((lang) => ({ label: lang, value: lang }))}
 						clearable={false}
 						bind:value={selectedLang}
-						on:change={setLang}
+						onchange={setLang}
 						placeholder="Auto-detect language"
 					/>
 				</div>

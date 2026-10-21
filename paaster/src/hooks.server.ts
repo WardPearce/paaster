@@ -1,13 +1,13 @@
-import type { Handle } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import type { Handle } from '@sveltejs/kit/hooks';
+import { MONGO_URL, MONGO_DB } from '$app/env/private';
 import { Db, MongoClient } from 'mongodb';
 import sodium from 'libsodium-wrappers-sumo';
-import { getSession, getSessionIdFromCookie } from '$lib/server/session';
-import { createStorageBackend } from '$lib/server/storage';
-import { getLimiter } from '$lib/server/rateLimit';
-import type { StorageBackend } from '$lib/server/storage/types';
+import { getSession, getSessionIdFromCookie } from '#lib/server/session';
+import { createStorageBackend } from '#lib/server/storage/index';
+import { getLimiter } from '#lib/server/rateLimit';
+import type { StorageBackend } from '#lib/server/storage/types';
 
-const mongoClient = new MongoClient(env.MONGO_URL ?? 'mongodb://localhost:27017');
+const mongoClient = new MongoClient(MONGO_URL ?? 'mongodb://localhost:27017');
 let mongoDb: Db | undefined;
 
 let captchaKey = '';
@@ -22,7 +22,7 @@ let storageBackend: StorageBackend | undefined;
 export const handle: Handle = async ({ event, resolve }) => {
 	if (!mongoDb) {
 		await mongoClient.connect();
-		mongoDb = mongoClient.db(env.MONGO_DB ?? 'paasterv3');
+		mongoDb = mongoClient.db(MONGO_DB ?? 'paasterv3');
 		mongoDb
 			.collection('captcha')
 			.createIndex({ created: 1 }, { expireAfterSeconds: 7200 })

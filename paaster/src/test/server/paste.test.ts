@@ -1,7 +1,7 @@
 import { describe, beforeEach, expect, it } from 'vitest';
 import { ObjectId } from 'mongodb';
 import { nanoid } from 'nanoid';
-import type { PasteDoc } from '$lib/server/pastes';
+import type { PasteDoc } from '#lib/server/pastes';
 import { GET as listPastes, POST as createPaste } from '../../routes/api/paste/+server';
 import {
 	DELETE as deletePaste,
@@ -9,8 +9,8 @@ import {
 } from '../../routes/api/paste/[pasteId]/+server';
 import { POST as uploadChunk } from '../../routes/api/paste/[pasteId]/chunks/+server';
 import { GET as getChunk } from '../../routes/api/paste/[pasteId]/chunks/[chunkIndex]/+server';
-import { CHUNK_SIZE } from '$lib/consts';
-import { getMaxUploadBytes } from '$lib/server/storage';
+import { CHUNK_SIZE } from '#lib/consts';
+import { getMaxUploadBytes } from '#lib/server/storage/index';
 import { setupTestDb } from '../utils/db';
 import { TEST_ACCESS_KEY, insertPaste, insertUserPaste } from '../utils/factories';
 import {

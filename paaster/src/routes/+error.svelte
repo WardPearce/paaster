@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { deletePaste } from '$lib/client/paste';
+	import { deletePaste } from '#lib/client/paste';
 	import CircleSlashIcon from 'lucide-svelte/icons/circle-slash';
 
 	if ('pasteId' in page.params) {

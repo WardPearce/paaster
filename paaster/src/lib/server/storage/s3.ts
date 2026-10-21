@@ -1,4 +1,10 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import {
+	S3Client,
+	PutObjectCommand,
+	GetObjectCommand,
+	DeleteObjectCommand,
+	ListObjectsV2Command
+} from '@aws-sdk/client-s3';
 import type { StorageBackend } from './types';
 
 export class S3StorageBackend implements StorageBackend {
@@ -10,7 +16,12 @@ export class S3StorageBackend implements StorageBackend {
 		this.bucket = bucket;
 	}
 
-	async saveChunk(pasteId: string, chunkIndex: number, data: Uint8Array, _totalChunks: number): Promise<void> {
+	async saveChunk(
+		pasteId: string,
+		chunkIndex: number,
+		data: Uint8Array,
+		_totalChunks: number
+	): Promise<void> {
 		void _totalChunks;
 		await this.client.send(
 			new PutObjectCommand({
@@ -45,9 +56,7 @@ export class S3StorageBackend implements StorageBackend {
 
 		for (const obj of listed.Contents) {
 			if (obj.Key) {
-				await this.client.send(
-					new DeleteObjectCommand({ Bucket: this.bucket, Key: obj.Key })
-				);
+				await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: obj.Key }));
 			}
 		}
 	}

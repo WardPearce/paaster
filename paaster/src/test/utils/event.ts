@@ -1,5 +1,6 @@
 import type { Cookies, RequestEvent } from '@sveltejs/kit';
-import type { StorageBackend } from '$lib/server/storage/types';
+import type { StorageBackend } from '#lib/server/storage/types';
+import { parseSetCookie } from 'cookie';
 import type { Db } from 'mongodb';
 import { expect } from 'vitest';
 
@@ -52,6 +53,9 @@ export function makeCookies(): TestCookies {
 		},
 		serialize(name, value) {
 			return `${name}=${value}`;
+		},
+		parse(str) {
+			return parseSetCookie(str);
 		}
 	};
 }

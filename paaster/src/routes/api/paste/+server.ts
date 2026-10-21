@@ -1,6 +1,6 @@
-import { stringToObjectId } from '$lib/server/objectId';
-import { getUserPastes, type PasteDoc } from '$lib/server/pastes';
-import { getMaxUploadBytes } from '$lib/server/storage';
+import { stringToObjectId } from '#lib/server/objectId';
+import { getUserPastes, type PasteDoc } from '#lib/server/pastes';
+import { getMaxUploadBytes } from '#lib/server/storage/index';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import sodium from 'libsodium-wrappers-sumo';
@@ -32,7 +32,7 @@ export async function POST({ locals, request }) {
 	const formData = createPasteSchema.safeParse(Object.fromEntries(await request.formData()));
 
 	if (!formData.success) {
-		throw error(400, formData.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	let expireAfter = -2;

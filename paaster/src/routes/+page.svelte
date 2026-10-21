@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { savePaste } from '$lib/client/paste';
-	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '$lib/client/sodiumWrapped';
-	import { getToast } from '$lib/client/toasts';
-	import Loading from '$lib/components/Loading.svelte';
-	import { CHUNK_SIZE } from '$lib/consts';
+	import { savePaste } from '#lib/client/paste';
+	import { deriveNewKeyFromMaster, secretBoxEncryptFromMaster } from '#lib/client/sodiumWrapped';
+	import { getToast } from '#lib/client/toasts';
+	import Loading from '#lib/components/Loading.svelte';
+	import { CHUNK_SIZE } from '#lib/consts';
 	import sodium from 'libsodium-wrappers-sumo';
 	import Dropzone from 'svelte-file-dropzone';
-	import { _ } from '$lib/i18n';
+	import { _ } from '#lib/i18n/index';
 	import { get } from 'svelte/store';
 	import { resolve } from '$app/paths';
 	import KeyboardIcon from 'lucide-svelte/icons/keyboard';
-	import PasteShareReceiver from '$lib/components/PasteShareReceiver.svelte';
+	import PasteShareReceiver from '#lib/components/PasteShareReceiver.svelte';
 
 	let codeTextArea: HTMLTextAreaElement | undefined = $state();
 	let pasteUploading = $state(false);

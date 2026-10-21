@@ -1,6 +1,6 @@
-import { validateAuth } from '$lib/server/auth';
-import type { PasteDoc } from '$lib/server/pastes';
-import { parsePasteId } from '$lib/server/objectId';
+import { validateAuth } from '#lib/server/auth';
+import type { PasteDoc } from '#lib/server/pastes';
+import { parsePasteId } from '#lib/server/objectId';
 import { error, json } from '@sveltejs/kit';
 import argon2 from 'argon2';
 import { z } from 'zod';
@@ -63,7 +63,7 @@ export async function POST({ locals, request, params, cookies }) {
 	const formData = updatePasteSchema.safeParse(Object.fromEntries(await request.formData()));
 
 	if (!formData.success) {
-		throw error(400, formData.error);
+		throw error(400, 'Invalid request body');
 	}
 
 	if (formData.data.codeName && formData.data.codeNameNonce && formData.data.codeNameKeySalt) {
