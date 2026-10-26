@@ -70,7 +70,7 @@
 		"svelte-select": "^6.0.0",
 		"sveltekit-rate-limiter": "^0.8.0",
 		"tailwindcss": "^4.3.3",
-		"zod": "^4.3.6"
+		"zod": "^4.6.6"
 	},
 	"imports": {
 		"#lib/*": "./src/lib/*"
