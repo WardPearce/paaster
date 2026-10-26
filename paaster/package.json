@@ -21,7 +21,7 @@
 		"@sveltejs/adapter-auto": "^8.0.0",
 		"@sveltejs/adapter-node": "^6.0.0",
 		"@sveltejs/kit": "^3.1.0",
-		"@sveltejs/vite-plugin-svelte": "^7.2.0",
+		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@types/culori": "^4.0.1",
 		"@types/node": "^26.0.1",
 		"autoprefixer": "^10.5.4",
