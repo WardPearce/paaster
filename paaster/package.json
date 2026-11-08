@@ -23,7 +23,7 @@
 		"@sveltejs/kit": "^3.1.0",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@types/culori": "^4.0.1",
-		"@types/node": "^26.0.1",
+		"@types/node": "^26.6.6",
 		"autoprefixer": "^10.5.4",
 		"cookie": "^2.0.1",
 		"eslint": "^10.10.0",
