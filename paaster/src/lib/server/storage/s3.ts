@@ -45,19 +45,22 @@ export class S3StorageBackend implements StorageBackend {
 	}
 
 	async deletePaste(pasteId: string): Promise<void> {
-		const listed = await this.client.send(
-			new ListObjectsV2Command({
-				Bucket: this.bucket,
-				Prefix: `${pasteId}/`
-			})
-		);
+		let continuationToken: string | undefined;
+		do {
+			const listed = await this.client.send(
+				new ListObjectsV2Command({
+					Bucket: this.bucket,
+					Prefix: `${pasteId}/`,
+					ContinuationToken: continuationToken
+				})
+			);
 
-		if (!listed.Contents) return;
-
-		for (const obj of listed.Contents) {
-			if (obj.Key) {
-				await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: obj.Key }));
+			for (const obj of listed.Contents ?? []) {
+				if (obj.Key) {
+					await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: obj.Key }));
+				}
 			}
-		}
+			continuationToken = listed.IsTruncated ? listed.NextContinuationToken : undefined;
+		} while (continuationToken);
 	}
 }

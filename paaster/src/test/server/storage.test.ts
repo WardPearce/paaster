@@ -1,9 +1,11 @@
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { nanoid } from 'nanoid';
 import { FileSystemStorageBackend } from '#lib/server/storage/filesystem';
+import { S3StorageBackend } from '#lib/server/storage/s3';
+import { DeleteObjectCommand, ListObjectsV2Command, type S3Client } from '@aws-sdk/client-s3';
 
 describe('FileSystemStorageBackend', () => {
 	const traversalPasteIds = [
@@ -59,5 +61,27 @@ describe('FileSystemStorageBackend', () => {
 		} finally {
 			await rm(tmp, { recursive: true, force: true });
 		}
+	});
+});
+
+describe('S3StorageBackend', () => {
+	it('deletes objects from every listing page', async () => {
+		const deleted: string[] = [];
+		const send = vi.fn(async (command: ListObjectsV2Command | DeleteObjectCommand) => {
+			if (command instanceof ListObjectsV2Command) {
+				return command.input.ContinuationToken
+					? { Contents: [{ Key: 'paste/chunks/1' }], IsTruncated: false }
+					: {
+							Contents: [{ Key: 'paste/chunks/0' }],
+							IsTruncated: true,
+							NextContinuationToken: 'next'
+						};
+			}
+			deleted.push(command.input.Key!);
+			return {};
+		});
+		const backend = new S3StorageBackend({ send } as unknown as S3Client, 'bucket');
+		await backend.deletePaste('paste');
+		expect(deleted).toEqual(['paste/chunks/0', 'paste/chunks/1']);
 	});
 });
