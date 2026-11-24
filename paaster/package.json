@@ -1,7 +1,7 @@
 {
 	"name": "paaster",
 	"private": true,
-	"version": "3.6.2",
+	"version": "3.6.3",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -74,5 +74,8 @@
 	},
 	"imports": {
 		"#lib/*": "./src/lib/*"
+	},
+	"overrides": {
+		"minimatch": "^11.0.4"
 	}
 }

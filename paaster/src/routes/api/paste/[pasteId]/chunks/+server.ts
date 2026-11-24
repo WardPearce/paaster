@@ -10,12 +10,14 @@ const chunkSchema = z
 	.object({
 		chunkIndex: z
 			.string()
-			.transform((v) => parseInt(v, 10))
-			.pipe(z.number().int().nonnegative()),
+			.regex(/^(0|[1-9]\d*)$/)
+			.transform(Number)
+			.pipe(z.number().int().safe().nonnegative()),
 		totalChunks: z
 			.string()
-			.transform((v) => parseInt(v, 10))
-			.pipe(z.number().int().min(1)),
+			.regex(/^[1-9]\d*$/)
+			.transform(Number)
+			.pipe(z.number().int().safe().min(1)),
 		data: z.instanceof(File)
 	})
 	.refine((v) => v.chunkIndex < v.totalChunks, {
@@ -42,13 +44,20 @@ export async function POST({ locals, params, request }) {
 	}
 
 	const { chunkIndex, totalChunks, data: file } = parsed.data;
+	const maxBytes = getMaxUploadBytes();
+	const maxChunks = Math.ceil(maxBytes / (CHUNK_SIZE / 4)) + 1;
+	if (totalChunks > maxChunks) {
+		throw error(413, 'Too many chunks');
+	}
 
 	const buf = await file.arrayBuffer();
+	if (buf.byteLength === 0) {
+		throw error(400, 'Empty chunk');
+	}
 	if (buf.byteLength > CHUNK_SIZE) {
 		throw error(413, 'Chunk exceeds maximum chunk size');
 	}
 
-	const maxBytes = getMaxUploadBytes();
 	const result = await locals.mongoDb.collection<PasteDoc>('pastes').findOneAndUpdate(
 		{
 			_id: parsePasteId(pasteId),

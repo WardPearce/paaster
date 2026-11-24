@@ -15,6 +15,7 @@ import {
 } from '../utils/event';
 import { getCaptchaSecrets, createSolvedCaptcha } from '../utils/captcha';
 import { passphraseLimiter } from '#lib/server/rateLimit';
+import { GET as getChunk } from '../../routes/api/paste/[pasteId]/chunks/[chunkIndex]/+server';
 
 const getDb = setupTestDb();
 
@@ -182,5 +183,23 @@ describe('passphrase verification load', () => {
 			) as unknown as Promise<unknown>,
 			429
 		);
+	});
+});
+
+describe('view-once chunk access', () => {
+	it('lets only the first page viewer download chunks', async () => {
+		const paste = await insertPaste(getDb(), { expireAfter: -1 });
+		const pasteId = paste._id as unknown as string;
+		const storage = makeMemoryStorage();
+		await storage.saveChunk(pasteId, 0, new Uint8Array([7]), 1);
+		const cookies = makeCookies();
+		await load(
+			makeEvent(getDb(), storage, { params: { pasteId }, cookies }) as unknown as LoadEvent
+		);
+
+		const chunkParams = { pasteId, chunkIndex: '0' };
+		const response = await getChunk(makeEvent(getDb(), storage, { params: chunkParams, cookies }));
+		expect(response.status).toBe(200);
+		await expectHttpError(getChunk(makeEvent(getDb(), storage, { params: chunkParams })), 401);
 	});
 });

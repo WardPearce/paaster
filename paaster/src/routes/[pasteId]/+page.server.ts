@@ -3,6 +3,7 @@ import type { PasteDoc } from '#lib/server/pastes';
 import { parsePasteId } from '#lib/server/objectId';
 import argon2 from 'argon2';
 import { passphraseLimiter } from '#lib/server/rateLimit';
+import { grantOneTimeView, isPasteExpired } from '#lib/server/pasteAccess';
 
 export async function load(event) {
 	const { params, locals, cookies } = event;
@@ -53,11 +54,16 @@ export async function load(event) {
 
 	if (paste.expireAfter !== -2) {
 		if (paste.expireAfter === -1) {
+			const viewTokenHash = await grantOneTimeView(
+				cookies,
+				pasteId,
+				event.url.protocol === 'https:'
+			);
 			const claimed = await locals.mongoDb
 				.collection<PasteDoc>('pastes')
 				.findOneAndUpdate(
 					{ _id: parsePasteId(pasteId), deleteNextRequest: { $ne: true } },
-					{ $set: { deleteNextRequest: true } }
+					{ $set: { deleteNextRequest: true, viewTokenHash } }
 				);
 			if (!claimed) {
 				await locals.mongoDb
@@ -73,9 +79,7 @@ export async function load(event) {
 				throw error(404, 'Unable to find paste');
 			}
 		} else {
-			const now = new Date();
-			const expireTime = paste.created.getTime() + paste.expireAfter * 60 * 60 * 1000;
-			if (now > expireTime) {
+			if (isPasteExpired(paste)) {
 				await locals.mongoDb
 					.collection<PasteDoc>('pastes')
 					.deleteOne({ _id: parsePasteId(pasteId) });

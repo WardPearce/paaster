@@ -16,7 +16,7 @@
 	import ShareIcon from 'lucide-svelte/icons/share-2';
 	import TrashIcon from 'lucide-svelte/icons/trash';
 	import Mousetrap from 'mousetrap';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import Highlight, { HighlightAuto, LineNumbers } from 'svelte-highlight';
 	import type { LanguageType } from 'svelte-highlight/languages';
 	import atonOneDark from 'svelte-highlight/styles/atom-one-dark';
@@ -60,6 +60,32 @@
 
 	let generatedPassphrase = $state('');
 	let passphraseCopied = $state(false);
+	let settingsOpen = $state(false);
+	let deleting = $state(false);
+	let pendingAction = $state('');
+	let deleteConfirmOpen = $state(false);
+	let removePassphraseConfirmOpen = $state(false);
+	let deletePopoverElement = $state<HTMLElement>();
+	let removePassphrasePopoverElement = $state<HTMLElement>();
+
+	function closeConfirmationsOnOutsideClick(event: MouseEvent) {
+		if (deleteConfirmOpen && !deletePopoverElement?.contains(event.target as Node)) {
+			deleteConfirmOpen = false;
+		}
+		if (
+			removePassphraseConfirmOpen &&
+			!removePassphrasePopoverElement?.contains(event.target as Node)
+		) {
+			removePassphraseConfirmOpen = false;
+		}
+	}
+
+	function closeConfirmationsOnEscape(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			deleteConfirmOpen = false;
+			removePassphraseConfirmOpen = false;
+		}
+	}
 
 	let isMarkdown = $state(false);
 	let showRenderedMarkdown = $state(false);
@@ -122,22 +148,50 @@
 
 	async function deletePaste() {
 		if (!localStored || !localStored.accessKey) return;
+		deleting = true;
+		try {
+			const deletePasteResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${localStored.accessKey}`
+				}
+			});
 
-		const deletePasteResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'DELETE',
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
+			if (deletePasteResponse.ok) {
+				await localDb.pastes.delete(page.params.pasteId);
+				getToast().success(get(_)('paste_actions.delete.success'));
+				goto(resolve('/'));
+			} else {
+				getToast().error('Could not delete paste. Please try again.');
 			}
-		});
-
-		if (deletePasteResponse.ok) {
-			await localDb.pastes.delete(page.params.pasteId);
-			getToast().success(get(_)('paste_actions.delete.success'));
-			goto(resolve('/'));
+		} catch {
+			getToast().error('Could not delete paste. Please try again.');
+		} finally {
+			deleting = false;
+			deleteConfirmOpen = false;
 		}
 	}
 
 	let pasteName: string | undefined = $state();
+	async function updatePaste(payload: FormData, action: string, errorMessage: string) {
+		if (!localStored?.accessKey || pendingAction) return false;
+		pendingAction = action;
+		try {
+			const response = await fetch(`/api/paste/${page.params.pasteId}`, {
+				method: 'POST',
+				body: payload,
+				headers: { Authorization: `Bearer ${localStored.accessKey}` }
+			});
+			if (response.ok) return true;
+		} catch {
+			// Report network and server errors in the same place.
+		} finally {
+			pendingAction = '';
+		}
+		getToast().error(errorMessage);
+		return false;
+	}
+
 	async function setName(event: SubmitEvent) {
 		event.preventDefault();
 
@@ -153,14 +207,7 @@
 		updatePayload.append('codeNameNonce', sodium.to_base64(nameEncrypted.data.nonce));
 		updatePayload.append('codeNameKeySalt', sodium.to_base64(nameEncrypted.key.salt));
 
-		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'POST',
-			body: updatePayload,
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
-			}
-		});
-		if (updatePayloadResponse.ok) {
+		if (await updatePaste(updatePayload, 'rename', 'Could not rename paste. Please try again.')) {
 			getToast().success(get(_)('paste_actions.rename.success'));
 			if (!$authStore) {
 				await localDb.pastes.update(page.params.pasteId, { name: pasteName });
@@ -180,14 +227,7 @@
 		const updatePayload = new FormData();
 		updatePayload.append('expireAfter', expireTime.value.toString());
 
-		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'POST',
-			body: updatePayload,
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
-			}
-		});
-		if (updatePayloadResponse.ok) {
+		if (await updatePaste(updatePayload, 'expiry', 'Could not update expiry. Please try again.')) {
 			getToast().success(
 				get(_)('paste_actions.expire.success').replace('{period}', expireTime.label)
 			);
@@ -197,8 +237,6 @@
 	let selectedLang: { label: string; value: string } | undefined = $state();
 	async function setLang() {
 		if (!selectedLang || !localStored || !localStored.accessKey) return;
-
-		isMarkdown = selectedLang.value === 'markdown';
 
 		const langEncrypted = secretBoxEncryptFromMaster(
 			new TextEncoder().encode(selectedLang.value),
@@ -210,34 +248,32 @@
 		updatePayload.append('langNonce', sodium.to_base64(langEncrypted.data.nonce));
 		updatePayload.append('langKeySalt', sodium.to_base64(langEncrypted.key.salt));
 
-		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'POST',
-			body: updatePayload,
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
-			}
-		});
-		if (updatePayloadResponse.ok) {
+		if (
+			await updatePaste(updatePayload, 'language', 'Could not update language. Please try again.')
+		) {
 			getToast().success(get(_)('paste_actions.lang_updated'));
 			langImport = supportedLangs[selectedLang.value];
+			isMarkdown = selectedLang.value === 'markdown';
 		}
 	}
 
-	async function setPreWrap() {
-		preWrap = !preWrap;
-
+	async function setPreWrap(event: Event) {
 		if (!localStored || !localStored.accessKey) return;
+		const requestedWrap = (event.currentTarget as HTMLInputElement).checked;
+		preWrap = requestedWrap;
 
 		const updatePayload = new FormData();
-		updatePayload.append('wrapWords', preWrap.toString());
+		updatePayload.append('wrapWords', requestedWrap.toString());
 
-		await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'POST',
-			body: updatePayload,
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
-			}
-		});
+		if (
+			!(await updatePaste(
+				updatePayload,
+				'wrap',
+				'Could not update line wrapping. Please try again.'
+			))
+		) {
+			preWrap = !requestedWrap;
+		}
 	}
 
 	async function setPassphrase() {
@@ -250,14 +286,9 @@
 		const updatePayload = new FormData();
 		updatePayload.append('passphrase', passphrase);
 
-		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'POST',
-			body: updatePayload,
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
-			}
-		});
-		if (updatePayloadResponse.ok) {
+		if (
+			await updatePaste(updatePayload, 'passphrase', 'Could not set passphrase. Please try again.')
+		) {
 			hasPassphrase = true;
 			getToast().success(get(_)('paste_actions.passphrase.success'));
 			passphraseOverlay.open();
@@ -270,16 +301,16 @@
 		const updatePayload = new FormData();
 		updatePayload.append('passphrase', '');
 
-		const updatePayloadResponse = await fetch(`/api/paste/${page.params.pasteId}`, {
-			method: 'POST',
-			body: updatePayload,
-			headers: {
-				Authorization: `Bearer ${localStored.accessKey}`
-			}
-		});
-		if (updatePayloadResponse.ok) {
+		if (
+			await updatePaste(
+				updatePayload,
+				'passphrase',
+				'Could not remove passphrase. Please try again.'
+			)
+		) {
 			hasPassphrase = false;
 			getToast().success('Passphrase removed');
+			removePassphraseConfirmOpen = false;
 		}
 	}
 
@@ -453,6 +484,7 @@
 		}
 
 		pasteDownloading = false;
+		await tick();
 
 		Mousetrap.bind(['command+a', 'ctrl+a'], () => {
 			copyCode();
@@ -478,6 +510,11 @@
 		});
 	});
 </script>
+
+<svelte:document
+	onclick={closeConfirmationsOnOutsideClick}
+	onkeydown={closeConfirmationsOnEscape}
+/>
 
 <svelte:head>
 	{@html highlightStyle}
@@ -620,219 +657,342 @@
 {#if pasteDownloading}
 	<Loading />
 {:else}
-	<div class="flex flex-col gap-4 p-0 pt-4 pb-4 sm:p-4 md:flex-row">
+	<div
+		class={`flex flex-col gap-4 p-4 pb-24 sm:p-6 md:pb-6 ${localStored?.accessKey && !$rawModeStore ? 'md:grid md:grid-cols-[minmax(0,1fr)_16rem] md:grid-rows-[auto_1fr]' : ''}`}
+	>
 		{#if localStored && localStored.accessKey && !$rawModeStore}
 			<div
-				class="card border-base-content/20 flex w-full flex-col gap-4 rounded-lg border p-5 md:order-last md:w-72 md:shrink-0 md:self-start"
+				class="card border-base-content/20 flex w-full flex-col gap-4 rounded-lg border p-5 md:col-start-2 md:row-start-2 md:self-start"
 			>
 				<div class="border-base-content/10 border-b pb-3">
-					<h1 class="text-base-content text-lg font-semibold">{$_('paste_owner')}</h1>
-				</div>
-
-				<form onsubmit={setName}>
-					<label class="label label-text mb-1.5" for="name-paste"
-						>{$_('paste_actions.rename.button')}</label
+					<button
+						type="button"
+						class="flex w-full items-center justify-between text-left md:pointer-events-none"
+						aria-expanded={settingsOpen}
+						onclick={() => (settingsOpen = !settingsOpen)}
 					>
-					<div class="flex items-center gap-1">
-						<input
-							bind:value={pasteName}
-							type="text"
-							class="input h-9 flex-1 text-sm"
-							id="name-paste"
+						<span class="text-base-content text-lg font-semibold">{$_('paste_owner')}</span>
+						<span class="md:hidden" aria-hidden="true">{settingsOpen ? '−' : '+'}</span>
+					</button>
+				</div>
+				<div class={settingsOpen ? 'flex flex-col gap-4 md:contents' : 'hidden md:contents'}>
+					<form onsubmit={setName}>
+						<label class="label label-text mb-1.5" for="name-paste"
+							>{$_('paste_actions.rename.button')}</label
+						>
+						<div class="flex items-center gap-1">
+							<input
+								bind:value={pasteName}
+								type="text"
+								class="input h-9 flex-1 text-sm"
+								id="name-paste"
+								disabled={!!pendingAction}
+							/>
+							<button
+								type="submit"
+								class="btn btn-primary btn-sm"
+								disabled={!!pendingAction || !pasteName}
+								>{pendingAction === 'rename' ? 'Saving…' : 'Save'}</button
+							>
+						</div>
+					</form>
+
+					<div>
+						<label class="label label-text mb-1.5" for="delete-after"
+							>{$_('paste_actions.expire.button')}</label
+						>
+						<Select
+							items={pasteDeletionTimes()}
+							clearable={false}
+							disabled={!!pendingAction}
+							bind:value={expireTime}
+							onchange={setExpire}
 						/>
 					</div>
-				</form>
 
-				<div>
-					<label class="label label-text mb-1.5" for="delete-after"
-						>{$_('paste_actions.expire.button')}</label
-					>
-					<Select
-						items={pasteDeletionTimes()}
-						clearable={false}
-						bind:value={expireTime}
-						onchange={setExpire}
-					/>
-				</div>
+					<div>
+						<label class="label label-text mb-1.5" for="lang">{$_('paste_actions.language')}</label>
+						<Select
+							items={Object.keys(supportedLangs).map((lang) => ({ label: lang, value: lang }))}
+							clearable={false}
+							disabled={!!pendingAction}
+							bind:value={selectedLang}
+							onchange={setLang}
+							placeholder="Auto-detect language"
+						/>
+					</div>
 
-				<div>
-					<label class="label label-text mb-1.5" for="lang">{$_('paste_actions.language')}</label>
-					<Select
-						items={Object.keys(supportedLangs).map((lang) => ({ label: lang, value: lang }))}
-						clearable={false}
-						bind:value={selectedLang}
-						onchange={setLang}
-						placeholder="Auto-detect language"
-					/>
-				</div>
+					<div class="flex items-center justify-between">
+						<span class="label-text">{$_('paste_actions.wrap_words')}</span>
+						<input
+							type="checkbox"
+							class="checkbox checkbox-primary checkbox-sm"
+							id="wrap-words"
+							bind:checked={preWrap}
+							onchange={setPreWrap}
+							disabled={!!pendingAction}
+						/>
+					</div>
 
-				<div class="flex items-center justify-between">
-					<span class="label-text">{$_('paste_actions.wrap_words')}</span>
-					<input
-						type="checkbox"
-						class="checkbox checkbox-primary checkbox-sm"
-						id="wrap-words"
-						bind:checked={preWrap}
-						onclick={setPreWrap}
-					/>
-				</div>
+					<div class="border-base-content/10 flex flex-col gap-2 border-t pt-3">
+						{#if hasPassphrase}
+							<div
+								id="remove-passphrase-popover"
+								class="tooltip --prevent-on-load-init relative w-full"
+								bind:this={removePassphrasePopoverElement}
+							>
+								<div class="tooltip-toggle w-full">
+									<button
+										type="button"
+										class="btn btn-primary btn-sm w-full"
+										disabled={!!pendingAction}
+										aria-expanded={removePassphraseConfirmOpen}
+										aria-controls="remove-passphrase-confirmation"
+										onclick={() => (removePassphraseConfirmOpen = !removePassphraseConfirmOpen)}
+									>
+										<TrashIcon size={16} /> Remove passphrase
+									</button>
+									{#if removePassphraseConfirmOpen}
+										<div
+											id="remove-passphrase-confirmation"
+											class="tooltip-content"
+											style="visibility: visible; opacity: 1; position: absolute; bottom: calc(100% + 0.5rem); right: 0; left: auto; top: auto;"
+											role="dialog"
+											aria-label="Confirm passphrase removal"
+										>
+											<div
+												class="tooltip-body bg-base-100 border-base-content/15 w-64 rounded-lg border p-4 text-start shadow-lg"
+											>
+												<p class="text-base-content font-medium">Remove the passphrase?</p>
+												<p class="text-base-content/70 mt-1 text-sm">
+													Anyone with the paste link will be able to open it.
+												</p>
+												<div class="mt-4 flex justify-end gap-2">
+													<button
+														type="button"
+														class="btn btn-ghost btn-sm"
+														onclick={() => (removePassphraseConfirmOpen = false)}>Cancel</button
+													>
+													<button
+														type="button"
+														class="btn btn-error btn-sm"
+														onclick={removePassphrase}
+														disabled={!!pendingAction}
+													>
+														{pendingAction === 'passphrase' ? 'Removing…' : 'Remove'}
+													</button>
+												</div>
+											</div>
+										</div>
+									{/if}
+								</div>
+							</div>
+						{:else}
+							<button
+								class="btn btn-primary btn-sm w-full"
+								onclick={setPassphrase}
+								disabled={!!pendingAction}
+							>
+								<KeyIcon size={16} />
+								{$_('paste_actions.passphrase.button')}</button
+							>
+						{/if}
 
-				<div class="border-base-content/10 flex flex-col gap-2 border-t pt-3">
-					{#if hasPassphrase}
-						<button class="btn btn-primary btn-sm w-full" onclick={removePassphrase}>
-							<TrashIcon size={16} />
-							Remove passphrase
-						</button>
-					{:else}
-						<button class="btn btn-primary btn-sm w-full" onclick={setPassphrase}>
-							<KeyIcon size={16} />
-							{$_('paste_actions.passphrase.button')}</button
+						<button
+							class="btn btn-ghost btn-sm w-full"
+							onclick={() => {
+								shortcutsOverlay.open();
+							}}
 						>
-					{/if}
+							<CommandIcon size={16} /> {$_('shortcuts')}</button
+						>
 
-					<button
-						class="btn btn-primary btn-sm w-full"
-						onclick={() => {
-							qrCodeOverlay.open();
-						}}
-					>
-						<QrCodeIcon size={16} />
-						{$_('paste_actions.qr_code.button')}</button
-					>
-
-					<button class="btn btn-primary btn-sm w-full" onclick={sharePaste}>
-						<ShareIcon size={16} />
-						{$_('paste_actions.share.button')}
-					</button>
-
-					<button
-						class="btn btn-ghost btn-sm w-full"
-						onclick={() => {
-							shortcutsOverlay.open();
-						}}
-					>
-						<CommandIcon size={16} /> {$_('shortcuts')}</button
-					>
-
-					<button class="btn btn-error btn-outline btn-sm mt-1 w-full" onclick={deletePaste}>
-						<TrashIcon size={16} />
-						{$_('paste_actions.delete.button')}
-					</button>
+						<div
+							id="delete-paste-popover"
+							class="tooltip --prevent-on-load-init relative mt-1 w-full"
+							bind:this={deletePopoverElement}
+						>
+							<div class="tooltip-toggle w-full">
+								<button
+									type="button"
+									class="btn btn-error btn-outline btn-sm w-full"
+									aria-expanded={deleteConfirmOpen}
+									aria-controls="delete-paste-confirmation"
+									onclick={() => (deleteConfirmOpen = !deleteConfirmOpen)}
+								>
+									<TrashIcon size={16} />
+									{$_('paste_actions.delete.button')}
+								</button>
+								{#if deleteConfirmOpen}
+									<div
+										id="delete-paste-confirmation"
+										class="tooltip-content"
+										style="visibility: visible; opacity: 1; position: absolute; bottom: calc(100% + 0.5rem); right: 0; left: auto; top: auto;"
+										role="dialog"
+										aria-label="Confirm paste deletion"
+									>
+										<div
+											class="tooltip-body bg-base-100 border-base-content/15 w-64 rounded-lg border p-4 text-start shadow-lg"
+										>
+											<p class="text-base-content font-medium">Delete this paste?</p>
+											<p class="text-base-content/70 mt-1 text-sm">This cannot be undone.</p>
+											<div class="mt-4 flex justify-end gap-2">
+												<button
+													type="button"
+													class="btn btn-ghost btn-sm"
+													onclick={() => (deleteConfirmOpen = false)}>Cancel</button
+												>
+												<button
+													type="button"
+													class="btn btn-error btn-sm"
+													onclick={deletePaste}
+													disabled={deleting}
+												>
+													{deleting ? 'Deleting…' : 'Delete'}
+												</button>
+											</div>
+										</div>
+									</div>
+								{/if}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		{/if}
 
-		<div
-			class={`min-w-0 ${localStored?.accessKey ? 'flex-1' : 'w-full'} ${$rawModeStore ? '' : 'rounded-lg'}`}
-		>
-			<div class="mb-3 flex flex-wrap items-center justify-between gap-1.5">
-				<div class="flex items-center gap-2">
-					{#if pasteName}
-						<div class="bg-base-content/5 flex items-center gap-1.5 rounded-md px-3 py-1.5">
+		<div class="contents">
+			<div class="min-w-0 md:col-start-1 md:row-start-1">
+				{#if !$rawModeStore}
+					<div class="mb-4">
+						<h1
+							class="text-base-content truncate text-xl font-semibold"
+							title={pasteName ?? 'Untitled paste'}
+						>
+							{pasteName ?? 'Untitled paste'}
+						</h1>
+						<div class="text-base-content/60 mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+							{#if selectedLang}<span>{selectedLang.label}</span>{/if}
+							{#if data.created}<span>Created {new Date(data.created).toLocaleDateString()}</span
+								>{/if}
+							{#if expireTime}<span>Expires: {expireTime.label}</span>{/if}
+						</div>
+					</div>
+				{/if}
+				<div class="mb-3 max-w-full">
+					<div class="grid auto-rows-fr grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+						<button
+							type="button"
+							class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+							onclick={copyCode}
+							title={$_('paste_actions.clipboard.button')}
+							aria-label={$_('paste_actions.clipboard.button')}
+						>
 							<svg
-								class="h-4 w-4 shrink-0 opacity-50"
+								class="h-4 w-4 shrink-0"
 								viewBox="0 0 24 24"
 								fill="none"
 								stroke="currentColor"
 								stroke-width="2"
-								><path
-									d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"
-								/><polyline points="14 2 14 8 20 8" /></svg
+								><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path
+									d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+								/></svg
 							>
-							<span
-								class="text-base-content xs:max-w-40 max-w-24 truncate text-sm font-medium sm:max-w-56"
-								>{pasteName}</span
-							>
-						</div>
-					{/if}
-				</div>
-				<div class="flex items-center gap-1">
-					<button
-						type="button"
-						class="btn btn-soft btn-sm"
-						onclick={copyCode}
-						title={$_('paste_actions.clipboard.button')}
-					>
-						<svg
-							class="h-4 w-4 shrink-0"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path
-								d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-							/></svg
-						>
-						<span class="hidden sm:inline">{$_('paste_actions.clipboard.button')}</span>
-					</button>
-					<button
-						type="button"
-						class="btn btn-soft btn-sm"
-						onclick={downloadPaste}
-						title={$_('paste_actions.download.button')}
-					>
-						<svg
-							class="h-4 w-4 shrink-0"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline
-								points="7 10 12 15 17 10"
-							/><line x1="12" y1="15" x2="12" y2="3" /></svg
-						>
-						<span class="hidden sm:inline">{$_('paste_actions.download.button')}</span>
-					</button>
-					<button
-						type="button"
-						class="btn btn-soft btn-sm"
-						onclick={() => void openSendPaste()}
-						title={$_('paste_actions.send_to_device.button')}
-					>
-						<SendIcon size={16} />
-						<span class="hidden sm:inline">{$_('paste_actions.send_to_device.button')}</span>
-					</button>
-					{#if isMarkdown && !$rawModeStore}
+							<span class="min-w-0 break-words">{$_('paste_actions.clipboard.button')}</span>
+						</button>
 						<button
 							type="button"
-							class="btn btn-soft btn-sm"
-							onclick={() => (showRenderedMarkdown = !showRenderedMarkdown)}
+							class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+							onclick={downloadPaste}
+							title={$_('paste_actions.download.button')}
+							aria-label={$_('paste_actions.download.button')}
 						>
-							{showRenderedMarkdown
-								? $_('paste_actions.show_code')
-								: $_('paste_actions.render_markdown')}
+							<svg
+								class="h-4 w-4 shrink-0"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline
+									points="7 10 12 15 17 10"
+								/><line x1="12" y1="15" x2="12" y2="3" /></svg
+							>
+							<span class="min-w-0 break-words">{$_('paste_actions.download.button')}</span>
 						</button>
-					{/if}
-					<button
-						type="button"
-						class="btn btn-soft btn-sm"
-						onclick={() => rawModeStore.set(!$rawModeStore)}
-					>
-						{$rawModeStore ? $_('paste_actions.exit_raw_mode') : $_('paste_actions.raw_mode')}
-					</button>
+						<button
+							type="button"
+							class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+							onclick={sharePaste}
+						>
+							<ShareIcon size={16} />
+							<span class="min-w-0 break-words">{$_('paste_actions.share.button')}</span>
+						</button>
+						<button
+							type="button"
+							class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+							onclick={() => qrCodeOverlay.open()}
+						>
+							<QrCodeIcon size={16} />
+							<span class="min-w-0 break-words">{$_('paste_actions.qr_code.button')}</span>
+						</button>
+						<button
+							type="button"
+							class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+							onclick={() => void openSendPaste()}
+							title={$_('paste_actions.send_to_device.button')}
+							aria-label={$_('paste_actions.send_to_device.button')}
+						>
+							<SendIcon size={16} />
+							<span class="min-w-0 break-words">{$_('paste_actions.send_to_device.button')}</span>
+						</button>
+						{#if isMarkdown && !$rawModeStore}
+							<button
+								type="button"
+								class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+								onclick={() => (showRenderedMarkdown = !showRenderedMarkdown)}
+							>
+								{showRenderedMarkdown
+									? $_('paste_actions.show_code')
+									: $_('paste_actions.render_markdown')}
+							</button>
+						{/if}
+						<button
+							type="button"
+							class="btn btn-soft btn-sm h-auto min-h-10 min-w-0 whitespace-normal sm:min-h-8"
+							onclick={() => rawModeStore.set(!$rawModeStore)}
+						>
+							{$rawModeStore ? $_('paste_actions.exit_raw_mode') : $_('paste_actions.raw_mode')}
+						</button>
+					</div>
 				</div>
 			</div>
-			{#if showRenderedMarkdown && !$rawModeStore}
-				<div class="markdown-render border-base-content/10 rounded-lg border p-4 sm:p-6">
-					<SvelteMarkdown source={rawPaste} />
-				</div>
-			{:else if langImport}
-				<Highlight language={langImport} code={rawPaste} let:highlighted>
-					{#if !$rawModeStore}
-						<LineNumbers {highlighted} hideBorder />
-					{:else}
-						{@html highlighted}
-					{/if}
-				</Highlight>
-			{:else}
-				<HighlightAuto code={rawPaste} let:highlighted>
-					{#if !$rawModeStore}
-						<LineNumbers {highlighted} hideBorder />
-					{:else}
-						{@html highlighted}
-					{/if}
-				</HighlightAuto>
-			{/if}
+			<div
+				class={$rawModeStore
+					? 'min-w-0 overflow-x-auto md:col-start-1 md:row-start-2'
+					: 'border-base-content/10 min-w-0 overflow-x-auto rounded-lg border md:col-start-1 md:row-start-2'}
+			>
+				{#if showRenderedMarkdown && !$rawModeStore}
+					<div class="markdown-render p-4 sm:p-6">
+						<SvelteMarkdown source={rawPaste} />
+					</div>
+				{:else if langImport}
+					<Highlight language={langImport} code={rawPaste} let:highlighted>
+						{#if !$rawModeStore}
+							<LineNumbers {highlighted} hideBorder />
+						{:else}
+							{@html highlighted}
+						{/if}
+					</Highlight>
+				{:else}
+					<HighlightAuto code={rawPaste} let:highlighted>
+						{#if !$rawModeStore}
+							<LineNumbers {highlighted} hideBorder />
+						{:else}
+							{@html highlighted}
+						{/if}
+					</HighlightAuto>
+				{/if}
+			</div>
 		</div>
 	</div>
 {/if}

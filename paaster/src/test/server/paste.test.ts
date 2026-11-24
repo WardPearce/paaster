@@ -1,6 +1,7 @@
 import { describe, beforeEach, expect, it } from 'vitest';
 import { ObjectId } from 'mongodb';
 import { nanoid } from 'nanoid';
+import argon2 from 'argon2';
 import type { PasteDoc } from '#lib/server/pastes';
 import { GET as listPastes, POST as createPaste } from '../../routes/api/paste/+server';
 import {
@@ -343,6 +344,25 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 		);
 	});
 
+	it('rejects empty chunks and excessive chunk counts', async () => {
+		const paste = await createPasteDoc();
+		for (const [totalChunks, bytes, status] of [
+			['1', new Uint8Array(), 400],
+			['1001', new Uint8Array([1]), 413]
+		] as const) {
+			const request = formRequest(
+				{ chunkIndex: '0', totalChunks, data: new File([bytes], 'chunk.bin') },
+				{ headers: authHeaders() }
+			);
+			await expectHttpError(
+				uploadChunk(
+					makeEvent(getDb(), makeMemoryStorage(), { params: { pasteId: paste._id }, request })
+				),
+				status
+			);
+		}
+	});
+
 	it('rejects uploads exceeding the maximum total size', async () => {
 		const paste = await createPasteDoc();
 		process.env.MAX_UPLOAD_SIZE = '1';
@@ -403,6 +423,36 @@ describe('POST /api/paste/[pasteId]/chunks', () => {
 });
 
 describe('GET /api/paste/[pasteId]/chunks/[chunkIndex]', () => {
+	it('requires the passphrase cookie before serving a protected chunk', async () => {
+		const paste = await createPasteDoc({ passphrase: await argon2.hash('correct-horse') });
+		const storage = makeMemoryStorage();
+		await storage.saveChunk(paste._id, 0, new Uint8Array([1]), 1);
+		await expectHttpError(
+			getChunk(makeEvent(getDb(), storage, { params: { pasteId: paste._id, chunkIndex: '0' } })),
+			401
+		);
+		const cookies = makeCookies();
+		cookies.set(`passphrase_${paste._id}`, 'correct-horse');
+		const response = await getChunk(
+			makeEvent(getDb(), storage, { params: { pasteId: paste._id, chunkIndex: '0' }, cookies })
+		);
+		expect(response.status).toBe(200);
+	});
+
+	it('rejects direct reads of expired and unclaimed view-once pastes', async () => {
+		const storage = makeMemoryStorage();
+		for (const overrides of [
+			{ expireAfter: 1, created: new Date(Date.now() - 2 * 60 * 60 * 1000) },
+			{ expireAfter: -1 }
+		]) {
+			const paste = await createPasteDoc(overrides);
+			await storage.saveChunk(paste._id, 0, new Uint8Array([1]), 1);
+			await expectHttpError(
+				getChunk(makeEvent(getDb(), storage, { params: { pasteId: paste._id, chunkIndex: '0' } })),
+				overrides.expireAfter === -1 ? 401 : 404
+			);
+		}
+	});
 	it('returns 404 for an unknown paste', async () => {
 		await expectHttpError(
 			getChunk(

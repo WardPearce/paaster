@@ -1,14 +1,16 @@
 import { error } from '@sveltejs/kit';
 import type { PasteDoc } from '#lib/server/pastes';
 import { parsePasteId } from '#lib/server/objectId';
+import { requireChunkAccess } from '#lib/server/pasteAccess';
 
-export async function GET({ locals, params }) {
+export async function GET({ locals, params, cookies }) {
 	const paste = await locals.mongoDb.collection<PasteDoc>('pastes').findOne({
 		_id: parsePasteId(params.pasteId)
 	});
 	if (!paste) {
 		throw error(404, 'Paste not found');
 	}
+	await requireChunkAccess(paste, params.pasteId, cookies);
 
 	const chunkIndex = parseInt(params.chunkIndex, 10);
 	if (isNaN(chunkIndex) || chunkIndex < 0) {

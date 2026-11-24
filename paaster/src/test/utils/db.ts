@@ -1,6 +1,6 @@
 import { MongoClient, type Db } from 'mongodb';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { afterAll, afterEach, beforeAll } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest';
 
 export function setupTestDb(): () => Db {
 	let server: MongoMemoryServer | undefined;
@@ -12,6 +12,10 @@ export function setupTestDb(): () => Db {
 		client = new MongoClient(server.getUri());
 		await client.connect();
 		db = client.db('paaster-test');
+	});
+
+	beforeEach(async () => {
+		await db?.collection('captcha').createIndex({ signature: 1 }, { unique: true });
 	});
 
 	afterEach(async () => {
