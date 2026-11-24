@@ -9,6 +9,7 @@ import type { StorageBackend } from '#lib/server/storage/types';
 
 const mongoClient = new MongoClient(MONGO_URL ?? 'mongodb://localhost:27017');
 let mongoDb: Db | undefined;
+let captchaIndexReady: Promise<string> | undefined;
 
 let captchaKey = '';
 let captchaSignature = '';
@@ -27,6 +28,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			.collection('captcha')
 			.createIndex({ created: 1 }, { expireAfterSeconds: 7200 })
 			.catch(() => {});
+		captchaIndexReady = mongoDb.collection('captcha').createIndex({ signature: 1 }, { unique: true });
 		mongoDb
 			.collection('sessions')
 			.createIndex({ sessionId: 1 }, { unique: true })
@@ -44,6 +46,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })
 			.catch(() => {});
 	}
+	await captchaIndexReady;
 
 	if (!storageBackend) {
 		storageBackend = createStorageBackend(mongoDb);

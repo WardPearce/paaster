@@ -52,14 +52,6 @@ export async function verifyCaptcha(captcha: {
 	signature: string;
 	mongoDb: Db;
 }) {
-	if (
-		await captcha.mongoDb.collection('captcha').findOne({
-			signature: captcha.challenge.signature
-		})
-	) {
-		throw error(400, 'Unsupported payload');
-	}
-
 	const captchaVerified = await verifySolution({
 		deriveKey,
 		hmacKeySignatureSecret: captcha.key,
@@ -72,8 +64,15 @@ export async function verifyCaptcha(captcha: {
 		throw error(400, 'Unsupported payload');
 	}
 
-	await captcha.mongoDb.collection('captcha').insertOne({
-		signature: captcha.challenge.signature,
-		created: new Date()
-	});
+	try {
+		await captcha.mongoDb.collection('captcha').insertOne({
+			signature: captcha.challenge.signature,
+			created: new Date()
+		});
+	} catch (cause) {
+		if (typeof cause === 'object' && cause !== null && 'code' in cause && cause.code === 11000) {
+			throw error(400, 'Unsupported payload');
+		}
+		throw cause;
+	}
 }
